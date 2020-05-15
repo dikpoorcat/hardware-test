@@ -1,81 +1,81 @@
-/***************************** (C) COPYRIGHT 2019 æ–¹è¯šç”µåŠ› *****************************
+/***************************** (C) COPYRIGHT 2019 ·½³ÏµçÁ¦ *****************************
 * File Name          : NW_Protocol.c
-* Author             : æœé¢–æˆã€é™ˆå¨ã€ç­‰
-* Version            : è§å†å²ç‰ˆæœ¬ä¿¡æ¯
+* Author             : ¶ÅÓ±³É¡¢³ÂÍş¡¢µÈ
+* Version            : ¼ûÀúÊ·°æ±¾ĞÅÏ¢
 * Date               : 2019/02/21
-* Description        : æ ¹æ®å—ç½‘åè®®ç¼–å†™çš„é€šä¿¡åŠŸèƒ½å‡½æ•°ã€‚
-************************************  å†å²ç‰ˆæœ¬ä¿¡æ¯  ************************************
+* Description        : ¸ù¾İÄÏÍøĞ­Òé±àĞ´µÄÍ¨ĞÅ¹¦ÄÜº¯Êı¡£
+************************************  ÀúÊ·°æ±¾ĞÅÏ¢  ************************************
 * 2019/03/28    : V4.1.0
-* Description   : å—ç½‘æµ‹æ¸©é¡¹ç›®åˆç‰ˆã€‚åŸºç¡€åŠŸèƒ½å®Œæˆï¼Œè°ƒè¯•ä¸­ã€‚
+* Description   : ÄÏÍø²âÎÂÏîÄ¿³õ°æ¡£»ù´¡¹¦ÄÜÍê³É£¬µ÷ÊÔÖĞ¡£
 *******************************************************************************/
 #include "NW_Protocol.h"
 
-/*å…¨å±€å˜é‡*/
+/*È«¾Ö±äÁ¿*/
 struct NW_CONFIG Config={
-	{0x31,0x32,0x33,0x34},														//è£…ç½®å‡ºå‚å¯†ç ï¼šå­—ç¬¦ï¼šâ€˜1234â€™ï¼ˆ31H32H33H34Hï¼‰
-	{0x01},																		//å¿ƒè·³é—´éš”ï¼Œå‡ºå‚é…ç½®åº”ä¸º1åˆ†é’Ÿ
-	{0x00,0x14},																//é‡‡é›†é—´éš”ï¼Œå‡ºå‚é…ç½®åº”ä¸º20åˆ†é’Ÿ
-	{0x00,0x37},																//ä¼‘çœ æ—¶é•¿ï¼Œå¯è®¾ç½®ä¸º55åˆ†é’Ÿ
-	{0x00,0x05},																//åœ¨çº¿æ—¶é•¿ï¼Œå¯è®¾ç½®ä¸º5åˆ†é’Ÿ
-	{0x00,0x0A,0x1E},															//æ—¶é—´ç‚¹æ ¼å¼ï¼šæ—¥ï¼Œæ—¶ï¼Œåˆ†	æ—¥ï¼š0åˆ°28æ—¥ï¼›ï¼ˆè‹¥æ—¥ä¸º00Håˆ™å°±æ¯å¤©å®šæ—¶é‡å¯ï¼‰ï¼›æ—¶ï¼š0åˆ°23ï¼›åˆ†ï¼š0åˆ°59ï¼›
-	{0x31,0x32,0x33,0x34}														//è£…ç½®åˆå§‹å¯†æ–‡è®¤è¯ä¸ºå­—ç¬¦â€˜1234â€™ï¼ˆ31H32H33H34Hï¼‰
+	{0x31,0x32,0x33,0x34},														//×°ÖÃ³ö³§ÃÜÂë£º×Ö·û£º¡®1234¡¯£¨31H32H33H34H£©
+	{0x01},																		//ĞÄÌø¼ä¸ô£¬³ö³§ÅäÖÃÓ¦Îª1·ÖÖÓ
+	{0x00,0x14},																//²É¼¯¼ä¸ô£¬³ö³§ÅäÖÃÓ¦Îª20·ÖÖÓ
+	{0x00,0x37},																//ĞİÃßÊ±³¤£¬¿ÉÉèÖÃÎª55·ÖÖÓ
+	{0x00,0x05},																//ÔÚÏßÊ±³¤£¬¿ÉÉèÖÃÎª5·ÖÖÓ
+	{0x00,0x0A,0x1E},															//Ê±¼äµã¸ñÊ½£ºÈÕ£¬Ê±£¬·Ö	ÈÕ£º0µ½28ÈÕ£»£¨ÈôÈÕÎª00HÔò¾ÍÃ¿Ìì¶¨Ê±ÖØÆô£©£»Ê±£º0µ½23£»·Ö£º0µ½59£»
+	{0x31,0x32,0x33,0x34}														//×°ÖÃ³õÊ¼ÃÜÎÄÈÏÖ¤Îª×Ö·û¡®1234¡¯£¨31H32H33H34H£©
 };
 
 /*------------------------------------------------------------
-å¯†ç 	ä¸»ç«™IP	ç«¯å£å·	ä¸»ç«™IP	ç«¯å£å·	ä¸»ç«™å¡å·	ä¸»ç«™å¡å·
-4å­—èŠ‚	4å­—èŠ‚	2å­—èŠ‚	4å­—èŠ‚	2å­—èŠ‚	6å­—èŠ‚		6å­—èŠ‚		
+ÃÜÂë	Ö÷Õ¾IP	¶Ë¿ÚºÅ	Ö÷Õ¾IP	¶Ë¿ÚºÅ	Ö÷Õ¾¿¨ºÅ	Ö÷Õ¾¿¨ºÅ
+4×Ö½Ú	4×Ö½Ú	2×Ö½Ú	4×Ö½Ú	2×Ö½Ú	6×Ö½Ú		6×Ö½Ú		
 ------------------------------------------------------------*/
 struct NW_IP_CONFIG IP_Config={
-	{118,190,141,140},															//å‡ºå‚é…ç½®ä¸º118.190.141.140
-	{0x1D,0xBB},																//å‡ºå‚é…ç½®ä¸º7611
-	{0x2F,0x64,0x23,0xC8},														//å‡ºå‚é…ç½®ä¸º
-	{0x17,0x71},																//å‡ºå‚é…ç½®ä¸º
-	{0x00,0x00,0x00,0x00,0x00,0x00},											//å‡ºå‚é…ç½®ä¸º
-	{0x00,0x00,0x00,0x00,0x00,0x00},											//å‡ºå‚é…ç½®ä¸º
+	{118,190,141,140},															//³ö³§ÅäÖÃÎª118.190.141.140
+	{0x1D,0xBB},																//³ö³§ÅäÖÃÎª7611
+	{0x2F,0x64,0x23,0xC8},														//³ö³§ÅäÖÃÎª
+	{0x17,0x71},																//³ö³§ÅäÖÃÎª
+	{0x00,0x00,0x00,0x00,0x00,0x00},											//³ö³§ÅäÖÃÎª
+	{0x00,0x00,0x00,0x00,0x00,0x00},											//³ö³§ÅäÖÃÎª
 };
 
-struct NW_FLOW_DATA Flow_Data={													//æ•´æ•°ï¼Œå•ä½MB
-	{0x00,0x00,0x00,0x00,0x00,0x00},											//åŒ…é‡‡æ ·æ—¶é—´ï¼ˆå¹´+æœˆ+æ—¥+æ—¶+åˆ†+ç§’ï¼‰ï¼ˆ6å­—èŠ‚ï¼‰
-	{0x00,0x00,0x00,0x00},														//å½“æ—¥å·²ç”¨æµé‡ï¼ˆ4å­—èŠ‚ï¼‰
-	{0x00,0x00,0x00,0x00},														//å½“æœˆå·²ç”¨æµé‡ï¼ˆ4å­—èŠ‚ï¼‰
-	{MF_0,MF_1,MF_2,MF_3},														//å½“æœˆå‰©ä½™æµé‡ï¼ˆ4å­—èŠ‚ï¼‰é»˜è®¤MONTHLY_FLOW
+struct NW_FLOW_DATA Flow_Data={													//ÕûÊı£¬µ¥Î»MB
+	{0x00,0x00,0x00,0x00,0x00,0x00},											//°ü²ÉÑùÊ±¼ä£¨Äê+ÔÂ+ÈÕ+Ê±+·Ö+Ãë£©£¨6×Ö½Ú£©
+	{0x00,0x00,0x00,0x00},														//µ±ÈÕÒÑÓÃÁ÷Á¿£¨4×Ö½Ú£©
+	{0x00,0x00,0x00,0x00},														//µ±ÔÂÒÑÓÃÁ÷Á¿£¨4×Ö½Ú£©
+	{MF_0,MF_1,MF_2,MF_3},														//µ±ÔÂÊ£ÓàÁ÷Á¿£¨4×Ö½Ú£©Ä¬ÈÏMONTHLY_FLOW
 };
 
-struct NW_TEM_DATA Tem_Cur_Data={												//ä»…ç”¨äºä¸»ç«™è¯·æ±‚è£…ç½®æ•°æ®åç«‹åˆ»ä¸Šä¼ æ—¶ç»„å¸§
-	0,																			//å¸§æ ‡è¯†ï¼ˆ1å­—èŠ‚ï¼‰
-	1,																			//åŒ…æ•°ï¼ˆ1å­—èŠ‚ï¼‰
-	0,																			//åŠŸèƒ½å•å…ƒè¯†åˆ«ç ï¼ˆ1å­—èŠ‚ï¼‰
-	{0x00,0x00,0x00,0x00,0x00,0x00},											//åŒ…é‡‡æ ·æ—¶é—´ï¼ˆå¹´+æœˆ+æ—¥+æ—¶+åˆ†+ç§’ï¼‰ï¼ˆ6å­—èŠ‚ï¼‰
-	{0x00,0x00},																//æµ‹ç‚¹æ¸©åº¦ï¼ˆ2å­—èŠ‚ï¼‰ä¸Šé€å€¼=ï¼ˆå®é™…æ¸©åº¦+50ï¼‰*10
-	{0x00,0x00},																//å¯¼çº¿ç”µæµï¼ˆ2å­—èŠ‚ï¼‰ä¸Šé€å€¼=å®é™…ç”µæµ*10
-	33,																			//ä¼ æ„Ÿå™¨å·¥ä½œç”µå‹ï¼ˆ1å­—èŠ‚ï¼‰ä¸Šé€å€¼=å®é™…ç”µå‹*10
+struct NW_TEM_DATA Tem_Cur_Data={												//½öÓÃÓÚÖ÷Õ¾ÇëÇó×°ÖÃÊı¾İºóÁ¢¿ÌÉÏ´«Ê±×éÖ¡
+	0,																			//Ö¡±êÊ¶£¨1×Ö½Ú£©
+	1,																			//°üÊı£¨1×Ö½Ú£©
+	0,																			//¹¦ÄÜµ¥ÔªÊ¶±ğÂë£¨1×Ö½Ú£©
+	{0x00,0x00,0x00,0x00,0x00,0x00},											//°ü²ÉÑùÊ±¼ä£¨Äê+ÔÂ+ÈÕ+Ê±+·Ö+Ãë£©£¨6×Ö½Ú£©
+	{0x00,0x00},																//²âµãÎÂ¶È£¨2×Ö½Ú£©ÉÏËÍÖµ=£¨Êµ¼ÊÎÂ¶È+50£©*10
+	{0x00,0x00},																//µ¼ÏßµçÁ÷£¨2×Ö½Ú£©ÉÏËÍÖµ=Êµ¼ÊµçÁ÷*10
+	33,																			//´«¸ĞÆ÷¹¤×÷µçÑ¹£¨1×Ö½Ú£©ÉÏËÍÖµ=Êµ¼ÊµçÑ¹*10
 };
 
-const INT8U Unit_ID_Code[55]={													//åŠŸèƒ½å•å…ƒè¯†åˆ«ç è¡¨
-	/*å¯¼çº¿ä¾§ä¼ æ„Ÿå™¨20ä¸ª*/
-	0x15,	0x16,	0x17,	0x18,												//å¯¼çº¿ç›¸ä½1
-	0x25,	0x26,	0x27,	0x28,												//å¯¼çº¿ç›¸ä½2
-	0x35,	0x36,	0x37,	0x38,												//å¯¼çº¿ç›¸ä½3
-	0x45,	0x46,	0x47,	0x48,												//åœ°çº¿ç›¸ä½4
-	0x55,	0x56,	0x57,	0x58,												//åœ°çº¿ç›¸ä½5
-	/*ä¿ç•™ä½æ‰©å±•35ä¸ª*/
-	0x19,	0x1A,	0x1B,	0x1C,	0x1D,	0x1E,	0x1F,						//å¯¼çº¿ç›¸ä½1
-	0x29,	0x2A,	0x2B,	0x2C,	0x2D,	0x2E,	0x2F,						//å¯¼çº¿ç›¸ä½2
-	0x39,	0x3A,	0x3B,	0x3C,	0x3D,	0x3E,	0x3F,						//å¯¼çº¿ç›¸ä½3
-	0x49,	0x4A,	0x4B,	0x4C,	0x4D,	0x4E,	0x4F,						//åœ°çº¿ç›¸ä½4
-	0x59,	0x5A,	0x5B,	0x5C,	0x5D,	0x5E,	0x5F,						//åœ°çº¿ç›¸ä½5
+const INT8U Unit_ID_Code[55]={													//¹¦ÄÜµ¥ÔªÊ¶±ğÂë±í
+	/*µ¼Ïß²à´«¸ĞÆ÷20¸ö*/
+	0x15,	0x16,	0x17,	0x18,												//µ¼ÏßÏàÎ»1
+	0x25,	0x26,	0x27,	0x28,												//µ¼ÏßÏàÎ»2
+	0x35,	0x36,	0x37,	0x38,												//µ¼ÏßÏàÎ»3
+	0x45,	0x46,	0x47,	0x48,												//µØÏßÏàÎ»4
+	0x55,	0x56,	0x57,	0x58,												//µØÏßÏàÎ»5
+	/*±£ÁôÎ»À©Õ¹35¸ö*/
+	0x19,	0x1A,	0x1B,	0x1C,	0x1D,	0x1E,	0x1F,						//µ¼ÏßÏàÎ»1
+	0x29,	0x2A,	0x2B,	0x2C,	0x2D,	0x2E,	0x2F,						//µ¼ÏßÏàÎ»2
+	0x39,	0x3A,	0x3B,	0x3C,	0x3D,	0x3E,	0x3F,						//µ¼ÏßÏàÎ»3
+	0x49,	0x4A,	0x4B,	0x4C,	0x4D,	0x4E,	0x4F,						//µØÏßÏàÎ»4
+	0x59,	0x5A,	0x5B,	0x5C,	0x5D,	0x5E,	0x5F,						//µØÏßÏàÎ»5
 };
 
-struct LOCAL_FLOW_DATA Local_FLow_Data={0};										//æœ¬åœ°è¿›è¡Œæµé‡ç»Ÿè®¡çš„ç»“æ„ä½“
-struct NW_FAULT_INFO Fault_Info[FI_NUM]={0};									//æ•…éšœä¿¡æ¯ç»“æ„ä½“æ•°æ®ï¼Œæœ€å¤šå­˜å‚¨FI_NUMä¸ªæ•…éšœã€‚åŒ…æ‹¬æ•…éšœå’Œæ•…éšœæ¢å¤ç­‰æ‰€æœ‰æœªä¸ŠæŠ¥çš„
-struct NW_FAULT_MANAGE  Fault_Manage={0};										//æ•…éšœä¿¡æ¯ç®¡ç†ç»“æ„ä½“ï¼Œæ¯ç§æ•…éšœçš„æ ‡å¿—ä½å‚¨å­˜åœ°æ–¹
+struct LOCAL_FLOW_DATA Local_FLow_Data={0};										//±¾µØ½øĞĞÁ÷Á¿Í³¼ÆµÄ½á¹¹Ìå
+struct NW_FAULT_INFO Fault_Info[FI_NUM]={0};									//¹ÊÕÏĞÅÏ¢½á¹¹ÌåÊı¾İ£¬×î¶à´æ´¢FI_NUM¸ö¹ÊÕÏ¡£°üÀ¨¹ÊÕÏºÍ¹ÊÕÏ»Ö¸´µÈËùÓĞÎ´ÉÏ±¨µÄ
+struct NW_FAULT_MANAGE  Fault_Manage={0};										//¹ÊÕÏĞÅÏ¢¹ÜÀí½á¹¹Ìå£¬Ã¿ÖÖ¹ÊÕÏµÄ±êÖ¾Î»´¢´æµØ·½
 
-INT8U 				Unreport_Index[31][3]={0};									//æœªä¸ŠæŠ¥æ•°æ®ç´¢å¼•è¡¨ï¼Œ31å¤©ï¼Œæ¯å°æ—¶1bitï¼ˆæœ€é«˜bitä»£è¡¨0æ—¶ï¼‰ï¼š1å·²ä¸ŠæŠ¥ï¼Œ0æœªä¸ŠæŠ¥	æ³¨ï¼šæ–°è®¾å¤‡åˆå§‹åŒ–æ—¶å·²å…¨éƒ¨å†™1
-INT8U 				Device_Number[6]={'F','C',0,0,0,0};							//6Byteè£…ç½®å·ç 
-INT8U 				FUN_Config[24]={0x26,0x30};									//24ByteåŠŸèƒ½é…ç½®å‚æ•°ï¼Œæœ€å¤š24é¡¹åŠŸèƒ½ï¼Œé»˜è®¤26Hå¯¼çº¿æ¸©åº¦ã€ç”µæµæ•°æ®ç›‘æµ‹åŠŸèƒ½\30Hè®¾å¤‡æ•…éšœè‡ªæ£€åŠŸèƒ½	PSï¼šç°åœ¨æš‚ä¸æ”¯æŒåŠŸèƒ½é…ç½®ï¼Œå›ºå®šå¼€å¯è¿™ä¸¤ä¸ªåŠŸèƒ½
-INT8U				Time_Proofread = DONE;										//åˆå§‹åŒ–ä¸ºDONEï¼šè®¾å¤‡ä¸Šç”µååªè¦RTCæ—¶é—´æ ¼å¼æ­£å¸¸å³å¯é‡‡é›†æ¸©åº¦ï¼Œé˜²æ­¢ç”µé‡ä¸è¶³æ—¶å› æ— æ³•æ ¡æ—¶è€Œä¸é‡‡é›†
-INT8U				Tem_Sampled[2] = {0};										//ç”¨äºç«‹å³é‡‡é›†çš„æ¸©åº¦æ•°æ®ç»„å¸§ä¸ŠæŠ¥
-INT8U				APN[100] = "CMIOT";											//å—ç½‘æ‰©å±•åè®®å¢åŠ APNï¼ˆæœ€å¤§ä¸èƒ½è¶…è¿‡100ä¸ªå­—èŠ‚ï¼‰é…ç½®		"CMNET"	"CMMTM"	"CMIOTGZDWSCSPJK.GZ"
+INT8U 				Unreport_Index[31][3]={0};									//Î´ÉÏ±¨Êı¾İË÷Òı±í£¬31Ìì£¬Ã¿Ğ¡Ê±1bit£¨×î¸ßbit´ú±í0Ê±£©£º1ÒÑÉÏ±¨£¬0Î´ÉÏ±¨	×¢£ºĞÂÉè±¸³õÊ¼»¯Ê±ÒÑÈ«²¿Ğ´1
+INT8U 				Device_Number[6]={'F','C',0,0,0,0};							//6Byte×°ÖÃºÅÂë
+INT8U 				FUN_Config[24]={0x26,0x30};									//24Byte¹¦ÄÜÅäÖÃ²ÎÊı£¬×î¶à24Ïî¹¦ÄÜ£¬Ä¬ÈÏ26Hµ¼ÏßÎÂ¶È¡¢µçÁ÷Êı¾İ¼à²â¹¦ÄÜ\30HÉè±¸¹ÊÕÏ×Ô¼ì¹¦ÄÜ	PS£ºÏÖÔÚÔİ²»Ö§³Ö¹¦ÄÜÅäÖÃ£¬¹Ì¶¨¿ªÆôÕâÁ½¸ö¹¦ÄÜ
+INT8U				Time_Proofread = DONE;										//³õÊ¼»¯ÎªDONE£ºÉè±¸ÉÏµçºóÖ»ÒªRTCÊ±¼ä¸ñÊ½Õı³£¼´¿É²É¼¯ÎÂ¶È£¬·ÀÖ¹µçÁ¿²»×ãÊ±ÒòÎŞ·¨Ğ£Ê±¶ø²»²É¼¯
+INT8U				Tem_Sampled[2] = {0};										//ÓÃÓÚÁ¢¼´²É¼¯µÄÎÂ¶ÈÊı¾İ×éÖ¡ÉÏ±¨
+INT8U				APN[100] = "CMIOT";											//ÄÏÍøÀ©Õ¹Ğ­ÒéÔö¼ÓAPN£¨×î´ó²»ÄÜ³¬¹ı100¸ö×Ö½Ú£©ÅäÖÃ		"CMNET"	"CMMTM"	"CMIOTGZDWSCSPJK.GZ"
 
 
 
@@ -83,17 +83,17 @@ INT8U				APN[100] = "CMIOT";											//å—ç½‘æ‰©å±•åè®®å¢åŠ APNï¼ˆæœ€å¤§ä¸
 
 
 /*******************************************************************************
-åç§°ï¼švoid NW_Comm_Process(void)
-åŠŸèƒ½ï¼šæ ¹æ®å—ç½‘åè®®ç¼–å†™çš„é€šä¿¡æµç¨‹ï¼ŒåŒ…æ‹¬é€šä¿¡åŠåŠŸèƒ½æ‰§è¡Œç­‰ã€‚è°ƒç”¨æ—¶åˆå§‹çŠ¶æ€ä¸ºå¼€æœºè”ç»œæ€ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼š1ï¼ŒåŠŸèƒ½æ­£å¸¸æ‰§è¡Œï¼›0ï¼Œæœ‰å¼‚å¸¸
+Ãû³Æ£ºvoid NW_Comm_Process(void)
+¹¦ÄÜ£º¸ù¾İÄÏÍøĞ­Òé±àĞ´µÄÍ¨ĞÅÁ÷³Ì£¬°üÀ¨Í¨ĞÅ¼°¹¦ÄÜÖ´ĞĞµÈ¡£µ÷ÓÃÊ±³õÊ¼×´Ì¬Îª¿ª»úÁªÂçÌ¬¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£º1£¬¹¦ÄÜÕı³£Ö´ĞĞ£»0£¬ÓĞÒì³£
 *******************************************************************************/
 INT8U NW_Comm_Process(void)														
 {
-	INT8U			First_Time = 0xFF;											//è°ƒç”¨æ—¶ä¸»åŠ¨è¿›å…¥ä¸€æ¬¡TEM_CUR_UPLOAD
+	INT8U			First_Time = 0xFF;											//µ÷ÓÃÊ±Ö÷¶¯½øÈëÒ»´ÎTEM_CUR_UPLOAD
 	INT16U			WaitTime = 0;
-	INT8U			STATE = START_UP;											//åˆå§‹çŠ¶æ€å®šä¸ºå¼€æœºè”ç»œ
+	INT8U			STATE = START_UP;											//³õÊ¼×´Ì¬¶¨Îª¿ª»úÁªÂç
 	static INT8U	msg_cmd;
 	static INT8U	msg_state;
 	static INT8U	msg_fault;
@@ -101,226 +101,226 @@ INT8U NW_Comm_Process(void)
 	
 	while(1)
 	{
-		WDTClear(LTE_PRIO);														//æ¸…é™¤ä»»åŠ¡çœ‹é—¨ç‹—
+		WDTClear(LTE_PRIO);														//Çå³ıÈÎÎñ¿´ÃÅ¹·
 		switch(STATE)
 		{
 			case START_UP:
-				/*åˆ¤æ–­æ˜¯å¦è¦å‘é€å¼€æœºè”ç»œä¿¡æ¯*/					
-					if(Reset_Flag != NORST){									//è‹¥åˆšå¤ä½è¿‡ï¼ˆè¯·å‹¿éšæ„ä¿®æ”¹æ­¤å…¨å±€å˜é‡ï¼‰
-						BspUartWrite(2,SIZE_OF("\r\n---------->å¼€æœºè”ç»œ<----------\r\n"));
-						if(!Startup_Comm(RETRY,TIMEOUT)) return 0;				//å¼€æœºè”ç»œé€šä¿¡ï¼Œå¤±è´¥æ—¶è¿”å›0
+				/*ÅĞ¶ÏÊÇ·ñÒª·¢ËÍ¿ª»úÁªÂçĞÅÏ¢*/					
+					if(Reset_Flag != NORST){									//Èô¸Õ¸´Î»¹ı£¨ÇëÎğËæÒâĞŞ¸Ä´ËÈ«¾Ö±äÁ¿£©
+						BspUartWrite(2,SIZE_OF("\r\n---------->¿ª»úÁªÂç<----------\r\n"));
+						if(!Startup_Comm(RETRY,TIMEOUT)) return 0;				//¿ª»úÁªÂçÍ¨ĞÅ£¬Ê§°ÜÊ±·µ»Ø0
 					}
-					STATE = HEARTBEAT;											//å¼€æœºè”ç»œé€šä¿¡æˆåŠŸï¼Œä¸‹ä¸€æ­¥å¿ƒè·³é€šä¿¡
+					STATE = HEARTBEAT;											//¿ª»úÁªÂçÍ¨ĞÅ³É¹¦£¬ÏÂÒ»²½ĞÄÌøÍ¨ĞÅ
 					break;														
 					
 			case HEARTBEAT:
-					BspUartWrite(2,SIZE_OF("\r\n---------->å¿ƒè·³ä¸ŠæŠ¥<----------\r\n"));
-					if(!Heartbeat(RETRY,TIMEOUT)) return 0;						//å¿ƒè·³é€šä¿¡ï¼Œå¤±è´¥æ—¶è¿”å›0
-				/*åˆ¤æ–­æ˜¯å¦è¦å‘é€æ•…éšœä¿¡æ¯*/
-					if(Reset_Flag != NORST||Fault_Manage.Need_Report)			//è‹¥åˆšå¤ä½è¿‡ï¼ˆè¯·å‹¿éšæ„ä¿®æ”¹æ­¤å…¨å±€å˜é‡ï¼‰  æˆ–æœ‰æ•…éšœä¿¡æ¯éœ€è¦ä¸ŠæŠ¥æ—¶ï¼Œä¼˜å…ˆä¸ŠæŠ¥å†è¿›å…¥ç­‰å¾…æŒ‡ä»¤
+					BspUartWrite(2,SIZE_OF("\r\n---------->ĞÄÌøÉÏ±¨<----------\r\n"));
+					if(!Heartbeat(RETRY,TIMEOUT)) return 0;						//ĞÄÌøÍ¨ĞÅ£¬Ê§°ÜÊ±·µ»Ø0
+				/*ÅĞ¶ÏÊÇ·ñÒª·¢ËÍ¹ÊÕÏĞÅÏ¢*/
+					if(Reset_Flag != NORST||Fault_Manage.Need_Report)			//Èô¸Õ¸´Î»¹ı£¨ÇëÎğËæÒâĞŞ¸Ä´ËÈ«¾Ö±äÁ¿£©  »òÓĞ¹ÊÕÏĞÅÏ¢ĞèÒªÉÏ±¨Ê±£¬ÓÅÏÈÉÏ±¨ÔÙ½øÈëµÈ´ıÖ¸Áî
 					{									
-						Reset_Flag = NORST;										//èµ‹å€¼ä¸ºNORSTï¼Œç”¨äºéå¤ä½æƒ…å†µä¸‹è·³è¿‡å¼€æœºè”ç»œå’Œæ•…éšœä¸ŠæŠ¥ã€‚é™¤éå¤ä½ï¼Œå¦åˆ™ä¸å†æ”¹å˜æ­¤å€¼
-						STATE = FAULT_INFO;										//å¤ä½åéœ€è¦ä¸ŠæŠ¥æ•…éšœçŠ¶æ€ä»£ç 
+						Reset_Flag = NORST;										//¸³ÖµÎªNORST£¬ÓÃÓÚ·Ç¸´Î»Çé¿öÏÂÌø¹ı¿ª»úÁªÂçºÍ¹ÊÕÏÉÏ±¨¡£³ı·Ç¸´Î»£¬·ñÔò²»ÔÙ¸Ä±ä´ËÖµ
+						STATE = FAULT_INFO;										//¸´Î»ºóĞèÒªÉÏ±¨¹ÊÕÏ×´Ì¬´úÂë
 					}
-					else STATE = REC_AND_EXE;									//å¿ƒè·³é€šä¿¡æˆåŠŸï¼Œä¸‹ä¸€æ­¥ç­‰å¾…ä¸Šä½æœºæŒ‡ä»¤å¹¶å¤„ç†ï¼ˆä¸€ä¸ªå¿ƒè·³é—´éš”æ—¶é—´ï¼‰	ä¸è¦ç›´æ¥è¿›å…¥QUERY_MAILçŠ¶æ€ï¼Œæœ‰æ— é™å¿ƒè·³é£é™©
+					else STATE = REC_AND_EXE;									//ĞÄÌøÍ¨ĞÅ³É¹¦£¬ÏÂÒ»²½µÈ´ıÉÏÎ»»úÖ¸Áî²¢´¦Àí£¨Ò»¸öĞÄÌø¼ä¸ôÊ±¼ä£©	²»ÒªÖ±½Ó½øÈëQUERY_MAIL×´Ì¬£¬ÓĞÎŞÏŞĞÄÌø·çÏÕ
 					break;
 			
 			case FAULT_INFO:
-					BspUartWrite(2,SIZE_OF("\r\n---------->æ•…éšœä¿¡æ¯<----------\r\n"));
-					if(!Fault_Info_Comm(RETRY,TIMEOUT)) return 0;				//æ•…éšœä¿¡æ¯é€šä¿¡ï¼Œå¤±è´¥æ—¶è¿”å›0
-					STATE = REC_AND_EXE;										//å¿ƒè·³é€šä¿¡æˆåŠŸï¼Œä¸‹ä¸€æ­¥ç­‰å¾…ä¸Šä½æœºæŒ‡ä»¤å¹¶å¤„ç†ï¼ˆä¸€ä¸ªå¿ƒè·³é—´éš”æ—¶é—´ï¼‰	ä¸è¦ç›´æ¥è¿›å…¥QUERY_MAILçŠ¶æ€ï¼Œæœ‰æ— é™å¿ƒè·³é£é™©
+					BspUartWrite(2,SIZE_OF("\r\n---------->¹ÊÕÏĞÅÏ¢<----------\r\n"));
+					if(!Fault_Info_Comm(RETRY,TIMEOUT)) return 0;				//¹ÊÕÏĞÅÏ¢Í¨ĞÅ£¬Ê§°ÜÊ±·µ»Ø0
+					STATE = REC_AND_EXE;										//ĞÄÌøÍ¨ĞÅ³É¹¦£¬ÏÂÒ»²½µÈ´ıÉÏÎ»»úÖ¸Áî²¢´¦Àí£¨Ò»¸öĞÄÌø¼ä¸ôÊ±¼ä£©	²»ÒªÖ±½Ó½øÈëQUERY_MAIL×´Ì¬£¬ÓĞÎŞÏŞĞÄÌø·çÏÕ
 					break;
 			
 			case REC_AND_EXE:
-					BspUartWrite(2,SIZE_OF("\r\n---------->ç­‰å¾…æ¥æ”¶<----------\r\n"));
-					WaitTime = *Config.BeatTime*60;								//è®¡ç®—å»¶æ—¶æ—¶é—´ï¼Œå•ä½ï¼šç§’
-				/*ä¿æŒåœ¨çº¿çŠ¶æ€WaitTimeç§’ï¼ˆç”¨äºå¿ƒè·³é—´éš”ï¼Œé‡å…¶ä»–å‘½ä»¤åé¡ºå»¶ä¸€ä¸ªè”ç»œé—´éš”ï¼‰*/
-					STATE = NW_ReceiveAndExecute(LTE_Rx_Buff,WaitTime);	//æ¥æ”¶å¹¶æ‰§è¡ŒæˆåŠŸè¿”å›ä¸‹ä¸€ä¸ªéœ€è¦æ‰§è¡Œçš„çŠ¶æ€ï¼ˆå¦‚é‡å¯/ä¼‘çœ /æ ¡æ—¶ç­‰ï¼‰ï¼Œæœªæ‰§è¡Œä»»ä½•æ“ä½œåˆ™è¿”å›0
-					if(STATE==1) STATE = REC_AND_EXE;							//STATE==1è¡¨ç¤ºå·²ç»æˆåŠŸæ‰§è¡Œäº†æŸäº›åŠŸèƒ½ï¼Œç­‰å¾…ä¸‹ä¸€ä¸ªæŒ‡ä»¤ï¼Œå¿ƒè·³é¡ºå»¶ä¸€ä¸ªè”ç»œé—´éš”
-					else if(STATE==0) 	 										//è¿”å›0è¡¨ç¤ºæ— éœ€æ“ä½œæˆ–æ“ä½œå¤±è´¥ï¼ŒæŸ¥è¯¢é‚®ç®±æŒ‡ä»¤
+					BspUartWrite(2,SIZE_OF("\r\n---------->µÈ´ı½ÓÊÕ<----------\r\n"));
+					WaitTime = *Config.BeatTime*60;								//¼ÆËãÑÓÊ±Ê±¼ä£¬µ¥Î»£ºÃë
+				/*±£³ÖÔÚÏß×´Ì¬WaitTimeÃë£¨ÓÃÓÚĞÄÌø¼ä¸ô£¬ÓöÆäËûÃüÁîºóË³ÑÓÒ»¸öÁªÂç¼ä¸ô£©*/
+					STATE = NW_ReceiveAndExecute(LTE_Rx_Buff,WaitTime);	//½ÓÊÕ²¢Ö´ĞĞ³É¹¦·µ»ØÏÂÒ»¸öĞèÒªÖ´ĞĞµÄ×´Ì¬£¨ÈçÖØÆô/ĞİÃß/Ğ£Ê±µÈ£©£¬Î´Ö´ĞĞÈÎºÎ²Ù×÷Ôò·µ»Ø0
+					if(STATE==1) STATE = REC_AND_EXE;							//STATE==1±íÊ¾ÒÑ¾­³É¹¦Ö´ĞĞÁËÄ³Ğ©¹¦ÄÜ£¬µÈ´ıÏÂÒ»¸öÖ¸Áî£¬ĞÄÌøË³ÑÓÒ»¸öÁªÂç¼ä¸ô
+					else if(STATE==0) 	 										//·µ»Ø0±íÊ¾ÎŞĞè²Ù×÷»ò²Ù×÷Ê§°Ü£¬²éÑ¯ÓÊÏäÖ¸Áî
 					{
 						if(First_Time) 
 						{
-							STATE = TEM_CUR_UPLOAD;								//åˆæ¬¡è°ƒç”¨æ—¶ä¸»åŠ¨è¿›å…¥ä¸€æ¬¡TEM_CUR_UPLOAD
-							First_Time = 0;										//æ¸…0ï¼Œä¹‹åä¸å†ä¸»åŠ¨ä¸ŠæŠ¥
+							STATE = TEM_CUR_UPLOAD;								//³õ´Îµ÷ÓÃÊ±Ö÷¶¯½øÈëÒ»´ÎTEM_CUR_UPLOAD
+							First_Time = 0;										//Çå0£¬Ö®ºó²»ÔÙÖ÷¶¯ÉÏ±¨
 						}
-						else STATE = QUERY_MAIL;								//ä¸ä¸»åŠ¨ä¸ŠæŠ¥æ—¶ï¼ŒæŸ¥è¯¢é‚®ç®±
+						else STATE = QUERY_MAIL;								//²»Ö÷¶¯ÉÏ±¨Ê±£¬²éÑ¯ÓÊÏä
 					}	
-					/*å…¶ä»–æƒ…å†µä¼šè‡ªåŠ¨æ ¹æ®STATEçŠ¶æ€é€‰æ‹©ï¼Œå¦‚RESET_DEVç­‰*/
+					/*ÆäËûÇé¿ö»á×Ô¶¯¸ù¾İSTATE×´Ì¬Ñ¡Ôñ£¬ÈçRESET_DEVµÈ*/
 					break;
 					
 			case TEM_CUR_UPLOAD:
-					BspUartWrite(2,SIZE_OF("\r\n---------->å†å²æ•°æ®<----------\r\n"));
-					Err = Tem_Cur_Upload(RETRY,TIMEOUT);						//å‘é€å†å²æ•°æ®
-					if(0xFF==Err) STATE = QUERY_MAIL;							//æ— å†å²æ•°æ®ï¼Œä¸äºŒæ¬¡ç­‰å¾…
-					else if(!Err) return 0;										//å‘é€å†å²æ•°æ®å¤±è´¥æ—¶è¿”å›0ï¼ˆä»…è¡¨ç¤ºè¿˜æœ‰å†å²æ•°æ®æœªå‘é€å®Œæˆï¼Œä¸å½±å“å·²å®Œæˆçš„éƒ¨åˆ†ï¼‰
-					else STATE = REC_AND_EXE;									//ä¸ŠæŠ¥æˆåŠŸï¼Œä¸‹ä¸€æ­¥å›åˆ°ç­‰å¾…çŠ¶æ€
-					BspUartWrite(2,SIZE_OF("---------->å†å²æ•°æ®ä¸ŠæŠ¥ç»“æŸ<----------\r\n"));
+					BspUartWrite(2,SIZE_OF("\r\n---------->ÀúÊ·Êı¾İ<----------\r\n"));
+					Err = Tem_Cur_Upload(RETRY,TIMEOUT);						//·¢ËÍÀúÊ·Êı¾İ
+					if(0xFF==Err) STATE = QUERY_MAIL;							//ÎŞÀúÊ·Êı¾İ£¬²»¶ş´ÎµÈ´ı
+					else if(!Err) return 0;										//·¢ËÍÀúÊ·Êı¾İÊ§°ÜÊ±·µ»Ø0£¨½ö±íÊ¾»¹ÓĞÀúÊ·Êı¾İÎ´·¢ËÍÍê³É£¬²»Ó°ÏìÒÑÍê³ÉµÄ²¿·Ö£©
+					else STATE = REC_AND_EXE;									//ÉÏ±¨³É¹¦£¬ÏÂÒ»²½»Øµ½µÈ´ı×´Ì¬
+					BspUartWrite(2,SIZE_OF("---------->ÀúÊ·Êı¾İÉÏ±¨½áÊø<----------\r\n"));
 					break;
 			
-			case SMS_AWAKE:														//ä¸»ç«™è‹¥é€šè¿‡IPç½‘ç»œUDPé€šä¿¡ï¼Œå‘é€æ­¤æ§åˆ¶å­—ï¼Œä¹Ÿè¡¨ç¤ºå”¤é†’ç»ˆç«¯
-					BspUartWrite(2,SIZE_OF("\r\n---------->å”¤é†’æŒ‡ä»¤<----------\r\n"));
+			case SMS_AWAKE:														//Ö÷Õ¾ÈôÍ¨¹ıIPÍøÂçUDPÍ¨ĞÅ£¬·¢ËÍ´Ë¿ØÖÆ×Ö£¬Ò²±íÊ¾»½ĞÑÖÕ¶Ë
+					BspUartWrite(2,SIZE_OF("\r\n---------->»½ĞÑÖ¸Áî<----------\r\n"));
 					msg_state = WAKE_SUCCESS;
-					OSMboxPost(Dev_STAB0X, &msg_state);							//é€šè¿‡é‚®ç®±å°†çŠ¶æ€å˜åŒ–å‘½ä»¤å‘å‡ºï¼Œä»¥é‡ç½®åœ¨çº¿æ—¶é—´
-					STATE = REC_AND_EXE;										//ç«‹å³åˆ‡æ¢åˆ°åœ¨çº¿çŠ¶æ€ï¼Œç­‰æ•ˆäºå›åˆ°ç­‰å¾…çŠ¶æ€
+					OSMboxPost(Dev_STAB0X, &msg_state);							//Í¨¹ıÓÊÏä½«×´Ì¬±ä»¯ÃüÁî·¢³ö£¬ÒÔÖØÖÃÔÚÏßÊ±¼ä
+					STATE = REC_AND_EXE;										//Á¢¼´ÇĞ»»µ½ÔÚÏß×´Ì¬£¬µÈĞ§ÓÚ»Øµ½µÈ´ı×´Ì¬
 					break;	
 			
 			case SLEEP_NOTICE:
-					BspUartWrite(2,SIZE_OF("\r\n---------->ä¼‘çœ é€šçŸ¥<----------\r\n"));
-					Sleep_Notice();												//è¯¥ä¿¡æ¯åœ¨è£…ç½®è®¾å¤‡æ¯æ¬¡ä¼‘çœ ä¹‹å‰ä¸ŠæŠ¥ä¸»ç«™
-					return SLEEP_NOTICE;										//è¿”å›ï¼Œè¿›å…¥ä¼‘çœ 
+					BspUartWrite(2,SIZE_OF("\r\n---------->ĞİÃßÍ¨Öª<----------\r\n"));
+					Sleep_Notice();												//¸ÃĞÅÏ¢ÔÚ×°ÖÃÉè±¸Ã¿´ÎĞİÃßÖ®Ç°ÉÏ±¨Ö÷Õ¾
+					return SLEEP_NOTICE;										//·µ»Ø£¬½øÈëĞİÃß
 			
 			case RESET_DEV:
-					BspUartWrite(2,SIZE_OF("\r\n---------->è£…ç½®é‡å¯<----------\r\n"));
-					return RESET_DEV;											//è¿”å›ï¼Œé‡å¯è£…ç½®
+					BspUartWrite(2,SIZE_OF("\r\n---------->×°ÖÃÖØÆô<----------\r\n"));
+					return RESET_DEV;											//·µ»Ø£¬ÖØÆô×°ÖÃ
 									
 			case QUERY_MAIL:
-					/*ä¼˜å…ˆå¤„ç†æ•…éšœä¿¡æ¯*/
-					msg_fault = *(INT8U *)OSMboxPend(Fault_CMDB0X,1,&Err);		//è¿›è¡Œé‚®ç®±æŸ¥è¯¢ï¼Œæ•…éšœä¿¡æ¯
-					if(msg_fault==FAULT_CMD) 									//éœ€è¦ä¸ŠæŠ¥
+					/*ÓÅÏÈ´¦Àí¹ÊÕÏĞÅÏ¢*/
+					msg_fault = *(INT8U *)OSMboxPend(Fault_CMDB0X,1,&Err);		//½øĞĞÓÊÏä²éÑ¯£¬¹ÊÕÏĞÅÏ¢
+					if(msg_fault==FAULT_CMD) 									//ĞèÒªÉÏ±¨
 					{
-						STATE = FAULT_INFO;										//è¿›å…¥æ•…éšœä¿¡æ¯ä¸ŠæŠ¥çŠ¶æ€
+						STATE = FAULT_INFO;										//½øÈë¹ÊÕÏĞÅÏ¢ÉÏ±¨×´Ì¬
 						break;													
 					}
-					/*ç­‰å¾…ä¼‘çœ æŒ‡ä»¤*/
-					msg_cmd = *(INT8U *)OSMboxPend(Dev_CMDB0X,1,&Err);			//è¿›è¡Œé‚®ç®±æŸ¥è¯¢ï¼ˆåªæœ‰WAKEå’ŒSLEEPä¸¤ç§å‘½ä»¤ï¼Œæ¶ˆæ¯è¢«æ¸…äº†ä¹Ÿä¸ç”¨é‡å‘ï¼‰
-					if(msg_cmd==SLEEP_CMD) STATE = SLEEP_NOTICE;				//è¿›å…¥ä¼‘çœ çŠ¶æ€
-//					else if(msg==UPLOAD_CMD) STATE = TEM_CUR_UPLOAD;			//è¿›å…¥æ¸©åº¦ç”µæµå‘é€çŠ¶æ€ï¼ˆç‰¹æ®Šä¸ŠæŠ¥å¯ä»¥åšè¿™é‡Œï¼‰
-					else STATE = HEARTBEAT;										//æ— éœ€è¦åŠ¨ä½œçš„æŒ‡ä»¤ã€‚å¿ƒè·³é—´éš”åˆ°æœŸï¼Œè¯¥ä¸Šå¿ƒè·³äº†
+					/*µÈ´ıĞİÃßÖ¸Áî*/
+					msg_cmd = *(INT8U *)OSMboxPend(Dev_CMDB0X,1,&Err);			//½øĞĞÓÊÏä²éÑ¯£¨Ö»ÓĞWAKEºÍSLEEPÁ½ÖÖÃüÁî£¬ÏûÏ¢±»ÇåÁËÒ²²»ÓÃÖØ·¢£©
+					if(msg_cmd==SLEEP_CMD) STATE = SLEEP_NOTICE;				//½øÈëĞİÃß×´Ì¬
+//					else if(msg==UPLOAD_CMD) STATE = TEM_CUR_UPLOAD;			//½øÈëÎÂ¶ÈµçÁ÷·¢ËÍ×´Ì¬£¨ÌØÊâÉÏ±¨¿ÉÒÔ×öÕâÀï£©
+					else STATE = HEARTBEAT;										//ÎŞĞèÒª¶¯×÷µÄÖ¸Áî¡£ĞÄÌø¼ä¸ôµ½ÆÚ£¬¸ÃÉÏĞÄÌøÁË
 					break;
 			
 			default:
-					BspUartWrite(2,SIZE_OF("\r\n!!!!!!!!!!!!!!!!!!!!>è­¦å‘Šï¼NW_Comm_Process()è¿›å…¥æœªçŸ¥çŠ¶æ€ï¼<!!!!!!!!!!!!!!!!!!!!\r\n"));
+					BspUartWrite(2,SIZE_OF("\r\n!!!!!!!!!!!!!!!!!!!!>¾¯¸æ£¡NW_Comm_Process()½øÈëÎ´Öª×´Ì¬£¡<!!!!!!!!!!!!!!!!!!!!\r\n"));
 					return 0;
 		}
 	}	
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Startup_Comm(u8 times, u16 timeout)
-åŠŸèƒ½ï¼šå¼€æœºè”ç»œï¼Œé‡è¯•timesæ¬¡ï¼Œæ§åˆ¶å­—ï¼š00H
-è£…ç½®æ¯æ¬¡å‘é€å¼€æœºè”ç»œä¿¡æ¯ï¼Œä¸»ç«™æ— è¿”å›ä¿¡æ¯åˆ™æ¯1åˆ†é’Ÿå‘é€ä¸€æ¬¡ç›´åˆ°æ”¶åˆ°ä¸»ç«™è¿”å›ä¿¡æ¯ã€‚
-å…¥å‚ï¼šu8 timesï¼Œé‡è¯•æ¬¡æ•°ï¼›u16 timeoutï¼Œè¶…æ—¶ç­‰å¾…æ—¶é—´ï¼Œå•ä½ï¼šæ—¶é—´ç‰‡
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šå¼€æœºè”ç»œå¹¶æ ¡æ—¶æˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U Startup_Comm(u8 times, u16 timeout)
+¹¦ÄÜ£º¿ª»úÁªÂç£¬ÖØÊÔtimes´Î£¬¿ØÖÆ×Ö£º00H
+×°ÖÃÃ¿´Î·¢ËÍ¿ª»úÁªÂçĞÅÏ¢£¬Ö÷Õ¾ÎŞ·µ»ØĞÅÏ¢ÔòÃ¿1·ÖÖÓ·¢ËÍÒ»´ÎÖ±µ½ÊÕµ½Ö÷Õ¾·µ»ØĞÅÏ¢¡£
+Èë²Î£ºu8 times£¬ÖØÊÔ´ÎÊı£»u16 timeout£¬³¬Ê±µÈ´ıÊ±¼ä£¬µ¥Î»£ºÊ±¼äÆ¬
+³ö²Î£ºÎŞ
+·µ»Ø£º¿ª»úÁªÂç²¢Ğ£Ê±³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U Startup_Comm(u8 times, u16 timeout)
 {
-	INT16U	len_frame=0;														//å¸§é•¿åº¦
+	INT16U	len_frame=0;														//Ö¡³¤¶È
 	INT8U	i=0;
 	INT16U	len=0;
 	
-	len_frame=NW_Framing(START_UP,LTE_Tx_Buff);									//ç»„å¼€æœºè”ç»œå¸§
-	for(i=0;i<times;i++)														//æœ€å¤šé‡è¯•timesæ¬¡	è£…ç½®æ¯æ¬¡å‘é€å¼€æœºè”ç»œä¿¡æ¯ï¼Œä¸»ç«™æ— è¿”å›ä¿¡æ¯åˆ™æ¯1åˆ†é’Ÿå‘é€ä¸€æ¬¡ç›´åˆ°æ”¶åˆ°ä¸»ç«™è¿”å›ä¿¡æ¯ã€‚
+	len_frame=NW_Framing(START_UP,LTE_Tx_Buff);									//×é¿ª»úÁªÂçÖ¡
+	for(i=0;i<times;i++)														//×î¶àÖØÊÔtimes´Î	×°ÖÃÃ¿´Î·¢ËÍ¿ª»úÁªÂçĞÅÏ¢£¬Ö÷Õ¾ÎŞ·µ»ØĞÅÏ¢ÔòÃ¿1·ÖÖÓ·¢ËÍÒ»´ÎÖ±µ½ÊÕµ½Ö÷Õ¾·µ»ØĞÅÏ¢¡£
 	{
-		len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);		//è¿”å›ä¸º0è¡¨ç¤ºé€šä¿¡å¤±è´¥ï¼Œè¿”å›0xffè¡¨ç¤ºæ²¡æ¥æ”¶åˆ°æ•°æ®ï¼Œå…¶ä»–è¿”å›ä¸ºæ¥æ”¶æ•°æ®é•¿åº¦
+		len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);		//·µ»ØÎª0±íÊ¾Í¨ĞÅÊ§°Ü£¬·µ»Ø0xff±íÊ¾Ã»½ÓÊÕµ½Êı¾İ£¬ÆäËû·µ»ØÎª½ÓÊÕÊı¾İ³¤¶È
 		if(!len) 
 		{
-			BspUartWrite(2,SIZE_OF("æœªæ”¶åˆ°ä¸»ç«™å›å¤ï¼\r\n"));
-			if(i<times-1) OSTimeDly(1*60*20-timeout);							//é€šä¿¡å¤±è´¥æ—¶æ¯éš”1åˆ†é’Ÿè¯·æ±‚ä¸€æ¬¡
-			continue;															//é‡è¯•
+			BspUartWrite(2,SIZE_OF("Î´ÊÕµ½Ö÷Õ¾»Ø¸´£¡\r\n"));
+			if(i<times-1) OSTimeDly(1*60*20-timeout);							//Í¨ĞÅÊ§°ÜÊ±Ã¿¸ô1·ÖÖÓÇëÇóÒ»´Î
+			continue;															//ÖØÊÔ
 		}
-		if(Judge_NW_Framing(START_UP,LTE_Rx_Buff,len,0))						//åˆ¤æ–­æ¥æ”¶å†…å®¹æ˜¯å¦ç¬¦åˆå—ç½‘åè®®ï¼Œä¸ç¬¦åˆæ—¶é‡æ–°é€šä¿¡
+		if(Judge_NW_Framing(START_UP,LTE_Rx_Buff,len,0))						//ÅĞ¶Ï½ÓÊÕÄÚÈİÊÇ·ñ·ûºÏÄÏÍøĞ­Òé£¬²»·ûºÏÊ±ÖØĞÂÍ¨ĞÅ
 		{
-			OSTimeDly(10);														//ç°åœ¨çš„åå°ï¼Œå¼€æœºè”ç»œå®Œæˆåï¼Œæ ¡æ—¶æœ‰æ—¶å›å¤æ…¢ï¼ŒåŠ ä¸ªå»¶æ—¶å°±å¥½äº†
-			/*æ¥æ”¶åˆ°å›å¤åï¼Œä¸»åŠ¨è¯·æ±‚æ ¡æ—¶*/
-			return Timming_Request(10,20);/*timeoutæ ¹æ®åè®®å›ºå®šä¸º20ç§’*/			//ç›‘æµ‹è£…ç½®æ”¶åˆ°ä¸»ç«™å¼€æœºè”ç»œè¿”å›ä¿¡æ¯åä¸»åŠ¨è¯·æ±‚æ ¡æ—¶ï¼Œæ¯éš”2åˆ†é’Ÿè¯·æ±‚ä¸€æ¬¡ç›´åˆ°æ ¡æ—¶æˆåŠŸä¸ºæ­¢ï¼Œè‹¥è¯·æ±‚æ—¶é—´ä¸ä¸»ç«™åº”ç­”ä¹‹é—´å»¶æ—¶ä¸è¶…è¿‡20ç§’ï¼Œåˆ™æ¥å—è¯¥å‘½ä»¤ï¼Œæ›´æ”¹è£…ç½®æ—¶é’Ÿã€‚
+			OSTimeDly(10);														//ÏÖÔÚµÄºóÌ¨£¬¿ª»úÁªÂçÍê³Éºó£¬Ğ£Ê±ÓĞÊ±»Ø¸´Âı£¬¼Ó¸öÑÓÊ±¾ÍºÃÁË
+			/*½ÓÊÕµ½»Ø¸´ºó£¬Ö÷¶¯ÇëÇóĞ£Ê±*/
+			return Timming_Request(10,20);/*timeout¸ù¾İĞ­Òé¹Ì¶¨Îª20Ãë*/			//¼à²â×°ÖÃÊÕµ½Ö÷Õ¾¿ª»úÁªÂç·µ»ØĞÅÏ¢ºóÖ÷¶¯ÇëÇóĞ£Ê±£¬Ã¿¸ô2·ÖÖÓÇëÇóÒ»´ÎÖ±µ½Ğ£Ê±³É¹¦ÎªÖ¹£¬ÈôÇëÇóÊ±¼äÓëÖ÷Õ¾Ó¦´ğÖ®¼äÑÓÊ±²»³¬¹ı20Ãë£¬Ôò½ÓÊÜ¸ÃÃüÁî£¬¸ü¸Ä×°ÖÃÊ±ÖÓ¡£
 		}
 	}
-	BspUartWrite(2,SIZE_OF("Startup_Commé‡è¯•è¶…æ¬¡æ•°ï¼Œå¼€æœºè”ç»œå¤±è´¥ï¼\r\n"));
-	return 0;																	//é‡è¯•è¶…æ¬¡æ•°ã€ç­‰å¾…è¶…æ—¶éƒ½è¿”å›0
+	BspUartWrite(2,SIZE_OF("Startup_CommÖØÊÔ³¬´ÎÊı£¬¿ª»úÁªÂçÊ§°Ü£¡\r\n"));
+	return 0;																	//ÖØÊÔ³¬´ÎÊı¡¢µÈ´ı³¬Ê±¶¼·µ»Ø0
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Timming_Request(u8 times, u16 timeout)
-åŠŸèƒ½ï¼šä¸»åŠ¨è¯·æ±‚æ ¡æ—¶ï¼Œé‡è¯•timesæ¬¡ï¼Œæ§åˆ¶å­—ï¼š01H
-ç›‘æµ‹è£…ç½®æ”¶åˆ°ä¸»ç«™å¼€æœºè”ç»œè¿”å›ä¿¡æ¯åä¸»åŠ¨è¯·æ±‚æ ¡æ—¶ï¼Œæ¯éš”2åˆ†é’Ÿè¯·æ±‚ä¸€æ¬¡ç›´åˆ°æ ¡æ—¶æˆåŠŸä¸ºæ­¢ï¼Œè‹¥è¯·æ±‚
-æ—¶é—´ä¸ä¸»ç«™åº”ç­”ä¹‹é—´å»¶æ—¶ä¸è¶…è¿‡20ç§’ï¼Œåˆ™æ¥å—è¯¥å‘½ä»¤ï¼Œæ›´æ”¹è£…ç½®æ—¶é’Ÿã€‚
-å…¥å‚ï¼šu8 timesï¼Œé‡è¯•æ¬¡æ•°ï¼›u16 timeoutï¼Œè¶…æ—¶ç­‰å¾…æ—¶é—´ï¼Œå•ä½ï¼šæ—¶é—´ç‰‡  æœ¬å·¥ç¨‹ä¸º50msï¼ˆæ³¨æ„ï¼Œæ ¹
-æ®åè®®è¦æ±‚ä¸è¶…è¿‡20ç§’æ—¶æ¥å—è¯¥å‘½ä»¤ï¼Œæ•…timeout<=20*20ï¼‰
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ ¡æ—¶æˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U Timming_Request(u8 times, u16 timeout)
+¹¦ÄÜ£ºÖ÷¶¯ÇëÇóĞ£Ê±£¬ÖØÊÔtimes´Î£¬¿ØÖÆ×Ö£º01H
+¼à²â×°ÖÃÊÕµ½Ö÷Õ¾¿ª»úÁªÂç·µ»ØĞÅÏ¢ºóÖ÷¶¯ÇëÇóĞ£Ê±£¬Ã¿¸ô2·ÖÖÓÇëÇóÒ»´ÎÖ±µ½Ğ£Ê±³É¹¦ÎªÖ¹£¬ÈôÇëÇó
+Ê±¼äÓëÖ÷Õ¾Ó¦´ğÖ®¼äÑÓÊ±²»³¬¹ı20Ãë£¬Ôò½ÓÊÜ¸ÃÃüÁî£¬¸ü¸Ä×°ÖÃÊ±ÖÓ¡£
+Èë²Î£ºu8 times£¬ÖØÊÔ´ÎÊı£»u16 timeout£¬³¬Ê±µÈ´ıÊ±¼ä£¬µ¥Î»£ºÊ±¼äÆ¬  ±¾¹¤³ÌÎª50ms£¨×¢Òâ£¬¸ù
+¾İĞ­ÒéÒªÇó²»³¬¹ı20ÃëÊ±½ÓÊÜ¸ÃÃüÁî£¬¹Êtimeout<=20*20£©
+³ö²Î£ºÎŞ
+·µ»Ø£ºĞ£Ê±³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U Timming_Request(u8 times, u16 timeout)
 {
-	INT16U	len_frame=0;														//å¸§é•¿åº¦
+	INT16U	len_frame=0;														//Ö¡³¤¶È
 	INT8U 	*R;
 	INT8U	i=0;
 	INT16U	len=0;
 	
-	len_frame=NW_Framing(TIMMING,LTE_Tx_Buff);									//ç»„æ ¡æ—¶è¯·æ±‚å¸§
-	for(i=0;i<times;i++)														//æœ€å¤šé‡è¯•timesæ¬¡
+	len_frame=NW_Framing(TIMMING,LTE_Tx_Buff);									//×éĞ£Ê±ÇëÇóÖ¡
+	for(i=0;i<times;i++)														//×î¶àÖØÊÔtimes´Î
 	{
-		len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);		//è¿”å›ä¸º0è¡¨ç¤ºé€šä¿¡å¤±è´¥ï¼Œè¿”å›0xffè¡¨ç¤ºæ²¡æ¥æ”¶åˆ°æ•°æ®ï¼Œå…¶ä»–è¿”å›ä¸ºæ¥æ”¶æ•°æ®é•¿åº¦
+		len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);		//·µ»ØÎª0±íÊ¾Í¨ĞÅÊ§°Ü£¬·µ»Ø0xff±íÊ¾Ã»½ÓÊÕµ½Êı¾İ£¬ÆäËû·µ»ØÎª½ÓÊÕÊı¾İ³¤¶È
 		if(!len) 
 		{
-			BspUartWrite(2,SIZE_OF("æœªæ”¶åˆ°ä¸»ç«™å›å¤ï¼\r\n"));
-			if(i<times-1) OSTimeDly(2*60*20-timeout);							//é€šä¿¡å¤±è´¥æ—¶æ¯éš”2åˆ†é’Ÿè¯·æ±‚ä¸€æ¬¡
-			continue;															//é‡è¯•
+			BspUartWrite(2,SIZE_OF("Î´ÊÕµ½Ö÷Õ¾»Ø¸´£¡\r\n"));
+			if(i<times-1) OSTimeDly(2*60*20-timeout);							//Í¨ĞÅÊ§°ÜÊ±Ã¿¸ô2·ÖÖÓÇëÇóÒ»´Î
+			continue;															//ÖØÊÔ
 		}
-		R = Judge_NW_Framing(TIMMING,LTE_Rx_Buff,len,0);						//åˆ¤æ–­æ¥æ”¶å†…å®¹æ˜¯å¦ç¬¦åˆå—ç½‘åè®®
-		if(R) 																	//ä¸ç¬¦åˆåè®®æ—¶é‡æ–°é€šä¿¡
+		R = Judge_NW_Framing(TIMMING,LTE_Rx_Buff,len,0);						//ÅĞ¶Ï½ÓÊÕÄÚÈİÊÇ·ñ·ûºÏÄÏÍøĞ­Òé
+		if(R) 																	//²»·ûºÏĞ­ÒéÊ±ÖØĞÂÍ¨ĞÅ
 		{
-			/*åªè¦timeoutè®¾ç½®ä¸è¶…è¿‡20ç§’ï¼Œéƒ½ç¬¦åˆåè®®è¦æ±‚ï¼Œæ¥å—è¯¥å‘½ä»¤ï¼Œæ›´æ”¹è£…ç½®æ—¶é’Ÿ*/
-			return SetTime(R);													//æ›´æ”¹RTCï¼Œæ¥æ”¶åˆ°çš„å†…å®¹åœ¨*Rï¼ŒæˆåŠŸè¿”å›1		
+			/*Ö»ÒªtimeoutÉèÖÃ²»³¬¹ı20Ãë£¬¶¼·ûºÏĞ­ÒéÒªÇó£¬½ÓÊÜ¸ÃÃüÁî£¬¸ü¸Ä×°ÖÃÊ±ÖÓ*/
+			return SetTime(R);													//¸ü¸ÄRTC£¬½ÓÊÕµ½µÄÄÚÈİÔÚ*R£¬³É¹¦·µ»Ø1		
 		}
 	}
-	BspUartWrite(2,SIZE_OF("Timming_Requesté‡è¯•è¶…æ¬¡æ•°ï¼Œæ ¡æ—¶å¤±è´¥ï¼\r\n"));
-	return 0;																	//é‡è¯•è¶…æ¬¡æ•°ã€ç­‰å¾…è¶…æ—¶éƒ½è¿”å›0
+	BspUartWrite(2,SIZE_OF("Timming_RequestÖØÊÔ³¬´ÎÊı£¬Ğ£Ê±Ê§°Ü£¡\r\n"));
+	return 0;																	//ÖØÊÔ³¬´ÎÊı¡¢µÈ´ı³¬Ê±¶¼·µ»Ø0
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U *Heartbeat(u8 times, u16 timeout)
-åŠŸèƒ½ï¼šå‘é€å¿ƒè·³ï¼Œé‡è¯•timesæ¬¡ï¼›u16 timeoutï¼Œè¶…æ—¶ç­‰å¾…æ—¶é—´ï¼Œå•ä½ï¼šæ—¶é—´ç‰‡
-å…¥å‚ï¼šu8 timesï¼Œé‡è¯•æ¬¡æ•°
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼š0 é€šä¿¡å¤±è´¥ï¼›é0 é€šä¿¡æˆåŠŸï¼Œä¸”è¿”å›æ•°æ®åŒ…é¦–å­—èŠ‚åœ°å€ INT8U *
+Ãû³Æ£ºINT8U *Heartbeat(u8 times, u16 timeout)
+¹¦ÄÜ£º·¢ËÍĞÄÌø£¬ÖØÊÔtimes´Î£»u16 timeout£¬³¬Ê±µÈ´ıÊ±¼ä£¬µ¥Î»£ºÊ±¼äÆ¬
+Èë²Î£ºu8 times£¬ÖØÊÔ´ÎÊı
+³ö²Î£ºÎŞ
+·µ»Ø£º0 Í¨ĞÅÊ§°Ü£»·Ç0 Í¨ĞÅ³É¹¦£¬ÇÒ·µ»ØÊı¾İ°üÊ××Ö½ÚµØÖ· INT8U *
 *******************************************************************************/
 INT8U *Heartbeat(u8 times, u16 timeout)
 {
-	INT16U	len_frame=0;														//å¸§é•¿åº¦
+	INT16U	len_frame=0;														//Ö¡³¤¶È
 	INT8U	i=0;
 	INT16U	len=0;
 	INT8U	*R=0;
 	
-	/*å—ç½‘åè®®å¿ƒè·³*/
-	len_frame=NW_Framing(HEARTBEAT,LTE_Tx_Buff);								//ç»„å¿ƒè·³å¸§
-	for(i=0;i<times;i++)														//æœ€å¤šé‡è¯•timesæ¬¡
+	/*ÄÏÍøĞ­ÒéĞÄÌø*/
+	len_frame=NW_Framing(HEARTBEAT,LTE_Tx_Buff);								//×éĞÄÌøÖ¡
+	for(i=0;i<times;i++)														//×î¶àÖØÊÔtimes´Î
 	{	
-		len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);		//è¿”å›ä¸º0è¡¨ç¤ºé€šä¿¡å¤±è´¥ï¼Œè¿”å›0xffè¡¨ç¤ºæ²¡æ¥æ”¶åˆ°æ•°æ®ï¼Œå…¶ä»–è¿”å›ä¸ºæ¥æ”¶æ•°æ®é•¿åº¦
+		len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);		//·µ»ØÎª0±íÊ¾Í¨ĞÅÊ§°Ü£¬·µ»Ø0xff±íÊ¾Ã»½ÓÊÕµ½Êı¾İ£¬ÆäËû·µ»ØÎª½ÓÊÕÊı¾İ³¤¶È
 		if(!len) 
 		{
-			BspUartWrite(2,SIZE_OF("æœªæ”¶åˆ°ä¸»ç«™å›å¤ï¼\r\n"));
-			continue;															//é€šä¿¡å¤±è´¥æ—¶é‡è¯•
+			BspUartWrite(2,SIZE_OF("Î´ÊÕµ½Ö÷Õ¾»Ø¸´£¡\r\n"));
+			continue;															//Í¨ĞÅÊ§°ÜÊ±ÖØÊÔ
 		}
-		R = Judge_NW_Framing(HEARTBEAT,LTE_Rx_Buff,len,0);						//åˆ¤æ–­æ¥æ”¶å†…å®¹æ˜¯å¦ç¬¦åˆå—ç½‘åè®®ï¼Œå¹¶è¿”å›ç»“æœ
+		R = Judge_NW_Framing(HEARTBEAT,LTE_Rx_Buff,len,0);						//ÅĞ¶Ï½ÓÊÕÄÚÈİÊÇ·ñ·ûºÏÄÏÍøĞ­Òé£¬²¢·µ»Ø½á¹û
 		break;
 	}
 	
-	/*æ‰©å±•åè®®å¿ƒè·³*/
-	len_frame=NW_Framing(EX_HEARTBEAT,LTE_Tx_Buff);								//ç»„æ‰©å±•å¿ƒè·³å¸§
-	for(i=0;i<times;i++)														//æœ€å¤šé‡è¯•timesæ¬¡
+	/*À©Õ¹Ğ­ÒéĞÄÌø*/
+	len_frame=NW_Framing(EX_HEARTBEAT,LTE_Tx_Buff);								//×éÀ©Õ¹ĞÄÌøÖ¡
+	for(i=0;i<times;i++)														//×î¶àÖØÊÔtimes´Î
 	{	
-		len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);		//è¿”å›ä¸º0è¡¨ç¤ºé€šä¿¡å¤±è´¥ï¼Œè¿”å›0xffè¡¨ç¤ºæ²¡æ¥æ”¶åˆ°æ•°æ®ï¼Œå…¶ä»–è¿”å›ä¸ºæ¥æ”¶æ•°æ®é•¿åº¦
+		len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);		//·µ»ØÎª0±íÊ¾Í¨ĞÅÊ§°Ü£¬·µ»Ø0xff±íÊ¾Ã»½ÓÊÕµ½Êı¾İ£¬ÆäËû·µ»ØÎª½ÓÊÕÊı¾İ³¤¶È
 		if(!len) 
 		{
-			BspUartWrite(2,SIZE_OF("æœªæ”¶åˆ°ä¸»ç«™å›å¤ï¼\r\n"));
-			continue;															//é€šä¿¡å¤±è´¥æ—¶é‡è¯•
+			BspUartWrite(2,SIZE_OF("Î´ÊÕµ½Ö÷Õ¾»Ø¸´£¡\r\n"));
+			continue;															//Í¨ĞÅÊ§°ÜÊ±ÖØÊÔ
 		}
 		break;
 	}
 	
-	if(!R) BspUartWrite(2,SIZE_OF("Heartbeaté‡è¯•è¶…æ¬¡æ•°ï¼Œå¿ƒè·³é€šä¿¡å¤±è´¥ï¼\r\n"));
-	return R;																	//é‡è¯•è¶…æ¬¡æ•°ã€ç­‰å¾…è¶…æ—¶éƒ½è¿”å›0
+	if(!R) BspUartWrite(2,SIZE_OF("HeartbeatÖØÊÔ³¬´ÎÊı£¬ĞÄÌøÍ¨ĞÅÊ§°Ü£¡\r\n"));
+	return R;																	//ÖØÊÔ³¬´ÎÊı¡¢µÈ´ı³¬Ê±¶¼·µ»Ø0
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U *Fault_Info_Comm(u8 times, u16 timeout)
-åŠŸèƒ½ï¼šå‘é€æ•…éšœä¿¡æ¯ï¼Œé‡è¯•timesæ¬¡ï¼›u16 timeoutï¼Œè¶…æ—¶ç­‰å¾…æ—¶é—´ï¼Œå•ä½ï¼šæ—¶é—´ç‰‡
-ä¸‰ç§æƒ…å†µä¸ŠæŠ¥æ•…éšœä¿¡æ¯ï¼šå¼€æœºè”ç»œ+å¿ƒè·³å®Œæˆåã€æ–°æ•…éšœå‘ç”Ÿæˆ–æ¢å¤æ—¶ã€é€šä¿¡æ•…éšœæ¢å¤æ—¶ã€‚
-å…¥å‚ï¼šu8 timesï¼Œé‡è¯•æ¬¡æ•°
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U *Fault_Info_Comm(u8 times, u16 timeout)
+¹¦ÄÜ£º·¢ËÍ¹ÊÕÏĞÅÏ¢£¬ÖØÊÔtimes´Î£»u16 timeout£¬³¬Ê±µÈ´ıÊ±¼ä£¬µ¥Î»£ºÊ±¼äÆ¬
+ÈıÖÖÇé¿öÉÏ±¨¹ÊÕÏĞÅÏ¢£º¿ª»úÁªÂç+ĞÄÌøÍê³Éºó¡¢ĞÂ¹ÊÕÏ·¢Éú»ò»Ö¸´Ê±¡¢Í¨ĞÅ¹ÊÕÏ»Ö¸´Ê±¡£
+Èë²Î£ºu8 times£¬ÖØÊÔ´ÎÊı
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U Fault_Info_Comm(u8 times, u16 timeout)
 {
@@ -328,316 +328,316 @@ INT8U Fault_Info_Comm(u8 times, u16 timeout)
 	INT16U			len_frame,len;		
 	INT8U			*R;
 
-	/*ç»„å¸§*/
-	len_frame = NW_Framing(FAULT_INFO, LTE_Tx_Buff);							//ç»„FAULT_INFOå¸§
+	/*×éÖ¡*/
+	len_frame = NW_Framing(FAULT_INFO, LTE_Tx_Buff);							//×éFAULT_INFOÖ¡
 	
-	/*ä¸ŠæŠ¥å¹¶ç­‰å›å¤ï¼Œé‡è¯•timesæ¬¡*/
-	for(i=0;i<times;i++)														//æœ€å¤šé‡è¯•timesæ¬¡
+	/*ÉÏ±¨²¢µÈ»Ø¸´£¬ÖØÊÔtimes´Î*/
+	for(i=0;i<times;i++)														//×î¶àÖØÊÔtimes´Î
 	{
-		len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);		//è¿”å›ä¸º0è¡¨ç¤ºé€šä¿¡å¤±è´¥ï¼Œè¿”å›0xffè¡¨ç¤ºæ²¡æ¥æ”¶åˆ°æ•°æ®ï¼Œå…¶ä»–è¿”å›ä¸ºæ¥æ”¶æ•°æ®é•¿åº¦
+		len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);		//·µ»ØÎª0±íÊ¾Í¨ĞÅÊ§°Ü£¬·µ»Ø0xff±íÊ¾Ã»½ÓÊÕµ½Êı¾İ£¬ÆäËû·µ»ØÎª½ÓÊÕÊı¾İ³¤¶È
 		if(!len)
 		{
-			BspUartWrite(2,SIZE_OF("æœªæ”¶åˆ°ä¸»ç«™å›å¤ï¼\r\n"));
-			if(i<times-1) OSTimeDly(2*60*20-timeout);							//é€šä¿¡å¤±è´¥æ—¶æ¯éš”2åˆ†é’Ÿè¯·æ±‚ä¸€æ¬¡
-			continue;															//é‡è¯•
+			BspUartWrite(2,SIZE_OF("Î´ÊÕµ½Ö÷Õ¾»Ø¸´£¡\r\n"));
+			if(i<times-1) OSTimeDly(2*60*20-timeout);							//Í¨ĞÅÊ§°ÜÊ±Ã¿¸ô2·ÖÖÓÇëÇóÒ»´Î
+			continue;															//ÖØÊÔ
 		}
-		R = Judge_NW_Framing(FAULT_INFO,LTE_Rx_Buff,len,0);						//åˆ¤æ–­æ¥æ”¶å†…å®¹æ˜¯å¦ç¬¦åˆå—ç½‘åè®®
-		if(R) 																	//ç¬¦åˆæ—¶è¿›å…¥ï¼Œä¸ç¬¦åˆåè®®æ—¶é‡æ–°é€šä¿¡
+		R = Judge_NW_Framing(FAULT_INFO,LTE_Rx_Buff,len,0);						//ÅĞ¶Ï½ÓÊÕÄÚÈİÊÇ·ñ·ûºÏÄÏÍøĞ­Òé
+		if(R) 																	//·ûºÏÊ±½øÈë£¬²»·ûºÏĞ­ÒéÊ±ÖØĞÂÍ¨ĞÅ
 		{
-			if(R[10]!=1) continue;												//åˆ¤æ–­å¸§æ ‡è¯† 1
-			if(R[11]!=0xAA) continue;											//åˆ¤æ–­å›å¤æ•°æ®åŸŸ AA55H
-			if(R[12]!=0x55) continue;											//åˆ¤æ–­å›å¤æ•°æ®åŸŸ	
+			if(R[10]!=1) continue;												//ÅĞ¶ÏÖ¡±êÊ¶ 1
+			if(R[11]!=0xAA) continue;											//ÅĞ¶Ï»Ø¸´Êı¾İÓò AA55H
+			if(R[12]!=0x55) continue;											//ÅĞ¶Ï»Ø¸´Êı¾İÓò	
 			
 			Fault_Manage.Need_Report=0;
-			if(!BSP_WriteDataToFm(Fault_Manage_Addr,(INT8U*)&Fault_Manage,Fault_Magage_Len)) return 0;		//æ¸…é™¤æ•…éšœç®¡ç†ç»“æ„ä½“çš„â€œéœ€è¦ä¸ŠæŠ¥æ ‡å¿—ä½â€
+			if(!BSP_WriteDataToFm(Fault_Manage_Addr,(INT8U*)&Fault_Manage,Fault_Magage_Len)) return 0;		//Çå³ı¹ÊÕÏ¹ÜÀí½á¹¹ÌåµÄ¡°ĞèÒªÉÏ±¨±êÖ¾Î»¡±
 			
-			memset(Fault_Info,0,Fault_Info_Len);															//æ¸…ç»“æ„ä½“æ•°ç»„
-			if(!BSP_WriteDataToFm(Fault_Info_Addr,(INT8U*)Fault_Info,Fault_Info_Len)) return 0;				//æ¸…é™¤é“ç”µä¸­Fault_Infoæ•…éšœä¿¡æ¯ç»“æ„ä½“æ•°ç»„ï¼ˆæŠŠä¸Šå¥æ¸…çš„ç»“æœå†™è¿›å»ï¼‰
+			memset(Fault_Info,0,Fault_Info_Len);															//Çå½á¹¹ÌåÊı×é
+			if(!BSP_WriteDataToFm(Fault_Info_Addr,(INT8U*)Fault_Info,Fault_Info_Len)) return 0;				//Çå³ıÌúµçÖĞFault_Info¹ÊÕÏĞÅÏ¢½á¹¹ÌåÊı×é£¨°ÑÉÏ¾äÇåµÄ½á¹ûĞ´½øÈ¥£©
 			
-			wakeup_en.overtime = true;											//å…è®¸å”¤é†’LTEä¼‘çœ 
-			return 1;															//ä¸ŠæŠ¥æˆåŠŸï¼Œè¿”å›1
+			wakeup_en.overtime = true;											//ÔÊĞí»½ĞÑLTEĞİÃß
+			return 1;															//ÉÏ±¨³É¹¦£¬·µ»Ø1
 		}
 	}
 	
-	/*é€šä¿¡è¶…æ—¶*/
-	wakeup_en.overtime = false;													//ä¸»ç«™æœªå›å¤æ•…éšœï¼Œç¦æ­¢å”¤é†’LTEä¼‘çœ 
-	BspUartWrite(2,SIZE_OF("Fault_Info_Commé‡è¯•è¶…æ¬¡æ•°ï¼Œæ•…éšœä¿¡æ¯é€šä¿¡å¤±è´¥ï¼\r\n"));
-	return 0;																	//é‡è¯•è¶…æ¬¡æ•°ï¼Œé€šä¿¡å¤±è´¥ï¼Œè¿”å›0				
+	/*Í¨ĞÅ³¬Ê±*/
+	wakeup_en.overtime = false;													//Ö÷Õ¾Î´»Ø¸´¹ÊÕÏ£¬½ûÖ¹»½ĞÑLTEĞİÃß
+	BspUartWrite(2,SIZE_OF("Fault_Info_CommÖØÊÔ³¬´ÎÊı£¬¹ÊÕÏĞÅÏ¢Í¨ĞÅÊ§°Ü£¡\r\n"));
+	return 0;																	//ÖØÊÔ³¬´ÎÊı£¬Í¨ĞÅÊ§°Ü£¬·µ»Ø0				
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Set_Password_Comm(u8 *InBuff, u16 Len)
-åŠŸèƒ½ï¼šåŒ…æ‹¬å¯†ç æ£€éªŒã€å›å¤é€šä¿¡ã€è®¾ç½®å¯†ç åŠŸèƒ½æ‰§è¡Œ
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§ï¼›u16 Lenï¼Œé•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U Set_Password_Comm(u8 *InBuff, u16 Len)
+¹¦ÄÜ£º°üÀ¨ÃÜÂë¼ìÑé¡¢»Ø¸´Í¨ĞÅ¡¢ÉèÖÃÃÜÂë¹¦ÄÜÖ´ĞĞ
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡£»u16 Len£¬³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U Set_Password_Comm(u8 *InBuff, u16 Len)
 {
-	if(!PassworkCheckAndReport(InBuff));										//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-	else																		//è‹¥ç›¸åŒï¼Œå¯†ç æ­£ç¡®
+	if(!PassworkCheckAndReport(InBuff));										//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+	else																		//ÈôÏàÍ¬£¬ÃÜÂëÕıÈ·
 	{
-		memcpy(Config.Password,InBuff+14,4);									//å°†å¯†ç æ›´æ”¹ä¸ºæ–°å¯†ç ï¼Œå†™å…¥Configç»“æ„ä½“ï¼ˆé»˜è®¤æˆåŠŸï¼‰
-		BSP_WriteDataToFm(Config_Addr,&Config.Password[0],Config_Len);			//å®šå…¥é“ç”µ
-		LteCommunication(InBuff,Len,0,0);										//é…ç½®æˆåŠŸï¼ŒæŒ‰ç…§åŸå‘½ä»¤è¿”å›ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+		memcpy(Config.Password,InBuff+14,4);									//½«ÃÜÂë¸ü¸ÄÎªĞÂÃÜÂë£¬Ğ´ÈëConfig½á¹¹Ìå£¨Ä¬ÈÏ³É¹¦£©
+		BSP_WriteDataToFm(Config_Addr,&Config.Password[0],Config_Len);			//¶¨ÈëÌúµç
+		LteCommunication(InBuff,Len,0,0);										//ÅäÖÃ³É¹¦£¬°´ÕÕÔ­ÃüÁî·µ»Ø£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 		return 1;
 	}
-	BspUartWrite(2,SIZE_OF("Set_Password_Commè®¾ç½®å¯†ç é€šä¿¡å¤±è´¥ï¼\r\n"));
+	BspUartWrite(2,SIZE_OF("Set_Password_CommÉèÖÃÃÜÂëÍ¨ĞÅÊ§°Ü£¡\r\n"));
 	return 0;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U ParaConfigComm(u8 *InBuff, u16 Len)
-åŠŸèƒ½ï¼šåŒ…æ‹¬å¯†ç æ£€éªŒã€å›å¤é€šä¿¡ã€å‚æ•°é…ç½®åŠŸèƒ½æ‰§è¡Œ
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§ï¼›u16 Lenï¼Œé•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U ParaConfigComm(u8 *InBuff, u16 Len)
+¹¦ÄÜ£º°üÀ¨ÃÜÂë¼ìÑé¡¢»Ø¸´Í¨ĞÅ¡¢²ÎÊıÅäÖÃ¹¦ÄÜÖ´ĞĞ
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡£»u16 Len£¬³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U ParaConfigComm(u8 *InBuff, u16 Len)
 {
-	if(!PassworkCheckAndReport(InBuff));										//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-	else																		//è‹¥ç›¸åŒï¼Œå¯†ç æ­£ç¡®
+	if(!PassworkCheckAndReport(InBuff));										//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+	else																		//ÈôÏàÍ¬£¬ÃÜÂëÕıÈ·
 	{
-	/*ä¸èƒ½ä¸º0çš„è®¾ç½®è¢«è¯¯è®¾ä¸º0æ—¶ï¼Œé‡‡ç”¨åŸè®¾ç½®*/
-		if(!InBuff[14]) InBuff[14]=Config.BeatTime[0];							//å¿ƒè·³é—´éš”ï¼Œä¸èƒ½ä¸º0ï¼Œé‡‡ç”¨åŸè®¾ç½®
-		if(!(InBuff[15]|InBuff[16])) memcpy(InBuff+15,Config.ScanInterval,2);	//é‡‡é›†é—´éš”ï¼Œä¸èƒ½ä¸º0ï¼Œé‡‡ç”¨åŸè®¾ç½®
-		/*17ã€18 ä¼‘çœ æ—¶é•¿å¯ä»¥ä¸º0*/
-		if(!(InBuff[19]|InBuff[20])) memcpy(InBuff+19,Config.OnlineTime,2);		//åœ¨çº¿æ—¶é•¿ï¼Œä¸èƒ½ä¸º0ï¼Ÿï¼Œé‡‡ç”¨åŸè®¾ç½®
-		/*21ã€22ã€23 ç¡¬ä»¶é‡å¯æ—¶é—´ç‚¹å¯ä»¥ä¸º0*/
-		/*24ã€25ã€26ã€27 å¯†æ–‡éªŒè¯ç å¯ä»¥ä¸º0*/
-		memcpy(&Config.BeatTime,InBuff+14,14);									//å‚æ•°é…ç½®ï¼Œå†™å…¥Configç»“æ„ä½“ï¼ˆé»˜è®¤æˆåŠŸï¼‰
-		BSP_WriteDataToFm(Config_Addr,(u8 *)&Config,Config_Len);				//å®šå…¥é“ç”µ
-		LteCommunication(InBuff,Len,0,0);										//é…ç½®æˆåŠŸï¼ŒæŒ‰ç…§åŸå‘½ä»¤è¿”å›ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+	/*²»ÄÜÎª0µÄÉèÖÃ±»ÎóÉèÎª0Ê±£¬²ÉÓÃÔ­ÉèÖÃ*/
+		if(!InBuff[14]) InBuff[14]=Config.BeatTime[0];							//ĞÄÌø¼ä¸ô£¬²»ÄÜÎª0£¬²ÉÓÃÔ­ÉèÖÃ
+		if(!(InBuff[15]|InBuff[16])) memcpy(InBuff+15,Config.ScanInterval,2);	//²É¼¯¼ä¸ô£¬²»ÄÜÎª0£¬²ÉÓÃÔ­ÉèÖÃ
+		/*17¡¢18 ĞİÃßÊ±³¤¿ÉÒÔÎª0*/
+		if(!(InBuff[19]|InBuff[20])) memcpy(InBuff+19,Config.OnlineTime,2);		//ÔÚÏßÊ±³¤£¬²»ÄÜÎª0£¿£¬²ÉÓÃÔ­ÉèÖÃ
+		/*21¡¢22¡¢23 Ó²¼şÖØÆôÊ±¼äµã¿ÉÒÔÎª0*/
+		/*24¡¢25¡¢26¡¢27 ÃÜÎÄÑéÖ¤Âë¿ÉÒÔÎª0*/
+		memcpy(&Config.BeatTime,InBuff+14,14);									//²ÎÊıÅäÖÃ£¬Ğ´ÈëConfig½á¹¹Ìå£¨Ä¬ÈÏ³É¹¦£©
+		BSP_WriteDataToFm(Config_Addr,(u8 *)&Config,Config_Len);				//¶¨ÈëÌúµç
+		LteCommunication(InBuff,Len,0,0);										//ÅäÖÃ³É¹¦£¬°´ÕÕÔ­ÃüÁî·µ»Ø£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 		return 1;
 	}
-	BspUartWrite(2,SIZE_OF("ParaConfigCommå‚æ•°é…ç½®é€šä¿¡å¤±è´¥ï¼\r\n"));
+	BspUartWrite(2,SIZE_OF("ParaConfigComm²ÎÊıÅäÖÃÍ¨ĞÅÊ§°Ü£¡\r\n"));
 	return 0;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Set_IP_Comm(u8 *InBuff, u16 Len)
-åŠŸèƒ½ï¼šåŒ…æ‹¬å¯†ç æ£€éªŒã€å›å¤é€šä¿¡ã€è®¾ç½®IPå‚æ•°åŠŸèƒ½æ‰§è¡Œ
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§ï¼›u16 Lenï¼Œé•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U Set_IP_Comm(u8 *InBuff, u16 Len)
+¹¦ÄÜ£º°üÀ¨ÃÜÂë¼ìÑé¡¢»Ø¸´Í¨ĞÅ¡¢ÉèÖÃIP²ÎÊı¹¦ÄÜÖ´ĞĞ
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡£»u16 Len£¬³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U Set_IP_Comm(u8 *InBuff, u16 Len)
 {
-	INT16U	len_frame=0;														//å¸§é•¿åº¦
+	INT16U	len_frame=0;														//Ö¡³¤¶È
 	
-	if(!PassworkCheckAndReport(InBuff));										//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-	else if(memcmp(InBuff+14,InBuff+20,6) || memcmp(InBuff+26,InBuff+32,6))		//è‹¥ä¸¤ç»„ä¸»ç«™IPã€ç«¯å£å·å’Œä¸»ç«™å¡å·å¯¹åº”å­—èŠ‚ä¸å®Œå…¨ç›¸åŒï¼ˆç›¸åŒæ—¶memcmpè¿”å›0ï¼‰
+	if(!PassworkCheckAndReport(InBuff));										//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+	else if(memcmp(InBuff+14,InBuff+20,6) || memcmp(InBuff+26,InBuff+32,6))		//ÈôÁ½×éÖ÷Õ¾IP¡¢¶Ë¿ÚºÅºÍÖ÷Õ¾¿¨ºÅ¶ÔÓ¦×Ö½Ú²»ÍêÈ«ÏàÍ¬£¨ÏàÍ¬Ê±memcmp·µ»Ø0£©
 	{
-		len_frame=NW_Framing(DATA_UNCORRESPOND,LTE_Tx_Buff);					//ç»„å‡ºé”™ä¿¡æ¯å¸§0ï¼ˆæ•°æ®åŸŸä¸º0000Hï¼‰
-		LteCommunication(LTE_Tx_Buff,len_frame,0,0);							//ä¸ŠæŠ¥å‡ºé”™ä¿¡æ¯0ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+		len_frame=NW_Framing(DATA_UNCORRESPOND,LTE_Tx_Buff);					//×é³ö´íĞÅÏ¢Ö¡0£¨Êı¾İÓòÎª0000H£©
+		LteCommunication(LTE_Tx_Buff,len_frame,0,0);							//ÉÏ±¨³ö´íĞÅÏ¢0£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 	}
-	else																		//è‹¥ç›¸åŒï¼Œå¯†ç æ­£ç¡®
+	else																		//ÈôÏàÍ¬£¬ÃÜÂëÕıÈ·
 	{
-		memcpy(&IP_Config,InBuff+14,24);										//IPå‚æ•°é…ç½®ï¼Œå†™IP_Configç»“æ„ä½“ï¼ˆé»˜è®¤æˆåŠŸï¼‰
-		BSP_WriteDataToFm(IP_Config_Addr,&IP_Config.IP_addr_1[0],IP_Config_Len);//å®šå…¥é“ç”µ
-		LteCommunication(InBuff,Len,0,0);										//é…ç½®æˆåŠŸï¼ŒæŒ‰ç…§åŸå‘½ä»¤è¿”å›ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+		memcpy(&IP_Config,InBuff+14,24);										//IP²ÎÊıÅäÖÃ£¬Ğ´IP_Config½á¹¹Ìå£¨Ä¬ÈÏ³É¹¦£©
+		BSP_WriteDataToFm(IP_Config_Addr,&IP_Config.IP_addr_1[0],IP_Config_Len);//¶¨ÈëÌúµç
+		LteCommunication(InBuff,Len,0,0);										//ÅäÖÃ³É¹¦£¬°´ÕÕÔ­ÃüÁî·µ»Ø£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 		return 1;
 	}
-	BspUartWrite(2,SIZE_OF("Set_IP_Commè®¾ç½®IPé€šä¿¡å¤±è´¥ï¼\r\n"));
+	BspUartWrite(2,SIZE_OF("Set_IP_CommÉèÖÃIPÍ¨ĞÅÊ§°Ü£¡\r\n"));
 	return 0;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Fun_Config_Comm(u8 *InBuff, u16 Len)
-åŠŸèƒ½ï¼šåŒ…æ‹¬å¯†ç æ£€éªŒã€å›å¤é€šä¿¡ã€åŠŸèƒ½é…ç½®
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§ï¼›u16 Lenï¼Œé•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U Fun_Config_Comm(u8 *InBuff, u16 Len)
+¹¦ÄÜ£º°üÀ¨ÃÜÂë¼ìÑé¡¢»Ø¸´Í¨ĞÅ¡¢¹¦ÄÜÅäÖÃ
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡£»u16 Len£¬³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U Fun_Config_Comm(u8 *InBuff, u16 Len)
 {
-	INT16U	len_frame=0;														//å¸§é•¿åº¦/æˆ–ç”¨äºè®¡ç®—æ•°æ®åŸŸé•¿åº¦
+	INT16U	len_frame=0;														//Ö¡³¤¶È/»òÓÃÓÚ¼ÆËãÊı¾İÓò³¤¶È
 	
-	if(!PassworkCheckAndReport(InBuff));										//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-	else																		//è‹¥ç›¸åŒï¼Œå¯†ç æ­£ç¡®
+	if(!PassworkCheckAndReport(InBuff));										//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+	else																		//ÈôÏàÍ¬£¬ÃÜÂëÕıÈ·
 	{
-		len_frame = ((INT16U)InBuff[8]<<8) + InBuff[9] -4;						//è®¡ç®—æœ‰æ•ˆåŠŸèƒ½æ•°ï¼ˆä¿é™©èµ·è§ï¼Œè¿›è¡Œå¼ºåˆ¶è½¬æ¢ï¼‰
-		memset(FUN_Config,0,24);												//æ¸…ç©ºå½“å‰åŠŸèƒ½é…ç½®å‚æ•°
-		memcpy(FUN_Config,InBuff+14,len_frame);									//æœ‰æ•ˆåŠŸèƒ½é…ç½®ï¼Œå†™å…¥FUN_Configæ•°ç»„ï¼ˆé»˜è®¤æˆåŠŸï¼‰
-		BSP_WriteDataToFm(FUN_Config_Addr,FUN_Config,FUN_Config_Len);			//å®šå…¥é“ç”µ
-//		LteCommunication(InBuff,Len,0,0);										//é…ç½®æˆåŠŸï¼ŒæŒ‰ç…§åŸå‘½ä»¤è¿”å›ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰PSï¼šåè®®ä¸Šæœªè¦æ±‚è¿”å›
+		len_frame = ((INT16U)InBuff[8]<<8) + InBuff[9] -4;						//¼ÆËãÓĞĞ§¹¦ÄÜÊı£¨±£ÏÕÆğ¼û£¬½øĞĞÇ¿ÖÆ×ª»»£©
+		memset(FUN_Config,0,24);												//Çå¿Õµ±Ç°¹¦ÄÜÅäÖÃ²ÎÊı
+		memcpy(FUN_Config,InBuff+14,len_frame);									//ÓĞĞ§¹¦ÄÜÅäÖÃ£¬Ğ´ÈëFUN_ConfigÊı×é£¨Ä¬ÈÏ³É¹¦£©
+		BSP_WriteDataToFm(FUN_Config_Addr,FUN_Config,FUN_Config_Len);			//¶¨ÈëÌúµç
+//		LteCommunication(InBuff,Len,0,0);										//ÅäÖÃ³É¹¦£¬°´ÕÕÔ­ÃüÁî·µ»Ø£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©PS£ºĞ­ÒéÉÏÎ´ÒªÇó·µ»Ø
 		return 1;
 	}
-	BspUartWrite(2,SIZE_OF("Fun_Config_CommåŠŸèƒ½é…ç½®é€šä¿¡å¤±è´¥ï¼\r\n"));
+	BspUartWrite(2,SIZE_OF("Fun_Config_Comm¹¦ÄÜÅäÖÃÍ¨ĞÅÊ§°Ü£¡\r\n"));
 	return 0;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U SMS_Send_Comm(u8 *InBuff, u16 Len)
-åŠŸèƒ½ï¼šåŒ…æ‹¬å¯†ç æ£€éªŒã€å›å¤é€šä¿¡ã€å‘æŒ‡å®šå·ç å‘é€çŸ­ä¿¡
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§ï¼›u16 Lenï¼Œé•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U SMS_Send_Comm(u8 *InBuff, u16 Len)
+¹¦ÄÜ£º°üÀ¨ÃÜÂë¼ìÑé¡¢»Ø¸´Í¨ĞÅ¡¢ÏòÖ¸¶¨ºÅÂë·¢ËÍ¶ÌĞÅ
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡£»u16 Len£¬³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U SMS_Send_Comm(u8 *InBuff, u16 Len)
 {
 	INT8U 	ST=0,i;
 	INT8U	phone_num[12]={0};
 	
-	if(!PassworkCheckAndReport(InBuff));										//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-	else																		//è‹¥ç›¸åŒï¼Œå¯†ç æ­£ç¡®
+	if(!PassworkCheckAndReport(InBuff));										//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+	else																		//ÈôÏàÍ¬£¬ÃÜÂëÕıÈ·
 	{
 
-		LteCommunication(InBuff,Len,0,0);										//é…ç½®æˆåŠŸï¼ŒæŒ‰ç…§åŸå‘½ä»¤è¿”å›ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+		LteCommunication(InBuff,Len,0,0);										//ÅäÖÃ³É¹¦£¬°´ÕÕÔ­ÃüÁî·µ»Ø£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 		ME909S_Trans_OFF();
-		for(i=0;i<6;i++)														//çŸ­ä¿¡æ¥æ”¶å·ç ï¼šä¸ºFåŠ é€šä¿¡å¡å·ï¼Œæ¯ä¸ªæ•°å­—å åŠä¸ªå­—èŠ‚ã€‚ä¾‹å¦‚å¡å·ä¸º13912345678ï¼Œåˆ™å‘é€æ•°æ®ä¸ºï¼šF1Hï¼Œ39Hï¼Œ12Hï¼Œ34Hï¼Œ56Hï¼Œ78Hã€‚
+		for(i=0;i<6;i++)														//¶ÌĞÅ½ÓÊÕºÅÂë£ºÎªF¼ÓÍ¨ĞÅ¿¨ºÅ£¬Ã¿¸öÊı×ÖÕ¼°ë¸ö×Ö½Ú¡£ÀıÈç¿¨ºÅÎª13912345678£¬Ôò·¢ËÍÊı¾İÎª£ºF1H£¬39H£¬12H£¬34H£¬56H£¬78H¡£
 		{
-			INT8UBCDToAscii(InBuff[14+i],phone_num+2*i);						//BCDè½¬æ¢ä¸ºASCII
+			INT8UBCDToAscii(InBuff[14+i],phone_num+2*i);						//BCD×ª»»ÎªASCII
 		}
-		ST=ME909S_SMS_Send(Device_Number,6,phone_num+1);						//å‘æŒ‡å®šå·ç å‘é€æœ¬æœºçš„è£…ç½®ç¼–å·ï¼Œè¿”å›æ“ä½œç»“æœ phone_num[0]ä¸ºFï¼Œä¸ç”¨ç®¡
+		ST=ME909S_SMS_Send(Device_Number,6,phone_num+1);						//ÏòÖ¸¶¨ºÅÂë·¢ËÍ±¾»úµÄ×°ÖÃ±àºÅ£¬·µ»Ø²Ù×÷½á¹û phone_num[0]ÎªF£¬²»ÓÃ¹Ü
 		ME909S_Trans_ON();
 	}	
 	if(ST)return 1;	
-	BspUartWrite(2,SIZE_OF("SMS_Send_Commå‘é€çŸ­ä¿¡é€šä¿¡å¤±è´¥ï¼\r\n"));	
+	BspUartWrite(2,SIZE_OF("SMS_Send_Comm·¢ËÍ¶ÌĞÅÍ¨ĞÅÊ§°Ü£¡\r\n"));	
 	return 0;
 }
 
 
 /*******************************************************************************
-åç§°ï¼šINT8U SMS_Judge(u8 *InBuff, u16 Len)
-åŠŸèƒ½ï¼šåˆ¤æ–­InBuffå†…å®¹æ˜¯å¦ç¬¦åˆåè®®è¦æ±‚ï¼Œä¸”å¯†ç æ­£ç¡®
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼ŒçŸ­ä¿¡æ¥æ”¶åˆ°çš„å¸§ï¼›u16 Lenï¼Œé•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šç¬¦åˆçŸ­ä¿¡å”¤é†’è¦æ±‚è¿”å›1ï¼Œå¦åˆ™è¿”å›0
+Ãû³Æ£ºINT8U SMS_Judge(u8 *InBuff, u16 Len)
+¹¦ÄÜ£ºÅĞ¶ÏInBuffÄÚÈİÊÇ·ñ·ûºÏĞ­ÒéÒªÇó£¬ÇÒÃÜÂëÕıÈ·
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬¶ÌĞÅ½ÓÊÕµ½µÄÖ¡£»u16 Len£¬³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£º·ûºÏ¶ÌĞÅ»½ĞÑÒªÇó·µ»Ø1£¬·ñÔò·µ»Ø0
 *******************************************************************************/
 INT8U SMS_Judge(u8 *InBuff, u16 Len)
 {
-	if(Judge_NW_Framing(SMS_AWAKE,InBuff,Len,0)) 								//åˆ¤æ–­åè®®ï¼Œè‹¥ç¬¦åˆ
+	if(Judge_NW_Framing(SMS_AWAKE,InBuff,Len,0)) 								//ÅĞ¶ÏĞ­Òé£¬Èô·ûºÏ
 	{
-		if(0==memcmp(InBuff+10,Config.Password,4)) return 1;					//è‹¥åˆ¤æ–­åŸå¯†ç ä¸åŸè®¾ç½®å¯†ç ä¸åŒï¼ˆç›¸åŒæ—¶memcmpè¿”å›0ï¼‰																	
+		if(0==memcmp(InBuff+10,Config.Password,4)) return 1;					//ÈôÅĞ¶ÏÔ­ÃÜÂëÓëÔ­ÉèÖÃÃÜÂë²»Í¬£¨ÏàÍ¬Ê±memcmp·µ»Ø0£©																	
 	}
-	BspUartWrite(2,SIZE_OF("SMS_Judgeæœªé€šè¿‡ï¼\r\n"));
+	BspUartWrite(2,SIZE_OF("SMS_JudgeÎ´Í¨¹ı£¡\r\n"));
 	return 0;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Data_Request_Comm(u8 *InBuff, u16 Len)
-åŠŸèƒ½ï¼šè£…ç½®æ”¶åˆ°ä¸»ç«™æ•°æ®è¯·æ±‚å‘½ä»¤åæŒ‰åŸå‘½ä»¤è¿”å›ï¼Œå¹¶ç«‹å³æŒ‰ç…§ç›¸åº”æ§åˆ¶å­—æ ¼å¼å°†æ•°æ®ä¾æ¬¡ä¸Šé€ä¸»ç«™ã€‚
-å¦‚æœæ•°æ®åŸŸä¸º0å­—èŠ‚ï¼Œä¸Šä¼ æœªæˆåŠŸä¸Šä¼ çš„å†å²æ•°æ®ï¼ŒåŒ…å«å†å²ç…§ç‰‡ï¼Œè‹¥è£…ç½®æ— å†å²æ•°æ®åˆ™ä¸ä¸Šä¼ ã€‚
-å¦‚æœæ•°æ®åŸŸä¸º2å­—èŠ‚BBBBHï¼Œè£…ç½®ç«‹åˆ»é‡‡é›†æ‰€æœ‰æ•°æ®ï¼ˆå›¾ç‰‡é™¤å¤–ï¼‰ï¼Œå®Œæˆé‡‡é›†åç«‹åˆ»ä¸Šä¼ ã€‚è¯¥æ¬¡é‡‡æ ·ä¸
-å½±å“åŸè®¾å®šé‡‡é›†é—´éš”çš„æ‰§è¡Œã€‚
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§ï¼›u16 Lenï¼Œé•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U Data_Request_Comm(u8 *InBuff, u16 Len)
+¹¦ÄÜ£º×°ÖÃÊÕµ½Ö÷Õ¾Êı¾İÇëÇóÃüÁîºó°´Ô­ÃüÁî·µ»Ø£¬²¢Á¢¼´°´ÕÕÏàÓ¦¿ØÖÆ×Ö¸ñÊ½½«Êı¾İÒÀ´ÎÉÏËÍÖ÷Õ¾¡£
+Èç¹ûÊı¾İÓòÎª0×Ö½Ú£¬ÉÏ´«Î´³É¹¦ÉÏ´«µÄÀúÊ·Êı¾İ£¬°üº¬ÀúÊ·ÕÕÆ¬£¬Èô×°ÖÃÎŞÀúÊ·Êı¾İÔò²»ÉÏ´«¡£
+Èç¹ûÊı¾İÓòÎª2×Ö½ÚBBBBH£¬×°ÖÃÁ¢¿Ì²É¼¯ËùÓĞÊı¾İ£¨Í¼Æ¬³ıÍâ£©£¬Íê³É²É¼¯ºóÁ¢¿ÌÉÏ´«¡£¸Ã´Î²ÉÑù²»
+Ó°ÏìÔ­Éè¶¨²É¼¯¼ä¸ôµÄÖ´ĞĞ¡£
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡£»u16 Len£¬³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U Data_Request_Comm(u8 *InBuff, u16 Len)
 {
-	INT16U	len_frame=0;														//å¸§é•¿åº¦/æˆ–ç”¨äºè®¡ç®—æ•°æ®åŸŸé•¿åº¦
+	INT16U	len_frame=0;														//Ö¡³¤¶È/»òÓÃÓÚ¼ÆËãÊı¾İÓò³¤¶È
 	
-	LteCommunication(InBuff,Len,0,0);											//æŒ‰ç…§åŸå‘½ä»¤è¿”å›ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
-	len_frame = ((INT16U)InBuff[8]<<8) + InBuff[9];								//è®¡ç®—æ•°æ®åŸŸé•¿åº¦ï¼ˆä¿é™©èµ·è§ï¼Œè¿›è¡Œå¼ºåˆ¶è½¬æ¢ï¼‰
-	if(!len_frame)																//å¦‚æœæ•°æ®åŸŸä¸º0å­—èŠ‚
+	LteCommunication(InBuff,Len,0,0);											//°´ÕÕÔ­ÃüÁî·µ»Ø£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
+	len_frame = ((INT16U)InBuff[8]<<8) + InBuff[9];								//¼ÆËãÊı¾İÓò³¤¶È£¨±£ÏÕÆğ¼û£¬½øĞĞÇ¿ÖÆ×ª»»£©
+	if(!len_frame)																//Èç¹ûÊı¾İÓòÎª0×Ö½Ú
 	{
-		/*ä¸Šä¼ æœªæˆåŠŸä¸Šä¼ çš„å†å²æ•°æ®ï¼ŒåŒ…å«å†å²ç…§ç‰‡ï¼Œè‹¥è£…ç½®æ— å†å²æ•°æ®åˆ™ä¸ä¸Šä¼ ã€‚*/
-		return Tem_Cur_Upload(RETRY,TIMEOUT);									//å‘é€å†å²æ•°æ®ï¼Œå¤±è´¥æ—¶è¿”å›0ï¼ˆä»…è¡¨ç¤ºè¿˜æœ‰å†å²æ•°æ®æœªå‘é€å®Œæˆï¼Œä¸å½±å“å·²å®Œæˆçš„éƒ¨åˆ†ï¼‰
+		/*ÉÏ´«Î´³É¹¦ÉÏ´«µÄÀúÊ·Êı¾İ£¬°üº¬ÀúÊ·ÕÕÆ¬£¬Èô×°ÖÃÎŞÀúÊ·Êı¾İÔò²»ÉÏ´«¡£*/
+		return Tem_Cur_Upload(RETRY,TIMEOUT);									//·¢ËÍÀúÊ·Êı¾İ£¬Ê§°ÜÊ±·µ»Ø0£¨½ö±íÊ¾»¹ÓĞÀúÊ·Êı¾İÎ´·¢ËÍÍê³É£¬²»Ó°ÏìÒÑÍê³ÉµÄ²¿·Ö£©
 	}
-	else if((InBuff[10]==0xBB) && (InBuff[11]==0xBB))							//å¦‚æœæ•°æ®åŸŸä¸º2å­—èŠ‚BBBBH
+	else if((InBuff[10]==0xBB) && (InBuff[11]==0xBB))							//Èç¹ûÊı¾İÓòÎª2×Ö½ÚBBBBH
 	{
-		return Tem_Cur_Sample_Upload(RETRY,TIMEOUT);							//è£…ç½®ç«‹åˆ»é‡‡é›†æ‰€æœ‰æ•°æ®ï¼ˆå›¾ç‰‡é™¤å¤–ï¼‰ï¼Œå®Œæˆé‡‡é›†åç«‹åˆ»ä¸Šä¼ 
+		return Tem_Cur_Sample_Upload(RETRY,TIMEOUT);							//×°ÖÃÁ¢¿Ì²É¼¯ËùÓĞÊı¾İ£¨Í¼Æ¬³ıÍâ£©£¬Íê³É²É¼¯ºóÁ¢¿ÌÉÏ´«
 	}
-	BspUartWrite(2,SIZE_OF("Data_Request_Commå‡ºç°æœªçŸ¥æƒ…å†µï¼\r\n"));
-	return 0;																	//å…¶ä»–æƒ…å†µï¼Œä¸åº”è¯¥å‡ºç°
+	BspUartWrite(2,SIZE_OF("Data_Request_Comm³öÏÖÎ´ÖªÇé¿ö£¡\r\n"));
+	return 0;																	//ÆäËûÇé¿ö£¬²»Ó¦¸Ã³öÏÖ
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Flow_Data_Upload(u8 times, u16 timeout)
-åŠŸèƒ½ï¼šç»ˆç«¯ä¸»åŠ¨ä¸Šä¼ è£…ç½®æµé‡æ•°æ®ä½¿ç”¨æƒ…å†µã€‚ï¼ˆæ§åˆ¶å­—ï¼š40Hï¼‰
-å…ˆä¸åšåˆ†å¸§å’Œåˆ†åŒ…ä»€ä¹ˆçš„ï¼Œè¦åšå­˜å‚¨ï¼Œè¿˜è¦ç®¡ç†ï¼Œå¤ªéº»çƒ¦ã€‚å…ˆåªåšé¦–åŒ…
-å…¥å‚ï¼šu8 timesï¼Œé‡è¯•æ¬¡æ•°ï¼›u16 timeoutï¼Œè¶…æ—¶ç­‰å¾…æ—¶é—´ï¼Œå•ä½ï¼šæ—¶é—´ç‰‡
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U Flow_Data_Upload(u8 times, u16 timeout)
+¹¦ÄÜ£ºÖÕ¶ËÖ÷¶¯ÉÏ´«×°ÖÃÁ÷Á¿Êı¾İÊ¹ÓÃÇé¿ö¡££¨¿ØÖÆ×Ö£º40H£©
+ÏÈ²»×ö·ÖÖ¡ºÍ·Ö°üÊ²Ã´µÄ£¬Òª×ö´æ´¢£¬»¹Òª¹ÜÀí£¬Ì«Âé·³¡£ÏÈÖ»×öÊ×°ü
+Èë²Î£ºu8 times£¬ÖØÊÔ´ÎÊı£»u16 timeout£¬³¬Ê±µÈ´ıÊ±¼ä£¬µ¥Î»£ºÊ±¼äÆ¬
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U Flow_Data_Upload(u8 times, u16 timeout)
 {
 	INT8U 	i=0;
 	INT8U 	*R;
-	INT32U	Temp=0;																//ç”¨äºå•ä½è½¬æ¢å’Œè¿”å›é•¿åº¦
-	INT16U	f_len=0;															//ç»„å¸§é•¿åº¦ï¼ˆå…±ç”¨Tempä¼šå¸¦æ¥éº»çƒ¦ï¼‰
+	INT32U	Temp=0;																//ÓÃÓÚµ¥Î»×ª»»ºÍ·µ»Ø³¤¶È
+	INT16U	f_len=0;															//×éÖ¡³¤¶È£¨¹²ÓÃTemp»á´øÀ´Âé·³£©
 
-/*Flow_Dataç»“æ„ä½“å¡«å……*/
-	NW_GetTime(&Flow_Data.Sample_Time);											//æ›´æ–°Flow_Dataç»“æ„ä½“ä¸­çš„é‡‡æ ·æ—¶é—´
-	Temp = Local_FLow_Data.Flow_Day_Used_B >>20;								//è®¡ç®—å½“æ—¥å·²ä½¿ç”¨æµé‡ï¼Œå•ä½ï¼šByte -> M Byte
-	Temp = htonl(Temp);															//å¤§å°ç«¯è½¬æ¢
-	memcpy(Flow_Data.Day_Used,&Temp,4);											//å•ä½ï¼šM Byte
-	Temp = Local_FLow_Data.Flow_Month_Used_B>>20;								//è®¡ç®—å½“æœˆå·²ä½¿ç”¨æµé‡ï¼Œå•ä½ï¼šByte -> M Byte
-	Temp = htonl(Temp);															//å¤§å°ç«¯è½¬æ¢
-	memcpy(Flow_Data.Month_Used,&Temp,4);										//å•ä½ï¼šM Byte
-	Temp = MONTHLY_FLOW>(Local_FLow_Data.Flow_Month_Used_B>>20) ? 				//æœ¬æœˆå‰©ä½™æµé‡ï¼Œå•ä½ï¼šM Byte
+/*Flow_Data½á¹¹ÌåÌî³ä*/
+	NW_GetTime(&Flow_Data.Sample_Time);											//¸üĞÂFlow_Data½á¹¹ÌåÖĞµÄ²ÉÑùÊ±¼ä
+	Temp = Local_FLow_Data.Flow_Day_Used_B >>20;								//¼ÆËãµ±ÈÕÒÑÊ¹ÓÃÁ÷Á¿£¬µ¥Î»£ºByte -> M Byte
+	Temp = htonl(Temp);															//´óĞ¡¶Ë×ª»»
+	memcpy(Flow_Data.Day_Used,&Temp,4);											//µ¥Î»£ºM Byte
+	Temp = Local_FLow_Data.Flow_Month_Used_B>>20;								//¼ÆËãµ±ÔÂÒÑÊ¹ÓÃÁ÷Á¿£¬µ¥Î»£ºByte -> M Byte
+	Temp = htonl(Temp);															//´óĞ¡¶Ë×ª»»
+	memcpy(Flow_Data.Month_Used,&Temp,4);										//µ¥Î»£ºM Byte
+	Temp = MONTHLY_FLOW>(Local_FLow_Data.Flow_Month_Used_B>>20) ? 				//±¾ÔÂÊ£ÓàÁ÷Á¿£¬µ¥Î»£ºM Byte
 		MONTHLY_FLOW-(Local_FLow_Data.Flow_Month_Used_B>>20) : 0;
-	Temp = htonl(Temp);															//å¤§å°ç«¯è½¬æ¢
-	memcpy(Flow_Data.Month_Surplus,&Temp,4);									//å•ä½ï¼šM Byte
+	Temp = htonl(Temp);															//´óĞ¡¶Ë×ª»»
+	memcpy(Flow_Data.Month_Surplus,&Temp,4);									//µ¥Î»£ºM Byte
 
-/*ç»„å¸§ä¸ŠæŠ¥*/
-	f_len = NW_Framing(FLOW_DATA_UPLOAD,LTE_Tx_Buff);							//ç»„å¸§
+/*×éÖ¡ÉÏ±¨*/
+	f_len = NW_Framing(FLOW_DATA_UPLOAD,LTE_Tx_Buff);							//×éÖ¡
 	for(;i<times;i++)
 	{
-		Temp = LteCommunication(LTE_Tx_Buff,f_len,LTE_Rx_Buff,timeout);			//ä¸ŠæŠ¥å¹¶ç­‰å¾…å›å¤
-		if(!Temp) continue;														//ç»ˆç«¯è‹¥æ²¡æœ‰æ”¶åˆ°ä¸»ç«™å›åº”å‘½ä»¤ï¼Œé‡è¯•3æ¬¡							
+		Temp = LteCommunication(LTE_Tx_Buff,f_len,LTE_Rx_Buff,timeout);			//ÉÏ±¨²¢µÈ´ı»Ø¸´
+		if(!Temp) continue;														//ÖÕ¶ËÈôÃ»ÓĞÊÕµ½Ö÷Õ¾»ØÓ¦ÃüÁî£¬ÖØÊÔ3´Î							
 
-		R = Judge_NW_Framing(FLOW_DATA_UPLOAD,LTE_Rx_Buff,Temp,0);				//åˆ¤æ–­æ¥æ”¶å†…å®¹æ˜¯å¦ç¬¦åˆå—ç½‘åè®®
+		R = Judge_NW_Framing(FLOW_DATA_UPLOAD,LTE_Rx_Buff,Temp,0);				//ÅĞ¶Ï½ÓÊÕÄÚÈİÊÇ·ñ·ûºÏÄÏÍøĞ­Òé
 		if(R)
 		{
-			if(R[10]!=1) continue;												//åˆ¤æ–­å¸§æ ‡è¯†ï¼Œç›®å‰åšçš„åªæœ‰é¦–åŒ…ä¸”ä¸åˆ†å¸§ï¼Œå›ºå®šä¸º1
-			if(R[11]!=0xAA) continue;											//åˆ¤æ–­å›å¤æ•°æ®åŸŸ AA55H
-			if(R[12]!=0x55) continue;											//åˆ¤æ–­å›å¤æ•°æ®åŸŸ
-			return 1;															//ä¸ŠæŠ¥æˆåŠŸ
+			if(R[10]!=1) continue;												//ÅĞ¶ÏÖ¡±êÊ¶£¬Ä¿Ç°×öµÄÖ»ÓĞÊ×°üÇÒ²»·ÖÖ¡£¬¹Ì¶¨Îª1
+			if(R[11]!=0xAA) continue;											//ÅĞ¶Ï»Ø¸´Êı¾İÓò AA55H
+			if(R[12]!=0x55) continue;											//ÅĞ¶Ï»Ø¸´Êı¾İÓò
+			return 1;															//ÉÏ±¨³É¹¦
 		}
 	}
-	BspUartWrite(2,SIZE_OF("Flow_Data_Uploadæµé‡ä¸ŠæŠ¥é€šä¿¡å¤±è´¥ï¼\r\n"));
-	return 0;																	//ä¸ŠæŠ¥å¤±è´¥ï¼Œåˆ™å°†æ•°æ®ä¿ç•™ï¼Œä¸‹æ¬¡ä¼ é€ã€‚//å…ˆåªåšé¦–åŒ…ï¼Œå› æ­¤å¯ä»¥ä¸ç”¨ä¿ç•™ï¼Œæ¯æ¬¡éƒ½ä¼šæ›´æ–°
+	BspUartWrite(2,SIZE_OF("Flow_Data_UploadÁ÷Á¿ÉÏ±¨Í¨ĞÅÊ§°Ü£¡\r\n"));
+	return 0;																	//ÉÏ±¨Ê§°Ü£¬Ôò½«Êı¾İ±£Áô£¬ÏÂ´Î´«ËÍ¡£//ÏÈÖ»×öÊ×°ü£¬Òò´Ë¿ÉÒÔ²»ÓÃ±£Áô£¬Ã¿´Î¶¼»á¸üĞÂ
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Sleep_Notice(void)
-åŠŸèƒ½ï¼šè¯¥ä¿¡æ¯åœ¨è£…ç½®è®¾å¤‡æ¯æ¬¡ä¼‘çœ ä¹‹å‰å‘é€ã€‚ä¸»ç«™æ— å›å¤ã€‚ï¼ˆæ§åˆ¶å­—ï¼š0CHï¼‰
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U Sleep_Notice(void)
+¹¦ÄÜ£º¸ÃĞÅÏ¢ÔÚ×°ÖÃÉè±¸Ã¿´ÎĞİÃßÖ®Ç°·¢ËÍ¡£Ö÷Õ¾ÎŞ»Ø¸´¡££¨¿ØÖÆ×Ö£º0CH£©
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U Sleep_Notice(void)
 {
-	INT16U	len=0;																//ç”¨äºç»„å¸§
-	len = NW_Framing(SLEEP_NOTICE,LTE_Tx_Buff);									//ç»„å¸§
-	LteCommunication(LTE_Tx_Buff,len,0,0);										//ä¸ŠæŠ¥ï¼Œæ— å›å¤ä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+	INT16U	len=0;																//ÓÃÓÚ×éÖ¡
+	len = NW_Framing(SLEEP_NOTICE,LTE_Tx_Buff);									//×éÖ¡
+	LteCommunication(LTE_Tx_Buff,len,0,0);										//ÉÏ±¨£¬ÎŞ»Ø¸´²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 	return 1;	
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Tem_Cur_Upload(u8 times, u16 timeout)
-åŠŸèƒ½ï¼šè£…ç½®ä¸»åŠ¨ä¸Šä¼ å¯¼çº¿æ¸©åº¦ã€ç”µæµå†å²æ•°æ®ï¼ˆæ§åˆ¶å­—ï¼š26Hï¼‰ï¼Œæ ¹æ®Unreport_Index[31][3]
-ç´¢å¼•è¡¨åˆ¤æ–­æ˜¯å¦æœªä¸ŠæŠ¥æˆåŠŸã€‚
-å…¥å‚ï¼šu8 timesï¼Œé‡è¯•æ¬¡æ•°ï¼›u16 timeoutï¼Œè¶…æ—¶ç­‰å¾…æ—¶é—´ï¼Œå•ä½ï¼šæ—¶é—´ç‰‡
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0ï¼Œæ— éœ€ä¸ŠæŠ¥è¿”å›0xFF
+Ãû³Æ£ºINT8U Tem_Cur_Upload(u8 times, u16 timeout)
+¹¦ÄÜ£º×°ÖÃÖ÷¶¯ÉÏ´«µ¼ÏßÎÂ¶È¡¢µçÁ÷ÀúÊ·Êı¾İ£¨¿ØÖÆ×Ö£º26H£©£¬¸ù¾İUnreport_Index[31][3]
+Ë÷Òı±íÅĞ¶ÏÊÇ·ñÎ´ÉÏ±¨³É¹¦¡£
+Èë²Î£ºu8 times£¬ÖØÊÔ´ÎÊı£»u16 timeout£¬³¬Ê±µÈ´ıÊ±¼ä£¬µ¥Î»£ºÊ±¼äÆ¬
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0£¬ÎŞĞèÉÏ±¨·µ»Ø0xFF
 *******************************************************************************/
 INT8U Tem_Cur_Upload(u8 times, u16 timeout)
 {
 	INT8U 	i=0,j=0,k=0;
-	INT16U	Bit_Index = 0;														//æœªä¸ŠæŠ¥çš„å†å²æ–‡ä»¶åºå·ï¼Œ31å¤©æœ€å¤šå­˜å‚¨744å°æ—¶ï¼Œå³0~743
+	INT16U	Bit_Index = 0;														//Î´ÉÏ±¨µÄÀúÊ·ÎÄ¼şĞòºÅ£¬31Ìì×î¶à´æ´¢744Ğ¡Ê±£¬¼´0~743
 	INT8U	nodata = 0xFF;
 	
-	/*æ£€ç´¢Unreport_Index[31][3]ï¼Œå¹¶è®¡ç®—Bit_Index*/
-	for(i=0;i<31;i++){															//å¤©
-		for(j=0;j<3;j++){														//å­—èŠ‚
-			for(k=0;k<8;k++){													//æ¯å­—èŠ‚8å°æ—¶
-				if(0==(Unreport_Index[i][j]&(0x80>>k)))							//1å·²ä¸ŠæŠ¥ï¼Œ0æœªä¸ŠæŠ¥ï¼ˆæœ€é«˜bitä»£è¡¨0æ—¶ï¼‰
+	/*¼ìË÷Unreport_Index[31][3]£¬²¢¼ÆËãBit_Index*/
+	for(i=0;i<31;i++){															//Ìì
+		for(j=0;j<3;j++){														//×Ö½Ú
+			for(k=0;k<8;k++){													//Ã¿×Ö½Ú8Ğ¡Ê±
+				if(0==(Unreport_Index[i][j]&(0x80>>k)))							//1ÒÑÉÏ±¨£¬0Î´ÉÏ±¨£¨×î¸ßbit´ú±í0Ê±£©
 				{
-				/*æ£€ç´¢åˆ°æœªä¸ŠæŠ¥ï¼Œæ‰§è¡Œç›¸å…³æ“ä½œ*/
-					nodata = 1;													//æœ‰ä¸ŠæŠ¥ï¼Œæ¸…0xFF
-					WDTClear(LTE_PRIO);											//æ¸…é™¤ä»»åŠ¡çœ‹é—¨ç‹—ï¼ˆè¿™é‡Œå¯èƒ½å¾ªç¯å¾ˆä¹…ï¼‰
-					Bit_Index = 3*8*i+8*j+k;									//ä¾‹ï¼šUnreport_Index[1][2]çš„ç¬¬5ï¼ˆkï¼‰ä½ä¸º0ï¼Œè¡¨ç¤ºSUB2 ç¬¬21å°æ—¶ æœªä¸ŠæŠ¥ï¼Œå³ç¬¬21+24=45å°æ—¶ï¼Œä¸è®¡ç®—ç»“æœç›¸ç¬¦ï¼ˆå­˜åœ¨ç¬¬0å°æ—¶ï¼‰
-					if(NW_History_Temp_Comm(Bit_Index,RETRY,TIMEOUT))			//æ ¹æ®Bit_Indexç»„å¸§å¹¶é€šä¿¡ï¼ŒåŒ…å«nå¸§ä¸ŠæŠ¥å’Œç­‰å¾…å›å¤ï¼Œè‹¥æˆåŠŸ
+				/*¼ìË÷µ½Î´ÉÏ±¨£¬Ö´ĞĞÏà¹Ø²Ù×÷*/
+					nodata = 1;													//ÓĞÉÏ±¨£¬Çå0xFF
+					WDTClear(LTE_PRIO);											//Çå³ıÈÎÎñ¿´ÃÅ¹·£¨ÕâÀï¿ÉÄÜÑ­»·ºÜ¾Ã£©
+					Bit_Index = 3*8*i+8*j+k;									//Àı£ºUnreport_Index[1][2]µÄµÚ5£¨k£©Î»Îª0£¬±íÊ¾SUB2 µÚ21Ğ¡Ê± Î´ÉÏ±¨£¬¼´µÚ21+24=45Ğ¡Ê±£¬Óë¼ÆËã½á¹ûÏà·û£¨´æÔÚµÚ0Ğ¡Ê±£©
+					if(NW_History_Temp_Comm(Bit_Index,RETRY,TIMEOUT))			//¸ù¾İBit_Index×éÖ¡²¢Í¨ĞÅ£¬°üº¬nÖ¡ÉÏ±¨ºÍµÈ´ı»Ø¸´£¬Èô³É¹¦
 					{
-						Unreport_Index[i][j] |= (0x80>>k);						//ä¸ŠæŠ¥æˆåŠŸï¼Œæ›´æ”¹Unreport_Index[][]ç´¢å¼•è¡¨
+						Unreport_Index[i][j] |= (0x80>>k);						//ÉÏ±¨³É¹¦£¬¸ü¸ÄUnreport_Index[][]Ë÷Òı±í
 						if(!BSP_WriteDataToFm(Unreport_Index_Addr,(INT8U*)Unreport_Index,Unreport_Index_Len)) 
 						{
-							BspUartWrite(2,SIZE_OF("æœªä¸ŠæŠ¥æ•°æ®ç´¢å¼•è¡¨å†™å…¥é“ç”µå¤±è´¥ï¼\r\n"));
-							return 0;											//æœªä¸ŠæŠ¥æ•°æ®ç´¢å¼•è¡¨å†™å…¥é“ç”µ
+							BspUartWrite(2,SIZE_OF("Î´ÉÏ±¨Êı¾İË÷Òı±íĞ´ÈëÌúµçÊ§°Ü£¡\r\n"));
+							return 0;											//Î´ÉÏ±¨Êı¾İË÷Òı±íĞ´ÈëÌúµç
 						}
 					}
 				}
@@ -645,18 +645,18 @@ INT8U Tem_Cur_Upload(u8 times, u16 timeout)
 		}
 	}
 	
-	if(nodata==1) BspUartWrite(2,SIZE_OF("æ‰€æœ‰å†å²æ•°æ®å·²å°è¯•ä¸ŠæŠ¥\r\n"));
-	else BspUartWrite(2,SIZE_OF("æ²¡æœ‰å†å²æ•°æ®éœ€è¦ä¸ŠæŠ¥\r\n"));
-	return nodata;																//å…¨éƒ¨å†å²æ•°æ®ä¸ŠæŠ¥å®Œæˆæ—¶è¿”å›1ï¼›æ— éœ€ä¸ŠæŠ¥æ—¶ä¼šè¿”å›0xFF
+	if(nodata==1) BspUartWrite(2,SIZE_OF("ËùÓĞÀúÊ·Êı¾İÒÑ³¢ÊÔÉÏ±¨\r\n"));
+	else BspUartWrite(2,SIZE_OF("Ã»ÓĞÀúÊ·Êı¾İĞèÒªÉÏ±¨\r\n"));
+	return nodata;																//È«²¿ÀúÊ·Êı¾İÉÏ±¨Íê³ÉÊ±·µ»Ø1£»ÎŞĞèÉÏ±¨Ê±»á·µ»Ø0xFF
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Tem_Cur_Sample_Upload(u8 times, u16 timeout)
-åŠŸèƒ½ï¼šè£…ç½®ç«‹åˆ»é‡‡é›†æ‰€æœ‰æ•°æ®ï¼ˆå›¾ç‰‡é™¤å¤–ï¼‰ï¼Œå®Œæˆé‡‡é›†åç«‹åˆ»ä¸Šä¼ ã€‚è¯¥æ¬¡é‡‡æ ·ä¸å½±å“åŸè®¾å®šé‡‡é›†é—´éš”
-çš„æ‰§è¡Œã€‚ï¼ˆæ§åˆ¶å­—ï¼š26Hï¼‰
-å…¥å‚ï¼šu8 timesï¼Œé‡è¯•æ¬¡æ•°ï¼›u16 timeoutï¼Œè¶…æ—¶ç­‰å¾…æ—¶é—´ï¼Œå•ä½ï¼šæ—¶é—´ç‰‡
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U Tem_Cur_Sample_Upload(u8 times, u16 timeout)
+¹¦ÄÜ£º×°ÖÃÁ¢¿Ì²É¼¯ËùÓĞÊı¾İ£¨Í¼Æ¬³ıÍâ£©£¬Íê³É²É¼¯ºóÁ¢¿ÌÉÏ´«¡£¸Ã´Î²ÉÑù²»Ó°ÏìÔ­Éè¶¨²É¼¯¼ä¸ô
+µÄÖ´ĞĞ¡££¨¿ØÖÆ×Ö£º26H£©
+Èë²Î£ºu8 times£¬ÖØÊÔ´ÎÊı£»u16 timeout£¬³¬Ê±µÈ´ıÊ±¼ä£¬µ¥Î»£ºÊ±¼äÆ¬
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U Tem_Cur_Sample_Upload(u8 times, u16 timeout)
 {
@@ -666,68 +666,68 @@ INT8U Tem_Cur_Sample_Upload(u8 times, u16 timeout)
 	INT16U			len=0,len_frame=0;
 	INT8U			*R;
 	
-	msg_data = DATA_CMD;														//ç”¨äºå‘å‡ºï¼Œé€šçŸ¥RFä»»åŠ¡åˆ‡æ¢åˆ°é‡‡é›†æ•°æ®çŠ¶æ€
-	OSMboxPost(Data_CMDB0X, &msg_data);											//é€šè¿‡é‚®ç®±å°†é‡‡é›†å‘½ä»¤å‘å‡º
-	OSTimeDly(5*20);															//ç­‰å¾…5ç§’ï¼Œç¡®ä¿RFä»»åŠ¡å°†å†…å­˜ä¸­æ•°æ®å†™å…¥é“ç”µ
+	msg_data = DATA_CMD;														//ÓÃÓÚ·¢³ö£¬Í¨ÖªRFÈÎÎñÇĞ»»µ½²É¼¯Êı¾İ×´Ì¬
+	OSMboxPost(Data_CMDB0X, &msg_data);											//Í¨¹ıÓÊÏä½«²É¼¯ÃüÁî·¢³ö
+	OSTimeDly(5*20);															//µÈ´ı5Ãë£¬È·±£RFÈÎÎñ½«ÄÚ´æÖĞÊı¾İĞ´ÈëÌúµç
 	
-	//ä»é“ç”µä¸­è¯»å–æ•°æ®å¹¶ç»„å¸§ä¸ŠæŠ¥
-	BSP_InitFm(LTE_Num);														//åˆå§‹åŒ–
+	//´ÓÌúµçÖĞ¶ÁÈ¡Êı¾İ²¢×éÖ¡ÉÏ±¨
+	BSP_InitFm(LTE_Num);														//³õÊ¼»¯
 	for(i=0;i<55;i++)
 	{			
-		if(TT_Info.HaveTT[i]==0x55)												//è¡¨ç¤ºè¿™é‡Œæœ‰æ•°æ®
+		if(TT_Info.HaveTT[i]==0x55)												//±íÊ¾ÕâÀïÓĞÊı¾İ
 		{
-		/*å¡«å……ç»“æ„ä½“å¹¶ç»„å¸§*/
-			Tem_Cur_Data.Frame_ID = i;											//å¸§æ ‡è¯†
-			Tem_Cur_Data.Pack_Num = 1;											//åŒ…æ•°
-			Tem_Cur_Data.Unit_ID = Unit_ID_Code[i];								//åŠŸèƒ½å•å…ƒè¯†åˆ«ç 
-			SecondToNwTime(TT_Sample_Manage.Time[TT_Sample_Manage.Sample_Num-1],&Tem_Cur_Data.Sample_Time);			//é‡‡æ ·æ—¶é—´ï¼ˆå¹´+æœˆ+æ—¥+æ—¶+åˆ†+ç§’ï¼‰ï¼ˆ6å­—èŠ‚ï¼‰
-			addr = Sample_Data_Addr + One_TT_Sample_Data_Len*i + 2*(TT_Sample_Manage.Sample_Num-1);					//è®¡ç®—æ¸©åº¦æ•°æ®åœ°å€
-			BSP_ReadDataFromFm(addr, Tem_Cur_Data.Tem, 2);						//ä»é“ç”µä¸­è¯»å–å¯¹åº”æµ‹ç‚¹æ¸©åº¦ï¼ˆ2å­—èŠ‚ï¼‰
-			Tem_DS18B20_To_NW(Tem_Cur_Data.Tem,Tem_Cur_Data.Tem);				//æŒ‰å—ç½‘è§„åˆ™è½¬æ¢æ¸©åº¦
-			//Tem_Cur_Data.Cur													//å¯¼çº¿ç”µæµï¼ˆ2å­—èŠ‚ï¼‰æš‚æ— 
-			Tem_Cur_Data.Voltage = 33;											//ä¼ æ„Ÿå™¨å·¥ä½œç”µå‹ï¼ˆ1å­—èŠ‚ï¼‰3.3V
-			len_frame = NW_Framing(TEM_CUR_UPLOAD, LTE_Tx_Buff);				//å½“å‰é‡‡é›†å†…å®¹ç»„å¸§
+		/*Ìî³ä½á¹¹Ìå²¢×éÖ¡*/
+			Tem_Cur_Data.Frame_ID = i;											//Ö¡±êÊ¶
+			Tem_Cur_Data.Pack_Num = 1;											//°üÊı
+			Tem_Cur_Data.Unit_ID = Unit_ID_Code[i];								//¹¦ÄÜµ¥ÔªÊ¶±ğÂë
+			SecondToNwTime(TT_Sample_Manage.Time[TT_Sample_Manage.Sample_Num-1],&Tem_Cur_Data.Sample_Time);			//²ÉÑùÊ±¼ä£¨Äê+ÔÂ+ÈÕ+Ê±+·Ö+Ãë£©£¨6×Ö½Ú£©
+			addr = Sample_Data_Addr + One_TT_Sample_Data_Len*i + 2*(TT_Sample_Manage.Sample_Num-1);					//¼ÆËãÎÂ¶ÈÊı¾İµØÖ·
+			BSP_ReadDataFromFm(addr, Tem_Cur_Data.Tem, 2);						//´ÓÌúµçÖĞ¶ÁÈ¡¶ÔÓ¦²âµãÎÂ¶È£¨2×Ö½Ú£©
+			Tem_DS18B20_To_NW(Tem_Cur_Data.Tem,Tem_Cur_Data.Tem);				//°´ÄÏÍø¹æÔò×ª»»ÎÂ¶È
+			//Tem_Cur_Data.Cur													//µ¼ÏßµçÁ÷£¨2×Ö½Ú£©ÔİÎŞ
+			Tem_Cur_Data.Voltage = 33;											//´«¸ĞÆ÷¹¤×÷µçÑ¹£¨1×Ö½Ú£©3.3V
+			len_frame = NW_Framing(TEM_CUR_UPLOAD, LTE_Tx_Buff);				//µ±Ç°²É¼¯ÄÚÈİ×éÖ¡
 			
-		/*ä¸ŠæŠ¥å¹¶ç­‰å›å¤ï¼Œé‡è¯•timesæ¬¡*/
-			for(j=0;j<times;j++)												//æœ€å¤šé‡è¯•timesæ¬¡
+		/*ÉÏ±¨²¢µÈ»Ø¸´£¬ÖØÊÔtimes´Î*/
+			for(j=0;j<times;j++)												//×î¶àÖØÊÔtimes´Î
 			{
-				len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);		//è¿”å›ä¸º0è¡¨ç¤ºé€šä¿¡å¤±è´¥ï¼Œè¿”å›0xffè¡¨ç¤ºæ²¡æ¥æ”¶åˆ°æ•°æ®ï¼Œå…¶ä»–è¿”å›ä¸ºæ¥æ”¶æ•°æ®é•¿åº¦
+				len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);		//·µ»ØÎª0±íÊ¾Í¨ĞÅÊ§°Ü£¬·µ»Ø0xff±íÊ¾Ã»½ÓÊÕµ½Êı¾İ£¬ÆäËû·µ»ØÎª½ÓÊÕÊı¾İ³¤¶È
 				if(!len) 
 				{
-					BspUartWrite(2,SIZE_OF("æœªæ”¶åˆ°ä¸»ç«™å›å¤ï¼\r\n"));
-					continue;													//é€šä¿¡å¤±è´¥æ—¶é‡è¯•
+					BspUartWrite(2,SIZE_OF("Î´ÊÕµ½Ö÷Õ¾»Ø¸´£¡\r\n"));
+					continue;													//Í¨ĞÅÊ§°ÜÊ±ÖØÊÔ
 				}
 
-				R = Judge_NW_Framing(TEM_CUR_UPLOAD,LTE_Rx_Buff,len,0);			//åˆ¤æ–­æ¥æ”¶å†…å®¹æ˜¯å¦ç¬¦åˆå—ç½‘åè®®
-				if(R) 															//ä¸ç¬¦åˆåè®®æ—¶é‡æ–°é€šä¿¡
+				R = Judge_NW_Framing(TEM_CUR_UPLOAD,LTE_Rx_Buff,len,0);			//ÅĞ¶Ï½ÓÊÕÄÚÈİÊÇ·ñ·ûºÏÄÏÍøĞ­Òé
+				if(R) 															//²»·ûºÏĞ­ÒéÊ±ÖØĞÂÍ¨ĞÅ
 				{
-					if(R[10]!=i) continue;										//åˆ¤æ–­å¸§æ ‡è¯†i
-					if(R[11]!=0xAA) continue;									//åˆ¤æ–­å›å¤æ•°æ®åŸŸ AA55H
-					if(R[12]!=0x55) continue;									//åˆ¤æ–­å›å¤æ•°æ®åŸŸ
-					break;														//ä¸ŠæŠ¥æˆåŠŸ	
+					if(R[10]!=i) continue;										//ÅĞ¶ÏÖ¡±êÊ¶i
+					if(R[11]!=0xAA) continue;									//ÅĞ¶Ï»Ø¸´Êı¾İÓò AA55H
+					if(R[12]!=0x55) continue;									//ÅĞ¶Ï»Ø¸´Êı¾İÓò
+					break;														//ÉÏ±¨³É¹¦	
 				}
 			}
 			if(j==times) 
 			{
-				FM_LowPower(LTE_Num);											//é“ç”µå¼•è„šä½åŠŸè€—é…ç½®
-				BspUartWrite(2,SIZE_OF("Tem_Cur_Sample_Uploadé‡è¯•è¶…æ¬¡æ•°ï¼Œé‡‡é›†ä¸ŠæŠ¥é€šä¿¡å¤±è´¥ï¼\r\n"));
-				return 0;														//é‡è¯•è¶…æ¬¡æ•°ï¼Œé€šä¿¡å¤±è´¥ï¼Œè¿”å›0
+				FM_LowPower(LTE_Num);											//ÌúµçÒı½ÅµÍ¹¦ºÄÅäÖÃ
+				BspUartWrite(2,SIZE_OF("Tem_Cur_Sample_UploadÖØÊÔ³¬´ÎÊı£¬²É¼¯ÉÏ±¨Í¨ĞÅÊ§°Ü£¡\r\n"));
+				return 0;														//ÖØÊÔ³¬´ÎÊı£¬Í¨ĞÅÊ§°Ü£¬·µ»Ø0
 			}
 		}				
 	}
-	FM_LowPower(LTE_Num);														//é“ç”µå¼•è„šä½åŠŸè€—é…ç½®	
-	return 1;																	//å…¨éƒ¨æ¢å¤´ä¸ŠæŠ¥å®Œæˆæ—¶è¿”å›1
+	FM_LowPower(LTE_Num);														//ÌúµçÒı½ÅµÍ¹¦ºÄÅäÖÃ	
+	return 1;																	//È«²¿Ì½Í·ÉÏ±¨Íê³ÉÊ±·µ»Ø1
 }
 
 INT16U NW_History_Temp_Framing(u8 Frame_ID, u8 *InBuff, struct SAMP_MANAGE *Info_str, u8 *OutBuff);
 /*******************************************************************************
-åç§°ï¼šINT16U NW_History_Temp_Comm(u16 Bit_Index, u8 times, u16 timeout)
-åŠŸèƒ½ï¼šå°†Bit_Indexæ‰€æŒ‡ç¤ºçš„æ–‡ä»¶è¯»å–ã€ç»„å¸§ã€ä¸ŠæŠ¥ã€å›å¤å¤„ç†ä¸€æ¡é¾™æœåŠ¡
-å…¥å‚ï¼šu16 Bit_Indexï¼Œç”¨äºæŒ‡ç¤ºè¯»å–å“ªä¸ªå†å²æ•°æ®æ–‡ä»¶æ¥ç»„å¸§ã€‚0~23è¡¨ç¤ºSUB1ä¸­çš„0~23å·æ–‡ä»¶ï¼›24~47
-è¡¨ç¤ºSUB2ä¸­çš„0~23å·æ–‡ä»¶ï¼›â€¦â€¦720~743è¡¨ç¤ºSUB31ä¸­çš„0~23å·æ–‡ä»¶ã€‚
-u8 timesï¼Œé‡è¯•æ¬¡æ•°ï¼›u16 timeoutï¼Œè¶…æ—¶ç­‰å¾…æ—¶é—´ï¼Œå•ä½ï¼šæ—¶é—´ç‰‡
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT16U NW_History_Temp_Comm(u16 Bit_Index, u8 times, u16 timeout)
+¹¦ÄÜ£º½«Bit_IndexËùÖ¸Ê¾µÄÎÄ¼ş¶ÁÈ¡¡¢×éÖ¡¡¢ÉÏ±¨¡¢»Ø¸´´¦ÀíÒ»ÌõÁú·şÎñ
+Èë²Î£ºu16 Bit_Index£¬ÓÃÓÚÖ¸Ê¾¶ÁÈ¡ÄÄ¸öÀúÊ·Êı¾İÎÄ¼şÀ´×éÖ¡¡£0~23±íÊ¾SUB1ÖĞµÄ0~23ºÅÎÄ¼ş£»24~47
+±íÊ¾SUB2ÖĞµÄ0~23ºÅÎÄ¼ş£»¡­¡­720~743±íÊ¾SUB31ÖĞµÄ0~23ºÅÎÄ¼ş¡£
+u8 times£¬ÖØÊÔ´ÎÊı£»u16 timeout£¬³¬Ê±µÈ´ıÊ±¼ä£¬µ¥Î»£ºÊ±¼äÆ¬
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT16U NW_History_Temp_Comm(u16 Bit_Index, u8 times, u16 timeout)
 {
@@ -737,95 +737,95 @@ INT16U NW_History_Temp_Comm(u16 Bit_Index, u8 times, u16 timeout)
 	UINT			bw;
 	INT16U			offset_len,len_frame,len;		
 	INT8U			*R;
-	struct SAMP_MANAGE	Info_str;												//æš‚å­˜ä»æ–‡ä»¶è¯»å‡ºçš„ç»“æ„ä½“ä¿¡æ¯
+	struct SAMP_MANAGE	Info_str;												//Ôİ´æ´ÓÎÄ¼ş¶Á³öµÄ½á¹¹ÌåĞÅÏ¢
 	
-	/*æ ¹æ®Bit_Indexæ‰“å¼€å¯¹åº”æ–‡ä»¶*/
-	day = Bit_Index/24 +1;														//æ—¥æœŸï¼Œå¯¹åº”SUBn
-	hour = Bit_Index%24;														//å°æ—¶ï¼Œå¯¹åº”0~23
-	sprintf(path, "/SUB%d/%02d%02d", day, day, hour);							//æ ¹æ®ç´¢å¼•ç”Ÿæˆæ–‡ä»¶è·¯å¾„â€œSUBæ—¥/æ—¥æ—¶â€	æ³¨æ„ï¼æ–‡ä»¶åå‹¿éšæ„æ”¹åŠ¨ï¼
+	/*¸ù¾İBit_Index´ò¿ª¶ÔÓ¦ÎÄ¼ş*/
+	day = Bit_Index/24 +1;														//ÈÕÆÚ£¬¶ÔÓ¦SUBn
+	hour = Bit_Index%24;														//Ğ¡Ê±£¬¶ÔÓ¦0~23
+	sprintf(path, "/SUB%d/%02d%02d", day, day, hour);							//¸ù¾İË÷ÒıÉú³ÉÎÄ¼şÂ·¾¶¡°SUBÈÕ/ÈÕÊ±¡±	×¢Òâ£¡ÎÄ¼şÃûÎğËæÒâ¸Ä¶¯£¡
 	
-	BspUartWrite(2,SIZE_OF("\r\nå¼€å§‹ä¼ è¾“"));
-	BspUartWrite(2,(INT8U*)path,strlen(path));									//ä¸åˆå¹¶å­—ç¬¦çš„åŸå› ï¼špathæ˜¯æ–‡ä»¶åï¼Œä¸‹é¢è¦ç”¨åˆ°
+	BspUartWrite(2,SIZE_OF("\r\n¿ªÊ¼´«Êä"));
+	BspUartWrite(2,(INT8U*)path,strlen(path));									//²»ºÏ²¢×Ö·ûµÄÔ­Òò£ºpathÊÇÎÄ¼şÃû£¬ÏÂÃæÒªÓÃµ½
 	BspUartWrite(2,SIZE_OF("\r\n"));
 
-	OSTimeDly(25);																//å»¶æ—¶ä½œç”¨ï¼šæ­¤å‡½æ•°åœ¨å¤–é¢å¾ªç¯ä¸­è°ƒç”¨å¤šæ¬¡ï¼ˆå½“éœ€è¦å‘é€å¤šä¸ªå°æ—¶æ•°æ®æ—¶ä¼šå†æ¬¡è°ƒç”¨ï¼‰ï¼Œæ­¤æ—¶å»¶æ—¶å¤§äºRFä»»åŠ¡ä¸­è½®è¯¢é—´éš”1sï¼Œå¯ä¿è¯ä¼˜å…ˆRFä»»åŠ¡ä½¿ç”¨æ–‡ä»¶ç³»ç»Ÿ
+	OSTimeDly(25);																//ÑÓÊ±×÷ÓÃ£º´Ëº¯ÊıÔÚÍâÃæÑ­»·ÖĞµ÷ÓÃ¶à´Î£¨µ±ĞèÒª·¢ËÍ¶à¸öĞ¡Ê±Êı¾İÊ±»áÔÙ´Îµ÷ÓÃ£©£¬´ËÊ±ÑÓÊ±´óÓÚRFÈÎÎñÖĞÂÖÑ¯¼ä¸ô1s£¬¿É±£Ö¤ÓÅÏÈRFÈÎÎñÊ¹ÓÃÎÄ¼şÏµÍ³
 	while(FATFS_Lock)	OSTimeDly(20);
 	FATFS_Lock=1;
 	
 	f_mount(&fs, "", 1);														/* Re-mount the default drive to reinitialize the filesystem */
-	if (FR_OK==f_open(&fil, path, FA_OPEN_EXISTING | FA_READ))					//æ‰“å¼€æ–‡ä»¶	&filæ˜¯å…¨å±€å˜é‡ï¼Œæ³¨æ„ä¸è¦åŒæ—¶æ‰“å¼€
+	if (FR_OK==f_open(&fil, path, FA_OPEN_EXISTING | FA_READ))					//´ò¿ªÎÄ¼ş	&filÊÇÈ«¾Ö±äÁ¿£¬×¢Òâ²»ÒªÍ¬Ê±´ò¿ª
 	{
-	/*è¯»å–SAMP_MANAGEç»“æ„ä½“ä¿¡æ¯*/
-		f_read(&fil,&work,FF_MAX_SS,&bw);										//è¯»å–åˆ°å·¥ä½œç©ºé—´ï¼ˆç”¨æ¥æ ¼å¼åŒ–çš„workæ•°ç»„ï¼Œå…¶ä»–åœ°æ–¹æ²¡ç”¨åˆ°ï¼‰
-		offset_len = Search_Info((u8 *)&work,FF_MAX_SS);						//åœ¨&workæŸ¥æ‰¾æ–‡ä»¶ä¿¡æ¯ç»“æ„ä½“ï¼Œè¿”å›æœ‰æ•ˆæ–‡ä»¶å¤´çš„offseté•¿åº¦ï¼›è‹¥æœªæ‰¾åˆ°è¿”å›0xFFFF
+	/*¶ÁÈ¡SAMP_MANAGE½á¹¹ÌåĞÅÏ¢*/
+		f_read(&fil,&work,FF_MAX_SS,&bw);										//¶ÁÈ¡µ½¹¤×÷¿Õ¼ä£¨ÓÃÀ´¸ñÊ½»¯µÄworkÊı×é£¬ÆäËûµØ·½Ã»ÓÃµ½£©
+		offset_len = Search_Info((u8 *)&work,FF_MAX_SS);						//ÔÚ&work²éÕÒÎÄ¼şĞÅÏ¢½á¹¹Ìå£¬·µ»ØÓĞĞ§ÎÄ¼şÍ·µÄoffset³¤¶È£»ÈôÎ´ÕÒµ½·µ»Ø0xFFFF
 		if(offset_len==0xFFFF) 	
 		{
 			FATFS_Lock=0;
 			f_close(&fil);
-			BspUartWrite(2,SIZE_OF("æœªæ‰¾åˆ°æœ‰æ•ˆsample_manageä¿¡æ¯ç»“æ„ä½“ï¼\r\n"));
-			return 0;															//æœªæ‰¾åˆ°æœ‰æ•ˆç»“æ„ä½“ä¿¡æ¯
+			BspUartWrite(2,SIZE_OF("Î´ÕÒµ½ÓĞĞ§sample_manageĞÅÏ¢½á¹¹Ìå£¡\r\n"));
+			return 0;															//Î´ÕÒµ½ÓĞĞ§½á¹¹ÌåĞÅÏ¢
 		}			
-	/*æ ¹æ®ç»“æ„ä½“ä¿¡æ¯æ‰§è¡Œé€šä¿¡*/
-		memcpy(&Info_str,(INT8U*)&work+2+offset_len,Sample_Manage_Len);			//åœ°å€+offset_lenæŒ‡å‘æ–‡ä»¶å¤´0xFF 0xAAï¼Œå†+2ï¼ˆå¿…é¡»å…ˆå¼ºåˆ¶è½¬æ¢ï¼Œå¦åˆ™æ˜¯+2ä¸ªç»“æ„ä½“é•¿åº¦ï¼‰æŒ‡å‘sample_manageç»“æ„ä½“
-		offset_len += Sample_Manage_Len+2;										//åç§»ç»“æ„ä½“é•¿åº¦+FFAAé•¿åº¦
-		f_lseek(&fil, offset_len);												//è°ƒæ•´æ–‡ä»¶æŒ‡é’ˆï¼ŒæŒ‡å‘é¦–ä¸ªæ¢å¤´æ•°æ®
-		for(;i<Info_str.TT_Count;i++)											//æ–‡ä»¶ä¸­è¯»å‡ºæ¥çš„æ¢å¤´æ•°ï¼Œä»£è¡¨éœ€è¦ä»æ–‡ä»¶è¯»å–æ•°æ®çš„æ¡æ•°
+	/*¸ù¾İ½á¹¹ÌåĞÅÏ¢Ö´ĞĞÍ¨ĞÅ*/
+		memcpy(&Info_str,(INT8U*)&work+2+offset_len,Sample_Manage_Len);			//µØÖ·+offset_lenÖ¸ÏòÎÄ¼şÍ·0xFF 0xAA£¬ÔÙ+2£¨±ØĞëÏÈÇ¿ÖÆ×ª»»£¬·ñÔòÊÇ+2¸ö½á¹¹Ìå³¤¶È£©Ö¸Ïòsample_manage½á¹¹Ìå
+		offset_len += Sample_Manage_Len+2;										//ºóÒÆ½á¹¹Ìå³¤¶È+FFAA³¤¶È
+		f_lseek(&fil, offset_len);												//µ÷ÕûÎÄ¼şÖ¸Õë£¬Ö¸ÏòÊ×¸öÌ½Í·Êı¾İ
+		for(;i<Info_str.TT_Count;i++)											//ÎÄ¼şÖĞ¶Á³öÀ´µÄÌ½Í·Êı£¬´ú±íĞèÒª´ÓÎÄ¼ş¶ÁÈ¡Êı¾İµÄÌõÊı
 		{
-			/*è¯»å–æ–‡ä»¶å¹¶ç»„å¸§*/
+			/*¶ÁÈ¡ÎÄ¼ş²¢×éÖ¡*/
 			if(f_read(&fil,&work,Info_str.Len,&bw)) 
 			{
 				FATFS_Lock=0;
 				f_close(&fil);
-				BspUartWrite(2,SIZE_OF("SPIFLASHè¯»å–æ–‡ä»¶å¤±è´¥ï¼\r\n"));
-				return 0;														//æ ¹æ®æ–‡ä»¶ä¿¡æ¯ç»“æ„ä½“è¯»å–ä¸€æ¡æ•°æ®ï¼ˆé‡å¤è¯»å–å³å¯ï¼ŒæŒ‡é’ˆè‡ªåŠ¨å¢é•¿ï¼‰ã€‚è¯»å–å¤±è´¥è¿”å›0			
+				BspUartWrite(2,SIZE_OF("SPIFLASH¶ÁÈ¡ÎÄ¼şÊ§°Ü£¡\r\n"));
+				return 0;														//¸ù¾İÎÄ¼şĞÅÏ¢½á¹¹Ìå¶ÁÈ¡Ò»ÌõÊı¾İ£¨ÖØ¸´¶ÁÈ¡¼´¿É£¬Ö¸Õë×Ô¶¯Ôö³¤£©¡£¶ÁÈ¡Ê§°Ü·µ»Ø0			
 			}		
-			len_frame = NW_History_Temp_Framing(i,(u8 *)&work, &Info_str, LTE_Tx_Buff);		//ç¬¬iæ¡æ•°æ®ç»„å¸§åˆ°LTE_Tx_Buffï¼Œiä¸ºå¸§æ ‡è¯†
+			len_frame = NW_History_Temp_Framing(i,(u8 *)&work, &Info_str, LTE_Tx_Buff);		//µÚiÌõÊı¾İ×éÖ¡µ½LTE_Tx_Buff£¬iÎªÖ¡±êÊ¶
 			
-			/*ä¸ŠæŠ¥å¹¶ç­‰å›å¤ï¼Œé‡è¯•timesæ¬¡*/
-			for(j=0;j<times;j++)												//æœ€å¤šé‡è¯•timesæ¬¡
+			/*ÉÏ±¨²¢µÈ»Ø¸´£¬ÖØÊÔtimes´Î*/
+			for(j=0;j<times;j++)												//×î¶àÖØÊÔtimes´Î
 			{
-				len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);			//è¿”å›ä¸º0è¡¨ç¤ºé€šä¿¡å¤±è´¥ï¼Œè¿”å›0xffè¡¨ç¤ºæ²¡æ¥æ”¶åˆ°æ•°æ®ï¼Œå…¶ä»–è¿”å›ä¸ºæ¥æ”¶æ•°æ®é•¿åº¦
+				len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,timeout);			//·µ»ØÎª0±íÊ¾Í¨ĞÅÊ§°Ü£¬·µ»Ø0xff±íÊ¾Ã»½ÓÊÕµ½Êı¾İ£¬ÆäËû·µ»ØÎª½ÓÊÕÊı¾İ³¤¶È
 				if(!len) 
 				{
-					BspUartWrite(2,SIZE_OF("æœªæ”¶åˆ°ä¸»ç«™å›å¤ï¼\r\n"));
-					continue;													//é‡è¯•
+					BspUartWrite(2,SIZE_OF("Î´ÊÕµ½Ö÷Õ¾»Ø¸´£¡\r\n"));
+					continue;													//ÖØÊÔ
 				}
 
-				R = Judge_NW_Framing(TEM_CUR_UPLOAD,LTE_Rx_Buff,len,0);			//åˆ¤æ–­æ¥æ”¶å†…å®¹æ˜¯å¦ç¬¦åˆå—ç½‘åè®®
-				if(R) 															//ä¸ç¬¦åˆåè®®æ—¶é‡æ–°é€šä¿¡
+				R = Judge_NW_Framing(TEM_CUR_UPLOAD,LTE_Rx_Buff,len,0);			//ÅĞ¶Ï½ÓÊÕÄÚÈİÊÇ·ñ·ûºÏÄÏÍøĞ­Òé
+				if(R) 															//²»·ûºÏĞ­ÒéÊ±ÖØĞÂÍ¨ĞÅ
 				{
-					j = 0;														//é‡æ–°å¼€å§‹è®¡é‡è¯•æ¬¡æ•°
-					if(R[10]!=i) continue;										//åˆ¤æ–­å¸§æ ‡è¯†i
-					if(R[11]!=0xAA) continue;									//åˆ¤æ–­å›å¤æ•°æ®åŸŸ AA55H
-					if(R[12]!=0x55) continue;									//åˆ¤æ–­å›å¤æ•°æ®åŸŸ
-					break;														//ä¸ŠæŠ¥æˆåŠŸ	
+					j = 0;														//ÖØĞÂ¿ªÊ¼¼ÆÖØÊÔ´ÎÊı
+					if(R[10]!=i) continue;										//ÅĞ¶ÏÖ¡±êÊ¶i
+					if(R[11]!=0xAA) continue;									//ÅĞ¶Ï»Ø¸´Êı¾İÓò AA55H
+					if(R[12]!=0x55) continue;									//ÅĞ¶Ï»Ø¸´Êı¾İÓò
+					break;														//ÉÏ±¨³É¹¦	
 				}
 			}
 			if(j==times) 
 			{
-				f_close(&fil);													//å…³é—­æ–‡ä»¶ã€‚dismountæ˜¯ä¸ºäº†the work area can be discardedï¼Œæˆ‘ä»¬ä¸é‡Šæ”¾å†…å­˜ï¼Œæ²¡æœ‰ä¹Ÿè¡Œ
+				f_close(&fil);													//¹Ø±ÕÎÄ¼ş¡£dismountÊÇÎªÁËthe work area can be discarded£¬ÎÒÃÇ²»ÊÍ·ÅÄÚ´æ£¬Ã»ÓĞÒ²ĞĞ
 				FATFS_Lock=0;
-				BspUartWrite(2,SIZE_OF("NW_History_Temp_Commé‡è¯•è¶…æ¬¡æ•°ï¼Œæ¸©åº¦ä¸ŠæŠ¥é€šä¿¡å¤±è´¥ï¼\r\n"));
-				return 0;														//é‡è¯•è¶…æ¬¡æ•°ï¼Œé€šä¿¡å¤±è´¥ï¼Œè¿”å›0					
+				BspUartWrite(2,SIZE_OF("NW_History_Temp_CommÖØÊÔ³¬´ÎÊı£¬ÎÂ¶ÈÉÏ±¨Í¨ĞÅÊ§°Ü£¡\r\n"));
+				return 0;														//ÖØÊÔ³¬´ÎÊı£¬Í¨ĞÅÊ§°Ü£¬·µ»Ø0					
 			}
 		}
 		
-	/*é€šä¿¡å®Œæˆ*/
-		f_close(&fil);															//å…³é—­æ–‡ä»¶ã€‚dismountæ˜¯ä¸ºäº†the work area can be discardedï¼Œæˆ‘ä»¬ä¸é‡Šæ”¾å†…å­˜ï¼Œæ²¡æœ‰ä¹Ÿè¡Œ
+	/*Í¨ĞÅÍê³É*/
+		f_close(&fil);															//¹Ø±ÕÎÄ¼ş¡£dismountÊÇÎªÁËthe work area can be discarded£¬ÎÒÃÇ²»ÊÍ·ÅÄÚ´æ£¬Ã»ÓĞÒ²ĞĞ
 		FATFS_Lock=0;
-		return 1;																//å…¨éƒ¨æ¢å¤´ä¸ŠæŠ¥å®Œæˆï¼Œè¿”å›1
+		return 1;																//È«²¿Ì½Í·ÉÏ±¨Íê³É£¬·µ»Ø1
 	}
 	FATFS_Lock=0;
-	BspUartWrite(2,SIZE_OF("æ‰“å¼€æ–‡ä»¶å¤±è´¥ï¼\r\n"));
-	return 0;																	//æ‰“å¼€æ–‡ä»¶å¤±è´¥
+	BspUartWrite(2,SIZE_OF("´ò¿ªÎÄ¼şÊ§°Ü£¡\r\n"));
+	return 0;																	//´ò¿ªÎÄ¼şÊ§°Ü
 }
 
 /*******************************************************************************
-åç§°ï¼šINT16U Search_Info(u8 *InBuff, u16 Len)
-åŠŸèƒ½ï¼šåœ¨ç¼“å­˜ä¸­æŸ¥æ‰¾æœ‰æ•ˆSAMP_MANAGEç»“æ„ä½“ä¿¡æ¯ã€‚
-å…¥å‚ï¼šu8 *InBuffï¼Œå¾…æŸ¥æ‰¾ç¼“å­˜ï¼›u16 Lenï¼ŒæŸ¥æ‰¾èŒƒå›´
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæœ‰æ•ˆæ–‡ä»¶å¤´çš„offseté•¿åº¦ï¼›æˆ–0xFFFFï¼Œè¡¨ç¤ºæœªæ‰¾åˆ°
+Ãû³Æ£ºINT16U Search_Info(u8 *InBuff, u16 Len)
+¹¦ÄÜ£ºÔÚ»º´æÖĞ²éÕÒÓĞĞ§SAMP_MANAGE½á¹¹ÌåĞÅÏ¢¡£
+Èë²Î£ºu8 *InBuff£¬´ı²éÕÒ»º´æ£»u16 Len£¬²éÕÒ·¶Î§
+³ö²Î£ºÎŞ
+·µ»Ø£ºÓĞĞ§ÎÄ¼şÍ·µÄoffset³¤¶È£»»ò0xFFFF£¬±íÊ¾Î´ÕÒµ½
 *******************************************************************************/
 INT16U Search_Info(u8 *InBuff, u16 Len)
 {
@@ -833,86 +833,86 @@ INT16U Search_Info(u8 *InBuff, u16 Len)
 	
 	for(i=0;i<Len;i++)
 	{
-		if(InBuff[i]==0xFF)														//æ–‡ä»¶å¼€å¤´æ˜¯0xFF 0xAA
+		if(InBuff[i]==0xFF)														//ÎÄ¼ş¿ªÍ·ÊÇ0xFF 0xAA
 		{
-			if(InBuff[i+1]==0xAA)												//æ‰¾åˆ°æ–‡ä»¶å¤´äº†
+			if(InBuff[i+1]==0xAA)												//ÕÒµ½ÎÄ¼şÍ·ÁË
 			{
-				crc = RTU_CRC(InBuff+i+2,Sample_Manage_Len-2-2);				//è®¡ç®—CRCï¼Œç”¨äºè¯»å†™æ ¡éªŒ
-				if(*(InBuff+i+2+Sample_Manage_Len-3)!=((crc>>8)&0xff)) continue;//CRCé«˜å­—èŠ‚ï¼ˆè¿™ä¸ªæ˜¯é«˜åœ°å€ï¼‰==>è¿™æ ·æ˜¯æŒ‰å°ç«¯æ¨¡å¼ï¼Œå’Œå†…å­˜å­˜å‚¨U16ç›¸åŒ
-				if(*(InBuff+i+2+Sample_Manage_Len-4)!=(crc&0xff)) continue;		//CRCä½å­—èŠ‚ï¼ˆè¿™ä¸ªæ˜¯ä½åœ°å€ï¼‰==>è¿™æ ·æ˜¯æŒ‰å°ç«¯æ¨¡å¼ï¼Œå’Œå†…å­˜å­˜å‚¨U16ç›¸åŒ
-				else return i;													//æœ‰æ•ˆï¼Œè¿”å›offseté•¿åº¦ï¼ˆ0xFFåˆ°æ–‡ä»¶å¤´çš„åç§»é‡ï¼‰
+				crc = RTU_CRC(InBuff+i+2,Sample_Manage_Len-2-2);				//¼ÆËãCRC£¬ÓÃÓÚ¶ÁĞ´Ğ£Ñé
+				if(*(InBuff+i+2+Sample_Manage_Len-3)!=((crc>>8)&0xff)) continue;//CRC¸ß×Ö½Ú£¨Õâ¸öÊÇ¸ßµØÖ·£©==>ÕâÑùÊÇ°´Ğ¡¶ËÄ£Ê½£¬ºÍÄÚ´æ´æ´¢U16ÏàÍ¬
+				if(*(InBuff+i+2+Sample_Manage_Len-4)!=(crc&0xff)) continue;		//CRCµÍ×Ö½Ú£¨Õâ¸öÊÇµÍµØÖ·£©==>ÕâÑùÊÇ°´Ğ¡¶ËÄ£Ê½£¬ºÍÄÚ´æ´æ´¢U16ÏàÍ¬
+				else return i;													//ÓĞĞ§£¬·µ»Øoffset³¤¶È£¨0xFFµ½ÎÄ¼şÍ·µÄÆ«ÒÆÁ¿£©
 			}
 		}
 	}
-	return 0xFFFF;																//æ²¡æ‰¾åˆ°æœ‰æ•ˆç»“æ„ä½“ä¿¡æ¯
+	return 0xFFFF;																//Ã»ÕÒµ½ÓĞĞ§½á¹¹ÌåĞÅÏ¢
 }
 
 /*******************************************************************************
-åç§°ï¼šINT16U NW_History_Temp_Framing(u8 Frame_ID, u8 *InBuff, struct SAMP_MANAGE *Info_str, u8 *OutBuff)
-åŠŸèƒ½ï¼šæŒ‰å—ç½‘åè®®ç»„æ¸©åº¦ç”µæµæ•°æ®å¸§ã€‚è¯¦ç»†è¯´æ˜è§NW_Framing()å‡½æ•°ã€‚
+Ãû³Æ£ºINT16U NW_History_Temp_Framing(u8 Frame_ID, u8 *InBuff, struct SAMP_MANAGE *Info_str, u8 *OutBuff)
+¹¦ÄÜ£º°´ÄÏÍøĞ­Òé×éÎÂ¶ÈµçÁ÷Êı¾İÖ¡¡£ÏêÏ¸ËµÃ÷¼ûNW_Framing()º¯Êı¡£
 ----------------------------------------------------------------
-	èµ·å§‹ç 	è£…ç½®å·ç 	æ§åˆ¶å­—	æ•°æ®åŸŸé•¿åº¦	æ•°æ®åŸŸ	æ ¡éªŒç 	ç»“æŸç 	|
-	1å­—èŠ‚	6å­—èŠ‚	1å­—èŠ‚	2å­—èŠ‚		å˜é•¿	1å­—èŠ‚	1å­—èŠ‚	|
+	ÆğÊ¼Âë	×°ÖÃºÅÂë	¿ØÖÆ×Ö	Êı¾İÓò³¤¶È	Êı¾İÓò	Ğ£ÑéÂë	½áÊøÂë	|
+	1×Ö½Ú	6×Ö½Ú	1×Ö½Ú	2×Ö½Ú		±ä³¤	1×Ö½Ú	1×Ö½Ú	|
 ----------------------------------------------------------------
-å…¥å‚ï¼šu8 Frame_ID,å¸§IDï¼›u8 *InBuff,ä»æ–‡ä»¶ä¸­è¯»å–çš„å†…å®¹ï¼›struct SAMP_MANAGE *Info_str, ç»“æ„ä½“æŒ‡é’ˆã€‚
-å‡ºå‚ï¼šINT8U *OutBuffï¼Œç»„å¸§å®Œåçš„å­˜æ”¾åœ°å€ã€‚ç¼“å­˜å¤§å°æœ€å¤§è¦443å­—èŠ‚ã€‚
-è¿”å›ï¼šæ€»çš„æŠ¥æ–‡é•¿åº¦
+Èë²Î£ºu8 Frame_ID,Ö¡ID£»u8 *InBuff,´ÓÎÄ¼şÖĞ¶ÁÈ¡µÄÄÚÈİ£»struct SAMP_MANAGE *Info_str, ½á¹¹ÌåÖ¸Õë¡£
+³ö²Î£ºINT8U *OutBuff£¬×éÖ¡ÍêºóµÄ´æ·ÅµØÖ·¡£»º´æ´óĞ¡×î´óÒª443×Ö½Ú¡£
+·µ»Ø£º×ÜµÄ±¨ÎÄ³¤¶È
 *******************************************************************************/
 INT16U NW_History_Temp_Framing(u8 Frame_ID, u8 *InBuff, struct SAMP_MANAGE *Info_str, u8 *OutBuff)
 {
 	INT8U	i;
-	INT16U	delta_T,len;														//æ—¶é—´å·®ï¼Œå†…å®¹é•¿åº¦
+	INT16U	delta_T,len;														//Ê±¼ä²î£¬ÄÚÈİ³¤¶È
 	
-	len = 7+11+7*(Info_str->Sample_Num-1);										//æ•°æ®åŸŸé•¿åº¦
+	len = 7+11+7*(Info_str->Sample_Num-1);										//Êı¾İÓò³¤¶È
 	
-/*èµ·å§‹ç ã€è£…ç½®å·ç ã€æ§åˆ¶å­—ã€æ•°æ®åŸŸé•¿åº¦*/
-	OutBuff[0]=Start_Code;														//1Byteèµ·å§‹ç ï¼Œå›ºå®š68H
+/*ÆğÊ¼Âë¡¢×°ÖÃºÅÂë¡¢¿ØÖÆ×Ö¡¢Êı¾İÓò³¤¶È*/
+	OutBuff[0]=Start_Code;														//1ByteÆğÊ¼Âë£¬¹Ì¶¨68H
 	OutBuff[1]=Device_Number[0];
-	OutBuff[2]=Device_Number[1];												//å‰ä¸¤å­—èŠ‚è¡¨ç¤ºå‚å®¶ä»£ç ï¼ˆç”±å—æ–¹ç”µç½‘å…¬å¸ç»Ÿä¸€åˆ†é…ï¼‰ï¼Œé‡‡ç”¨å¤§å†™å­—æ¯(ASCII)
-	OutBuff[3]=Device_Number[2];												//åå››å­—èŠ‚è¡¨ç¤ºå‚å®¶å¯¹æ¯å¥—çŠ¶æ€ç›‘æµ‹è£…ç½®çš„è¯†åˆ«ç ï¼ˆåŸºç«™åœ°å€ï¼‰ï¼Œé‡‡ç”¨å¤§å†™å­—æ¯åŠæ•°å­—ï¼Œä¼˜å…ˆä½¿ç”¨æ•°å­—
+	OutBuff[2]=Device_Number[1];												//Ç°Á½×Ö½Ú±íÊ¾³§¼Ò´úÂë£¨ÓÉÄÏ·½µçÍø¹«Ë¾Í³Ò»·ÖÅä£©£¬²ÉÓÃ´óĞ´×ÖÄ¸(ASCII)
+	OutBuff[3]=Device_Number[2];												//ºóËÄ×Ö½Ú±íÊ¾³§¼Ò¶ÔÃ¿Ì××´Ì¬¼à²â×°ÖÃµÄÊ¶±ğÂë£¨»ùÕ¾µØÖ·£©£¬²ÉÓÃ´óĞ´×ÖÄ¸¼°Êı×Ö£¬ÓÅÏÈÊ¹ÓÃÊı×Ö
 	OutBuff[4]=Device_Number[3];														
 	OutBuff[5]=Device_Number[4];														
-	OutBuff[6]=Device_Number[5];												//6Byteè£…ç½®å·ç 
-	OutBuff[7]=TEM_CUR_UPLOAD;													//1Byteæ§åˆ¶å­—ï¼Œç”¨äºåŒºåˆ†æ•°æ®ç±»å‹ å›ºå®šTEM_CUR_UPLOAD
+	OutBuff[6]=Device_Number[5];												//6Byte×°ÖÃºÅÂë
+	OutBuff[7]=TEM_CUR_UPLOAD;													//1Byte¿ØÖÆ×Ö£¬ÓÃÓÚÇø·ÖÊı¾İÀàĞÍ ¹Ì¶¨TEM_CUR_UPLOAD
 	OutBuff[8]=(len>>8)&0xff;													//
-	OutBuff[9]=len&0xff;														//2Byteæ•°æ®åŸŸé•¿åº¦ï¼Œé«˜å­—èŠ‚åœ¨å‰ï¼Œè‹¥ä¸ºé›¶è¡¨ç¤ºæ— æ•°æ®åŸŸ
+	OutBuff[9]=len&0xff;														//2ByteÊı¾İÓò³¤¶È£¬¸ß×Ö½ÚÔÚÇ°£¬ÈôÎªÁã±íÊ¾ÎŞÊı¾İÓò
 	
-/*æ•°æ®åŸŸ*/	
-	memcpy(OutBuff+10,&Config.SecurityCode,4);									//4Byteå¯†æ–‡è®¤è¯
-	OutBuff[14]=Frame_ID;														//1Byteå¸§æ ‡è¯†
-	OutBuff[15]=Info_str->Sample_Num;											//1ByteåŒ…æ•°
-	OutBuff[16]=InBuff[0];														//1ByteåŠŸèƒ½å•å…ƒè¯†åˆ«ç 
+/*Êı¾İÓò*/	
+	memcpy(OutBuff+10,&Config.SecurityCode,4);									//4ByteÃÜÎÄÈÏÖ¤
+	OutBuff[14]=Frame_ID;														//1ByteÖ¡±êÊ¶
+	OutBuff[15]=Info_str->Sample_Num;											//1Byte°üÊı
+	OutBuff[16]=InBuff[0];														//1Byte¹¦ÄÜµ¥ÔªÊ¶±ğÂë
 												
-	/*é¦–åŒ…ï¼ˆç¬¬0åŒ…ï¼‰11Byte*/
-	SecondToNwTime(Info_str->Time[0],(struct NW_TIME*)(OutBuff+17));			//6Byteé‡‡æ ·æ—¶é—´ï¼ˆå¹´+æœˆ+æ—¥+æ—¶+åˆ†+ç§’ï¼‰ï¼ˆ6å­—èŠ‚ï¼ŒHEXè¡¨ç¤ºï¼‰
-	Tem_DS18B20_To_NW(OutBuff+23,InBuff+1);										//2Byteæµ‹ç‚¹æ¸©åº¦ï¼Œä¸Šé€å€¼=ï¼ˆå®é™…æ¸©åº¦+50ï¼‰*10
-	memset(OutBuff+25,0,2);														//2Byteå¯¼çº¿ç”µæµï¼Œä¸Šé€å€¼=å®é™…ç”µæµ*10ï¼Œå…ˆå›ºå®šå†™0
-	OutBuff[27]=33;																//1Byteä¼ æ„Ÿå™¨å·¥ä½œç”µå‹ï¼Œä¸Šé€å€¼=å®é™…ç”µå‹*10ï¼Œå…ˆå›ºå®šå†™ä¸ª33
+	/*Ê×°ü£¨µÚ0°ü£©11Byte*/
+	SecondToNwTime(Info_str->Time[0],(struct NW_TIME*)(OutBuff+17));			//6Byte²ÉÑùÊ±¼ä£¨Äê+ÔÂ+ÈÕ+Ê±+·Ö+Ãë£©£¨6×Ö½Ú£¬HEX±íÊ¾£©
+	Tem_DS18B20_To_NW(OutBuff+23,InBuff+1);										//2Byte²âµãÎÂ¶È£¬ÉÏËÍÖµ=£¨Êµ¼ÊÎÂ¶È+50£©*10
+	memset(OutBuff+25,0,2);														//2Byteµ¼ÏßµçÁ÷£¬ÉÏËÍÖµ=Êµ¼ÊµçÁ÷*10£¬ÏÈ¹Ì¶¨Ğ´0
+	OutBuff[27]=33;																//1Byte´«¸ĞÆ÷¹¤×÷µçÑ¹£¬ÉÏËÍÖµ=Êµ¼ÊµçÑ¹*10£¬ÏÈ¹Ì¶¨Ğ´¸ö33
 
-	/*ç¬¬ä¸€åŒ…åŠä»¥åå„åŒ…7Byte*/
-	for(i=1;i<Info_str->Sample_Num;i++)											//iåˆå€¼ä¸º1ï¼Œå› ä¸ºé¦–åŒ…ä¸åœ¨è¿™é‡Œå¤„ç†
+	/*µÚÒ»°ü¼°ÒÔºó¸÷°ü7Byte*/
+	for(i=1;i<Info_str->Sample_Num;i++)											//i³õÖµÎª1£¬ÒòÎªÊ×°ü²»ÔÚÕâÀï´¦Àí
 	{
-		delta_T=Info_str->Time[i]-Info_str->Time[i-1];							//è®¡ç®—ä¸ä¸ŠåŒ…é‡‡æ ·æ—¶é—´å·®
-		OutBuff[28+7*(i-1)]=(delta_T>>8)&0xFF;									//2Byteé‡‡æ ·æ—¶é—´å·®ï¼Œé«˜å­—èŠ‚
-		OutBuff[29+7*(i-1)]=delta_T&0xFF;										//ä½å­—èŠ‚
-		Tem_DS18B20_To_NW(OutBuff+30+7*(i-1),InBuff+2*i+1);						//2Byteæµ‹ç‚¹æ¸©åº¦
-		memset(OutBuff+32+7*(i-1),0,2);											//2Byteå¯¼çº¿ç”µæµ
-		OutBuff[34+7*(i-1)]=33;													//1Byteä¼ æ„Ÿå™¨å·¥ä½œç”µå‹		
+		delta_T=Info_str->Time[i]-Info_str->Time[i-1];							//¼ÆËãÓëÉÏ°ü²ÉÑùÊ±¼ä²î
+		OutBuff[28+7*(i-1)]=(delta_T>>8)&0xFF;									//2Byte²ÉÑùÊ±¼ä²î£¬¸ß×Ö½Ú
+		OutBuff[29+7*(i-1)]=delta_T&0xFF;										//µÍ×Ö½Ú
+		Tem_DS18B20_To_NW(OutBuff+30+7*(i-1),InBuff+2*i+1);						//2Byte²âµãÎÂ¶È
+		memset(OutBuff+32+7*(i-1),0,2);											//2Byteµ¼ÏßµçÁ÷
+		OutBuff[34+7*(i-1)]=33;													//1Byte´«¸ĞÆ÷¹¤×÷µçÑ¹		
 	}
 	
-/*æ ¡éªŒç ã€ç»“æŸç */
-	OutBuff[35+7*(i-2)]=Negation_CS(OutBuff+1,34+7*(i-2));						//1Byteæ£€éªŒç   è®¡ç®—CSå‰é™¤èµ·å§‹ç çš„æ‰€æœ‰å­—èŠ‚
-	OutBuff[36+7*(i-2)]=Epilog_Code;											//1Byteç»“æŸç ï¼Œå›ºå®š16H
-	return 37+7*(i-2);		 													//æ€»çš„æŠ¥æ–‡é•¿åº¦
+/*Ğ£ÑéÂë¡¢½áÊøÂë*/
+	OutBuff[35+7*(i-2)]=Negation_CS(OutBuff+1,34+7*(i-2));						//1Byte¼ìÑéÂë  ¼ÆËãCSÇ°³ıÆğÊ¼ÂëµÄËùÓĞ×Ö½Ú
+	OutBuff[36+7*(i-2)]=Epilog_Code;											//1Byte½áÊøÂë£¬¹Ì¶¨16H
+	return 37+7*(i-2);		 													//×ÜµÄ±¨ÎÄ³¤¶È
 }
 
 /*******************************************************************************
-åç§°ï¼švoid Tem_DS18B20_To_NW(INT8U* Outbuff,INT8U* InBuff)
-åŠŸèƒ½ï¼šå°†18B20æµ‹å¾—çš„ä¸¤å­—èŠ‚æ¸©åº¦è½¬åŒ–æˆå—ç½‘è§„çº¦éœ€æ±‚çš„æ ¼å¼ï¼ˆä¸Šé€å€¼=å®é™…æ¸©åº¦*10+500ï¼‰
-18B20æµ‹å¾—çš„æ¸©åº¦å€¼ä¸ºå®é™…æ¸©åº¦*10
-å…¥å‚ï¼šInBuff ï¼šè¾“å…¥æ¸©åº¦æ•°ç»„æŒ‡é’ˆ
-å‡ºå‚ï¼šOutbuffï¼šè¾“å‡ºæ¸©åº¦æ•°ç»„æŒ‡é’ˆ
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid Tem_DS18B20_To_NW(INT8U* Outbuff,INT8U* InBuff)
+¹¦ÄÜ£º½«18B20²âµÃµÄÁ½×Ö½ÚÎÂ¶È×ª»¯³ÉÄÏÍø¹æÔ¼ĞèÇóµÄ¸ñÊ½£¨ÉÏËÍÖµ=Êµ¼ÊÎÂ¶È*10+500£©
+18B20²âµÃµÄÎÂ¶ÈÖµÎªÊµ¼ÊÎÂ¶È*10
+Èë²Î£ºInBuff £ºÊäÈëÎÂ¶ÈÊı×éÖ¸Õë
+³ö²Î£ºOutbuff£ºÊä³öÎÂ¶ÈÊı×éÖ¸Õë
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void Tem_DS18B20_To_NW(INT8U* Outbuff,INT8U* InBuff)									
 {
@@ -922,122 +922,122 @@ void Tem_DS18B20_To_NW(INT8U* Outbuff,INT8U* InBuff)
 	
 	if(Temp>=0xf800) 
 	{
-		if(Temp>0xF9F4)	Temp=0xF9F4;											//æ¸©åº¦å°äº-50Â°æ—¶éƒ½è®¾ä¸º-50Â° ï¼ˆ18B20è¯»æ•°ä¸ºF9F4ï¼‰
-		Temp=500-Temp&0x07ff;													//è´Ÿæ¸©
+		if(Temp>0xF9F4)	Temp=0xF9F4;											//ÎÂ¶ÈĞ¡ÓÚ-50¡ãÊ±¶¼ÉèÎª-50¡ã £¨18B20¶ÁÊıÎªF9F4£©
+		Temp=500-Temp&0x07ff;													//¸ºÎÂ
 	}
-	else Temp=500+Temp;															//æ­£æ¸©
+	else Temp=500+Temp;															//ÕıÎÂ
 	
 	Outbuff[0]=(Temp>>8)&0xff;
 	Outbuff[1]=Temp&0xff;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U File_List_Query_Comm(u8 *InBuff, u16 Len)
-åŠŸèƒ½ï¼šä¸»ç«™æŸ¥è¯¢æŸä¸ªæ—¶é—´èŒƒå›´å†…è£…ç½®å­˜å‚¨çš„æ–‡ä»¶åˆ—è¡¨ï¼Œè£…ç½®æ”¶åˆ°è¯¥å‘½ä»¤åï¼Œè¿”å›ç¬¦åˆæŸ¥è¯¢æ¡ä»¶çš„æ–‡ä»¶
-åˆ—è¡¨ã€‚01Hï¼ŒJPEGæ–‡ä»¶ï¼Œå¯¹åº”å›¾åƒæ–‡ä»¶ï¼›02Hï¼Œæ•…éšœå®šä½æ³¢å½¢æ–‡ä»¶ï¼›....FFHï¼Œæ‰€æœ‰æ–‡ä»¶ç±»å‹ã€‚
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§ï¼›u16 Lenï¼Œé•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U File_List_Query_Comm(u8 *InBuff, u16 Len)
+¹¦ÄÜ£ºÖ÷Õ¾²éÑ¯Ä³¸öÊ±¼ä·¶Î§ÄÚ×°ÖÃ´æ´¢µÄÎÄ¼şÁĞ±í£¬×°ÖÃÊÕµ½¸ÃÃüÁîºó£¬·µ»Ø·ûºÏ²éÑ¯Ìõ¼şµÄÎÄ¼ş
+ÁĞ±í¡£01H£¬JPEGÎÄ¼ş£¬¶ÔÓ¦Í¼ÏñÎÄ¼ş£»02H£¬¹ÊÕÏ¶¨Î»²¨ĞÎÎÄ¼ş£»....FFH£¬ËùÓĞÎÄ¼şÀàĞÍ¡£
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡£»u16 Len£¬³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U File_List_Query_Comm(u8 *InBuff, u16 Len)
 {
-	INT16U	len_frame=0;														//å¸§é•¿åº¦/æˆ–ç”¨äºè®¡ç®—æ•°æ®åŸŸé•¿åº¦
+	INT16U	len_frame=0;														//Ö¡³¤¶È/»òÓÃÓÚ¼ÆËãÊı¾İÓò³¤¶È
 	
-	//time_start = time_change(InBuff+11);										//èµ·å§‹æ—¶é—´ç»“æŸæ—¶é—´è§£æ		===============æœªå®Œæˆ
+	//time_start = time_change(InBuff+11);										//ÆğÊ¼Ê±¼ä½áÊøÊ±¼ä½âÎö		===============Î´Íê³É
 	//time_end = time_change(InBuff+17);
-	switch(InBuff[10])															//æ–‡ä»¶ç±»å‹è§£æ
+	switch(InBuff[10])															//ÎÄ¼şÀàĞÍ½âÎö
 	{
-		case JPEG_FILE:		/*æš‚æ— æ­¤åŠŸèƒ½*/
-		case FLW_FILE:		/*æš‚æ— æ­¤åŠŸèƒ½*/										//ä¸¤ä¸ªcaseå…±ç”¨ä¸€ä¸ª
-				len_frame = NW_Framing(FLW_FILE,LTE_Tx_Buff);					//ç»„å¸§ï¼Œè‹¥ç¬¦åˆæŸ¥è¯¢æ¡ä»¶çš„æ–‡ä»¶æ ¼å¼ä¸º0ï¼Œè¿”å›0000H
-				LteCommunication(LTE_Tx_Buff,len_frame,0,0);					//ä¸ŠæŠ¥ï¼Œæ— å›å¤ä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+		case JPEG_FILE:		/*ÔİÎŞ´Ë¹¦ÄÜ*/
+		case FLW_FILE:		/*ÔİÎŞ´Ë¹¦ÄÜ*/										//Á½¸öcase¹²ÓÃÒ»¸ö
+				len_frame = NW_Framing(FLW_FILE,LTE_Tx_Buff);					//×éÖ¡£¬Èô·ûºÏ²éÑ¯Ìõ¼şµÄÎÄ¼ş¸ñÊ½Îª0£¬·µ»Ø0000H
+				LteCommunication(LTE_Tx_Buff,len_frame,0,0);					//ÉÏ±¨£¬ÎŞ»Ø¸´²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 				return 1;
 		
-		case ANY_FILE:		/*æ¸©åº¦è¯¦ç»†æ•°æ®å¯ä»¥æ”¾è¿™é‡Œ*/
-//				len_frame = NW_FileList_framing(FILE_LIST_QUERY,0,time_start,time_end,LTE_Tx_Buff);		//æ–‡ä»¶File_Listä¸“ç”¨ç»„å¸§ï¼Œå†åšä¸ªå‡½æ•°å§		===============æœªå®Œæˆ
-				LteCommunication(LTE_Tx_Buff,len_frame,0,0);					//ä¸ŠæŠ¥ï¼Œæ— å›å¤ä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+		case ANY_FILE:		/*ÎÂ¶ÈÏêÏ¸Êı¾İ¿ÉÒÔ·ÅÕâÀï*/
+//				len_frame = NW_FileList_framing(FILE_LIST_QUERY,0,time_start,time_end,LTE_Tx_Buff);		//ÎÄ¼şFile_List×¨ÓÃ×éÖ¡£¬ÔÙ×ö¸öº¯Êı°É		===============Î´Íê³É
+				LteCommunication(LTE_Tx_Buff,len_frame,0,0);					//ÉÏ±¨£¬ÎŞ»Ø¸´²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 				return 1;
 		
 		default:
 				break;
 	}
-	//æ‰“å°è°ƒè¯•ä¿¡æ¯
+	//´òÓ¡µ÷ÊÔĞÅÏ¢
 	return 0;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Files_Upload(u8 *FileName,u8 Des_Len)
-åŠŸèƒ½ï¼š	STEP 1 è£…ç½®è¯·æ±‚ä¸Šé€æ–‡ä»¶ï¼ˆæ§åˆ¶å­—ï¼š73Hï¼‰
-		STEP 2 æ–‡ä»¶ä¸Šé€ï¼ˆæ§åˆ¶å­—ï¼š74Hï¼‰
-		STEP 3 æ–‡ä»¶ä¸Šé€ç»“æŸæ ‡è®°ï¼ˆæ§åˆ¶å­—ï¼š75Hï¼‰ï¼Œå¹¶ç­‰å¾…æ–‡ä»¶è¡¥åŒ…æ•°æ®ä¸‹å‘ï¼ˆæ§åˆ¶å­—ï¼š76Hï¼‰
-		STEP 4 è§£ææ¥æ”¶å†…å®¹å¹¶åˆ¤æ–­ï¼Œé€‰æ‹©å›åˆ°STEP 2 è¿›è¡Œè¡¥å‘ï¼Œæˆ–ç»“æŸå‘é€
-å…¥å‚ï¼šu8 *FilenNameï¼Œæ–‡ä»¶åæŒ‡é’ˆï¼Œå°†æ­¤æ–‡ä»¶ä¸Šä¼ 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U Files_Upload(u8 *FileName,u8 Des_Len)
+¹¦ÄÜ£º	STEP 1 ×°ÖÃÇëÇóÉÏËÍÎÄ¼ş£¨¿ØÖÆ×Ö£º73H£©
+		STEP 2 ÎÄ¼şÉÏËÍ£¨¿ØÖÆ×Ö£º74H£©
+		STEP 3 ÎÄ¼şÉÏËÍ½áÊø±ê¼Ç£¨¿ØÖÆ×Ö£º75H£©£¬²¢µÈ´ıÎÄ¼ş²¹°üÊı¾İÏÂ·¢£¨¿ØÖÆ×Ö£º76H£©
+		STEP 4 ½âÎö½ÓÊÕÄÚÈİ²¢ÅĞ¶Ï£¬Ñ¡Ôñ»Øµ½STEP 2 ½øĞĞ²¹·¢£¬»ò½áÊø·¢ËÍ
+Èë²Î£ºu8 *FilenName£¬ÎÄ¼şÃûÖ¸Õë£¬½«´ËÎÄ¼şÉÏ´«
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U Files_Upload(u8 *FileName,u16 Des_Len)
 {
 	INT8U	i=0;
-	INT8U 	STEP=FILE_UL_REQUEST;												//å‘é€èµ·å§‹æ­¥éª¤ä¸ºä¸ŠæŠ¥è¯·æ±‚
-	INT16U	len_frame=0;														//å¸§é•¿åº¦
-	INT16U	len=0;																//æ¥æ”¶åˆ°çš„é•¿åº¦
-	INT16U	packages=0;															//æ–‡ä»¶æ€»åŒ…æ•°
-	INT16U 	Pac_Num=0;															//å½“å‰è¦ç»„å¸§çš„åŒ…å·
-	INT16U	file_len=0;															//æ–‡ä»¶æ€»é•¿åº¦
-	INT8U	*R,*P_pac_num=0;													//é¦–åœ°å€/è¡¥åŒ…åŒ…å·é¦–åœ°å€
+	INT8U 	STEP=FILE_UL_REQUEST;												//·¢ËÍÆğÊ¼²½ÖèÎªÉÏ±¨ÇëÇó
+	INT16U	len_frame=0;														//Ö¡³¤¶È
+	INT16U	len=0;																//½ÓÊÕµ½µÄ³¤¶È
+	INT16U	packages=0;															//ÎÄ¼ş×Ü°üÊı
+	INT16U 	Pac_Num=0;															//µ±Ç°Òª×éÖ¡µÄ°üºÅ
+	INT16U	file_len=0;															//ÎÄ¼ş×Ü³¤¶È
+	INT8U	*R,*P_pac_num=0;													//Ê×µØÖ·/²¹°ü°üºÅÊ×µØÖ·
 	
-	//file_len = 																//è¯»å–æ–‡ä»¶	===============æœªå®Œæˆ
-	packages = file_len / Des_Len;												//è®¡ç®—æ–‡ä»¶æ€»åŒ…æ•°
+	//file_len = 																//¶ÁÈ¡ÎÄ¼ş	===============Î´Íê³É
+	packages = file_len / Des_Len;												//¼ÆËãÎÄ¼ş×Ü°üÊı
 	
 	while(1)
 	{
 		switch(STEP)
 		{
-			case FILE_UL_REQUEST:	/*STEP 1 è£…ç½®è¯·æ±‚ä¸Šé€æ–‡ä»¶ï¼ˆæ§åˆ¶å­—ï¼š73Hï¼‰*/
-					len_frame = NW_File_Framing(FILE_UL_REQUEST,FileName,0,0,LTE_Tx_Buff);			//æ–‡ä»¶ä¸“ç”¨ç»„å¸§		===============æœªå®Œæˆ
-					for(i=0;i<5;i++)																//æœ€å¤šé‡è¯•5æ¬¡ï¼ˆåè®®è¦æ±‚ï¼‰
+			case FILE_UL_REQUEST:	/*STEP 1 ×°ÖÃÇëÇóÉÏËÍÎÄ¼ş£¨¿ØÖÆ×Ö£º73H£©*/
+					len_frame = NW_File_Framing(FILE_UL_REQUEST,FileName,0,0,LTE_Tx_Buff);			//ÎÄ¼ş×¨ÓÃ×éÖ¡		===============Î´Íê³É
+					for(i=0;i<5;i++)																//×î¶àÖØÊÔ5´Î£¨Ğ­ÒéÒªÇó£©
 					{
-						len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,3*20);				//è£…ç½®è¯·æ±‚ä¸Šé€æ–‡ä»¶ï¼Œå¹¶ç­‰å¾…æ¥æ”¶ï¼Œæ¯æ¬¡é—´éš”3ç§’ï¼ˆåè®®è¦æ±‚ï¼‰
-						if(!len) continue;															//é€šä¿¡å¤±è´¥æ—¶é‡è¯•
-						Judge_NW_Framing(FILE_UL_REQUEST,LTE_Rx_Buff,len,0);						//åˆ¤æ–­æ¥æ”¶å†…å®¹æ˜¯å¦ç¬¦åˆå—ç½‘åè®®
-						////è¿›ä¸€æ­¥éªŒè¯æ˜¯å¦åŸå‘½ä»¤è¿”å›ï¼ˆä¸åšäº†ï¼‰
-						STEP = FILE_UPLOAD;															//ä¸‹ä¸€æ­¥ï¼Œæ–‡ä»¶ä¸Šä¼ 
-						break;																		//è·³å‡ºforå¾ªç¯																
+						len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,3*20);				//×°ÖÃÇëÇóÉÏËÍÎÄ¼ş£¬²¢µÈ´ı½ÓÊÕ£¬Ã¿´Î¼ä¸ô3Ãë£¨Ğ­ÒéÒªÇó£©
+						if(!len) continue;															//Í¨ĞÅÊ§°ÜÊ±ÖØÊÔ
+						Judge_NW_Framing(FILE_UL_REQUEST,LTE_Rx_Buff,len,0);						//ÅĞ¶Ï½ÓÊÕÄÚÈİÊÇ·ñ·ûºÏÄÏÍøĞ­Òé
+						////½øÒ»²½ÑéÖ¤ÊÇ·ñÔ­ÃüÁî·µ»Ø£¨²»×öÁË£©
+						STEP = FILE_UPLOAD;															//ÏÂÒ»²½£¬ÎÄ¼şÉÏ´«
+						break;																		//Ìø³öforÑ­»·																
 					}
-					//æ‰“å°è°ƒè¯•ä¿¡æ¯
-					return 0;																		//é‡è¯•è¶…æ—¶ï¼Œè¯·æ±‚å¤±è´¥
+					//´òÓ¡µ÷ÊÔĞÅÏ¢
+					return 0;																		//ÖØÊÔ³¬Ê±£¬ÇëÇóÊ§°Ü
 			
-			case FILE_UPLOAD:		/*STEP 2 æ–‡ä»¶ä¸Šé€ï¼ˆæ§åˆ¶å­—ï¼š74Hï¼‰*/
+			case FILE_UPLOAD:		/*STEP 2 ÎÄ¼şÉÏËÍ£¨¿ØÖÆ×Ö£º74H£©*/
 					for(i=0;i<packages;i++)
 					{
-						if(P_pac_num==0) Pac_Num=i;													//è®¡ç®—è¦è¡¥åŒ…çš„åŒ…å·ï¼ˆéè¡¥åŒ…çŠ¶å†µï¼‰
-						else Pac_Num = (P_pac_num[2*i]>>8)+P_pac_num[2*i+1];						//è®¡ç®—è¦è¡¥åŒ…çš„åŒ…å·ï¼ˆè¡¥åŒ…çŠ¶å†µï¼‰
-						len_frame = NW_File_Framing(FILE_UPLOAD,FileName,Pac_Num,Des_Len,LTE_Tx_Buff);		//æ–‡ä»¶ä¸“ç”¨ç»„å¸§ï¼Œæ¯åŒ…æ–‡ä»¶å†…å®¹é•¿åº¦Des_Len		===============æœªå®Œæˆ
-						LteCommunication(LTE_Tx_Buff,len_frame,0,0);										//åªå‘ä¸æ”¶			
+						if(P_pac_num==0) Pac_Num=i;													//¼ÆËãÒª²¹°üµÄ°üºÅ£¨·Ç²¹°ü×´¿ö£©
+						else Pac_Num = (P_pac_num[2*i]>>8)+P_pac_num[2*i+1];						//¼ÆËãÒª²¹°üµÄ°üºÅ£¨²¹°ü×´¿ö£©
+						len_frame = NW_File_Framing(FILE_UPLOAD,FileName,Pac_Num,Des_Len,LTE_Tx_Buff);		//ÎÄ¼ş×¨ÓÃ×éÖ¡£¬Ã¿°üÎÄ¼şÄÚÈİ³¤¶ÈDes_Len		===============Î´Íê³É
+						LteCommunication(LTE_Tx_Buff,len_frame,0,0);										//Ö»·¢²»ÊÕ			
 					}
-					STEP = FILE_UL_END;																//ä¸‹ä¸€æ­¥ï¼Œæ–‡ä»¶ä¸Šä¼ ç»“æŸæ ‡è®°	
+					STEP = FILE_UL_END;																//ÏÂÒ»²½£¬ÎÄ¼şÉÏ´«½áÊø±ê¼Ç	
 					break;
 			
-			case FILE_UL_END:		/*STEP 3 æ–‡ä»¶ä¸Šé€ç»“æŸæ ‡è®°ï¼ˆæ§åˆ¶å­—ï¼š75Hï¼‰ï¼Œå¹¶ç­‰å¾…æ–‡ä»¶è¡¥åŒ…æ•°æ®ä¸‹å‘ï¼ˆæ§åˆ¶å­—ï¼š76Hï¼‰*/
-					OSTimeDly(2*20);																//è£…ç½®ä¸Šé€æ–‡ä»¶æ•°æ®å…¨éƒ¨ç»“æŸå2ç§’ï¼Œå‘é€è¯¥æŒ‡ä»¤
-					len_frame = NW_File_Framing(FILE_UL_END,FileName,0,0,LTE_Tx_Buff);				//æ–‡ä»¶ä¸“ç”¨ç»„å¸§		===============æœªå®Œæˆ
-					for(i=0;i<5;i++)																//æœ€å¤šé‡è¯•5æ¬¡ï¼ˆåè®®è¦æ±‚ï¼‰
+			case FILE_UL_END:		/*STEP 3 ÎÄ¼şÉÏËÍ½áÊø±ê¼Ç£¨¿ØÖÆ×Ö£º75H£©£¬²¢µÈ´ıÎÄ¼ş²¹°üÊı¾İÏÂ·¢£¨¿ØÖÆ×Ö£º76H£©*/
+					OSTimeDly(2*20);																//×°ÖÃÉÏËÍÎÄ¼şÊı¾İÈ«²¿½áÊøºó2Ãë£¬·¢ËÍ¸ÃÖ¸Áî
+					len_frame = NW_File_Framing(FILE_UL_END,FileName,0,0,LTE_Tx_Buff);				//ÎÄ¼ş×¨ÓÃ×éÖ¡		===============Î´Íê³É
+					for(i=0;i<5;i++)																//×î¶àÖØÊÔ5´Î£¨Ğ­ÒéÒªÇó£©
 					{
-						len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,30*20);			//è£…ç½®è¯·æ±‚ä¸Šé€æ–‡ä»¶ï¼Œå¹¶ç­‰å¾…æ¥æ”¶ï¼Œæ¯æ¬¡é—´éš”30ç§’ï¼ˆåè®®è¦æ±‚ï¼‰ï¼Œå»¶æ—¶å¾ˆå¯èƒ½ä¼šä¸å‡†ï¼Œä¸ç®¡å®ƒäº†
-						if(!len) continue;															//é€šä¿¡å¤±è´¥æ—¶é‡è¯•
-						R = Judge_NW_Framing(FILE_FILLING,LTE_Rx_Buff,len,0);						//åˆ¤æ–­æ¥æ”¶æŒ‡ä»¤æ˜¯å¦ä¸º76H
-						if(!R)	continue;															//æ¥æ”¶ä¸æ­£ç¡®æ—¶é‡è¯•	
-						STEP = 4;																	//ä¸‹ä¸€æ­¥ï¼Œè§£ææ¥æ”¶å†…å®¹å¹¶åˆ¤æ–­
-						break;																		//è·³å‡ºforå¾ªç¯																
+						len = LteCommunication(LTE_Tx_Buff,len_frame,LTE_Rx_Buff,30*20);			//×°ÖÃÇëÇóÉÏËÍÎÄ¼ş£¬²¢µÈ´ı½ÓÊÕ£¬Ã¿´Î¼ä¸ô30Ãë£¨Ğ­ÒéÒªÇó£©£¬ÑÓÊ±ºÜ¿ÉÄÜ»á²»×¼£¬²»¹ÜËüÁË
+						if(!len) continue;															//Í¨ĞÅÊ§°ÜÊ±ÖØÊÔ
+						R = Judge_NW_Framing(FILE_FILLING,LTE_Rx_Buff,len,0);						//ÅĞ¶Ï½ÓÊÕÖ¸ÁîÊÇ·ñÎª76H
+						if(!R)	continue;															//½ÓÊÕ²»ÕıÈ·Ê±ÖØÊÔ	
+						STEP = 4;																	//ÏÂÒ»²½£¬½âÎö½ÓÊÕÄÚÈİ²¢ÅĞ¶Ï
+						break;																		//Ìø³öforÑ­»·																
 					}
-					//æ‰“å°è°ƒè¯•ä¿¡æ¯
-					return 0;																		//é‡è¯•è¶…æ—¶ï¼Œä¸»ç«™æœªå›å¤ä¸Šé€ç»“æŸæ ‡è®°	
+					//´òÓ¡µ÷ÊÔĞÅÏ¢
+					return 0;																		//ÖØÊÔ³¬Ê±£¬Ö÷Õ¾Î´»Ø¸´ÉÏËÍ½áÊø±ê¼Ç	
 			
-			case 4:					/*STEP 4 è§£ææ¥æ”¶å†…å®¹å¹¶åˆ¤æ–­*/
-					if(R[110]==0) return 1;															//æ— éœ€è¡¥åŒ…æ—¶ï¼Œå‘é€æˆåŠŸï¼Œè¿”å›1
-					packages = R[110];																//è®¡ç®—è¡¥åŒ…æ•°ï¼ˆ1å­—èŠ‚ï¼‰
-					P_pac_num = R+111;																//è¡¥åŒ…åŒ…å·é¦–åœ°å€
-					STEP = FILE_UPLOAD;																//ä¸‹ä¸€æ­¥ï¼Œå›åˆ°STEP 2 æ–‡ä»¶ä¸Šé€ï¼ˆæ§åˆ¶å­—ï¼š74Hï¼‰
+			case 4:					/*STEP 4 ½âÎö½ÓÊÕÄÚÈİ²¢ÅĞ¶Ï*/
+					if(R[110]==0) return 1;															//ÎŞĞè²¹°üÊ±£¬·¢ËÍ³É¹¦£¬·µ»Ø1
+					packages = R[110];																//¼ÆËã²¹°üÊı£¨1×Ö½Ú£©
+					P_pac_num = R+111;																//²¹°ü°üºÅÊ×µØÖ·
+					STEP = FILE_UPLOAD;																//ÏÂÒ»²½£¬»Øµ½STEP 2 ÎÄ¼şÉÏËÍ£¨¿ØÖÆ×Ö£º74H£©
 					break;
 			
 			default:
@@ -1048,183 +1048,183 @@ INT8U Files_Upload(u8 *FileName,u16 Des_Len)
 }
 
 /*******************************************************************************
-åç§°ï¼šINT16U NW_File_Framing(u8 Cmd,u8 *FileName,u8 Pac_Num,u8 Des_Len,u8 *OutBuff)
-åŠŸèƒ½ï¼šæ–‡ä»¶ç»„å¸§ä¸“ç”¨ï¼ŒæŒ‰å—ç½‘åè®®ç»„å¸§ã€‚å¸§ç»“æ„åŠæ•°æ®æ’åˆ—æ ¼å¼è¯´æ˜:æ•°æ®åŒ…é‡‡ç”¨æ•°æ®å¸§æ¨¡å¼ï¼Œå¯¹æ•°
-æ®å¸§å®šä¹‰èµ·å§‹ç ã€è£…ç½®å·ç ã€æ§åˆ¶ç±»å‹ç ã€æ•°æ®åŸŸé•¿åº¦ã€æ•°æ®åŸŸã€æ ¡éªŒç å’Œç»“æŸç ã€‚æ•°æ®å¸§é•¿åº¦ä¸å¤§
-äº4000å­—èŠ‚ã€‚é‡‡ç”¨å¤§ç«¯æ¨¡å¼ï¼ˆæ•°æ®çš„é«˜å­—èŠ‚ä¿å­˜åœ¨å†…å­˜çš„ä½åœ°å€ä¸­ï¼‰ã€‚æ ¡éªŒç é‡‡ç”¨ç´¯åŠ å’Œå–åçš„æ ¡éªŒ
-æ–¹å¼ï¼Œå‘é€æ–¹å°†è£…ç½®å·ç ã€æ§åˆ¶å­—ã€æ•°æ®åŸŸé•¿åº¦å’Œæ•°æ®åŒºçš„æ‰€æœ‰å­—èŠ‚è¿›è¡Œç®—æœ¯ç´¯åŠ ï¼ŒæŠ›å¼ƒé«˜ä½ï¼Œåªä¿
-ç•™æœ€åå•å­—èŠ‚ï¼Œå°†å•å­—èŠ‚å–åã€‚
+Ãû³Æ£ºINT16U NW_File_Framing(u8 Cmd,u8 *FileName,u8 Pac_Num,u8 Des_Len,u8 *OutBuff)
+¹¦ÄÜ£ºÎÄ¼ş×éÖ¡×¨ÓÃ£¬°´ÄÏÍøĞ­Òé×éÖ¡¡£Ö¡½á¹¹¼°Êı¾İÅÅÁĞ¸ñÊ½ËµÃ÷:Êı¾İ°ü²ÉÓÃÊı¾İÖ¡Ä£Ê½£¬¶ÔÊı
+¾İÖ¡¶¨ÒåÆğÊ¼Âë¡¢×°ÖÃºÅÂë¡¢¿ØÖÆÀàĞÍÂë¡¢Êı¾İÓò³¤¶È¡¢Êı¾İÓò¡¢Ğ£ÑéÂëºÍ½áÊøÂë¡£Êı¾İÖ¡³¤¶È²»´ó
+ÓÚ4000×Ö½Ú¡£²ÉÓÃ´ó¶ËÄ£Ê½£¨Êı¾İµÄ¸ß×Ö½Ú±£´æÔÚÄÚ´æµÄµÍµØÖ·ÖĞ£©¡£Ğ£ÑéÂë²ÉÓÃÀÛ¼ÓºÍÈ¡·´µÄĞ£Ñé
+·½Ê½£¬·¢ËÍ·½½«×°ÖÃºÅÂë¡¢¿ØÖÆ×Ö¡¢Êı¾İÓò³¤¶ÈºÍÊı¾İÇøµÄËùÓĞ×Ö½Ú½øĞĞËãÊõÀÛ¼Ó£¬Å×Æú¸ßÎ»£¬Ö»±£
+Áô×îºóµ¥×Ö½Ú£¬½«µ¥×Ö½ÚÈ¡·´¡£
 ----------------------------------------------------------------
-èµ·å§‹ç 	è£…ç½®å·ç 	æ§åˆ¶å­—	æ•°æ®åŸŸé•¿åº¦	æ•°æ®åŸŸ	æ ¡éªŒç 	ç»“æŸç 	|
-1å­—èŠ‚	6å­—èŠ‚		1å­—èŠ‚	2å­—èŠ‚		å˜é•¿	1å­—èŠ‚	1å­—èŠ‚	|
+ÆğÊ¼Âë	×°ÖÃºÅÂë	¿ØÖÆ×Ö	Êı¾İÓò³¤¶È	Êı¾İÓò	Ğ£ÑéÂë	½áÊøÂë	|
+1×Ö½Ú	6×Ö½Ú		1×Ö½Ú	2×Ö½Ú		±ä³¤	1×Ö½Ú	1×Ö½Ú	|
 ----------------------------------------------------------------
-å…¥å‚ï¼šINT8U Cmd,æ§åˆ¶å­—ï¼Œç”¨äºåŒºåˆ†æ•°æ®ç±»å‹ï¼›u8 *FileName,æ–‡ä»¶åï¼›u8 Pac_Num,ç»„å¸§åŒ…å·ï¼›
-u8 Des_Len,å¸§å†…å®¹é•¿åº¦
-å‡ºå‚ï¼šINT8U *OutBuffï¼Œç»„å¸§å®Œåçš„å­˜æ”¾åœ°å€
-è¿”å›ï¼šæ€»çš„æŠ¥æ–‡é•¿åº¦
+Èë²Î£ºINT8U Cmd,¿ØÖÆ×Ö£¬ÓÃÓÚÇø·ÖÊı¾İÀàĞÍ£»u8 *FileName,ÎÄ¼şÃû£»u8 Pac_Num,×éÖ¡°üºÅ£»
+u8 Des_Len,Ö¡ÄÚÈİ³¤¶È
+³ö²Î£ºINT8U *OutBuff£¬×éÖ¡ÍêºóµÄ´æ·ÅµØÖ·
+·µ»Ø£º×ÜµÄ±¨ÎÄ³¤¶È
 *******************************************************************************/
 INT16U NW_File_Framing(u8 Cmd,u8 *FileName,u8 Pac_Num,u8 Des_Len,u8 *OutBuff)
 {
-	INT16U len;																	//å†…å®¹é•¿åº¦
+	INT16U len;																	//ÄÚÈİ³¤¶È
 
-	/*è·å–å†…å®¹ï¼Œè¿”å›å†…å®¹é•¿åº¦*/
-//	len=Get_DataField(Cmd,&OutBuff[10]);										//è·å–å†…å®¹ï¼Œè¿”å›å†…å®¹é•¿åº¦
-	////è¿™é‡Œè¯»å–æ–‡ä»¶						 		==============================æœªå®Œæˆ
+	/*»ñÈ¡ÄÚÈİ£¬·µ»ØÄÚÈİ³¤¶È*/
+//	len=Get_DataField(Cmd,&OutBuff[10]);										//»ñÈ¡ÄÚÈİ£¬·µ»ØÄÚÈİ³¤¶È
+	////ÕâÀï¶ÁÈ¡ÎÄ¼ş						 		==============================Î´Íê³É
 	
-	OutBuff[0]=Start_Code;														//1Byteèµ·å§‹ç ï¼Œå›ºå®š68H
+	OutBuff[0]=Start_Code;														//1ByteÆğÊ¼Âë£¬¹Ì¶¨68H
 	OutBuff[1]=Device_Number[0];
-	OutBuff[2]=Device_Number[1];												//å‰ä¸¤å­—èŠ‚è¡¨ç¤ºå‚å®¶ä»£ç ï¼ˆç”±å—æ–¹ç”µç½‘å…¬å¸ç»Ÿä¸€åˆ†é…ï¼‰ï¼Œé‡‡ç”¨å¤§å†™å­—æ¯(ASCII)
-	OutBuff[3]=Device_Number[2];												//åå››å­—èŠ‚è¡¨ç¤ºå‚å®¶å¯¹æ¯å¥—çŠ¶æ€ç›‘æµ‹è£…ç½®çš„è¯†åˆ«ç ï¼ˆåŸºç«™åœ°å€ï¼‰ï¼Œé‡‡ç”¨å¤§å†™å­—æ¯åŠæ•°å­—ï¼Œä¼˜å…ˆä½¿ç”¨æ•°å­—
+	OutBuff[2]=Device_Number[1];												//Ç°Á½×Ö½Ú±íÊ¾³§¼Ò´úÂë£¨ÓÉÄÏ·½µçÍø¹«Ë¾Í³Ò»·ÖÅä£©£¬²ÉÓÃ´óĞ´×ÖÄ¸(ASCII)
+	OutBuff[3]=Device_Number[2];												//ºóËÄ×Ö½Ú±íÊ¾³§¼Ò¶ÔÃ¿Ì××´Ì¬¼à²â×°ÖÃµÄÊ¶±ğÂë£¨»ùÕ¾µØÖ·£©£¬²ÉÓÃ´óĞ´×ÖÄ¸¼°Êı×Ö£¬ÓÅÏÈÊ¹ÓÃÊı×Ö
 	OutBuff[4]=Device_Number[3];														
 	OutBuff[5]=Device_Number[4];														
-	OutBuff[6]=Device_Number[5];												//6Byteè£…ç½®å·ç 
-	OutBuff[7]=Cmd;																//1Byteæ§åˆ¶å­—ï¼Œç”¨äºåŒºåˆ†æ•°æ®ç±»å‹
+	OutBuff[6]=Device_Number[5];												//6Byte×°ÖÃºÅÂë
+	OutBuff[7]=Cmd;																//1Byte¿ØÖÆ×Ö£¬ÓÃÓÚÇø·ÖÊı¾İÀàĞÍ
 	OutBuff[8]=(len>>8)&0xff;													//
-	OutBuff[9]=len&0xff;														//2Byteæ•°æ®åŸŸé•¿åº¦ï¼Œé«˜å­—èŠ‚åœ¨å‰ï¼Œè‹¥ä¸ºé›¶è¡¨ç¤ºæ— æ•°æ®åŸŸ
-	//OutBuff[10]å¼€å§‹æ˜¯å†…å®¹ï¼Œå·²è·å–
-	OutBuff[10+len]=Negation_CS(OutBuff+1,9+len);								//1Byteæ£€éªŒç   è®¡ç®—OutBuffçš„å‰9+lenä¸ªå­—èŠ‚
-	OutBuff[11+len]=Epilog_Code;												//1Byteç»“æŸç ï¼Œå›ºå®š16H
-	return 12+len;		 														//æ€»çš„æŠ¥æ–‡é•¿åº¦
+	OutBuff[9]=len&0xff;														//2ByteÊı¾İÓò³¤¶È£¬¸ß×Ö½ÚÔÚÇ°£¬ÈôÎªÁã±íÊ¾ÎŞÊı¾İÓò
+	//OutBuff[10]¿ªÊ¼ÊÇÄÚÈİ£¬ÒÑ»ñÈ¡
+	OutBuff[10+len]=Negation_CS(OutBuff+1,9+len);								//1Byte¼ìÑéÂë  ¼ÆËãOutBuffµÄÇ°9+len¸ö×Ö½Ú
+	OutBuff[11+len]=Epilog_Code;												//1Byte½áÊøÂë£¬¹Ì¶¨16H
+	return 12+len;		 														//×ÜµÄ±¨ÎÄ³¤¶È
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U NW_ReceiveAndExecute(u8 *OutBuff,u16 timeout_s)
-åŠŸèƒ½ï¼šç­‰å¾…æ¥æ”¶æ•°æ®ï¼Œè§£æå¹¶æ‰§è¡Œç›¸åº”åŠŸèƒ½ã€‚åè®®è§£ææ”¾åœ¨å„ä¸ªcaseä¸‹åˆ†åˆ«è¿›è¡Œã€‚æˆåŠŸæ—¶è¿”å›ï¼Œå¤±è´¥æ—¶
-å°†ç­‰å¾…timeout_sè€—å°½ã€‚
-å…¥å‚ï¼šu8 timeoutï¼Œæ¥æ”¶è¶…æ—¶è®¾å®šï¼Œå•ä½ä¸ºç§’ã€‚
-å‡ºå‚ï¼šu8 *OutBuff,æ¥æ”¶å†…å®¹å­˜æ”¾ä½ç½®
-è¿”å›ï¼šæ¥æ”¶å¹¶æ‰§è¡ŒæˆåŠŸè¿”å›1ï¼Œæœ‰ç‰¹æ®ŠåŠ¨ä½œå¾…æ‰§è¡Œæ—¶è¿”å›çŠ¶æ€å­—ï¼ˆå¦‚é‡å¯ç­‰ï¼‰ï¼Œæœªæ‰§è¡Œæˆ–æ“ä½œå¤±è´¥åˆ™è¿”å›0
+Ãû³Æ£ºINT8U NW_ReceiveAndExecute(u8 *OutBuff,u16 timeout_s)
+¹¦ÄÜ£ºµÈ´ı½ÓÊÕÊı¾İ£¬½âÎö²¢Ö´ĞĞÏàÓ¦¹¦ÄÜ¡£Ğ­Òé½âÎö·ÅÔÚ¸÷¸öcaseÏÂ·Ö±ğ½øĞĞ¡£³É¹¦Ê±·µ»Ø£¬Ê§°ÜÊ±
+½«µÈ´ıtimeout_sºÄ¾¡¡£
+Èë²Î£ºu8 timeout£¬½ÓÊÕ³¬Ê±Éè¶¨£¬µ¥Î»ÎªÃë¡£
+³ö²Î£ºu8 *OutBuff,½ÓÊÕÄÚÈİ´æ·ÅÎ»ÖÃ
+·µ»Ø£º½ÓÊÕ²¢Ö´ĞĞ³É¹¦·µ»Ø1£¬ÓĞÌØÊâ¶¯×÷´ıÖ´ĞĞÊ±·µ»Ø×´Ì¬×Ö£¨ÈçÖØÆôµÈ£©£¬Î´Ö´ĞĞ»ò²Ù×÷Ê§°ÜÔò·µ»Ø0
 *******************************************************************************/
 INT8U NW_ReceiveAndExecute(u8 *OutBuff,u16 timeout_s)
 {
-	INT8U				*R;														//å­˜æ”¾åè®®é¦–åœ°å€
-	INT8U				Cmd,state;												//å­˜æ”¾cmdå’Œreturnçš„å€¼
-	INT16U				len=0;													//lenä¸ºæ¥æ”¶åˆ°çš„æ€»é•¿åº¦/æˆ–ç”¨äºç»„å¸§
-	static INT16U		len_frame = 0;											//len_frameå¸§é•¿åº¦ï¼Œç”±Judge_NW_framing()è·å–								
+	INT8U				*R;														//´æ·ÅĞ­ÒéÊ×µØÖ·
+	INT8U				Cmd,state;												//´æ·ÅcmdºÍreturnµÄÖµ
+	INT16U				len=0;													//lenÎª½ÓÊÕµ½µÄ×Ü³¤¶È/»òÓÃÓÚ×éÖ¡
+	static INT16U		len_frame = 0;											//len_frameÖ¡³¤¶È£¬ÓÉJudge_NW_framing()»ñÈ¡								
 
-/*LTEæ¨¡å—æ— æ³•å½»åº•å…³é—­å›å¤çš„ç‰¹æ€§å¯¼è‡´ä¸å¯ç”¨timeoutè¿›è¡Œé•¿æ—¶é—´çš„å»¶æ—¶ï¼Œç”¨å¾ªç¯åˆ†è§£ä¸‹*/
-	while(timeout_s--)															//timeout_så•ä½ä¸ºç§’
+/*LTEÄ£¿éÎŞ·¨³¹µ×¹Ø±Õ»Ø¸´µÄÌØĞÔµ¼ÖÂ²»¿ÉÓÃtimeout½øĞĞ³¤Ê±¼äµÄÑÓÊ±£¬ÓÃÑ­»··Ö½âÏÂ*/
+	while(timeout_s--)															//timeout_sµ¥Î»ÎªÃë
 	{
-		/*æ¥æ”¶å¹¶åˆ¤æ–­æ•°æ®æ˜¯å¦ç¬¦åˆè¦æ±‚*/
-		len = LTE_WaitData(OutBuff,20);											//æ¯æ¬¡å¾ªç¯å›ºå®šæ¥æ”¶1ç§’ï¼Œå½“LTEæ¨¡å—è¿”å›ä¸å¯æ§çš„å›å¤æ—¶ï¼Œå¯¹æ—¶é—´åˆ¤æ–­å½±å“ä¸å¤§
-		R = Judge_NW_Framing(ANY_CMD,OutBuff,len,&len_frame);					//åˆ¤æ–­åè®®
-		if(R)																	//è‹¥ç¬¦åˆåè®®ï¼Œä¸”è¦æ±‚ç­‰å¾…çš„æ•°æ®ä¸å½“å‰æ¥æ”¶æ•°æ®ç±»å‹ç›¸åŒï¼Œè¿›å…¥switchè¿›ä¸€æ­¥åˆ¤æ–­å’Œæ‰§è¡Œ
+		/*½ÓÊÕ²¢ÅĞ¶ÏÊı¾İÊÇ·ñ·ûºÏÒªÇó*/
+		len = LTE_WaitData(OutBuff,20);											//Ã¿´ÎÑ­»·¹Ì¶¨½ÓÊÕ1Ãë£¬µ±LTEÄ£¿é·µ»Ø²»¿É¿ØµÄ»Ø¸´Ê±£¬¶ÔÊ±¼äÅĞ¶ÏÓ°Ïì²»´ó
+		R = Judge_NW_Framing(ANY_CMD,OutBuff,len,&len_frame);					//ÅĞ¶ÏĞ­Òé
+		if(R)																	//Èô·ûºÏĞ­Òé£¬ÇÒÒªÇóµÈ´ıµÄÊı¾İÓëµ±Ç°½ÓÊÕÊı¾İÀàĞÍÏàÍ¬£¬½øÈëswitch½øÒ»²½ÅĞ¶ÏºÍÖ´ĞĞ
 		{	
-			Cmd =*(R+7);														//å°†è¿”å›çš„å‘½ä»¤ç¬¦æå–å‡ºæ¥
-		/*æ ¹æ®æ¥æ”¶åˆ°çš„å‘½ä»¤æ‰§è¡Œç›¸åº”åŠŸèƒ½*/
+			Cmd =*(R+7);														//½«·µ»ØµÄÃüÁî·ûÌáÈ¡³öÀ´
+		/*¸ù¾İ½ÓÊÕµ½µÄÃüÁîÖ´ĞĞÏàÓ¦¹¦ÄÜ*/
 			switch(Cmd)
 			{
-				case START_UP://00H												//ä¸»ç«™ä¸»åŠ¨ä¸‹å‘ï¼Œè£…ç½®æ”¶åˆ°è¯·æ±‚åï¼Œå‘é€å¼€æœºè”ç»œä¿¡æ¯
-						if(Startup_Comm( RETRY, TIMEOUT )) return 1;			//å¼€æœºè”ç»œé€šä¿¡ï¼Œæœ€å¤šé‡è¯•RETRYæ¬¡ï¼ŒTIMEOUTç§’è¶…æ—¶
+				case START_UP://00H												//Ö÷Õ¾Ö÷¶¯ÏÂ·¢£¬×°ÖÃÊÕµ½ÇëÇóºó£¬·¢ËÍ¿ª»úÁªÂçĞÅÏ¢
+						if(Startup_Comm( RETRY, TIMEOUT )) return 1;			//¿ª»úÁªÂçÍ¨ĞÅ£¬×î¶àÖØÊÔRETRY´Î£¬TIMEOUTÃë³¬Ê±
 						else break;
 				
-				case TIMMING://01H												//ä¸»ç«™ä¸‹å‘å¯¹æ—¶å‘½ä»¤ï¼Œè£…ç½®æ”¶åˆ°æ­¤å‘½ä»¤åæŒ‰ç…§åŸå‘½ä»¤è¿”å›
-						LteCommunication(R,len_frame,0,0);						//æŒ‰ç…§åŸå‘½ä»¤è¿”å›ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
-						state = SetTime(R);										//æ›´æ”¹RTCï¼Œæ¥æ”¶åˆ°çš„å†…å®¹åœ¨*Rï¼ŒæˆåŠŸè¿”å›1
+				case TIMMING://01H												//Ö÷Õ¾ÏÂ·¢¶ÔÊ±ÃüÁî£¬×°ÖÃÊÕµ½´ËÃüÁîºó°´ÕÕÔ­ÃüÁî·µ»Ø
+						LteCommunication(R,len_frame,0,0);						//°´ÕÕÔ­ÃüÁî·µ»Ø£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
+						state = SetTime(R);										//¸ü¸ÄRTC£¬½ÓÊÕµ½µÄÄÚÈİÔÚ*R£¬³É¹¦·µ»Ø1
 						if(state) return state; else break;
 				
-				case SET_PASSWORD://02H											//è£…ç½®æ”¶åˆ°è¯¥å‘½ä»¤ååˆ¤æ–­åŸå¯†ç æ˜¯å¦ä¸åŸè®¾ç½®å¯†ç ç›¸åŒï¼Œè‹¥ç›¸åŒåˆ™å°†å¯†ç æ›´æ”¹ä¸ºæ–°å¯†ç ï¼Œå¹¶æŒ‰ç…§åŸå‘½ä»¤è¿”å›ã€‚è‹¥ä¸åŒï¼Œåˆ™è¿”å›å‡ºé”™ä¿¡æ¯
-						state = Set_Password_Comm(R,len_frame);					//æ›´æ”¹å¯†ç åŠŸèƒ½å‡½æ•°ï¼ˆå¿…é¡»ç”¨Rï¼Œå‡½æ•°å†…æ²¡æœ‰åˆ¤æ–­åè®®ï¼‰
+				case SET_PASSWORD://02H											//×°ÖÃÊÕµ½¸ÃÃüÁîºóÅĞ¶ÏÔ­ÃÜÂëÊÇ·ñÓëÔ­ÉèÖÃÃÜÂëÏàÍ¬£¬ÈôÏàÍ¬Ôò½«ÃÜÂë¸ü¸ÄÎªĞÂÃÜÂë£¬²¢°´ÕÕÔ­ÃüÁî·µ»Ø¡£Èô²»Í¬£¬Ôò·µ»Ø³ö´íĞÅÏ¢
+						state = Set_Password_Comm(R,len_frame);					//¸ü¸ÄÃÜÂë¹¦ÄÜº¯Êı£¨±ØĞëÓÃR£¬º¯ÊıÄÚÃ»ÓĞÅĞ¶ÏĞ­Òé£©
 						if(state) return state; else break;
 				
-				case PARA_CONFG://03H											//è£…ç½®éªŒè¯å¯†ç é€šè¿‡åï¼Œæ‰§è¡Œå‚æ•°é…ç½®å‘½ä»¤ï¼Œå¹¶æŒ‰ç…§åŸå‘½ä»¤è¿”å›ã€‚è‹¥å¯†ç é”™è¯¯ï¼Œåˆ™è¿”å›å¯†ç å‡ºé”™ä¿¡æ¯
-						state = ParaConfigComm(R,len_frame);					//å‚æ•°é…ç½®åŠŸèƒ½å‡½æ•°ï¼ˆå¿…é¡»ç”¨Rï¼Œå‡½æ•°å†…æ²¡æœ‰åˆ¤æ–­åè®®ï¼‰
+				case PARA_CONFG://03H											//×°ÖÃÑéÖ¤ÃÜÂëÍ¨¹ıºó£¬Ö´ĞĞ²ÎÊıÅäÖÃÃüÁî£¬²¢°´ÕÕÔ­ÃüÁî·µ»Ø¡£ÈôÃÜÂë´íÎó£¬Ôò·µ»ØÃÜÂë³ö´íĞÅÏ¢
+						state = ParaConfigComm(R,len_frame);					//²ÎÊıÅäÖÃ¹¦ÄÜº¯Êı£¨±ØĞëÓÃR£¬º¯ÊıÄÚÃ»ÓĞÅĞ¶ÏĞ­Òé£©
 						if(state) return state; else break;
 				
-				case SET_IP://06H												//åªæœ‰å¯†ç ä¸è£…ç½®å¯†ç ç›¸åŒä¸”ä¸¤ç»„ä¸»ç«™IPã€ç«¯å£å·å’Œä¸»ç«™å¡å·å¯¹åº”å­—èŠ‚å®Œå…¨ç›¸åŒæ‰æ‰§è¡Œæ›´æ”¹å‘½ä»¤ã€‚è£…ç½®æ‰§è¡Œæ›´æ”¹å‘½ä»¤åæŒ‰ç…§åŸå‘½ä»¤æ ¼å¼è¿”å›ã€‚è‹¥å¯†ç é”™è¯¯ï¼Œåˆ™è¿”å›å¯†ç å‡ºé”™ä¿¡æ¯
-						state = Set_IP_Comm(R,len_frame);						//æ”¹ä¸»ç«™IPåœ°å€ã€ç«¯å£å·å’Œå¡å·åŠŸèƒ½å‡½æ•°ï¼ˆå¿…é¡»ç”¨Rï¼Œå‡½æ•°å†…æ²¡æœ‰åˆ¤æ–­åè®®ï¼‰
+				case SET_IP://06H												//Ö»ÓĞÃÜÂëÓë×°ÖÃÃÜÂëÏàÍ¬ÇÒÁ½×éÖ÷Õ¾IP¡¢¶Ë¿ÚºÅºÍÖ÷Õ¾¿¨ºÅ¶ÔÓ¦×Ö½ÚÍêÈ«ÏàÍ¬²ÅÖ´ĞĞ¸ü¸ÄÃüÁî¡£×°ÖÃÖ´ĞĞ¸ü¸ÄÃüÁîºó°´ÕÕÔ­ÃüÁî¸ñÊ½·µ»Ø¡£ÈôÃÜÂë´íÎó£¬Ôò·µ»ØÃÜÂë³ö´íĞÅÏ¢
+						state = Set_IP_Comm(R,len_frame);						//¸ÄÖ÷Õ¾IPµØÖ·¡¢¶Ë¿ÚºÅºÍ¿¨ºÅ¹¦ÄÜº¯Êı£¨±ØĞëÓÃR£¬º¯ÊıÄÚÃ»ÓĞÅĞ¶ÏĞ­Òé£©
 						if(state) return state; else break;
 				
-				case DEMAND_IP://07H											//è£…ç½®æ”¶åˆ°è¯¥å‘½ä»¤åï¼Œè¿”å›å…¶å½“å‰è®¾ç½®çš„ä¸»ç«™IPã€ç«¯å£å·å’Œä¸»ç«™å¡å·ã€‚
-						len = NW_Framing(DEMAND_IP,LTE_Tx_Buff);				//ç»„å¸§
-						LteCommunication(LTE_Tx_Buff,len,0,0);					//ä¸ŠæŠ¥ï¼Œæ— å›å¤ä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+				case DEMAND_IP://07H											//×°ÖÃÊÕµ½¸ÃÃüÁîºó£¬·µ»ØÆäµ±Ç°ÉèÖÃµÄÖ÷Õ¾IP¡¢¶Ë¿ÚºÅºÍÖ÷Õ¾¿¨ºÅ¡£
+						len = NW_Framing(DEMAND_IP,LTE_Tx_Buff);				//×éÖ¡
+						LteCommunication(LTE_Tx_Buff,len,0,0);					//ÉÏ±¨£¬ÎŞ»Ø¸´²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 						return 1;
 				
-				case RESET_DEV://08H											//åªæœ‰è£…ç½®å¯†ç é€šè¿‡åï¼Œè£…ç½®åŸå‘½ä»¤è¿”å›å¹¶æ‰§è¡Œæ­¤å‘½ä»¤ï¼Œå¦åˆ™è¿”å›å‡ºé”™ä¿¡æ¯ã€‚
-						if(!PassworkCheckAndReport( R )) break;					//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-						return RESET_DEV;										//å¯†ç ç›¸åŒæ—¶ï¼Œè¿”å›é‡å¯è£…ç½®çŠ¶æ€å­—
+				case RESET_DEV://08H											//Ö»ÓĞ×°ÖÃÃÜÂëÍ¨¹ıºó£¬×°ÖÃÔ­ÃüÁî·µ»Ø²¢Ö´ĞĞ´ËÃüÁî£¬·ñÔò·µ»Ø³ö´íĞÅÏ¢¡£
+						if(!PassworkCheckAndReport( R )) break;					//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+						return RESET_DEV;										//ÃÜÂëÏàÍ¬Ê±£¬·µ»ØÖØÆô×°ÖÃ×´Ì¬×Ö
 
-				case SMS_AWAKE://09H											//ä¸»ç«™è‹¥é€šè¿‡IPç½‘ç»œUDPé€šä¿¡ï¼Œå‘é€æ­¤æ§åˆ¶å­—ï¼Œä¹Ÿè¡¨ç¤ºå”¤é†’ç»ˆç«¯ã€‚æ­£å¸¸æƒ…å†µä¸‹ï¼Œå¤„äºä¼‘çœ çŠ¶æ€çš„è£…ç½®åº”åœ¨æ¥åˆ°å”¤é†’å‘½ä»¤åï¼Œç«‹å³åˆ‡æ¢åˆ°åœ¨çº¿çŠ¶æ€ã€‚
-						if(!PassworkCheckAndReport( R )) break;					//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-						return SMS_AWAKE;										//å¯†ç ç›¸åŒæ—¶ï¼Œè¿”å›åœ¨çº¿çŠ¶æ€å­—
+				case SMS_AWAKE://09H											//Ö÷Õ¾ÈôÍ¨¹ıIPÍøÂçUDPÍ¨ĞÅ£¬·¢ËÍ´Ë¿ØÖÆ×Ö£¬Ò²±íÊ¾»½ĞÑÖÕ¶Ë¡£Õı³£Çé¿öÏÂ£¬´¦ÓÚĞİÃß×´Ì¬µÄ×°ÖÃÓ¦ÔÚ½Óµ½»½ĞÑÃüÁîºó£¬Á¢¼´ÇĞ»»µ½ÔÚÏß×´Ì¬¡£
+						if(!PassworkCheckAndReport( R )) break;					//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+						return SMS_AWAKE;										//ÃÜÂëÏàÍ¬Ê±£¬·µ»ØÔÚÏß×´Ì¬×Ö
 				
-				case DEMAND_CONFG://0AH											//ç”¨äºä¸»ç«™æŸ¥è¯¢è£…ç½®é…ç½®å‚æ•°ã€‚
-						len = NW_Framing(DEMAND_CONFG,LTE_Tx_Buff);				//ç»„å¸§
-						LteCommunication(LTE_Tx_Buff,len,0,0);					//ä¸ŠæŠ¥ï¼Œæ— å›å¤ä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+				case DEMAND_CONFG://0AH											//ÓÃÓÚÖ÷Õ¾²éÑ¯×°ÖÃÅäÖÃ²ÎÊı¡£
+						len = NW_Framing(DEMAND_CONFG,LTE_Tx_Buff);				//×éÖ¡
+						LteCommunication(LTE_Tx_Buff,len,0,0);					//ÉÏ±¨£¬ÎŞ»Ø¸´²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 						return 1;
 				
-				case FUN_CONFG://0BH											//ç”¨äºä¸»ç«™å‘è£…ç½®ä¸‹å‘åŠŸèƒ½é…ç½®å‚æ•°ã€‚è£…ç½®åŠŸèƒ½é…ç½®ä»…ä¸‹å‘æœ‰æ•ˆåŠŸèƒ½ï¼Œæ— æ•ˆåŠŸèƒ½ä¸å‘é€ï¼Œé»˜è®¤æ— æ•ˆã€‚
-						state = Fun_Config_Comm(R,len_frame);					//è£…ç½®åŠŸèƒ½é…ç½®åŠŸèƒ½å‡½æ•°ï¼ˆå¿…é¡»ç”¨Rï¼Œå‡½æ•°å†…æ²¡æœ‰åˆ¤æ–­åè®®ï¼‰
+				case FUN_CONFG://0BH											//ÓÃÓÚÖ÷Õ¾Ïò×°ÖÃÏÂ·¢¹¦ÄÜÅäÖÃ²ÎÊı¡£×°ÖÃ¹¦ÄÜÅäÖÃ½öÏÂ·¢ÓĞĞ§¹¦ÄÜ£¬ÎŞĞ§¹¦ÄÜ²»·¢ËÍ£¬Ä¬ÈÏÎŞĞ§¡£
+						state = Fun_Config_Comm(R,len_frame);					//×°ÖÃ¹¦ÄÜÅäÖÃ¹¦ÄÜº¯Êı£¨±ØĞëÓÃR£¬º¯ÊıÄÚÃ»ÓĞÅĞ¶ÏĞ­Òé£©
 						if(state) return state; else break;
 				
-				case DEMAND_DEV_TIM://0DH										//ä¸»ç«™ä¸»åŠ¨æŸ¥è¯¢è£…ç½®ç³»ç»Ÿæ—¶é—´ã€‚
-						len = NW_Framing(DEMAND_DEV_TIM,LTE_Tx_Buff);			//ç»„å¸§	æ—¶é—´åº”ç­” å¹´	æœˆ	æ—¥	æ—¶	åˆ†	ç§’
-						LteCommunication(LTE_Tx_Buff,len,0,0);					//ä¸ŠæŠ¥ï¼Œæ— å›å¤ä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+				case DEMAND_DEV_TIM://0DH										//Ö÷Õ¾Ö÷¶¯²éÑ¯×°ÖÃÏµÍ³Ê±¼ä¡£
+						len = NW_Framing(DEMAND_DEV_TIM,LTE_Tx_Buff);			//×éÖ¡	Ê±¼äÓ¦´ğ Äê	ÔÂ	ÈÕ	Ê±	·Ö	Ãë
+						LteCommunication(LTE_Tx_Buff,len,0,0);					//ÉÏ±¨£¬ÎŞ»Ø¸´²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 						return 1;
 				
-				case SMS_SEND://0EH												//ä¸»ç«™è¦æ±‚è£…ç½®å‘æŒ‡å®šçš„æ‰‹æœºå·ç å‘é€ç¡®è®¤çŸ­ä¿¡ã€‚è£…ç½®æ¥æ”¶åˆ°è¯·æ±‚ååŸå‘½ä»¤è¿”å›ï¼Œç„¶åå‘æŒ‡å®šçš„çŸ­ä¿¡æ¥æ”¶å·ç å‘é€æœ¬æœºçš„è£…ç½®ç¼–å·ï¼Œå¦‚â€œCC0011â€ã€‚
-						state = SMS_Send_Comm(R,len_frame);						//å‘é€ç¡®è®¤çŸ­ä¿¡åŠŸèƒ½å‡½æ•°ï¼ˆå¿…é¡»ç”¨Rï¼Œå‡½æ•°å†…æ²¡æœ‰åˆ¤æ–­åè®®ï¼‰
+				case SMS_SEND://0EH												//Ö÷Õ¾ÒªÇó×°ÖÃÏòÖ¸¶¨µÄÊÖ»úºÅÂë·¢ËÍÈ·ÈÏ¶ÌĞÅ¡£×°ÖÃ½ÓÊÕµ½ÇëÇóºóÔ­ÃüÁî·µ»Ø£¬È»ºóÏòÖ¸¶¨µÄ¶ÌĞÅ½ÓÊÕºÅÂë·¢ËÍ±¾»úµÄ×°ÖÃ±àºÅ£¬Èç¡°CC0011¡±¡£
+						state = SMS_Send_Comm(R,len_frame);						//·¢ËÍÈ·ÈÏ¶ÌĞÅ¹¦ÄÜº¯Êı£¨±ØĞëÓÃR£¬º¯ÊıÄÚÃ»ÓĞÅĞ¶ÏĞ­Òé£©
 						if(state) return state; else break;
 				
-				case DATA_REQUEST://21H											//ç”¨äºä¸»ç«™ä¸»åŠ¨è¯·æ±‚ç›‘æµ‹è£…ç½®å‘é€æ•°æ®ã€‚è£…ç½®æ”¶åˆ°è¯¥å‘½ä»¤åæŒ‰åŸå‘½ä»¤è¿”å›ï¼Œå¹¶ç«‹å³æŒ‰ç…§ç›¸åº”æ§åˆ¶å­—æ ¼å¼å°†æ•°æ®ä¾æ¬¡ä¸Šé€ä¸»ç«™ã€‚ä¸¤ç§ï¼šè§åè®®
-						state = Data_Request_Comm(R,len_frame);					//ä¸»ç«™è¯·æ±‚è£…ç½®æ•°æ®åŠŸèƒ½å‡½æ•°ï¼ˆå¿…é¡»ç”¨Rï¼Œå‡½æ•°å†…æ²¡æœ‰åˆ¤æ–­åè®®ï¼‰
-						if(state==1) return state; else break;					//æ— éœ€ä¸ŠæŠ¥è¿”å›0xFFï¼Œç»§ç»­ç­‰å¾…
+				case DATA_REQUEST://21H											//ÓÃÓÚÖ÷Õ¾Ö÷¶¯ÇëÇó¼à²â×°ÖÃ·¢ËÍÊı¾İ¡£×°ÖÃÊÕµ½¸ÃÃüÁîºó°´Ô­ÃüÁî·µ»Ø£¬²¢Á¢¼´°´ÕÕÏàÓ¦¿ØÖÆ×Ö¸ñÊ½½«Êı¾İÒÀ´ÎÉÏËÍÖ÷Õ¾¡£Á½ÖÖ£º¼ûĞ­Òé
+						state = Data_Request_Comm(R,len_frame);					//Ö÷Õ¾ÇëÇó×°ÖÃÊı¾İ¹¦ÄÜº¯Êı£¨±ØĞëÓÃR£¬º¯ÊıÄÚÃ»ÓĞÅĞ¶ÏĞ­Òé£©
+						if(state==1) return state; else break;					//ÎŞĞèÉÏ±¨·µ»Ø0xFF£¬¼ÌĞøµÈ´ı
 				
-				case TEM_CUR_UPLOAD://26H										//è£…ç½®æ”¶åˆ°è¯¥å‘½ä»¤åç«‹å³å°†æœªä¼ é€æ•°æ®ä¸Šé€ä¸»ç«™ã€‚
-						state = Tem_Cur_Upload(RETRY,TIMEOUT);					//å‘é€å†å²æ•°æ®åŠŸèƒ½å‡½æ•°ï¼Œæ— éœ€ä¸ŠæŠ¥è¿”å›0xFFï¼Œå¤±è´¥æ—¶è¿”å›0ï¼ˆä»…è¡¨ç¤ºè¿˜æœ‰å†å²æ•°æ®æœªå‘é€å®Œæˆï¼Œä¸å½±å“å·²å®Œæˆçš„éƒ¨åˆ†ï¼‰
-						if(state==0xFF) LteCommunication(R,len_frame,0,0);		//è‹¥è£…ç½®æ— æœªä¸Šé€æ•°æ®ï¼Œåˆ™åŸå‘½ä»¤è¿”å›ã€‚
+				case TEM_CUR_UPLOAD://26H										//×°ÖÃÊÕµ½¸ÃÃüÁîºóÁ¢¼´½«Î´´«ËÍÊı¾İÉÏËÍÖ÷Õ¾¡£
+						state = Tem_Cur_Upload(RETRY,TIMEOUT);					//·¢ËÍÀúÊ·Êı¾İ¹¦ÄÜº¯Êı£¬ÎŞĞèÉÏ±¨·µ»Ø0xFF£¬Ê§°ÜÊ±·µ»Ø0£¨½ö±íÊ¾»¹ÓĞÀúÊ·Êı¾İÎ´·¢ËÍÍê³É£¬²»Ó°ÏìÒÑÍê³ÉµÄ²¿·Ö£©
+						if(state==0xFF) LteCommunication(R,len_frame,0,0);		//Èô×°ÖÃÎŞÎ´ÉÏËÍÊı¾İ£¬ÔòÔ­ÃüÁî·µ»Ø¡£
 						else if(state==1) return state; else break;				
 				
-				case FAULT_INFO://30H											//è£…ç½®æ¥æ”¶åˆ°è¯·æ±‚åå‘é€å½“å‰å­˜åœ¨çš„æ•…éšœä¿¡æ¯ã€‚
-						state = Fault_Info_Comm(RETRY,TIMEOUT);					//æ•…éšœä¿¡æ¯é€šä¿¡ï¼Œå¤±è´¥æ—¶è¿”å›0
+				case FAULT_INFO://30H											//×°ÖÃ½ÓÊÕµ½ÇëÇóºó·¢ËÍµ±Ç°´æÔÚµÄ¹ÊÕÏĞÅÏ¢¡£
+						state = Fault_Info_Comm(RETRY,TIMEOUT);					//¹ÊÕÏĞÅÏ¢Í¨ĞÅ£¬Ê§°ÜÊ±·µ»Ø0
 						if(state) return state; else break;
 				
-				case FLOW_DATA_UPLOAD://40H										//ç»ˆç«¯æ”¶åˆ°è¯¥å‘½ä»¤åç«‹å³å°†æ‰€æœ‰æœªä¼ é€æˆåŠŸçš„æ•°æ®ä¸Šé€ä¸»ç«™ã€‚è‹¥è£…ç½®æ— æœªä¸Šé€æ•°æ®ï¼Œåˆ™åŸå‘½ä»¤è¿”å›ã€‚
-						state = Flow_Data_Upload(RETRY,TIMEOUT);				//æµé‡æ•°æ®ä½¿ç”¨æƒ…å†µä¸ŠæŠ¥åŠŸèƒ½å‡½æ•°
+				case FLOW_DATA_UPLOAD://40H										//ÖÕ¶ËÊÕµ½¸ÃÃüÁîºóÁ¢¼´½«ËùÓĞÎ´´«ËÍ³É¹¦µÄÊı¾İÉÏËÍÖ÷Õ¾¡£Èô×°ÖÃÎŞÎ´ÉÏËÍÊı¾İ£¬ÔòÔ­ÃüÁî·µ»Ø¡£
+						state = Flow_Data_Upload(RETRY,TIMEOUT);				//Á÷Á¿Êı¾İÊ¹ÓÃÇé¿öÉÏ±¨¹¦ÄÜº¯Êı
 						if(state) return state; else break;
 				
-			/*æ–‡ä»¶åŠŸèƒ½å¯ä»¥ç”¨åœ¨è¯¦ç»†æ•°æ®ä¸ŠæŠ¥*/
-				case FILE_LIST_QUERY://71H										//ä¸»ç«™æŸ¥è¯¢æŸä¸ªæ—¶é—´èŒƒå›´å†…è£…ç½®å­˜å‚¨çš„æ–‡ä»¶åˆ—è¡¨ï¼Œè£…ç½®æ”¶åˆ°è¯¥å‘½ä»¤åï¼Œè¿”å›ç¬¦åˆæŸ¥è¯¢æ¡ä»¶çš„æ–‡ä»¶åˆ—è¡¨ã€‚
+			/*ÎÄ¼ş¹¦ÄÜ¿ÉÒÔÓÃÔÚÏêÏ¸Êı¾İÉÏ±¨*/
+				case FILE_LIST_QUERY://71H										//Ö÷Õ¾²éÑ¯Ä³¸öÊ±¼ä·¶Î§ÄÚ×°ÖÃ´æ´¢µÄÎÄ¼şÁĞ±í£¬×°ÖÃÊÕµ½¸ÃÃüÁîºó£¬·µ»Ø·ûºÏ²éÑ¯Ìõ¼şµÄÎÄ¼şÁĞ±í¡£
 						state = File_List_Query_Comm(R,len_frame);
 						if(state) return state; else break;
 				
-				case FILE_REQUEST://72H											//è£…ç½®æ”¶åˆ°è¯¥å‘½ä»¤åï¼Œæ‰§è¡Œæ–‡ä»¶ä¸ŠæŠ¥æ“ä½œ
-						LteCommunication(R,len_frame,0,0);						//æŒ‰ç…§åŸå‘½ä»¤è¿”å›ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
-						state = Files_Upload(R+10,DES_LEN);						//å¹¶ç«‹å³å°†ç›¸åº”æ–‡ä»¶ä¸Šé€ä¸»ç«™ã€‚
+				case FILE_REQUEST://72H											//×°ÖÃÊÕµ½¸ÃÃüÁîºó£¬Ö´ĞĞÎÄ¼şÉÏ±¨²Ù×÷
+						LteCommunication(R,len_frame,0,0);						//°´ÕÕÔ­ÃüÁî·µ»Ø£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
+						state = Files_Upload(R+10,DES_LEN);						//²¢Á¢¼´½«ÏàÓ¦ÎÄ¼şÉÏËÍÖ÷Õ¾¡£
 						if(state) return state; else break;
 				
-			/*æ–¹è¯šæ‰©å±•åè®® NW_ReceiveAndExecute*/
-				case EXTEN_ONOFF://F0H											//åªæœ‰å¯†ç ä¸è£…ç½®å¯†ç ç›¸åŒæ‰æ‰§è¡Œæ­¤å‘½ä»¤ã€‚FFHä¸ºå¯ç”¨ï¼Œå…è®¸è£…ç½®ä¸ŠæŠ¥æ‰©å±•åè®®ï¼›00Hä¸ºç¦ç”¨ï¼Œç¦æ­¢è£…ç½®ä¸ŠæŠ¥æ‰©å±•åè®®ã€‚è£…ç½®æ¥æ”¶åˆ°å‘½ä»¤åï¼Œä»¥åŸå‘½ä»¤è¿”å›ã€‚
+			/*·½³ÏÀ©Õ¹Ğ­Òé NW_ReceiveAndExecute*/
+				case EXTEN_ONOFF://F0H											//Ö»ÓĞÃÜÂëÓë×°ÖÃÃÜÂëÏàÍ¬²ÅÖ´ĞĞ´ËÃüÁî¡£FFHÎªÆôÓÃ£¬ÔÊĞí×°ÖÃÉÏ±¨À©Õ¹Ğ­Òé£»00HÎª½ûÓÃ£¬½ûÖ¹×°ÖÃÉÏ±¨À©Õ¹Ğ­Òé¡£×°ÖÃ½ÓÊÕµ½ÃüÁîºó£¬ÒÔÔ­ÃüÁî·µ»Ø¡£
 						state = ExtendOnOffComm(R,len_frame);					
 						if(state) return state; else break;
 				
-				case EX_SET_APN://F3H											//åªæœ‰å¯†ç ä¸è£…ç½®å¯†ç ç›¸åŒæ‰æ‰§è¡Œæ­¤å‘½ä»¤ï¼Œè£…ç½®æ‰§è¡Œæ›´æ”¹å‘½ä»¤åæŒ‰ç…§åŸå‘½ä»¤æ ¼å¼è¿”å›ã€‚è‹¥å¯†ç é”™è¯¯ï¼Œåˆ™è¿”å›å¯†ç å‡ºé”™ä¿¡æ¯
-						state = SetApnComm(R,len_frame);						//è®¾ç½®APN
+				case EX_SET_APN://F3H											//Ö»ÓĞÃÜÂëÓë×°ÖÃÃÜÂëÏàÍ¬²ÅÖ´ĞĞ´ËÃüÁî£¬×°ÖÃÖ´ĞĞ¸ü¸ÄÃüÁîºó°´ÕÕÔ­ÃüÁî¸ñÊ½·µ»Ø¡£ÈôÃÜÂë´íÎó£¬Ôò·µ»ØÃÜÂë³ö´íĞÅÏ¢
+						state = SetApnComm(R,len_frame);						//ÉèÖÃAPN
 						if(state) return state; else break;
 				
-				case EX_DEMAND_APN://F4H										//åªæœ‰å¯†ç ä¸è£…ç½®å¯†ç ç›¸åŒæ‰æ‰§è¡Œæ­¤å‘½ä»¤ï¼Œè£…ç½®æ‰§è¡Œæ ¼å¼åŒ–FLASHå‘½ä»¤æˆåŠŸåï¼ŒæŒ‰ç…§åŸå‘½ä»¤æ ¼å¼è¿”å›ã€‚è‹¥å¯†ç é”™è¯¯ï¼Œåˆ™è¿”å›å¯†ç å‡ºé”™ä¿¡æ¯
-						len = NW_Framing(EX_DEMAND_APN,LTE_Tx_Buff);			//ç»„å¸§
-						LteCommunication(LTE_Tx_Buff,len,0,0);					//ä¸ŠæŠ¥ï¼Œæ— å›å¤ä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+				case EX_DEMAND_APN://F4H										//Ö»ÓĞÃÜÂëÓë×°ÖÃÃÜÂëÏàÍ¬²ÅÖ´ĞĞ´ËÃüÁî£¬×°ÖÃÖ´ĞĞ¸ñÊ½»¯FLASHÃüÁî³É¹¦ºó£¬°´ÕÕÔ­ÃüÁî¸ñÊ½·µ»Ø¡£ÈôÃÜÂë´íÎó£¬Ôò·µ»ØÃÜÂë³ö´íĞÅÏ¢
+						len = NW_Framing(EX_DEMAND_APN,LTE_Tx_Buff);			//×éÖ¡
+						LteCommunication(LTE_Tx_Buff,len,0,0);					//ÉÏ±¨£¬ÎŞ»Ø¸´²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 				
-				case EX_VERSION_SIM://F6H										//è£…ç½®æ¥æ”¶åˆ°ä¸»ç«™æŸ¥è¯¢æŒ‡ä»¤åï¼Œç«‹å³è¯»å–è£…ç½®ä¿¡æ¯å¹¶å›å¤ã€‚
-						len = NW_Framing(EX_VERSION_SIM,LTE_Tx_Buff);			//æ ¹æ®æ§åˆ¶å­—ç»„å¸§    
-						LteCommunication(LTE_Tx_Buff,len,0,0);					//ä¸ŠæŠ¥ï¼Œæ— å›å¤ä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+				case EX_VERSION_SIM://F6H										//×°ÖÃ½ÓÊÕµ½Ö÷Õ¾²éÑ¯Ö¸Áîºó£¬Á¢¼´¶ÁÈ¡×°ÖÃĞÅÏ¢²¢»Ø¸´¡£
+						len = NW_Framing(EX_VERSION_SIM,LTE_Tx_Buff);			//¸ù¾İ¿ØÖÆ×Ö×éÖ¡    
+						LteCommunication(LTE_Tx_Buff,len,0,0);					//ÉÏ±¨£¬ÎŞ»Ø¸´²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 						return 1;
 				
-				case EX_UPDATA_REQUEST://F7H 									//ä¸»ç«™åœ¨æ”¶åˆ°æ‰©å±•å¿ƒè·³5ç§’åï¼Œä¸‹å‘å‡çº§è¯·æ±‚ã€‚
-						state = UpdataRequestComm( R );							//è£…ç½®æ¥æ”¶åˆ°ä¸»ç«™å‡çº§è¯·æ±‚åï¼Œç«‹åˆ»è¿›è¡Œå‡çº§æ£€æµ‹å¹¶è¿›è¡Œå›å¤ã€‚
+				case EX_UPDATA_REQUEST://F7H 									//Ö÷Õ¾ÔÚÊÕµ½À©Õ¹ĞÄÌø5Ãëºó£¬ÏÂ·¢Éı¼¶ÇëÇó¡£
+						state = UpdataRequestComm( R );							//×°ÖÃ½ÓÊÕµ½Ö÷Õ¾Éı¼¶ÇëÇóºó£¬Á¢¿Ì½øĞĞÉı¼¶¼ì²â²¢½øĞĞ»Ø¸´¡£
 						if(state) return state; else break;					
 																				
-				case EX_UPDATA_DOWNLOAD://F8H 									//ä¸»ç«™ä¸‹å‘å‡çº§åŒ…ï¼Œå‡çº§åŒ…æ•°æ®ä¸ºäºŒè¿›åˆ¶ç æµã€‚æ•°æ®åŒ…ä¸‹å‘é—´éš”ä¸º1ç§’ã€‚
-						state = UpdataDownloadComm( R );						//è§£ææ–‡ä»¶å’Œä¿å­˜ï¼ˆå†™å…¥FLASHï¼‰
+				case EX_UPDATA_DOWNLOAD://F8H 									//Ö÷Õ¾ÏÂ·¢Éı¼¶°ü£¬Éı¼¶°üÊı¾İÎª¶ş½øÖÆÂëÁ÷¡£Êı¾İ°üÏÂ·¢¼ä¸ôÎª1Ãë¡£
+						state = UpdataDownloadComm( R );						//½âÎöÎÄ¼şºÍ±£´æ£¨Ğ´ÈëFLASH£©
 						if(state) return state; else break;		
 
-				case EX_UPDATA_DL_DONE://F9H 									//å…¨éƒ¨å‡çº§åŒ…ä¸‹å‘ç»“æŸå2ç§’ï¼Œä¸»ç«™å‘é€è¯¥æŒ‡ä»¤
-						state = UpdataFinishComm( R );							//è£…ç½®æ”¶åˆ°åç«‹å³ä¸Šä¼ æ–‡ä»¶è¡¥åŒ…ï¼ˆFAHï¼‰ã€‚
+				case EX_UPDATA_DL_DONE://F9H 									//È«²¿Éı¼¶°üÏÂ·¢½áÊøºó2Ãë£¬Ö÷Õ¾·¢ËÍ¸ÃÖ¸Áî
+						state = UpdataFinishComm( R );							//×°ÖÃÊÕµ½ºóÁ¢¼´ÉÏ´«ÎÄ¼ş²¹°ü£¨FAH£©¡£
 						if(state) return state; else break;
 				
-				case EX_FORMAT_FLASH://FBH										//åªæœ‰å¯†ç ä¸è£…ç½®å¯†ç ç›¸åŒæ‰æ‰§è¡Œæ­¤å‘½ä»¤ï¼Œè£…ç½®æ‰§è¡Œæ ¼å¼åŒ–FLASHå‘½ä»¤æˆåŠŸåï¼ŒæŒ‰ç…§åŸå‘½ä»¤æ ¼å¼è¿”å›ã€‚è‹¥å¯†ç é”™è¯¯ï¼Œåˆ™è¿”å›å¯†ç å‡ºé”™ä¿¡æ¯
-						state = FormatFlashComm(R,len_frame);					//æ ¼å¼åŒ–FLASH
+				case EX_FORMAT_FLASH://FBH										//Ö»ÓĞÃÜÂëÓë×°ÖÃÃÜÂëÏàÍ¬²ÅÖ´ĞĞ´ËÃüÁî£¬×°ÖÃÖ´ĞĞ¸ñÊ½»¯FLASHÃüÁî³É¹¦ºó£¬°´ÕÕÔ­ÃüÁî¸ñÊ½·µ»Ø¡£ÈôÃÜÂë´íÎó£¬Ôò·µ»ØÃÜÂë³ö´íĞÅÏ¢
+						state = FormatFlashComm(R,len_frame);					//¸ñÊ½»¯FLASH
 						if(state) return state; else break;
 						
 				default:
@@ -1232,73 +1232,73 @@ INT8U NW_ReceiveAndExecute(u8 *OutBuff,u16 timeout_s)
 			}	
 		}	
 	}
-	BspUartWrite(2,SIZE_OF("NW_Receive_Executeç­‰å¾…æ¥æ”¶æ•°æ®ç»“æŸ\r\n"));
-	return 0;																	//è¶…æ—¶ï¼Œè¿”å›0
+	BspUartWrite(2,SIZE_OF("NW_Receive_ExecuteµÈ´ı½ÓÊÕÊı¾İ½áÊø\r\n"));
+	return 0;																	//³¬Ê±£¬·µ»Ø0
 }
 
 /*******************************************************************************
-åç§°ï¼šbool PassworkCheckAndReport(INT8U *Inbuff)
-åŠŸèƒ½ï¼šåˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-å…¥å‚ï¼šINT8U *Inbuffï¼ŒæŠ¥æ–‡èµ·å§‹åœ°å€
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šå¯†ç ç›¸åŒï¼Œè¿”å›çœŸï¼›å¯†ç ä¸åŒï¼Œè¿”å›å‡
+Ãû³Æ£ºbool PassworkCheckAndReport(INT8U *Inbuff)
+¹¦ÄÜ£ºÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+Èë²Î£ºINT8U *Inbuff£¬±¨ÎÄÆğÊ¼µØÖ·
+³ö²Î£ºÎŞ
+·µ»Ø£ºÃÜÂëÏàÍ¬£¬·µ»ØÕæ£»ÃÜÂë²»Í¬£¬·µ»Ø¼Ù
 *******************************************************************************/
 bool PassworkCheckAndReport(INT8U *Inbuff)
 {
 	INT8U len = 0;
-	if(memcmp(Inbuff+10,Config.Password,4))										//è‹¥åˆ¤æ–­åŸå¯†ç ä¸åŸè®¾ç½®å¯†ç ä¸åŒï¼ˆç›¸åŒæ—¶memcmpè¿”å›0ï¼‰
+	if(memcmp(Inbuff+10,Config.Password,4))										//ÈôÅĞ¶ÏÔ­ÃÜÂëÓëÔ­ÉèÖÃÃÜÂë²»Í¬£¨ÏàÍ¬Ê±memcmp·µ»Ø0£©
 	{
-		len = NW_Framing( PASSWORD_ERR, LTE_Tx_Buff );							//ç»„å¯†ç å‡ºé”™ä¿¡æ¯å¸§
-		LteCommunication(LTE_Tx_Buff,len,0,0);											//ä¸ŠæŠ¥å‡ºé”™ä¿¡æ¯ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
-		return false;															//å¯†ç ä¸åŒï¼Œè¿”å›å‡
+		len = NW_Framing( PASSWORD_ERR, LTE_Tx_Buff );							//×éÃÜÂë³ö´íĞÅÏ¢Ö¡
+		LteCommunication(LTE_Tx_Buff,len,0,0);											//ÉÏ±¨³ö´íĞÅÏ¢£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
+		return false;															//ÃÜÂë²»Í¬£¬·µ»Ø¼Ù
 	}
-	return true;																//å¯†ç ç›¸åŒï¼Œè¿”å›çœŸ
+	return true;																//ÃÜÂëÏàÍ¬£¬·µ»ØÕæ
 }
 
 /*******************************************************************************
-åç§°ï¼šINT16U NW_Framing(u8 FileUpCmd,u8 *OutBuff)
-åŠŸèƒ½ï¼šæŒ‰å—ç½‘åè®®ç»„å¸§ã€‚å¸§ç»“æ„åŠæ•°æ®æ’åˆ—æ ¼å¼è¯´æ˜:æ•°æ®åŒ…é‡‡ç”¨æ•°æ®å¸§æ¨¡å¼ï¼Œå¯¹æ•°æ®å¸§å®šä¹‰èµ·å§‹ç ã€
-è£…ç½®å·ç ã€æ§åˆ¶ç±»å‹ç ã€æ•°æ®åŸŸé•¿åº¦ã€æ•°æ®åŸŸã€æ ¡éªŒç å’Œç»“æŸç ã€‚æ•°æ®å¸§é•¿åº¦ä¸å¤§äº4000å­—èŠ‚ï¼›çŸ­ä¿¡
-é€šä¿¡æ–¹å¼ï¼Œå¸§é•¿ä¸å¤§äº130å­—èŠ‚ã€‚é‡‡ç”¨å¤§ç«¯æ¨¡å¼ï¼ˆæ•°æ®çš„é«˜å­—èŠ‚ä¿å­˜åœ¨å†…å­˜çš„ä½åœ°å€ä¸­ï¼‰ã€‚æ ¡éªŒç é‡‡
-ç”¨ç´¯åŠ å’Œå–åçš„æ ¡éªŒæ–¹å¼ï¼Œå‘é€æ–¹å°†è£…ç½®å·ç ã€æ§åˆ¶å­—ã€æ•°æ®åŸŸé•¿åº¦å’Œæ•°æ®åŒºçš„æ‰€æœ‰å­—èŠ‚è¿›è¡Œç®—æœ¯ç´¯
-åŠ ï¼ŒæŠ›å¼ƒé«˜ä½ï¼Œåªä¿ç•™æœ€åå•å­—èŠ‚ï¼Œå°†å•å­—èŠ‚å–åã€‚
+Ãû³Æ£ºINT16U NW_Framing(u8 FileUpCmd,u8 *OutBuff)
+¹¦ÄÜ£º°´ÄÏÍøĞ­Òé×éÖ¡¡£Ö¡½á¹¹¼°Êı¾İÅÅÁĞ¸ñÊ½ËµÃ÷:Êı¾İ°ü²ÉÓÃÊı¾İÖ¡Ä£Ê½£¬¶ÔÊı¾İÖ¡¶¨ÒåÆğÊ¼Âë¡¢
+×°ÖÃºÅÂë¡¢¿ØÖÆÀàĞÍÂë¡¢Êı¾İÓò³¤¶È¡¢Êı¾İÓò¡¢Ğ£ÑéÂëºÍ½áÊøÂë¡£Êı¾İÖ¡³¤¶È²»´óÓÚ4000×Ö½Ú£»¶ÌĞÅ
+Í¨ĞÅ·½Ê½£¬Ö¡³¤²»´óÓÚ130×Ö½Ú¡£²ÉÓÃ´ó¶ËÄ£Ê½£¨Êı¾İµÄ¸ß×Ö½Ú±£´æÔÚÄÚ´æµÄµÍµØÖ·ÖĞ£©¡£Ğ£ÑéÂë²É
+ÓÃÀÛ¼ÓºÍÈ¡·´µÄĞ£Ñé·½Ê½£¬·¢ËÍ·½½«×°ÖÃºÅÂë¡¢¿ØÖÆ×Ö¡¢Êı¾İÓò³¤¶ÈºÍÊı¾İÇøµÄËùÓĞ×Ö½Ú½øĞĞËãÊõÀÛ
+¼Ó£¬Å×Æú¸ßÎ»£¬Ö»±£Áô×îºóµ¥×Ö½Ú£¬½«µ¥×Ö½ÚÈ¡·´¡£
 ----------------------------------------------------------------
-èµ·å§‹ç 	è£…ç½®å·ç 		æ§åˆ¶å­—	æ•°æ®åŸŸé•¿åº¦	æ•°æ®åŸŸ	æ ¡éªŒç 	ç»“æŸç 	|
-1å­—èŠ‚	6å­—èŠ‚		1å­—èŠ‚	2å­—èŠ‚		å˜é•¿	1å­—èŠ‚	1å­—èŠ‚	|
+ÆğÊ¼Âë	×°ÖÃºÅÂë		¿ØÖÆ×Ö	Êı¾İÓò³¤¶È	Êı¾İÓò	Ğ£ÑéÂë	½áÊøÂë	|
+1×Ö½Ú	6×Ö½Ú		1×Ö½Ú	2×Ö½Ú		±ä³¤	1×Ö½Ú	1×Ö½Ú	|
 ----------------------------------------------------------------
-å…¥å‚ï¼šINT8U Cmd,æ§åˆ¶å­—ï¼Œç”¨äºåŒºåˆ†æ•°æ®ç±»å‹ï¼›
-å‡ºå‚ï¼šINT8U *OutBuffï¼Œç»„å¸§å®Œåçš„å­˜æ”¾åœ°å€
-è¿”å›ï¼šæ€»çš„æŠ¥æ–‡é•¿åº¦
+Èë²Î£ºINT8U Cmd,¿ØÖÆ×Ö£¬ÓÃÓÚÇø·ÖÊı¾İÀàĞÍ£»
+³ö²Î£ºINT8U *OutBuff£¬×éÖ¡ÍêºóµÄ´æ·ÅµØÖ·
+·µ»Ø£º×ÜµÄ±¨ÎÄ³¤¶È
 *******************************************************************************/
 INT16U NW_Framing(u8 Cmd,u8 *OutBuff)
 {
-	INT16U len;																	//å†…å®¹é•¿åº¦
+	INT16U len;																	//ÄÚÈİ³¤¶È
 
-	len=Get_DataField(Cmd,&OutBuff[10]);										//è·å–å†…å®¹ï¼Œè¿”å›å†…å®¹é•¿åº¦
-	if(Cmd==DATA_UNCORRESPOND) Cmd=SET_IP;										//è¿™é‡Œæœ‰ç‚¹ä¹±ï¼Œå…ˆä¸æ”¹äº†ï¼Œç›®å‰ç”¨åˆ° DATA_UNCORRESPOND çš„åªæœ‰SET_IP
-	OutBuff[0]=Start_Code;														//1Byteèµ·å§‹ç ï¼Œå›ºå®š68H
+	len=Get_DataField(Cmd,&OutBuff[10]);										//»ñÈ¡ÄÚÈİ£¬·µ»ØÄÚÈİ³¤¶È
+	if(Cmd==DATA_UNCORRESPOND) Cmd=SET_IP;										//ÕâÀïÓĞµãÂÒ£¬ÏÈ²»¸ÄÁË£¬Ä¿Ç°ÓÃµ½ DATA_UNCORRESPOND µÄÖ»ÓĞSET_IP
+	OutBuff[0]=Start_Code;														//1ByteÆğÊ¼Âë£¬¹Ì¶¨68H
 	OutBuff[1]=Device_Number[0];
-	OutBuff[2]=Device_Number[1];												//å‰ä¸¤å­—èŠ‚è¡¨ç¤ºå‚å®¶ä»£ç ï¼ˆç”±å—æ–¹ç”µç½‘å…¬å¸ç»Ÿä¸€åˆ†é…ï¼‰ï¼Œé‡‡ç”¨å¤§å†™å­—æ¯(ASCII)
-	OutBuff[3]=Device_Number[2];												//åå››å­—èŠ‚è¡¨ç¤ºå‚å®¶å¯¹æ¯å¥—çŠ¶æ€ç›‘æµ‹è£…ç½®çš„è¯†åˆ«ç ï¼ˆåŸºç«™åœ°å€ï¼‰ï¼Œé‡‡ç”¨å¤§å†™å­—æ¯åŠæ•°å­—ï¼Œä¼˜å…ˆä½¿ç”¨æ•°å­—
+	OutBuff[2]=Device_Number[1];												//Ç°Á½×Ö½Ú±íÊ¾³§¼Ò´úÂë£¨ÓÉÄÏ·½µçÍø¹«Ë¾Í³Ò»·ÖÅä£©£¬²ÉÓÃ´óĞ´×ÖÄ¸(ASCII)
+	OutBuff[3]=Device_Number[2];												//ºóËÄ×Ö½Ú±íÊ¾³§¼Ò¶ÔÃ¿Ì××´Ì¬¼à²â×°ÖÃµÄÊ¶±ğÂë£¨»ùÕ¾µØÖ·£©£¬²ÉÓÃ´óĞ´×ÖÄ¸¼°Êı×Ö£¬ÓÅÏÈÊ¹ÓÃÊı×Ö
 	OutBuff[4]=Device_Number[3];														
 	OutBuff[5]=Device_Number[4];														
-	OutBuff[6]=Device_Number[5];												//6Byteè£…ç½®å·ç 
-	OutBuff[7]=Cmd;																//1Byteæ§åˆ¶å­—ï¼Œç”¨äºåŒºåˆ†æ•°æ®ç±»å‹
+	OutBuff[6]=Device_Number[5];												//6Byte×°ÖÃºÅÂë
+	OutBuff[7]=Cmd;																//1Byte¿ØÖÆ×Ö£¬ÓÃÓÚÇø·ÖÊı¾İÀàĞÍ
 	OutBuff[8]=(len>>8)&0xff;													//
-	OutBuff[9]=len&0xff;														//2Byteæ•°æ®åŸŸé•¿åº¦ï¼Œé«˜å­—èŠ‚åœ¨å‰ï¼Œè‹¥ä¸ºé›¶è¡¨ç¤ºæ— æ•°æ®åŸŸ
-	//OutBuff[10]å¼€å§‹æ˜¯å†…å®¹ï¼Œå·²è·å–
-	OutBuff[10+len]=Negation_CS(OutBuff+1,9+len);								//1Byteæ£€éªŒç   è®¡ç®—OutBuffçš„å‰9+lenä¸ªå­—èŠ‚
-	OutBuff[11+len]=Epilog_Code;												//1Byteç»“æŸç ï¼Œå›ºå®š16H
-	return 12+len;		 														//æ€»çš„æŠ¥æ–‡é•¿åº¦
+	OutBuff[9]=len&0xff;														//2ByteÊı¾İÓò³¤¶È£¬¸ß×Ö½ÚÔÚÇ°£¬ÈôÎªÁã±íÊ¾ÎŞÊı¾İÓò
+	//OutBuff[10]¿ªÊ¼ÊÇÄÚÈİ£¬ÒÑ»ñÈ¡
+	OutBuff[10+len]=Negation_CS(OutBuff+1,9+len);								//1Byte¼ìÑéÂë  ¼ÆËãOutBuffµÄÇ°9+len¸ö×Ö½Ú
+	OutBuff[11+len]=Epilog_Code;												//1Byte½áÊøÂë£¬¹Ì¶¨16H
+	return 12+len;		 														//×ÜµÄ±¨ÎÄ³¤¶È
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U *Judge_NW_Framing(u8 Cmd,u8 *InBuff,u16 Len,u16 *OutLen)
-åŠŸèƒ½ï¼šç”¨äºåˆ¤æ–­æ˜¯å¦ç¬¦åˆå—ç½‘åè®®ã€‚æ ¡éªŒäº†èµ·å§‹ç ã€è£…ç½®å·ç ã€æ§åˆ¶ç±»å‹ç ã€æ•°æ®åŸŸé•¿åº¦ã€æ•°æ®åŸŸã€
-æ ¡éªŒç å’Œç»“æŸç ã€‚æ³¨ï¼šCmdä¸º0xffæ—¶ï¼Œä»»ä½•æ§åˆ¶å­—å¯é€šè¿‡
-å…¥å‚ï¼šINT8U Cmdï¼Œæ§åˆ¶å­—ï¼Œä¸º0xffæ—¶ï¼Œä»»ä½•æ§åˆ¶å­—å¯é€šè¿‡æ ¡éªŒ  *InBuffè¾“å…¥æ•°æ®  Lenè¾“å…¥é•¿åº¦
-å‡ºå‚ï¼š*OutLenæŠ¥æ–‡å®é™…æœ‰æ•ˆçš„é•¿åº¦  OutLenè¾“å…¥ä¸º0æ—¶ä¸è¾“å‡º
-è¿”å›ï¼š0 ä¸ç¬¦åˆï¼›é0 ç¬¦åˆï¼Œä¸”è¿”å›æ•°æ®åŒ…é¦–å­—èŠ‚åœ°å€ INT8U *
+Ãû³Æ£ºINT8U *Judge_NW_Framing(u8 Cmd,u8 *InBuff,u16 Len,u16 *OutLen)
+¹¦ÄÜ£ºÓÃÓÚÅĞ¶ÏÊÇ·ñ·ûºÏÄÏÍøĞ­Òé¡£Ğ£ÑéÁËÆğÊ¼Âë¡¢×°ÖÃºÅÂë¡¢¿ØÖÆÀàĞÍÂë¡¢Êı¾İÓò³¤¶È¡¢Êı¾İÓò¡¢
+Ğ£ÑéÂëºÍ½áÊøÂë¡£×¢£ºCmdÎª0xffÊ±£¬ÈÎºÎ¿ØÖÆ×Ö¿ÉÍ¨¹ı
+Èë²Î£ºINT8U Cmd£¬¿ØÖÆ×Ö£¬Îª0xffÊ±£¬ÈÎºÎ¿ØÖÆ×Ö¿ÉÍ¨¹ıĞ£Ñé  *InBuffÊäÈëÊı¾İ  LenÊäÈë³¤¶È
+³ö²Î£º*OutLen±¨ÎÄÊµ¼ÊÓĞĞ§µÄ³¤¶È  OutLenÊäÈëÎª0Ê±²»Êä³ö
+·µ»Ø£º0 ²»·ûºÏ£»·Ç0 ·ûºÏ£¬ÇÒ·µ»ØÊı¾İ°üÊ××Ö½ÚµØÖ· INT8U *
 *******************************************************************************/
 INT8U *Judge_NW_Framing(u8 Cmd,u8 *InBuff,u16 Len,u16 *OutLen)
 {
@@ -1306,41 +1306,41 @@ INT8U *Judge_NW_Framing(u8 Cmd,u8 *InBuff,u16 Len,u16 *OutLen)
 	INT16U 	Packet_Length;
 	INT8U 	NCS; 
 	INT8U 	*R;
-	/*æŠ¥æ–‡é•¿åº¦åˆ¤æ–­*/
-	if(Len<12)return 0;															//åè®®åŸºæœ¬é•¿åº¦ ä¸èƒ½å°äº12
-	for(i=0;i<12;i++)															//æ£€æŸ¥å‰é¢12å­—èŠ‚æœ‰æ— åŒ…å¤´
+	/*±¨ÎÄ³¤¶ÈÅĞ¶Ï*/
+	if(Len<12)return 0;															//Ğ­Òé»ù±¾³¤¶È ²»ÄÜĞ¡ÓÚ12
+	for(i=0;i<12;i++)															//¼ì²éÇ°Ãæ12×Ö½ÚÓĞÎŞ°üÍ·
 	{
 		if(InBuff[i]==Start_Code)
 		{
-			R=&InBuff[i];														//è®°å½•èµ·å§‹ç ä½ç½®
-			Len-=i;																//èµ·å§‹ç å¼€å§‹é•¿åº¦
+			R=&InBuff[i];														//¼ÇÂ¼ÆğÊ¼ÂëÎ»ÖÃ
+			Len-=i;																//ÆğÊ¼Âë¿ªÊ¼³¤¶È
 			break;
 		}
 	}
-	if(i>=12)return 0;															//12å­—èŠ‚å†…æœªæ‰¾åˆ°åŒ…å¤´ï¼Œè®¤ä¸ºæ•°æ®åŒ…æ— æ•ˆ	
-	Packet_Length=R[8]<<8;														//R[9]ä¸ºæ•°æ®é•¿åº¦çš„é«˜å­—èŠ‚
-	Packet_Length+=R[9];														//R[10]ä¸ºæ•°æ®é•¿åº¦çš„ä½å­—èŠ‚ è·å–æ•°æ®é•¿åº¦
-	Packet_Length+=12;															//æ•´ä½“æŠ¥æ–‡çš„é•¿åº¦
-	if(Len<Packet_Length) return 0;												//åè®®é•¿åº¦é”™è¯¯ï¼ˆ>æ—¶å¯èƒ½æ˜¯åŒ…å°¾æœ‰æ— æ•ˆæ•°æ®ï¼‰
-	/*å…¶ä»–åˆ¤æ–­*/
-	if(R[Packet_Length-1]!=Epilog_Code) return 0;								//ç»“æŸç æ ¡éªŒ
-	if(Cmd!=ANY_CMD && Cmd!=R[7]) return 0;										//æ§åˆ¶å­—æ ¡éªŒ  æ³¨ï¼šCmdä¸º0xffæ—¶ï¼Œä»»ä½•æ§åˆ¶å­—å¯é€šè¿‡
-	if(memcmp(&R[1],Device_Number,6)) return 0;									//æ¯”è¾ƒ6å­—èŠ‚è£…ç½®å·ç ï¼Œä¸ç›¸åŒè¿”å›0
-	NCS=Negation_CS(R+1,Packet_Length-3);										//ç´¯åŠ å’Œå–åè¿ç®—ï¼Œè®¡ç®—å‰Packet_Length-3ä¸ªå­—èŠ‚					
-	if(NCS==R[Packet_Length-2])													//è‹¥è¯»å–æŠ¥æ–‡ä¸­çš„NCSå€¼ä¸è¿ç®—å€¼ç›¸åŒï¼ˆå€’æ•°ç¬¬2å­—èŠ‚ä¸ºNCSï¼‰
+	if(i>=12)return 0;															//12×Ö½ÚÄÚÎ´ÕÒµ½°üÍ·£¬ÈÏÎªÊı¾İ°üÎŞĞ§	
+	Packet_Length=R[8]<<8;														//R[9]ÎªÊı¾İ³¤¶ÈµÄ¸ß×Ö½Ú
+	Packet_Length+=R[9];														//R[10]ÎªÊı¾İ³¤¶ÈµÄµÍ×Ö½Ú »ñÈ¡Êı¾İ³¤¶È
+	Packet_Length+=12;															//ÕûÌå±¨ÎÄµÄ³¤¶È
+	if(Len<Packet_Length) return 0;												//Ğ­Òé³¤¶È´íÎó£¨>Ê±¿ÉÄÜÊÇ°üÎ²ÓĞÎŞĞ§Êı¾İ£©
+	/*ÆäËûÅĞ¶Ï*/
+	if(R[Packet_Length-1]!=Epilog_Code) return 0;								//½áÊøÂëĞ£Ñé
+	if(Cmd!=ANY_CMD && Cmd!=R[7]) return 0;										//¿ØÖÆ×ÖĞ£Ñé  ×¢£ºCmdÎª0xffÊ±£¬ÈÎºÎ¿ØÖÆ×Ö¿ÉÍ¨¹ı
+	if(memcmp(&R[1],Device_Number,6)) return 0;									//±È½Ï6×Ö½Ú×°ÖÃºÅÂë£¬²»ÏàÍ¬·µ»Ø0
+	NCS=Negation_CS(R+1,Packet_Length-3);										//ÀÛ¼ÓºÍÈ¡·´ÔËËã£¬¼ÆËãÇ°Packet_Length-3¸ö×Ö½Ú					
+	if(NCS==R[Packet_Length-2])													//Èô¶ÁÈ¡±¨ÎÄÖĞµÄNCSÖµÓëÔËËãÖµÏàÍ¬£¨µ¹ÊıµÚ2×Ö½ÚÎªNCS£©
 	{
-		if(OutLen) *OutLen=Packet_Length;										//è¾“å‡ºæŠ¥æ–‡é•¿åº¦ï¼ˆOutLenè¾“å…¥ä¸º0æ—¶ä¸è¾“å‡ºï¼‰
-		return R;																//è¿”å›æœ‰æ•ˆåè®®åŒ…å¤´åœ°å€
+		if(OutLen) *OutLen=Packet_Length;										//Êä³ö±¨ÎÄ³¤¶È£¨OutLenÊäÈëÎª0Ê±²»Êä³ö£©
+		return R;																//·µ»ØÓĞĞ§Ğ­Òé°üÍ·µØÖ·
 	}
-	else return 0;																//NCSæ ¡éªŒå¤±è´¥
+	else return 0;																//NCSĞ£ÑéÊ§°Ü
 }
 
 /*******************************************************************************
-åç§°ï¼šINT16U Get_DataField(u8 Cmd,u8 *OutBuff)
-åŠŸèƒ½ï¼šæ ¹æ®Cmdè·å–å†…å®¹ï¼ˆæ•°æ®åŸŸï¼‰ï¼Œè¿”å›é•¿åº¦
-å…¥å‚ï¼šu8 Cmd,æ§åˆ¶å­—
-å‡ºå‚ï¼šu8 *OutBuffï¼Œè·å–åˆ°çš„å†…å®¹ï¼Œç”¨äºç»„å¸§å‡½NW_framingå¡«å……æ•°æ®åŸŸ
-è¿”å›ï¼šé0ï¼šè·å–çš„å†…å®¹ï¼ˆæ•°æ®åŸŸï¼‰é•¿åº¦  0ï¼šè·å–å¤±è´¥
+Ãû³Æ£ºINT16U Get_DataField(u8 Cmd,u8 *OutBuff)
+¹¦ÄÜ£º¸ù¾İCmd»ñÈ¡ÄÚÈİ£¨Êı¾İÓò£©£¬·µ»Ø³¤¶È
+Èë²Î£ºu8 Cmd,¿ØÖÆ×Ö
+³ö²Î£ºu8 *OutBuff£¬»ñÈ¡µ½µÄÄÚÈİ£¬ÓÃÓÚ×éÖ¡º¯NW_framingÌî³äÊı¾İÓò
+·µ»Ø£º·Ç0£º»ñÈ¡µÄÄÚÈİ£¨Êı¾İÓò£©³¤¶È  0£º»ñÈ¡Ê§°Ü
 *******************************************************************************/
 INT16U Get_DataField(u8 Cmd,u8 *OutBuff)
 {
@@ -1350,120 +1350,120 @@ INT16U Get_DataField(u8 Cmd,u8 *OutBuff)
 
 	switch(Cmd)
 	{
-		case START_UP://00H														//æ•°æ®åŸŸä¸ºï¼šè§„èŒƒç‰ˆæœ¬å·
+		case START_UP://00H														//Êı¾İÓòÎª£º¹æ·¶°æ±¾ºÅ
 				OutBuff[0] = PROTOCOL_VERSION_H;
 				OutBuff[1] = PROTOCOL_VERSION_L;
-				return 2;														//é•¿åº¦ä¸º2
+				return 2;														//³¤¶ÈÎª2
 		
-		case TIMMING://01H														//æ•°æ®åŸŸä¸ºï¼šç©º
-				return 0;														//é•¿åº¦ä¸º0
+		case TIMMING://01H														//Êı¾İÓòÎª£º¿Õ
+				return 0;														//³¤¶ÈÎª0
 		
-		case HEARTBEAT://05H													//æ•°æ®åŸŸä¸ºï¼šä¿¡å·è®°å½•æ—¶é—´	ä¿¡å·å¼ºåº¦	è“„ç”µæ± ç”µå‹
-				return Get_HB_INFO(OutBuff);									//è·å–å¿ƒè·³ä¿¡æ¯æ•°æ®ï¼Œæ ¹æ®å—ç½‘åè®®æ ¼å¼ä¼ å‡ºï¼Œå¹¶è¿”å›é•¿åº¦8å­—èŠ‚
+		case HEARTBEAT://05H													//Êı¾İÓòÎª£ºĞÅºÅ¼ÇÂ¼Ê±¼ä	ĞÅºÅÇ¿¶È	Ğîµç³ØµçÑ¹
+				return Get_HB_INFO(OutBuff);									//»ñÈ¡ĞÄÌøĞÅÏ¢Êı¾İ£¬¸ù¾İÄÏÍøĞ­Òé¸ñÊ½´«³ö£¬²¢·µ»Ø³¤¶È8×Ö½Ú
 		
-		case DEMAND_IP://07H													//æ•°æ®åŸŸä¸ºï¼šä¸»ç«™IP	ç«¯å£å·	ä¸»ç«™å¡å·
+		case DEMAND_IP://07H													//Êı¾İÓòÎª£ºÖ÷Õ¾IP	¶Ë¿ÚºÅ	Ö÷Õ¾¿¨ºÅ
 				memcpy(OutBuff,IP_Config.IP_addr_1,4);							
 				memcpy(OutBuff+4,IP_Config.PortNum_1,2);
 				memcpy(OutBuff+6,IP_Config.CardNum_1,6);
-				return 12;														//é•¿åº¦ä¸º12
+				return 12;														//³¤¶ÈÎª12
 
-		case DEMAND_CONFG://0AH													//ç”¨äºä¸»ç«™æŸ¥è¯¢è£…ç½®é…ç½®å‚æ•°ã€‚
-				memcpy(OutBuff,Config.BeatTime,10);								//å¿ƒè·³é—´éš”ã€é‡‡é›†é—´éš”ã€ä¼‘çœ æ—¶é•¿ã€åœ¨çº¿æ—¶é•¿ã€ç¡¬ä»¶é‡å¯æ—¶é—´ç‚¹
-				memset(OutBuff+10,0,10);										//å›¾åƒç›¸å…³10å­—èŠ‚ï¼Œæ¸…0
-				OutBuff[20] = TEM_CUR_UPLOAD;									//æœ‰æ•ˆåŠŸèƒ½1ï¼Œå¯¼çº¿æ¸©åº¦ã€ç”µæµæ•°æ®ç›‘æµ‹åŠŸèƒ½26H
-				return 21;														//é•¿åº¦ä¸º21
+		case DEMAND_CONFG://0AH													//ÓÃÓÚÖ÷Õ¾²éÑ¯×°ÖÃÅäÖÃ²ÎÊı¡£
+				memcpy(OutBuff,Config.BeatTime,10);								//ĞÄÌø¼ä¸ô¡¢²É¼¯¼ä¸ô¡¢ĞİÃßÊ±³¤¡¢ÔÚÏßÊ±³¤¡¢Ó²¼şÖØÆôÊ±¼äµã
+				memset(OutBuff+10,0,10);										//Í¼ÏñÏà¹Ø10×Ö½Ú£¬Çå0
+				OutBuff[20] = TEM_CUR_UPLOAD;									//ÓĞĞ§¹¦ÄÜ1£¬µ¼ÏßÎÂ¶È¡¢µçÁ÷Êı¾İ¼à²â¹¦ÄÜ26H
+				return 21;														//³¤¶ÈÎª21
 		
-		case SLEEP_NOTICE://0CH													//æ•°æ®åŸŸä¸ºï¼šç©º
-				return 0;														//é•¿åº¦ä¸º0
+		case SLEEP_NOTICE://0CH													//Êı¾İÓòÎª£º¿Õ
+				return 0;														//³¤¶ÈÎª0
 		
-		case DEMAND_DEV_TIM://0DH												//ä¸»ç«™ä¸»åŠ¨æŸ¥è¯¢è£…ç½®ç³»ç»Ÿæ—¶é—´ã€‚
-				return NW_GetTime((struct NW_TIME *)OutBuff);					//è·å–RTCæ—¶é—´ï¼Œå¹¶æ ¹æ®å—ç½‘åè®®æ ¼å¼ä¼ å‡ºï¼Œå¹¶è¿”å›é•¿åº¦6å­—èŠ‚
+		case DEMAND_DEV_TIM://0DH												//Ö÷Õ¾Ö÷¶¯²éÑ¯×°ÖÃÏµÍ³Ê±¼ä¡£
+				return NW_GetTime((struct NW_TIME *)OutBuff);					//»ñÈ¡RTCÊ±¼ä£¬²¢¸ù¾İÄÏÍøĞ­Òé¸ñÊ½´«³ö£¬²¢·µ»Ø³¤¶È6×Ö½Ú
 		
-		case TEM_CUR_UPLOAD://26H												//æ•°æ®åŸŸä¸ºï¼šå¯†æ–‡è®¤è¯	å¸§æ ‡è¯†	åŒ…æ•°	é¦–åŒ…	ç¬¬ä¸€åŒ…	ç¬¬äºŒåŒ…â€¦â€¦	ç¬¬NåŒ…ï¼ˆä»…ç”¨äºä¸»ç«™è¯·æ±‚è£…ç½®æ•°æ®åç«‹åˆ»ä¸Šä¼ ï¼‰
-				memcpy(OutBuff,Config.SecurityCode,4);							//å¯†æ–‡è®¤è¯
-				memcpy(OutBuff+4,&Tem_Cur_Data,14);								//æ•°æ®åŸŸé™¤äº†å¯†æ–‡è®¤è¯ï¼Œéƒ½åœ¨Tem_Cur_Dataç»“æ„ä½“ä¸­äº†ï¼Œ1+1+1+6+2+2+1=14
-				return 18;														//é•¿åº¦ä¸º18
+		case TEM_CUR_UPLOAD://26H												//Êı¾İÓòÎª£ºÃÜÎÄÈÏÖ¤	Ö¡±êÊ¶	°üÊı	Ê×°ü	µÚÒ»°ü	µÚ¶ş°ü¡­¡­	µÚN°ü£¨½öÓÃÓÚÖ÷Õ¾ÇëÇó×°ÖÃÊı¾İºóÁ¢¿ÌÉÏ´«£©
+				memcpy(OutBuff,Config.SecurityCode,4);							//ÃÜÎÄÈÏÖ¤
+				memcpy(OutBuff+4,&Tem_Cur_Data,14);								//Êı¾İÓò³ıÁËÃÜÎÄÈÏÖ¤£¬¶¼ÔÚTem_Cur_Data½á¹¹ÌåÖĞÁË£¬1+1+1+6+2+2+1=14
+				return 18;														//³¤¶ÈÎª18
 
-		case FAULT_INFO://30H	æœ‰ç©ºæŠŠè¿™ä¸€å †ä¹Ÿæ•´ç†æˆå‡½æ•°
-				memcpy(OutBuff,Config.SecurityCode,4);							//4Byteå¯†æ–‡è®¤è¯
-				OutBuff[4] = 1;													//1Byteå¸§æ ‡è¯†ï¼šä»…1å¸§
+		case FAULT_INFO://30H	ÓĞ¿Õ°ÑÕâÒ»¶ÑÒ²ÕûÀí³Éº¯Êı
+				memcpy(OutBuff,Config.SecurityCode,4);							//4ByteÃÜÎÄÈÏÖ¤
+				OutBuff[4] = 1;													//1ByteÖ¡±êÊ¶£º½ö1Ö¡
 		
 				pointer = (INT8U*)&Fault_Manage;
-				for(i=1;i<Fault_Magage_Len;i++)									//ç»“æ„ä½“ä¸­ç¬¬ä¸€ä¸ªæ˜¯Need_Reportï¼Œä¸éœ€è¦åˆ¤æ–­ï¼Œæ•…i=1å¼€å§‹
+				for(i=1;i<Fault_Magage_Len;i++)									//½á¹¹ÌåÖĞµÚÒ»¸öÊÇNeed_Report£¬²»ĞèÒªÅĞ¶Ï£¬¹Êi=1¿ªÊ¼
 				{
 					if(0x55==*(pointer+i))										
 					{
-						fault_state = 0xFF;										//åªè¦æœ‰ä¸€ä¸ªæ ‡è®°æ˜¯55å°±è¯´æ˜è®¾å¤‡å¤„äºæ•…éšœçŠ¶æ€
+						fault_state = 0xFF;										//Ö»ÒªÓĞÒ»¸ö±ê¼ÇÊÇ55¾ÍËµÃ÷Éè±¸´¦ÓÚ¹ÊÕÏ×´Ì¬
 						break;
 					}				
 				}
 		
-				for(i=0;i<FI_NUM;i++)											//è½®è¯¢FI_NUMä¸ªæ•…éšœä¿¡æ¯
+				for(i=0;i<FI_NUM;i++)											//ÂÖÑ¯FI_NUM¸ö¹ÊÕÏĞÅÏ¢
 				{
-				/*å­˜åœ¨è¡¨ç¤ºéœ€è¦ä¸ŠæŠ¥æ•…éšœä¿¡æ¯*/
+				/*´æÔÚ±íÊ¾ĞèÒªÉÏ±¨¹ÊÕÏĞÅÏ¢*/
 					if(Fault_Info[i].Time)										
 					{
-						/*é¦–åŒ…ï¼ˆç¬¬0åŒ…ï¼‰8Byte*/
+						/*Ê×°ü£¨µÚ0°ü£©8Byte*/
 						if(!pack_num)
 						{
-							SecondToNwTime(Fault_Info[i].Time,(struct NW_TIME*)(OutBuff+7));		//6Byteé‡‡æ ·æ—¶é—´ï¼ˆå¹´+æœˆ+æ—¥+æ—¶+åˆ†+ç§’ï¼‰ï¼ˆ6å­—èŠ‚ï¼ŒHEXè¡¨ç¤ºï¼‰
-							OutBuff[13] = Fault_Info[i].Function_Code;			//1ByteåŠŸèƒ½ç¼–ç 
-							OutBuff[14] = Fault_Info[i].Fault_Code;				//1Byteæ•…éšœç¼–ç 	
+							SecondToNwTime(Fault_Info[i].Time,(struct NW_TIME*)(OutBuff+7));		//6Byte²ÉÑùÊ±¼ä£¨Äê+ÔÂ+ÈÕ+Ê±+·Ö+Ãë£©£¨6×Ö½Ú£¬HEX±íÊ¾£©
+							OutBuff[13] = Fault_Info[i].Function_Code;			//1Byte¹¦ÄÜ±àÂë
+							OutBuff[14] = Fault_Info[i].Fault_Code;				//1Byte¹ÊÕÏ±àÂë	
 						}
-						/*ç¬¬ä¸€åŠä»¥åå„æ•…éšœåŒ… 4Byte*/
+						/*µÚÒ»¼°ÒÔºó¸÷¹ÊÕÏ°ü 4Byte*/
 						else 
 						{
-							delta_T=Fault_Info[i].Time-Fault_Info[i-1].Time;	//è®¡ç®—ä¸ä¸ŠåŒ…é‡‡æ ·æ—¶é—´å·®
-							if(delta_T>0xFFFF) delta_T=0xFFFF;					//éœ€è¦åˆ†å¸§ï¼Œå…ˆä¸ç®¡ï¼Œå›ºå®š0xFFFF
-							OutBuff[15+7*(i-1)]=(delta_T>>8)&0xFF;				//2Byteé‡‡æ ·æ—¶é—´å·®ï¼Œé«˜å­—èŠ‚
-							OutBuff[16+7*(i-1)]=delta_T&0xFF;					//ä½å­—èŠ‚
-							OutBuff[17+7*(i-1)]=Fault_Info[i].Function_Code;	//1ByteåŠŸèƒ½ç¼–ç 
-							OutBuff[18+7*(i-1)]=Fault_Info[i].Fault_Code;		//1Byteæ•…éšœç¼–ç 	
+							delta_T=Fault_Info[i].Time-Fault_Info[i-1].Time;	//¼ÆËãÓëÉÏ°ü²ÉÑùÊ±¼ä²î
+							if(delta_T>0xFFFF) delta_T=0xFFFF;					//ĞèÒª·ÖÖ¡£¬ÏÈ²»¹Ü£¬¹Ì¶¨0xFFFF
+							OutBuff[15+7*(i-1)]=(delta_T>>8)&0xFF;				//2Byte²ÉÑùÊ±¼ä²î£¬¸ß×Ö½Ú
+							OutBuff[16+7*(i-1)]=delta_T&0xFF;					//µÍ×Ö½Ú
+							OutBuff[17+7*(i-1)]=Fault_Info[i].Function_Code;	//1Byte¹¦ÄÜ±àÂë
+							OutBuff[18+7*(i-1)]=Fault_Info[i].Fault_Code;		//1Byte¹ÊÕÏ±àÂë	
 						}
 						
-						pack_num++;												//åŒ…æ•°
+						pack_num++;												//°üÊı
 					}	
 				}
 				
-				if(!pack_num) BspUartWrite(2,SIZE_OF("æ— \r\n"));
-				else BspUartWrite(2,SIZE_OF("æœ‰\r\n"));
-				OutBuff[5] = pack_num;											//1ByteåŒ…æ•°ï¼šç­‰äºæ•…éšœä¿¡æ¯æ•°
-				OutBuff[6] = fault_state;										//1Byteè®¾å¤‡çŠ¶æ€ï¼šè£…ç½®è®¾å¤‡å½“å‰çš„çŠ¶æ€ï¼š00Hæ­£å¸¸ï¼ŒFFHæ•…éšœ
-				return 7+8*(pack_num?1:0)+4*(pack_num?pack_num-1:0);			//å¯†æ–‡4ï¼Œå¸§æ•°1ï¼ŒåŒ…æ•°1ï¼ŒçŠ¶æ€1ï¼Œé¦–åŒ…8ï¼Œåç»­æ¯åŒ…4
+				if(!pack_num) BspUartWrite(2,SIZE_OF("ÎŞ\r\n"));
+				else BspUartWrite(2,SIZE_OF("ÓĞ\r\n"));
+				OutBuff[5] = pack_num;											//1Byte°üÊı£ºµÈÓÚ¹ÊÕÏĞÅÏ¢Êı
+				OutBuff[6] = fault_state;										//1ByteÉè±¸×´Ì¬£º×°ÖÃÉè±¸µ±Ç°µÄ×´Ì¬£º00HÕı³££¬FFH¹ÊÕÏ
+				return 7+8*(pack_num?1:0)+4*(pack_num?pack_num-1:0);			//ÃÜÎÄ4£¬Ö¡Êı1£¬°üÊı1£¬×´Ì¬1£¬Ê×°ü8£¬ºóĞøÃ¿°ü4
 				
-		case FLOW_DATA_UPLOAD://40H												//æ•°æ®åŸŸä¸ºï¼šå¯†æ–‡è®¤è¯	å¸§æ ‡è¯†	åŒ…æ•°	é¦–åŒ…	ç¬¬ä¸€åŒ…	ç¬¬äºŒåŒ…â€¦â€¦	ç¬¬NåŒ…
-				memcpy(OutBuff,Config.SecurityCode,4);							//å¯†æ–‡è®¤è¯
-				OutBuff[4] = 1;													//å¸§æ ‡è¯†ï¼šå…ˆåªæŒ‰1å¸§ï¼Œ1é¦–åŒ…æ¥åšï¼Œæ¯æ¬¡ç”¨æ–°æ•°æ®æ›¿æ¢æ‰
-				OutBuff[5] = 1;													//åŒ…æ•°ï¼šä»…ä¸€ä¸ªé¦–åŒ…
-				memcpy(OutBuff+6,&Flow_Data,18);								//é¦–åŒ…æ”¾åœ¨Flow_Dataç»“æ„ä½“ï¼Œ6+4+4+4=18
-				return 24;														//é•¿åº¦ä¸º24
+		case FLOW_DATA_UPLOAD://40H												//Êı¾İÓòÎª£ºÃÜÎÄÈÏÖ¤	Ö¡±êÊ¶	°üÊı	Ê×°ü	µÚÒ»°ü	µÚ¶ş°ü¡­¡­	µÚN°ü
+				memcpy(OutBuff,Config.SecurityCode,4);							//ÃÜÎÄÈÏÖ¤
+				OutBuff[4] = 1;													//Ö¡±êÊ¶£ºÏÈÖ»°´1Ö¡£¬1Ê×°üÀ´×ö£¬Ã¿´ÎÓÃĞÂÊı¾İÌæ»»µô
+				OutBuff[5] = 1;													//°üÊı£º½öÒ»¸öÊ×°ü
+				memcpy(OutBuff+6,&Flow_Data,18);								//Ê×°ü·ÅÔÚFlow_Data½á¹¹Ìå£¬6+4+4+4=18
+				return 24;														//³¤¶ÈÎª24
 		
-	/*æ–¹è¯šæ‰©å±•åè®® Get_DataField*/
-		case EX_DEMAND_APN://F4H												//æ•°æ®åŸŸä¸ºï¼šAPN	0~100å­—èŠ‚
-				strncpy((char*)OutBuff, (char*)APN, APN_Len);					//å¤åˆ¶å­—ç¬¦ä¸²
-				len = strlen((char*)APN)+1;										//æ•°æ®åŸŸé•¿åº¦åŒ…æ‹¬ç»“æŸç¬¦'\0'ã€‚
-				return len;														//è¿”å›æ•°æ®åŸŸé•¿åº¦											
+	/*·½³ÏÀ©Õ¹Ğ­Òé Get_DataField*/
+		case EX_DEMAND_APN://F4H												//Êı¾İÓòÎª£ºAPN	0~100×Ö½Ú
+				strncpy((char*)OutBuff, (char*)APN, APN_Len);					//¸´ÖÆ×Ö·û´®
+				len = strlen((char*)APN)+1;										//Êı¾İÓò³¤¶È°üÀ¨½áÊø·û'\0'¡£
+				return len;														//·µ»ØÊı¾İÓò³¤¶È											
 		
-		case EX_HEARTBEAT://F5H													//æ•°æ®åŸŸä¸ºï¼šè®°å½•æ—¶é—´ã€è¶…çº§ç”µå®¹ç”µå‹ã€ç¯å¢ƒæ¸©åº¦ã€MCUæ¸©åº¦
-				return GetExtendedHeartbeatData(OutBuff);						//è·å–æ‰©å±•å¿ƒè·³ä¿¡æ¯æ•°æ®ï¼Œæ ¹æ®æ‰©å±•åè®®æ ¼å¼ä¼ å‡ºï¼Œå¹¶è¿”å›é•¿åº¦11å­—èŠ‚
+		case EX_HEARTBEAT://F5H													//Êı¾İÓòÎª£º¼ÇÂ¼Ê±¼ä¡¢³¬¼¶µçÈİµçÑ¹¡¢»·¾³ÎÂ¶È¡¢MCUÎÂ¶È
+				return GetExtendedHeartbeatData(OutBuff);						//»ñÈ¡À©Õ¹ĞÄÌøĞÅÏ¢Êı¾İ£¬¸ù¾İÀ©Õ¹Ğ­Òé¸ñÊ½´«³ö£¬²¢·µ»Ø³¤¶È11×Ö½Ú
 					
-		case EX_VERSION_SIM://F6H												//æ•°æ®åŸŸä¸ºï¼šç¡¬ä»¶ç‰ˆæœ¬å·	è½¯ä»¶ç‰ˆæœ¬å·	SIMå¡å·ï¼ˆ13ä½ï¼‰	ICCIDï¼ˆ20ä½ï¼‰	IMSIï¼ˆ15ä½ï¼‰
-				return GetDeviceVersionAndCardNumber(OutBuff); 					//è·å–è£…ç½®ç‰ˆæœ¬åŠå¡å·ç­‰ä¿¡æ¯
+		case EX_VERSION_SIM://F6H												//Êı¾İÓòÎª£ºÓ²¼ş°æ±¾ºÅ	Èí¼ş°æ±¾ºÅ	SIM¿¨ºÅ£¨13Î»£©	ICCID£¨20Î»£©	IMSI£¨15Î»£©
+				return GetDeviceVersionAndCardNumber(OutBuff); 					//»ñÈ¡×°ÖÃ°æ±¾¼°¿¨ºÅµÈĞÅÏ¢
 		
-		case EX_UPDATA_REQUEST://F7H											//æ•°æ®åŸŸä¸ºï¼šå½“å‰è½¯ä»¶ç‰ˆæœ¬å·	å‡çº§æ£€æµ‹ç»“æœ
-				return GetUpdataRequestData(OutBuff);							//è·å–å‡çº§è¯·æ±‚å›å¤å¸§å†…å®¹ï¼Œæ ¹æ®æ‰©å±•åè®®æ ¼å¼ä¼ å‡ºï¼Œå¹¶è¿”å›æ•°æ®åŸŸé•¿åº¦ã€‚
+		case EX_UPDATA_REQUEST://F7H											//Êı¾İÓòÎª£ºµ±Ç°Èí¼ş°æ±¾ºÅ	Éı¼¶¼ì²â½á¹û
+				return GetUpdataRequestData(OutBuff);							//»ñÈ¡Éı¼¶ÇëÇó»Ø¸´Ö¡ÄÚÈİ£¬¸ù¾İÀ©Õ¹Ğ­Òé¸ñÊ½´«³ö£¬²¢·µ»ØÊı¾İÓò³¤¶È¡£
 		
-		case EX_UPDATA_FILLING://FAH											//æ•°æ®åŸŸä¸ºï¼šå‡çº§è½¯ä»¶ç‰ˆæœ¬å·	è¡¥åŒ…æ•°	ç¬¬ä¸€åŒ…åŒ…å·	ç¬¬äºŒåŒ…åŒ…å·	â€¦â€¦
-				return GetUpdataFillingData(OutBuff);							//è·å–è·å–è¡¥åŒ…å›å¤å¸§å†…å®¹ï¼Œæ ¹æ®æ‰©å±•åè®®æ ¼å¼ä¼ å‡ºï¼Œå¹¶è¿”å›æ•°æ®åŸŸé•¿åº¦ã€‚
+		case EX_UPDATA_FILLING://FAH											//Êı¾İÓòÎª£ºÉı¼¶Èí¼ş°æ±¾ºÅ	²¹°üÊı	µÚÒ»°ü°üºÅ	µÚ¶ş°ü°üºÅ	¡­¡­
+				return GetUpdataFillingData(OutBuff);							//»ñÈ¡»ñÈ¡²¹°ü»Ø¸´Ö¡ÄÚÈİ£¬¸ù¾İÀ©Õ¹Ğ­Òé¸ñÊ½´«³ö£¬²¢·µ»ØÊı¾İÓò³¤¶È¡£
 
-	/*è‡ªå®šä¹‰çš„ã€‚ä»…ç”¨äº06Hæ•°æ®ä¸å¯¹åº”é”™è¯¯æ—¶ï¼Œè¿”å›å‡ºé”™ä¿¡æ¯ï¼Œå¤–é¢è¦æ‰‹åŠ¨æ”¹å›LTE_Tx_Buff[7]=cmd*/
+	/*×Ô¶¨ÒåµÄ¡£½öÓÃÓÚ06HÊı¾İ²»¶ÔÓ¦´íÎóÊ±£¬·µ»Ø³ö´íĞÅÏ¢£¬ÍâÃæÒªÊÖ¶¯¸Ä»ØLTE_Tx_Buff[7]=cmd*/
 		case DATA_UNCORRESPOND://DEH													
 				OutBuff[0] = 0x00;												
 				OutBuff[1] = 0x00;
 				return 2;
 		
-	/*ä¸‹é¢å‡ ä¸ªè¿›æ¥ç»„å¸§éƒ½è¡¨ç¤ºå‡ºé”™ï¼ŒæŠ¥FFFFï¼›å¦åˆ™åŸå‘½ä»¤è¿”å›ï¼ˆä¸åœ¨è¿™é‡Œï¼‰*/
-		case PASSWORD_ERR:	//DDHï¼Œå¯†ç é”™è¯¯ã€‚ä¹Ÿå¯ç”¨äºæ–¹è¯šæ‰©å±•åè®®ã€‚
+	/*ÏÂÃæ¼¸¸ö½øÀ´×éÖ¡¶¼±íÊ¾³ö´í£¬±¨FFFF£»·ñÔòÔ­ÃüÁî·µ»Ø£¨²»ÔÚÕâÀï£©*/
+		case PASSWORD_ERR:	//DDH£¬ÃÜÂë´íÎó¡£Ò²¿ÉÓÃÓÚ·½³ÏÀ©Õ¹Ğ­Òé¡£
 		case SET_PASSWORD:	//02H		
 		case PARA_CONFG:	//03H
 		case SET_IP:		//06H
@@ -1482,73 +1482,73 @@ INT16U Get_DataField(u8 Cmd,u8 *OutBuff)
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U SetTime(u8 *InBuff)
-åŠŸèƒ½ï¼šæ ¹æ®å—ç½‘åè®®è®¾ç½®æ—¶é—´ã€‚
-å…¥å‚ï¼šu8 *InBuffï¼Œä¸»ç«™ä¸‹å‘çš„å®Œæ•´çš„å¯¹æ—¶å¸§é¦–åœ°å€
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼š1ï¼šæˆåŠŸ   0ï¼šå¤±è´¥
+Ãû³Æ£ºINT8U SetTime(u8 *InBuff)
+¹¦ÄÜ£º¸ù¾İÄÏÍøĞ­ÒéÉèÖÃÊ±¼ä¡£
+Èë²Î£ºu8 *InBuff£¬Ö÷Õ¾ÏÂ·¢µÄÍêÕûµÄ¶ÔÊ±Ö¡Ê×µØÖ·
+³ö²Î£ºÎŞ
+·µ»Ø£º1£º³É¹¦   0£ºÊ§°Ü
 *******************************************************************************/
 INT8U SetTime(u8 *InBuff)
 {
 	TCHAR				chars[40];
 	INT32U 				second=0;
 
-	second =NwTimeToSecond((struct NW_TIME *)(InBuff+10));						//å°†ä¸Šä½æœºä¸‹å‘çš„å—ç½‘æ—¶é—´è½¬æ¢ä¸ºä¸–çºªç§’
-	if(RtcSetTimeSecond(second))												//å°†æ—¶é—´å†™å…¥RTC
+	second =NwTimeToSecond((struct NW_TIME *)(InBuff+10));						//½«ÉÏÎ»»úÏÂ·¢µÄÄÏÍøÊ±¼ä×ª»»ÎªÊÀ¼ÍÃë
+	if(RtcSetTimeSecond(second))												//½«Ê±¼äĞ´ÈëRTC
 	{
-		Time_Proofread = DONE;													//æ ‡è®°ä¸ºæ ¡æ—¶å·²å®Œæˆ
-		sprintf(chars, "æ ¡æ—¶æˆåŠŸï¼š20%02då¹´%02dæœˆ%02dæ—¥ %02d:%02d:%02d\r\n", InBuff[10], InBuff[11], InBuff[12], InBuff[13], InBuff[14], InBuff[15]);
-		BspUartWrite(2,(INT8U*)chars,strlen(chars));							//æ‰“å°å½“å‰æ—¶é—´
+		Time_Proofread = DONE;													//±ê¼ÇÎªĞ£Ê±ÒÑÍê³É
+		sprintf(chars, "Ğ£Ê±³É¹¦£º20%02dÄê%02dÔÂ%02dÈÕ %02d:%02d:%02d\r\n", InBuff[10], InBuff[11], InBuff[12], InBuff[13], InBuff[14], InBuff[15]);
+		BspUartWrite(2,(INT8U*)chars,strlen(chars));							//´òÓ¡µ±Ç°Ê±¼ä
 		return 1;
 	}
-	Time_Proofread = UNDONE;													//æ ‡è®°ä¸ºæ ¡æ—¶æœªå®Œæˆ
-	sprintf(chars, "RTCèŠ¯ç‰‡å†™å…¥å¼‚å¸¸ï¼Œæ ¡æ—¶å¤±è´¥ï¼\r\n");	
-	BspUartWrite(2,(INT8U*)chars,strlen(chars));								//æ‰“å°æ ¡æ—¶å¤±è´¥
+	Time_Proofread = UNDONE;													//±ê¼ÇÎªĞ£Ê±Î´Íê³É
+	sprintf(chars, "RTCĞ¾Æ¬Ğ´ÈëÒì³££¬Ğ£Ê±Ê§°Ü£¡\r\n");	
+	BspUartWrite(2,(INT8U*)chars,strlen(chars));								//´òÓ¡Ğ£Ê±Ê§°Ü
 	return 0;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U NW_GetTime(struct NW_TIME *time)
-åŠŸèƒ½ï¼šè·å–RTCæ—¶é—´ï¼Œæ£€æµ‹RTCæ•…éšœ/æ¢å¤ï¼Œå¹¶æ ¹æ®å—ç½‘åè®®æ ¼å¼ä¼ å‡ºï¼Œå¹¶è¿”å›é•¿åº¦6å­—èŠ‚ã€‚
-æ£€æµ‹RTCæ˜¯å¦æœ‰é”™è¯¯/æ¢å¤åŠŸèƒ½ï¼ŒåŸå…ˆæ”¾åœ¨Task_Wdt_mainä¸­ï¼Œä½†å› ä¸ºå…¶æ‰§è¡Œæ—©äºé“ç”µä¿¡æ¯è¯»å–ï¼Œ
-å› æ­¤ä¼šäº§ç”Ÿå¼‚å¸¸ï¼Œéœ€è¦ç§»åˆ°é“ç”µè¯»å–ä¹‹åã€‚
-å…¥å‚ï¼šstruct NW_TIME *timeï¼ˆå¹´+æœˆ+æ—¥+æ—¶+åˆ†+ç§’ï¼‰ï¼ˆHEXè¡¨ç¤ºï¼‰
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼š6ï¼šæˆåŠŸ/é•¿åº¦   0ï¼šå¤±è´¥
+Ãû³Æ£ºINT8U NW_GetTime(struct NW_TIME *time)
+¹¦ÄÜ£º»ñÈ¡RTCÊ±¼ä£¬¼ì²âRTC¹ÊÕÏ/»Ö¸´£¬²¢¸ù¾İÄÏÍøĞ­Òé¸ñÊ½´«³ö£¬²¢·µ»Ø³¤¶È6×Ö½Ú¡£
+¼ì²âRTCÊÇ·ñÓĞ´íÎó/»Ö¸´¹¦ÄÜ£¬Ô­ÏÈ·ÅÔÚTask_Wdt_mainÖĞ£¬µ«ÒòÎªÆäÖ´ĞĞÔçÓÚÌúµçĞÅÏ¢¶ÁÈ¡£¬
+Òò´Ë»á²úÉúÒì³££¬ĞèÒªÒÆµ½Ìúµç¶ÁÈ¡Ö®ºó¡£
+Èë²Î£ºstruct NW_TIME *time£¨Äê+ÔÂ+ÈÕ+Ê±+·Ö+Ãë£©£¨HEX±íÊ¾£©
+³ö²Î£ºÎŞ
+·µ»Ø£º6£º³É¹¦/³¤¶È   0£ºÊ§°Ü
 *******************************************************************************/
 INT8U NW_GetTime(struct NW_TIME *time)
 {
-	if(!RtcGetChinaStdTimeStruct(&gRtcTime)) 									//è‹¥è·å–å½“å‰çš„æ—¶é—´åˆ°gRtcTimeç»“æ„ä½“å¤±è´¥
+	if(!RtcGetChinaStdTimeStruct(&gRtcTime)) 									//Èô»ñÈ¡µ±Ç°µÄÊ±¼äµ½gRtcTime½á¹¹ÌåÊ§°Ü
 	{
-		if(!Fault_Manage.F_RTC) NW_Fault_Manage(RTC_F, FAULT_STA);				//è‹¥å½“å‰æ— æ•…éšœï¼Œå†™RTCæ•…éšœäº§ç”Ÿä¿¡æ¯
-		return 0;		 														//0ï¼šå¤±è´¥
+		if(!Fault_Manage.F_RTC) NW_Fault_Manage(RTC_F, FAULT_STA);				//Èôµ±Ç°ÎŞ¹ÊÕÏ£¬Ğ´RTC¹ÊÕÏ²úÉúĞÅÏ¢
+		return 0;		 														//0£ºÊ§°Ü
 	}	
-	else if(Fault_Manage.F_RTC) NW_Fault_Manage(RTC_F, NOFAULT_STA);			//RTCæ­£å¸¸ï¼Œä¸”å‡ºè¿‡æ•…éšœã€‚è¡¨æ˜RTCæ¢å¤äº†ï¼Œå†™å…¥RTCæ•…éšœæ¢å¤ä¿¡æ¯
+	else if(Fault_Manage.F_RTC) NW_Fault_Manage(RTC_F, NOFAULT_STA);			//RTCÕı³££¬ÇÒ³ö¹ı¹ÊÕÏ¡£±íÃ÷RTC»Ö¸´ÁË£¬Ğ´ÈëRTC¹ÊÕÏ»Ö¸´ĞÅÏ¢
 
-	time->year = BcdToHex(gRtcTime.Year);										//å¹´ä¸ºå½“å‰å¹´ä»½å‡å»2000ï¼Œå¦‚2017-2000=17 åå…­è¿›åˆ¶
-	time->mon = BcdToHex(gRtcTime.Month);										//å½“å‰æœˆ åå…­è¿›åˆ¶
-	time->mday = BcdToHex(gRtcTime.Day);										//å½“å‰æ—¥ åå…­è¿›åˆ¶
-	time->hour = BcdToHex(gRtcTime.Hour);										//å½“å‰æ—¶ åå…­è¿›åˆ¶
-	time->min = BcdToHex(gRtcTime.Minute);										//å½“å‰åˆ† åå…­è¿›åˆ¶
-	time->sec = BcdToHex(gRtcTime.Second);										//å½“å‰ç§’ åå…­è¿›åˆ¶
+	time->year = BcdToHex(gRtcTime.Year);										//ÄêÎªµ±Ç°Äê·İ¼õÈ¥2000£¬Èç2017-2000=17 Ê®Áù½øÖÆ
+	time->mon = BcdToHex(gRtcTime.Month);										//µ±Ç°ÔÂ Ê®Áù½øÖÆ
+	time->mday = BcdToHex(gRtcTime.Day);										//µ±Ç°ÈÕ Ê®Áù½øÖÆ
+	time->hour = BcdToHex(gRtcTime.Hour);										//µ±Ç°Ê± Ê®Áù½øÖÆ
+	time->min = BcdToHex(gRtcTime.Minute);										//µ±Ç°·Ö Ê®Áù½øÖÆ
+	time->sec = BcdToHex(gRtcTime.Second);										//µ±Ç°Ãë Ê®Áù½øÖÆ
 	return 6;
 }
 
 /*******************************************************************************
 * Function Name:  INT8U SecondToNwTime(INT32U sencond,INT8U *outbuff)              
-* Description  :  ä¸–çºªç§’è½¬æ¢ä¸ºå—ç½‘æ ¼å¼æ—¶é—´ï¼Œéœ€è¦è°ƒæ•´æ—¶åŒºã€‚
-* Input        :  sencond : ä¸–çºªç§’
-*				  Time	  : è¾“å‡ºçš„æ—¶é—´æ•°ç»„ï¼Œé¡ºåºä¸ºå¹´æœˆæ—¥æ—¶åˆ†ç§’
-* Return       :  æ—      
+* Description  :  ÊÀ¼ÍÃë×ª»»ÎªÄÏÍø¸ñÊ½Ê±¼ä£¬ĞèÒªµ÷ÕûÊ±Çø¡£
+* Input        :  sencond : ÊÀ¼ÍÃë
+*				  Time	  : Êä³öµÄÊ±¼äÊı×é£¬Ë³ĞòÎªÄêÔÂÈÕÊ±·ÖÃë
+* Return       :  ÎŞ     
 *******************************************************************************/
 INT8U SecondToNwTime(INT32U sencond,struct NW_TIME *time)
 {
-	struct tm 	*TTME = 0;														//ç¼–è¯‘å™¨ä¼šè‡ªåŠ¨è¯†åˆ«ä¸ºç©ºæŒ‡
+	struct tm 	*TTME = 0;														//±àÒëÆ÷»á×Ô¶¯Ê¶±ğÎª¿ÕÖ¸
 
-	sencond += 8*3600;															//ä¸–çºªç§’æ˜¯0åŒºæ—¶é—´ï¼Œè½¬æ¢ä¸ºä¸œå…«åŒº ( UTC +8 )
-	TTME =localtime(&sencond);													//ä¸–çºªç§’è½¬æ¢ä¸ºæ—¶é—´æ•°ç»„
-	time->year  = TTME->tm_year-100;											//ä»1900 å¼€å§‹è®¡ç®—
-	time->mon  = TTME->tm_mon+1;												//æœˆä»½åŠ ä¸Š1(localtimeçš„è®¡ç®—ç»“æœç”±0å¼€å§‹)
+	sencond += 8*3600;															//ÊÀ¼ÍÃëÊÇ0ÇøÊ±¼ä£¬×ª»»Îª¶«°ËÇø ( UTC +8 )
+	TTME =localtime(&sencond);													//ÊÀ¼ÍÃë×ª»»ÎªÊ±¼äÊı×é
+	time->year  = TTME->tm_year-100;											//´Ó1900 ¿ªÊ¼¼ÆËã
+	time->mon  = TTME->tm_mon+1;												//ÔÂ·İ¼ÓÉÏ1(localtimeµÄ¼ÆËã½á¹ûÓÉ0¿ªÊ¼)
 	time->mday  = TTME->tm_mday;
 	time->hour  = TTME->tm_hour;
 	time->min  = TTME->tm_min;
@@ -1565,68 +1565,68 @@ INT8U SecondToNwTime(INT32U sencond,struct NW_TIME *time)
 
 /*******************************************************************************
 * Function Name:  INT32U NwTimeToSecond(struct NW_TIME *time)           
-* Description  :  ä¸­å›½æ ‡å‡†æ—¶é—´ï¼ˆCSTï¼‰è®°å½•çš„å—ç½‘æ—¶é—´ï¼Œè½¬æ¢ä¸ºä»1970 1.1.0æ—¶å¼€å§‹è®¡ç®—çš„
-				  ç§’æ•°ï¼ˆä¸–çºªç§’ã€æ—¶é—´æˆ³ï¼‰è¿”å›ã€‚
-* Input        :  struct NW_TIME *ptimeï¼Œå—ç½‘æ ¼å¼æ—¶é—´
-* Return       :  sencond   ä¸–çºªç§’ã€æ—¶é—´æˆ³
+* Description  :  ÖĞ¹ú±ê×¼Ê±¼ä£¨CST£©¼ÇÂ¼µÄÄÏÍøÊ±¼ä£¬×ª»»Îª´Ó1970 1.1.0Ê±¿ªÊ¼¼ÆËãµÄ
+				  ÃëÊı£¨ÊÀ¼ÍÃë¡¢Ê±¼ä´Á£©·µ»Ø¡£
+* Input        :  struct NW_TIME *ptime£¬ÄÏÍø¸ñÊ½Ê±¼ä
+* Return       :  sencond   ÊÀ¼ÍÃë¡¢Ê±¼ä´Á
 *******************************************************************************/
 INT32U NwTimeToSecond(struct NW_TIME *time)
 {
 	time_t sencond = 0;															//typedef unsigned int time_t;     /* date/time in unix secs past 1-Jan-70 */
 	struct tm TTM = {0};      								
 
-	TTM.tm_year = (time->year)+100;  											// å¹´
-	TTM.tm_mon  = (time->mon)-1;   												// æœˆ
-	TTM.tm_mday = (time->mday);       											// æ—¥
-	TTM.tm_hour = (time->hour);      											// æ—¶
-	TTM.tm_min  = (time->min);    												// åˆ†
-	TTM.tm_sec  = (time->sec);    												// ç§’
-	sencond = mktime(&TTM)-8*3600;                  							//ä¸œå…«åŒº ( UTC +8 )æ—¶é—´è½¬æ¢æˆä¸–çºªç§’
+	TTM.tm_year = (time->year)+100;  											// Äê
+	TTM.tm_mon  = (time->mon)-1;   												// ÔÂ
+	TTM.tm_mday = (time->mday);       											// ÈÕ
+	TTM.tm_hour = (time->hour);      											// Ê±
+	TTM.tm_min  = (time->min);    												// ·Ö
+	TTM.tm_sec  = (time->sec);    												// Ãë
+	sencond = mktime(&TTM)-8*3600;                  							//¶«°ËÇø ( UTC +8 )Ê±¼ä×ª»»³ÉÊÀ¼ÍÃë
 	
-	if (sencond==0xffffffff) return 0;											//å¼‚å¸¸
+	if (sencond==0xffffffff) return 0;											//Òì³£
 	return sencond;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Get_HB_INFO(u8 *OutBuff)
-åŠŸèƒ½ï¼šè·å–å¿ƒè·³ä¿¡æ¯æ•°æ®ï¼Œæ ¹æ®å—ç½‘åè®®æ ¼å¼ä¼ å‡ºï¼Œå¹¶è¿”å›é•¿åº¦8å­—èŠ‚ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šu8 *OutBuffï¼Œå¿ƒè·³ä¿¡æ¯æ•°æ®å­˜æ”¾åœ°å€
-è¿”å›ï¼š8ï¼šæˆåŠŸ/é•¿åº¦   0ï¼šå¤±è´¥ï¼ˆè°ƒç”¨æ—¶æ²¡ç”¨åˆ°ï¼Œå…ˆä¸åšäº†ï¼‰
+Ãû³Æ£ºINT8U Get_HB_INFO(u8 *OutBuff)
+¹¦ÄÜ£º»ñÈ¡ĞÄÌøĞÅÏ¢Êı¾İ£¬¸ù¾İÄÏÍøĞ­Òé¸ñÊ½´«³ö£¬²¢·µ»Ø³¤¶È8×Ö½Ú¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºu8 *OutBuff£¬ĞÄÌøĞÅÏ¢Êı¾İ´æ·ÅµØÖ·
+·µ»Ø£º8£º³É¹¦/³¤¶È   0£ºÊ§°Ü£¨µ÷ÓÃÊ±Ã»ÓÃµ½£¬ÏÈ²»×öÁË£©
 *******************************************************************************/
 INT8U Get_HB_INFO(u8 *OutBuff)
 {
-	NW_GetTime((struct NW_TIME *)OutBuff);										//è·å–å½“å‰æ—¶é—´
-	Get_Voltage_MCUtemp_Data( 3 );												//è·å–ç”µæ± ç”µå‹æ•°æ®å’Œå•ç‰‡æœºæ¸©åº¦
-	OutBuff[6]=HB_Get_Signal_Strength();										//è·å–å½“å‰ä¿¡å·å¼ºåº¦
-	OutBuff[7]=(INT8U)(Equipment_state.BAT_Volt*10);							//è·å–ç”µæ± ç”µå‹ï¼ˆ10å€ï¼‰
+	NW_GetTime((struct NW_TIME *)OutBuff);										//»ñÈ¡µ±Ç°Ê±¼ä
+	Get_Voltage_MCUtemp_Data( 3 );												//»ñÈ¡µç³ØµçÑ¹Êı¾İºÍµ¥Æ¬»úÎÂ¶È
+	OutBuff[6]=HB_Get_Signal_Strength();										//»ñÈ¡µ±Ç°ĞÅºÅÇ¿¶È
+	OutBuff[7]=(INT8U)(Equipment_state.BAT_Volt*10);							//»ñÈ¡µç³ØµçÑ¹£¨10±¶£©
 	return 8;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Get_NW_Info(void)
-åŠŸèƒ½ï¼šä»é“ç”µä¸­è¯»å–Fault_Infoæ•…éšœä¿¡æ¯ç»“æ„ä½“æ•°ç»„ã€æœªä¸ŠæŠ¥æ•°æ®ç´¢å¼•è¡¨ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼š0ï¼šå¤±è´¥ï¼›1ï¼šæˆåŠŸ
+Ãû³Æ£ºINT8U Get_NW_Info(void)
+¹¦ÄÜ£º´ÓÌúµçÖĞ¶ÁÈ¡Fault_Info¹ÊÕÏĞÅÏ¢½á¹¹ÌåÊı×é¡¢Î´ÉÏ±¨Êı¾İË÷Òı±í¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£º0£ºÊ§°Ü£»1£º³É¹¦
 *******************************************************************************/	
 INT8U Get_NW_Info(void)
 {
-	if(!BSP_ReadDataFromFm(Fault_Manage_Addr,(INT8U*)&Fault_Manage,Fault_Magage_Len)) return 0;			//ä»é“ç”µä¸­è¯»å–Fault_Manageæ•…éšœä¿¡æ¯ç®¡ç†ç»“æ„ä½“
+	if(!BSP_ReadDataFromFm(Fault_Manage_Addr,(INT8U*)&Fault_Manage,Fault_Magage_Len)) return 0;			//´ÓÌúµçÖĞ¶ÁÈ¡Fault_Manage¹ÊÕÏĞÅÏ¢¹ÜÀí½á¹¹Ìå
 	memset(Fault_Manage.F_RF,0,110);
-	BSP_WriteDataToFm(Fault_Manage_Addr,(INT8U*)&Fault_Manage,Fault_Magage_Len);						//æ¯æ¬¡ä¸Šç”µåå°†æ¢å¤´æ•…éšœæ ‡å¿—æ¸…é™¤ï¼Œè¿™ä¸å±äºå¼€æœºè‡ªæ£€ï¼ˆå¤ä½è‡ªæ¢å¤ï¼‰çš„é¡¹ç›®ï¼Œå¦‚æœä¿ç•™æ¢å¤´æ•…éšœæ ‡å¿—ä½ï¼Œå¯èƒ½ä¼šå¯¼è‡´æ•…éšœä¿¡æ¯é”™ä¹±ï¼ˆå› æ•…éšœä¿¡æ¯ä¸ŠæŠ¥åå°±æ¸…é™¤äº†ï¼Œè‹¥ä¸æ¸…é™¤æ ‡å¿—ä½ï¼Œåˆ™ä¸Šç”µæ£€æµ‹åˆ°æœ‰æ•…éšœï¼Œä½†å´æ— æ•…éšœä¿¡æ¯å¯ä¸ŠæŠ¥ï¼‰
+	BSP_WriteDataToFm(Fault_Manage_Addr,(INT8U*)&Fault_Manage,Fault_Magage_Len);						//Ã¿´ÎÉÏµçºó½«Ì½Í·¹ÊÕÏ±êÖ¾Çå³ı£¬Õâ²»ÊôÓÚ¿ª»ú×Ô¼ì£¨¸´Î»×Ô»Ö¸´£©µÄÏîÄ¿£¬Èç¹û±£ÁôÌ½Í·¹ÊÕÏ±êÖ¾Î»£¬¿ÉÄÜ»áµ¼ÖÂ¹ÊÕÏĞÅÏ¢´íÂÒ£¨Òò¹ÊÕÏĞÅÏ¢ÉÏ±¨ºó¾ÍÇå³ıÁË£¬Èô²»Çå³ı±êÖ¾Î»£¬ÔòÉÏµç¼ì²âµ½ÓĞ¹ÊÕÏ£¬µ«È´ÎŞ¹ÊÕÏĞÅÏ¢¿ÉÉÏ±¨£©
 	
-	if(!BSP_ReadDataFromFm(Fault_Info_Addr,(INT8U*)Fault_Info,Fault_Info_Len)) return 0;				//ä»é“ç”µä¸­è¯»å–Fault_Infoæ•…éšœä¿¡æ¯ç»“æ„ä½“æ•°ç»„
-	if(!BSP_ReadDataFromFm(Unreport_Index_Addr,(INT8U*)Unreport_Index,Unreport_Index_Len)) return 0;	//æœªä¸ŠæŠ¥æ•°æ®ç´¢å¼•è¡¨
+	if(!BSP_ReadDataFromFm(Fault_Info_Addr,(INT8U*)Fault_Info,Fault_Info_Len)) return 0;				//´ÓÌúµçÖĞ¶ÁÈ¡Fault_Info¹ÊÕÏĞÅÏ¢½á¹¹ÌåÊı×é
+	if(!BSP_ReadDataFromFm(Unreport_Index_Addr,(INT8U*)Unreport_Index,Unreport_Index_Len)) return 0;	//Î´ÉÏ±¨Êı¾İË÷Òı±í
 	return 1;	
 }
 
 /*******************************************************************************
-åç§°ï¼švoid NW_Fault_Manage(INT8U type, INT8U fault_state)
-åŠŸèƒ½ï¼šæ•…éšœå‘ç”Ÿå’Œæ¢å¤æ—¶è°ƒç”¨ï¼Œç”¨äºå¤„ç†ç›¸åº”æ•…éšœä¿¡æ¯ï¼Œå¹¶ç®¡ç†ç›¸å…³æ ‡å¿—ä½ã€‚
-å…¥å‚ï¼šINT8U fault_state, æ•…éšœçŠ¶æ€ï¼š1æ¢å¤ï¼Œ0å¼‚å¸¸
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼š0ï¼šå¤±è´¥ï¼›1ï¼šæˆåŠŸ
+Ãû³Æ£ºvoid NW_Fault_Manage(INT8U type, INT8U fault_state)
+¹¦ÄÜ£º¹ÊÕÏ·¢ÉúºÍ»Ö¸´Ê±µ÷ÓÃ£¬ÓÃÓÚ´¦ÀíÏàÓ¦¹ÊÕÏĞÅÏ¢£¬²¢¹ÜÀíÏà¹Ø±êÖ¾Î»¡£
+Èë²Î£ºINT8U fault_state, ¹ÊÕÏ×´Ì¬£º1»Ö¸´£¬0Òì³£
+³ö²Î£ºÎŞ
+·µ»Ø£º0£ºÊ§°Ü£»1£º³É¹¦
 *******************************************************************************/
 void NW_Fault_Manage(INT8U type, INT8U fault_state)
 {
@@ -1634,160 +1634,160 @@ void NW_Fault_Manage(INT8U type, INT8U fault_state)
 	INT32U			Time;
 	char			Buff[256]={0};
 	
-/*æ ¹æ®ä¼ å…¥å‚æ•°èµ‹å€¼*/
-	Time = RtcGetTimeSecond();													//æ•…éšœæ—¶é—´ï¼Œä¸–çºªç§’
+/*¸ù¾İ´«Èë²ÎÊı¸³Öµ*/
+	Time = RtcGetTimeSecond();													//¹ÊÕÏÊ±¼ä£¬ÊÀ¼ÍÃë
 	switch(type)
 	{
 		case RTC_F:
-				if(!Time) Time = 1577808000;									//æ—¶é—´å¼‚å¸¸ä¸º0æ—¶ï¼Œå†™1577808000ï¼š2020-01-01 00:00:00ã€‚ï¼ˆä¸èƒ½å†™0ï¼Œå¦åˆ™ä¼šè¢«åˆ¤æ–­æˆç©ºé—²ï¼‰
-				Function_Code = 0x01;											//01Hï¼Œä¸»æ§å•å…ƒ
-				Fault_Code = 0x01|fault_state;									//01Hï¼Œæ—¶é’Ÿæ•…éšœ/æ¢å¤
-				if(fault_state) Fault_Manage.F_RTC=0;							//æ•…éšœæ¢å¤æ ‡è®°
-				else Fault_Manage.F_RTC=0x55;									//æ•…éšœé”™è¯¯æ ‡è®°
-				strcpy(Buff,"RTCæ•…éšœ"); 
+				if(!Time) Time = 1577808000;									//Ê±¼äÒì³£Îª0Ê±£¬Ğ´1577808000£º2020-01-01 00:00:00¡££¨²»ÄÜĞ´0£¬·ñÔò»á±»ÅĞ¶Ï³É¿ÕÏĞ£©
+				Function_Code = 0x01;											//01H£¬Ö÷¿Øµ¥Ôª
+				Fault_Code = 0x01|fault_state;									//01H£¬Ê±ÖÓ¹ÊÕÏ/»Ö¸´
+				if(fault_state) Fault_Manage.F_RTC=0;							//¹ÊÕÏ»Ö¸´±ê¼Ç
+				else Fault_Manage.F_RTC=0x55;									//¹ÊÕÏ´íÎó±ê¼Ç
+				strcpy(Buff,"RTC¹ÊÕÏ"); 
 				break;
 		
 		case STORAGE_F:
-				Function_Code = 0x01;											//01Hï¼Œä¸»æ§å•å…ƒ
-				Fault_Code = 0x02|fault_state;									//02Hï¼Œå­˜å‚¨æ•…éšœ/æ¢å¤
-				if(fault_state) Fault_Manage.F_STORAGE=0;						//æ•…éšœæ¢å¤æ ‡è®°
-				else Fault_Manage.F_STORAGE=0x55;								//æ•…éšœé”™è¯¯æ ‡è®°
-				strcpy(Buff,"å­˜å‚¨æ•…éšœ"); 
+				Function_Code = 0x01;											//01H£¬Ö÷¿Øµ¥Ôª
+				Fault_Code = 0x02|fault_state;									//02H£¬´æ´¢¹ÊÕÏ/»Ö¸´
+				if(fault_state) Fault_Manage.F_STORAGE=0;						//¹ÊÕÏ»Ö¸´±ê¼Ç
+				else Fault_Manage.F_STORAGE=0x55;								//¹ÊÕÏ´íÎó±ê¼Ç
+				strcpy(Buff,"´æ´¢¹ÊÕÏ"); 
 				break;
 		
 		case REPLY_F:
-				Function_Code = 0x02;											//01Hï¼ŒDTUæ¨¡å—
-				Fault_Code = 0x01|fault_state;									//01Hï¼Œ30åˆ†é’Ÿå†…ä¸»ç«™æ— åº”ç­”æ•…éšœ/æ¢å¤
+				Function_Code = 0x02;											//01H£¬DTUÄ£¿é
+				Fault_Code = 0x01|fault_state;									//01H£¬30·ÖÖÓÄÚÖ÷Õ¾ÎŞÓ¦´ğ¹ÊÕÏ/»Ö¸´
 				if(fault_state) 
 				{
-					Fault_Manage.F_REPLY=0;										//æ•…éšœæ¢å¤æ ‡è®°
-					wakeup_en.reply = true;										//å…è®¸LTEæ¨¡å—ä»ä¼‘çœ ä¸­å”¤é†’
+					Fault_Manage.F_REPLY=0;										//¹ÊÕÏ»Ö¸´±ê¼Ç
+					wakeup_en.reply = true;										//ÔÊĞíLTEÄ£¿é´ÓĞİÃßÖĞ»½ĞÑ
 				}
 				else 
 				{
-					Fault_Manage.F_REPLY=0x55;									//æ•…éšœé”™è¯¯æ ‡è®°
-					wakeup_en.reply = false;									//ç¦æ­¢LTEæ¨¡å—ä»ä¼‘çœ ä¸­å”¤é†’
+					Fault_Manage.F_REPLY=0x55;									//¹ÊÕÏ´íÎó±ê¼Ç
+					wakeup_en.reply = false;									//½ûÖ¹LTEÄ£¿é´ÓĞİÃßÖĞ»½ĞÑ
 				}
-				strcpy(Buff,"ä¸»ç«™æ— åº”ç­”æ•…éšœ");
+				strcpy(Buff,"Ö÷Õ¾ÎŞÓ¦´ğ¹ÊÕÏ");
 				break;
 		
 		case NETWORK_F:
-				Function_Code = 0x02;											//01Hï¼ŒDTUæ¨¡å—
-				Fault_Code = 0x02|fault_state;									//01Hï¼Œ30åˆ†é’Ÿå†…æ— æ³•ç™»é™†æ— çº¿ç½‘ç»œæ•…éšœ/æ¢å¤
+				Function_Code = 0x02;											//01H£¬DTUÄ£¿é
+				Fault_Code = 0x02|fault_state;									//01H£¬30·ÖÖÓÄÚÎŞ·¨µÇÂ½ÎŞÏßÍøÂç¹ÊÕÏ/»Ö¸´
 				if(fault_state) 
 				{
-					Fault_Manage.F_NETWORK=0;									//æ•…éšœæ¢å¤æ ‡è®°
-					wakeup_en.network = true;									//å…è®¸LTEæ¨¡å—ä»ä¼‘çœ ä¸­å”¤é†’
+					Fault_Manage.F_NETWORK=0;									//¹ÊÕÏ»Ö¸´±ê¼Ç
+					wakeup_en.network = true;									//ÔÊĞíLTEÄ£¿é´ÓĞİÃßÖĞ»½ĞÑ
 				}
 				else 
 				{
-					Fault_Manage.F_NETWORK=0x55;								//æ•…éšœé”™è¯¯æ ‡è®°
-					wakeup_en.network = false;									//ç¦æ­¢LTEæ¨¡å—ä»ä¼‘çœ ä¸­å”¤é†’
+					Fault_Manage.F_NETWORK=0x55;								//¹ÊÕÏ´íÎó±ê¼Ç
+					wakeup_en.network = false;									//½ûÖ¹LTEÄ£¿é´ÓĞİÃßÖĞ»½ĞÑ
 				}
-				strcpy(Buff,"æ— çº¿ç½‘ç»œæ•…éšœ"); 
+				strcpy(Buff,"ÎŞÏßÍøÂç¹ÊÕÏ"); 
 				break;
 		
 		case BAT_F:
-				Function_Code = 0x03;											//03Hï¼Œç”µæºæ§åˆ¶æ¨¡å—
-				Fault_Code = 0x01|fault_state;									//01Hï¼Œè“„ç”µæ± ç”µæºæ¬ å‹æ•…éšœ/æ¢å¤
+				Function_Code = 0x03;											//03H£¬µçÔ´¿ØÖÆÄ£¿é
+				Fault_Code = 0x01|fault_state;									//01H£¬Ğîµç³ØµçÔ´Ç·Ñ¹¹ÊÕÏ/»Ö¸´
 				if(fault_state) 
 				{
-					Fault_Manage.F_BAT=0;										//æ•…éšœæ¢å¤æ ‡è®°
-					wakeup_en.battle = true;									//å…è®¸LTEæ¨¡å—ä»ä¼‘çœ ä¸­å”¤é†’
+					Fault_Manage.F_BAT=0;										//¹ÊÕÏ»Ö¸´±ê¼Ç
+					wakeup_en.battle = true;									//ÔÊĞíLTEÄ£¿é´ÓĞİÃßÖĞ»½ĞÑ
 				}
 				else 
 				{
-					Fault_Manage.F_BAT=0x55;									//æ•…éšœé”™è¯¯æ ‡è®°
-					wakeup_en.battle = false;									//ç¦æ­¢LTEæ¨¡å—ä»ä¼‘çœ ä¸­å”¤é†’
+					Fault_Manage.F_BAT=0x55;									//¹ÊÕÏ´íÎó±ê¼Ç
+					wakeup_en.battle = false;									//½ûÖ¹LTEÄ£¿é´ÓĞİÃßÖĞ»½ĞÑ
 				}
-				strcpy(Buff,"ç”µæºæ¬ å‹æ•…éšœ"); 
+				strcpy(Buff,"µçÔ´Ç·Ñ¹¹ÊÕÏ"); 
 				break;
 		
 		default:
 				break;
 	}
 	
-	/*æ¢å¤´å°„é¢‘é€šè®¯å¤±è´¥ï¼Œæ•…éšœæ ‡å¿—å†™å…¥Fault_Manage.F_RF*/
+	/*Ì½Í·ÉäÆµÍ¨Ñ¶Ê§°Ü£¬¹ÊÕÏ±êÖ¾Ğ´ÈëFault_Manage.F_RF*/
 	if(type<=54)						
 	{
-		Function_Code = Unit_ID_Code[type];										//è£…ç½®åŠŸèƒ½å•å…ƒè¯†åˆ«ç 10H-5FH
-		Fault_Code = 0x01|fault_state;											//01Hï¼Œ5ä¸ªé‡‡æ ·å‘¨æœŸå†…æ— æ³•è¿›è¡Œå°„é¢‘é€šè®¯æ•…éšœ/æ¢å¤
-		if(fault_state) Fault_Manage.F_RF[type]=0;								//æ•…éšœæ¢å¤æ ‡è®°
-		else Fault_Manage.F_RF[type]=0x55;										//æ•…éšœé”™è¯¯æ ‡è®°	
-		strcpy(Buff,"å°„é¢‘é€šè®¯æ•…éšœ");
+		Function_Code = Unit_ID_Code[type];										//×°ÖÃ¹¦ÄÜµ¥ÔªÊ¶±ğÂë10H-5FH
+		Fault_Code = 0x01|fault_state;											//01H£¬5¸ö²ÉÑùÖÜÆÚÄÚÎŞ·¨½øĞĞÉäÆµÍ¨Ñ¶¹ÊÕÏ/»Ö¸´
+		if(fault_state) Fault_Manage.F_RF[type]=0;								//¹ÊÕÏ»Ö¸´±ê¼Ç
+		else Fault_Manage.F_RF[type]=0x55;										//¹ÊÕÏ´íÎó±ê¼Ç	
+		strcpy(Buff,"ÉäÆµÍ¨Ñ¶¹ÊÕÏ");
 	}
 	
-	/*æ¢å¤´æ”¶åˆ°å¯¼çº¿æ¸©åº¦æ•°æ®å¼‚å¸¸ï¼Œæ•…éšœæ ‡å¿—å†™å…¥Fault_Manage.F_TEM*/
+	/*Ì½Í·ÊÕµ½µ¼ÏßÎÂ¶ÈÊı¾İÒì³££¬¹ÊÕÏ±êÖ¾Ğ´ÈëFault_Manage.F_TEM*/
 	else if(55<=type&&type<=109)	
 	{		
-		Function_Code =Unit_ID_Code[type-55];									//è£…ç½®åŠŸèƒ½å•å…ƒè¯†åˆ«ç 10H-5FH
-		Fault_Code = fault_state;												//02Hï¼Œå¯¼çº¿æ¸©åº¦æ•°æ®å¼‚å¸¸æ•…éšœ/æ¢å¤	åŸï¼šFault_Code = 0x02|fault_state;
+		Function_Code =Unit_ID_Code[type-55];									//×°ÖÃ¹¦ÄÜµ¥ÔªÊ¶±ğÂë10H-5FH
+		Fault_Code = fault_state;												//02H£¬µ¼ÏßÎÂ¶ÈÊı¾İÒì³£¹ÊÕÏ/»Ö¸´	Ô­£ºFault_Code = 0x02|fault_state;
 		if(fault_state==NOFAULT_STA) 
 		{
-			Fault_Manage.F_TEM[type-55]=0;										//æ•…éšœæ¢å¤æ ‡è®°ã€‚è‹¥ä¼ è¿›æ¥â€œæ¢å¤â€ï¼Œåˆ™æ¸…å¯¹åº”çš„æ•…éšœæ ‡è®°ã€‚
-			wakeup_en.rf_tem = true;											//å…è®¸LTEæ¨¡å—ä»ä¼‘çœ ä¸­å”¤é†’ï¼ˆå­˜åœ¨é—®é¢˜ï¼šè‹¥å¤šä¸ªæ¢å¤´åŒæ—¶æ•…éšœæ—¶ï¼Œæœ‰æ—¶ä¼šå”¤é†’ï¼‰
+			Fault_Manage.F_TEM[type-55]=0;										//¹ÊÕÏ»Ö¸´±ê¼Ç¡£Èô´«½øÀ´¡°»Ö¸´¡±£¬ÔòÇå¶ÔÓ¦µÄ¹ÊÕÏ±ê¼Ç¡£
+			wakeup_en.rf_tem = true;											//ÔÊĞíLTEÄ£¿é´ÓĞİÃßÖĞ»½ĞÑ£¨´æÔÚÎÊÌâ£ºÈô¶à¸öÌ½Í·Í¬Ê±¹ÊÕÏÊ±£¬ÓĞÊ±»á»½ĞÑ£©
 		}
 		else 
 		{
-			Fault_Manage.F_TEM[type-55]=0x55;									//æ•…éšœé”™è¯¯æ ‡è®°ã€‚è‹¥ä¼ è¿›æ¥â€œæ•…éšœâ€ï¼Œåˆ™ç½®å¯¹åº”çš„æ•…éšœæ ‡è®°ã€‚
-			wakeup_en.rf_tem = false;											//ç¦æ­¢LTEæ¨¡å—ä»ä¼‘çœ ä¸­å”¤é†’ï¼ˆå­˜åœ¨é—®é¢˜ï¼šè‹¥å¤šä¸ªæ¢å¤´åŒæ—¶æ•…éšœæ—¶ï¼Œæœ‰æ—¶ä¼šå”¤é†’ï¼‰
+			Fault_Manage.F_TEM[type-55]=0x55;									//¹ÊÕÏ´íÎó±ê¼Ç¡£Èô´«½øÀ´¡°¹ÊÕÏ¡±£¬ÔòÖÃ¶ÔÓ¦µÄ¹ÊÕÏ±ê¼Ç¡£
+			wakeup_en.rf_tem = false;											//½ûÖ¹LTEÄ£¿é´ÓĞİÃßÖĞ»½ĞÑ£¨´æÔÚÎÊÌâ£ºÈô¶à¸öÌ½Í·Í¬Ê±¹ÊÕÏÊ±£¬ÓĞÊ±»á»½ĞÑ£©
 		}
-		strcpy(Buff,"æ¸©åº¦æ•°æ®å¼‚å¸¸æ•…éšœ");
+		strcpy(Buff,"ÎÂ¶ÈÊı¾İÒì³£¹ÊÕÏ");
 	}		
 
 //		case CUR_F:
-//				Function_Code = åŠŸèƒ½å•å…ƒè¯†åˆ«ç ;												//01Hï¼Œå¯¼çº¿ä¾§æ— çº¿è£…ç½®	è£…ç½®åŠŸèƒ½å•å…ƒè¯†åˆ«ç 10H-5FH
-//				Fault_Code = 0x03|fault_state;									//03Hï¼Œå¯¼çº¿ç”µæµæ•°æ®å¼‚å¸¸æ•…éšœ/æ¢å¤
+//				Function_Code = ¹¦ÄÜµ¥ÔªÊ¶±ğÂë;												//01H£¬µ¼Ïß²àÎŞÏß×°ÖÃ	×°ÖÃ¹¦ÄÜµ¥ÔªÊ¶±ğÂë10H-5FH
+//				Fault_Code = 0x03|fault_state;									//03H£¬µ¼ÏßµçÁ÷Êı¾İÒì³£¹ÊÕÏ/»Ö¸´
 //				break;
 
 //		case POWER_F:
-//				Function_Code = åŠŸèƒ½å•å…ƒè¯†åˆ«ç ;												//01Hï¼Œå¯¼çº¿ä¾§æ— çº¿è£…ç½®	è£…ç½®åŠŸèƒ½å•å…ƒè¯†åˆ«ç 10H-5FH
-//				Fault_Code = 0x04|fault_state;									//04Hï¼Œä¾›ç”µä¸è¶³æ•…éšœ/æ¢å¤
+//				Function_Code = ¹¦ÄÜµ¥ÔªÊ¶±ğÂë;												//01H£¬µ¼Ïß²àÎŞÏß×°ÖÃ	×°ÖÃ¹¦ÄÜµ¥ÔªÊ¶±ğÂë10H-5FH
+//				Fault_Code = 0x04|fault_state;									//04H£¬¹©µç²»×ã¹ÊÕÏ/»Ö¸´
 //				break;
 		
-	Fault_Manage.Need_Report=0x55;												//æ ‡è®°æœ‰éœ€è¦è¿›è¡Œæ•…éšœä¸ŠæŠ¥(ä¸ç®¡æ˜¯æ•…éšœå‘ç”Ÿè¿˜æ˜¯æ•…éšœæ¢å¤éƒ½éœ€è¦ä¸ŠæŠ¥)
+	Fault_Manage.Need_Report=0x55;												//±ê¼ÇÓĞĞèÒª½øĞĞ¹ÊÕÏÉÏ±¨(²»¹ÜÊÇ¹ÊÕÏ·¢Éú»¹ÊÇ¹ÊÕÏ»Ö¸´¶¼ĞèÒªÉÏ±¨)
 	
-	if(Fault_Code & 0x80) strcpy(Buff+strlen(Buff),"å·²æ¢å¤ï¼Œä»£ç ï¼š");			//æœ€é«˜ä½æ˜¯1ï¼Œè¡¨ç¤ºæ¢å¤
-	else strcpy(Buff+strlen(Buff),"å‘ç”Ÿï¼æ•…éšœä»£ç ï¼š");
+	if(Fault_Code & 0x80) strcpy(Buff+strlen(Buff),"ÒÑ»Ö¸´£¬´úÂë£º");			//×î¸ßÎ»ÊÇ1£¬±íÊ¾»Ö¸´
+	else strcpy(Buff+strlen(Buff),"·¢Éú£¡¹ÊÕÏ´úÂë£º");
 	sprintf(Buff+strlen(Buff),"%02X %02X\r\n",Function_Code,Fault_Code);
-	BspUartWrite(2,(INT8U*)Buff,strlen(Buff));									//æ‰“å°
+	BspUartWrite(2,(INT8U*)Buff,strlen(Buff));									//´òÓ¡
 	
-/*æŸ¥æ‰¾ç©ºé—²ç»“æ„ä½“å¹¶å¡«å……*/
+/*²éÕÒ¿ÕÏĞ½á¹¹Ìå²¢Ìî³ä*/
 	for(i=0;i<FI_NUM;i++)
 	{
-		if(!Fault_Info[i].Time)													//ä¸º0æ—¶è¡¨ç¤ºæ­¤ä½ç½®ç©ºé—²
+		if(!Fault_Info[i].Time)													//Îª0Ê±±íÊ¾´ËÎ»ÖÃ¿ÕÏĞ
 		{
-		/*å†™å…¨å±€å˜é‡*/
-			Fault_Info[i].Time = Time;											//æ—¶é—´å·²ç»å¼‚å¸¸ï¼Œä¸èƒ½å†™0ï¼Œå¦åˆ™ä¼šè¢«åˆ¤æ–­æˆç©ºé—²
-			Fault_Info[i].Function_Code = Function_Code;						//åŠŸèƒ½ç¼–ç 
-			Fault_Info[i].Fault_Code = Fault_Code;								//æ•…éšœç¼–ç 
-		/*å†™å…¥é“ç”µ*/
-			BSP_InitFm(Fault_Num);												//è°ƒç”¨ä½åŠŸè€—å‡½æ•°åéœ€è¦é‡æ–°åˆå§‹åŒ–
-			BSP_WriteDataToFm(Fault_Manage_Addr,(INT8U*)&Fault_Manage,Fault_Magage_Len);	//å†™Fault_Manageåˆ°é“ç”µ
-			BSP_WriteDataToFm(Fault_Info_Addr,(u8*)&Fault_Info,Fault_Info_Len);	//å†™Fault_Info[]åˆ°é“ç”µ
-			FM_LowPower(Fault_Num);												//é“ç”µå¼•è„šä½åŠŸè€—é…ç½®
+		/*Ğ´È«¾Ö±äÁ¿*/
+			Fault_Info[i].Time = Time;											//Ê±¼äÒÑ¾­Òì³££¬²»ÄÜĞ´0£¬·ñÔò»á±»ÅĞ¶Ï³É¿ÕÏĞ
+			Fault_Info[i].Function_Code = Function_Code;						//¹¦ÄÜ±àÂë
+			Fault_Info[i].Fault_Code = Fault_Code;								//¹ÊÕÏ±àÂë
+		/*Ğ´ÈëÌúµç*/
+			BSP_InitFm(Fault_Num);												//µ÷ÓÃµÍ¹¦ºÄº¯ÊıºóĞèÒªÖØĞÂ³õÊ¼»¯
+			BSP_WriteDataToFm(Fault_Manage_Addr,(INT8U*)&Fault_Manage,Fault_Magage_Len);	//Ğ´Fault_Manageµ½Ìúµç
+			BSP_WriteDataToFm(Fault_Info_Addr,(u8*)&Fault_Info,Fault_Info_Len);	//Ğ´Fault_Info[]µ½Ìúµç
+			FM_LowPower(Fault_Num);												//ÌúµçÒı½ÅµÍ¹¦ºÄÅäÖÃ
 			break;
 		}
 	}
 }
 
 /*******************************************************************************
-åç§°ï¼švoid NW_DeviceNumberToAscii(INT32U InData,INT8U *pOut)
-åŠŸèƒ½ï¼šå°†æ»šç ç­‰16è¿›åˆ¶è¡¨ç¤ºçš„è£…ç½®ç¼–ç ï¼Œè½¬æ¢æˆ4å­—èŠ‚é•¿åº¦ASCIIç ã€‚
-å…¥å‚ï¼šINT16U InDataï¼Œ16è¿›åˆ¶è¡¨ç¤ºçš„è£…ç½®ç¼–ç 
-å‡ºå‚ï¼šINT8U *pOutï¼Œè¾“å‡ºçš„ASCIIç 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid NW_DeviceNumberToAscii(INT32U InData,INT8U *pOut)
+¹¦ÄÜ£º½«¹öÂëµÈ16½øÖÆ±íÊ¾µÄ×°ÖÃ±àÂë£¬×ª»»³É4×Ö½Ú³¤¶ÈASCIIÂë¡£
+Èë²Î£ºINT16U InData£¬16½øÖÆ±íÊ¾µÄ×°ÖÃ±àÂë
+³ö²Î£ºINT8U *pOut£¬Êä³öµÄASCIIÂë
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void NW_DeviceNumberToAscii(INT32U InData,INT8U *pOut)
 {
 	INT8U				gTemp = 0, i = 0;
 
-	if(InData>9999) return;														//è¶…å‡ºç¼–ç èŒƒå›´
+	if(InData>9999) return;														//³¬³ö±àÂë·¶Î§
 	for(i = 3; i != 0xff; i--)
 	{
-		gTemp = InData%10;     													//å–ä¸ªä½
+		gTemp = InData%10;     													//È¡¸öÎ»
 		pOut[i] =  gTemp + 0x30;
 		InData -= gTemp;
-		InData = InData/10;														//å»æ‰ä¸ªä½
+		InData = InData/10;														//È¥µô¸öÎ»
 	}
 }

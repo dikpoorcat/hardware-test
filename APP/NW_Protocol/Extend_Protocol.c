@@ -1,23 +1,23 @@
-/***************************** (C) COPYRIGHT 2019 æ–¹è¯šç”µåŠ› *****************************
+/***************************** (C) COPYRIGHT 2019 ·½³ÏµçÁ¦ *****************************
 * File Name          : Extend_Protocol.c
-* Author             : æœæ™“ç»ã€æœé¢–æˆã€ç­‰
-* Version            : è§å†å²ç‰ˆæœ¬ä¿¡æ¯
+* Author             : ¶ÅÏşÕ°¡¢¶ÅÓ±³É¡¢µÈ
+* Version            : ¼ûÀúÊ·°æ±¾ĞÅÏ¢
 * Date               : 2020/04/13
-* Description        : æ ¹æ®å—ç½‘åè®®ç¼–å†™çš„é€šä¿¡åŠŸèƒ½å‡½æ•°ã€‚
-************************************  å†å²ç‰ˆæœ¬ä¿¡æ¯  ************************************
+* Description        : ¸ù¾İÄÏÍøĞ­Òé±àĞ´µÄÍ¨ĞÅ¹¦ÄÜº¯Êı¡£
+************************************  ÀúÊ·°æ±¾ĞÅÏ¢  ************************************
 * 2019/03/28    : V4.1.0
-* Description   : å—ç½‘æµ‹æ¸©é¡¹ç›®åˆç‰ˆã€‚åŸºç¡€åŠŸèƒ½å®Œæˆï¼Œè°ƒè¯•ä¸­ã€‚
+* Description   : ÄÏÍø²âÎÂÏîÄ¿³õ°æ¡£»ù´¡¹¦ÄÜÍê³É£¬µ÷ÊÔÖĞ¡£
 *******************************************************************************/
 
 #include "Extend_Protocol.h"
 
-INT32U				bin_file_adress = 0x08027000;								//ç¼ºçœå€¼0x08027000
+INT32U				bin_file_adress = 0x08027000;								//È±Ê¡Öµ0x08027000
 struct	FILE_UPDATA	file_update = {0};
-INT8U				subbag_statistics[STA_NUM] = {0}; 							//æ¯ä¸€ä½ä»£è¡¨ä¸€åŒ…ï¼Œä¾‹ï¼š{0xE3,0xFF...}å³1110 0011 1111 1111...ï¼Œè¡¨ç¤ºç¬¬0ã€1ã€2ã€6ã€7ã€8...åŒ…æ¥æ”¶æˆåŠŸï¼Œç¬¬3ã€4ã€5åŒ…æ¥æ”¶å¤±è´¥
-bool				update_start = false;										//ä¸‹å‘å‡çº§è¯·æ±‚åå°†è¯¥æ ‡å¿—ä½1æ‰ä¼šè¿›å…¥åç»­å‡çº§è¿‡ç¨‹
-INT8U				device_status = 0;											//è®¾å¤‡çŠ¶æ€ï¼šä¸ºFFHæ—¶ï¼Œè¡¨ç¤ºå…è®¸å‡çº§ï¼›00Hè¡¨ç¤ºç”µæ± ç”µå‹ä¸è¶³ï¼Œ01Hè¡¨ç¤ºå­˜å‚¨ç©ºé—´ä¸è¶³ï¼Œ02Hè¡¨ç¤ºå½“å‰æœ‰æœªä¸ŠæŠ¥çš„å†å²æ•°æ®ï¼Œ03Hè¡¨ç¤ºè£…ç½®å­˜åœ¨æ•…éšœã€‚
-INT8U				upgrade_timeout = 0;										//ç”¨äºDevStatCtr()å‡½æ•°è½®è¯¢ï¼Œå½“è¿œç¨‹å‡çº§è¶…æ—¶ï¼Œé€€å‡ºå‡çº§æ¨¡å¼
-INT32U				sys2_upgrade_time = 0;										//ç³»ç»Ÿ2å‡çº§æ—¶é—´ï¼Œä¸–çºªç§’è¡¨ç¤º
+INT8U				subbag_statistics[STA_NUM] = {0}; 							//Ã¿Ò»Î»´ú±íÒ»°ü£¬Àı£º{0xE3,0xFF...}¼´1110 0011 1111 1111...£¬±íÊ¾µÚ0¡¢1¡¢2¡¢6¡¢7¡¢8...°ü½ÓÊÕ³É¹¦£¬µÚ3¡¢4¡¢5°ü½ÓÊÕÊ§°Ü
+bool				update_start = false;										//ÏÂ·¢Éı¼¶ÇëÇóºó½«¸Ã±êÖ¾Î»1²Å»á½øÈëºóĞøÉı¼¶¹ı³Ì
+INT8U				device_status = 0;											//Éè±¸×´Ì¬£ºÎªFFHÊ±£¬±íÊ¾ÔÊĞíÉı¼¶£»00H±íÊ¾µç³ØµçÑ¹²»×ã£¬01H±íÊ¾´æ´¢¿Õ¼ä²»×ã£¬02H±íÊ¾µ±Ç°ÓĞÎ´ÉÏ±¨µÄÀúÊ·Êı¾İ£¬03H±íÊ¾×°ÖÃ´æÔÚ¹ÊÕÏ¡£
+INT8U				upgrade_timeout = 0;										//ÓÃÓÚDevStatCtr()º¯ÊıÂÖÑ¯£¬µ±Ô¶³ÌÉı¼¶³¬Ê±£¬ÍË³öÉı¼¶Ä£Ê½
+INT32U				sys2_upgrade_time = 0;										//ÏµÍ³2Éı¼¶Ê±¼ä£¬ÊÀ¼ÍÃë±íÊ¾
 
 
 
@@ -26,158 +26,158 @@ INT32U				sys2_upgrade_time = 0;										//ç³»ç»Ÿ2å‡çº§æ—¶é—´ï¼Œä¸–çºªç§’è¡¨ç¤
 
 
 /*******************************************************************************
-åç§°ï¼šINT8U ExtendOnOffComm(u8 *InBuff, u16 Len)
-åŠŸèƒ½ï¼šåŒ…æ‹¬å¯†ç æ£€éªŒã€å›å¤é€šä¿¡ã€æ‰©å±•åè®®ä½¿èƒ½æ§åˆ¶åŠŸèƒ½æ‰§è¡Œï¼Œæ§åˆ¶å­—ï¼šF0H
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§ï¼›u16 Lenï¼Œé•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U ExtendOnOffComm(u8 *InBuff, u16 Len)
+¹¦ÄÜ£º°üÀ¨ÃÜÂë¼ìÑé¡¢»Ø¸´Í¨ĞÅ¡¢À©Õ¹Ğ­ÒéÊ¹ÄÜ¿ØÖÆ¹¦ÄÜÖ´ĞĞ£¬¿ØÖÆ×Ö£ºF0H
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡£»u16 Len£¬³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U ExtendOnOffComm(u8 *InBuff, u16 Len)
 {
-	if(!PassworkCheckAndReport(InBuff));										//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-	else																		//è‹¥ç›¸åŒï¼Œå¯†ç æ­£ç¡®
+	if(!PassworkCheckAndReport(InBuff));										//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+	else																		//ÈôÏàÍ¬£¬ÃÜÂëÕıÈ·
 	{
-		if(InBuff[14]==0xFF)													//å¯ç”¨æ‰©å±•åè®®
+		if(InBuff[14]==0xFF)													//ÆôÓÃÀ©Õ¹Ğ­Òé
 		{
-			/*å…ˆä¸åš*/
+			/*ÏÈ²»×ö*/
 		}
-		else																	//ç¦ç”¨æ‰©å±•åè®®
+		else																	//½ûÓÃÀ©Õ¹Ğ­Òé
 		{
-			/*å…ˆä¸åš*/
+			/*ÏÈ²»×ö*/
 		}
-		LteCommunication(InBuff,Len,0,0);										//é…ç½®æˆåŠŸï¼ŒæŒ‰ç…§åŸå‘½ä»¤è¿”å›ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+		LteCommunication(InBuff,Len,0,0);										//ÅäÖÃ³É¹¦£¬°´ÕÕÔ­ÃüÁî·µ»Ø£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 		return 1;
 	}
-	BspUartWrite(2,SIZE_OF("ExtendOnOffCommæ‰©å±•åè®®ä½¿èƒ½æ§åˆ¶é€šä¿¡å¤±è´¥ï¼\r\n"));
+	BspUartWrite(2,SIZE_OF("ExtendOnOffCommÀ©Õ¹Ğ­ÒéÊ¹ÄÜ¿ØÖÆÍ¨ĞÅÊ§°Ü£¡\r\n"));
 	return 0;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U SetApnComm(u8 *InBuff, u16 Len)
-åŠŸèƒ½ï¼šåŒ…æ‹¬å¯†ç æ£€éªŒã€å›å¤é€šä¿¡ã€APNå‚æ•°é…ç½®åŠŸèƒ½æ‰§è¡Œï¼Œæ§åˆ¶å­—ï¼šF3H
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§ï¼›u16 Lenï¼Œé•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U SetApnComm(u8 *InBuff, u16 Len)
+¹¦ÄÜ£º°üÀ¨ÃÜÂë¼ìÑé¡¢»Ø¸´Í¨ĞÅ¡¢APN²ÎÊıÅäÖÃ¹¦ÄÜÖ´ĞĞ£¬¿ØÖÆ×Ö£ºF3H
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡£»u16 Len£¬³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U SetApnComm(u8 *InBuff, u16 Len)
 {
-	if(!PassworkCheckAndReport(InBuff));										//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-	else																		//è‹¥ç›¸åŒï¼Œå¯†ç æ­£ç¡®
+	if(!PassworkCheckAndReport(InBuff));										//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+	else																		//ÈôÏàÍ¬£¬ÃÜÂëÕıÈ·
 	{
-		if(InBuff[14]!='\0')													//APNéç©º
+		if(InBuff[14]!='\0')													//APN·Ç¿Õ
 		{
-			strncpy((char*)APN, (char*)InBuff+14, APN_Len);						//å†™å…¥APNæ•°ç»„
-			if(BSP_WriteDataToFm(APN_Addr, APN, APN_Len))						//å†™å…¥é“ç”µ
+			strncpy((char*)APN, (char*)InBuff+14, APN_Len);						//Ğ´ÈëAPNÊı×é
+			if(BSP_WriteDataToFm(APN_Addr, APN, APN_Len))						//Ğ´ÈëÌúµç
 			{
-				LteCommunication(InBuff,Len,0,0);								//é…ç½®æˆåŠŸï¼ŒæŒ‰ç…§åŸå‘½ä»¤è¿”å›ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
+				LteCommunication(InBuff,Len,0,0);								//ÅäÖÃ³É¹¦£¬°´ÕÕÔ­ÃüÁî·µ»Ø£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
 				return 1;	
 			}		
 		}
 	}
-	BspUartWrite(2,SIZE_OF("SetApnCommè®¾ç½®APNé€šä¿¡å¤±è´¥ï¼\r\n"));
+	BspUartWrite(2,SIZE_OF("SetApnCommÉèÖÃAPNÍ¨ĞÅÊ§°Ü£¡\r\n"));
 	return 0;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U UpdataRequestComm(u8 *InBuff)
-åŠŸèƒ½ï¼šä¸»ç«™ä¸‹å‘å‡çº§è¯·æ±‚ï¼Œæ§åˆ¶å­—ï¼šF7H
-ä¸»ç«™åœ¨æ”¶åˆ°æ‰©å±•å¿ƒè·³5ç§’åï¼Œä¸‹å‘å‡çº§è¯·æ±‚ã€‚è£…ç½®æ¥æ”¶åˆ°ä¸»ç«™å‡çº§è¯·æ±‚åï¼Œç«‹åˆ»è¿›è¡Œå‡çº§æ£€æµ‹å¹¶è¿›è¡Œå›å¤ã€‚
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U UpdataRequestComm(u8 *InBuff)
+¹¦ÄÜ£ºÖ÷Õ¾ÏÂ·¢Éı¼¶ÇëÇó£¬¿ØÖÆ×Ö£ºF7H
+Ö÷Õ¾ÔÚÊÕµ½À©Õ¹ĞÄÌø5Ãëºó£¬ÏÂ·¢Éı¼¶ÇëÇó¡£×°ÖÃ½ÓÊÕµ½Ö÷Õ¾Éı¼¶ÇëÇóºó£¬Á¢¿Ì½øĞĞÉı¼¶¼ì²â²¢½øĞĞ»Ø¸´¡£
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U UpdataRequestComm(u8 *InBuff)
 {
-	INT16U	len_frame=0;														//å¸§é•¿åº¦
+	INT16U	len_frame=0;														//Ö¡³¤¶È
 	
-	if(!PassworkCheckAndReport(InBuff));										//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-	else																		//è‹¥ç›¸åŒï¼Œå¯†ç æ­£ç¡®
+	if(!PassworkCheckAndReport(InBuff));										//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+	else																		//ÈôÏàÍ¬£¬ÃÜÂëÕıÈ·
 	{
-		BspUartWrite(2,SIZE_OF("å‡çº§è¯·æ±‚ï¼Œæ§åˆ¶å­—ï¼šF7H\r\n"));
-		memcpy(&file_update,InBuff+14,sizeof(file_update));						//å°†æ–‡ä»¶åŸºæœ¬ä¿¡æ¯è®°å½•åœ¨ç»“æ„ä½“ file_update ä¸­
-		GetDeviceStatusBeforeUpgrade();											//è·å–è®¾å¤‡çŠ¶æ€
-		if(device_status==0xFF) UpgradePreparation( InBuff ); 					//å…è®¸å‡çº§ï¼Œæ ‡è®°ä¸ºå¼€å§‹å‡çº§ï¼Œå¹¶å‡†å¤‡æ›´æ–°ï¼ˆå›å¤å‰å¤„ç†ï¼Œä»¥å…ä¸¢ç¬¬ä¸€åŒ…ï¼‰
+		BspUartWrite(2,SIZE_OF("Éı¼¶ÇëÇó£¬¿ØÖÆ×Ö£ºF7H\r\n"));
+		memcpy(&file_update,InBuff+14,sizeof(file_update));						//½«ÎÄ¼ş»ù±¾ĞÅÏ¢¼ÇÂ¼ÔÚ½á¹¹Ìå file_update ÖĞ
+		GetDeviceStatusBeforeUpgrade();											//»ñÈ¡Éè±¸×´Ì¬
+		if(device_status==0xFF) UpgradePreparation( InBuff ); 					//ÔÊĞíÉı¼¶£¬±ê¼ÇÎª¿ªÊ¼Éı¼¶£¬²¢×¼±¸¸üĞÂ£¨»Ø¸´Ç°´¦Àí£¬ÒÔÃâ¶ªµÚÒ»°ü£©
 
-		len_frame = NW_Framing(EX_UPDATA_REQUEST,LTE_Tx_Buff);					//æ ¹æ®æ§åˆ¶å­—ç»„å¸§    
-		LteCommunication(LTE_Tx_Buff,len_frame,0,0);							//å›å¤å‡çº§æ£€æµ‹ç»“æœ
+		len_frame = NW_Framing(EX_UPDATA_REQUEST,LTE_Tx_Buff);					//¸ù¾İ¿ØÖÆ×Ö×éÖ¡    
+		LteCommunication(LTE_Tx_Buff,len_frame,0,0);							//»Ø¸´Éı¼¶¼ì²â½á¹û
 		
-		if(device_status==0xFE)	RestartToUpgrade();								//å‡çº§æ¡ä»¶å·²å…·å¤‡ï¼Œè£…ç½®éœ€åˆ‡æ¢åˆ°ç¨³å®šç‰ˆæœ¬ç¨‹åºè¿›è¡Œæ¥æ”¶å¹¶å‡çº§ï¼ˆæŒ‰åè®®è¦æ±‚å…ˆå›å¤å†é‡å¯ï¼‰
-		return 1;																//é€šä¿¡å®Œæˆè¿”å›1ï¼Œä»¤NW_Comm_Processç»§ç»­ä¿æŒæ¥æ”¶
+		if(device_status==0xFE)	RestartToUpgrade();								//Éı¼¶Ìõ¼şÒÑ¾ß±¸£¬×°ÖÃĞèÇĞ»»µ½ÎÈ¶¨°æ±¾³ÌĞò½øĞĞ½ÓÊÕ²¢Éı¼¶£¨°´Ğ­ÒéÒªÇóÏÈ»Ø¸´ÔÙÖØÆô£©
+		return 1;																//Í¨ĞÅÍê³É·µ»Ø1£¬ÁîNW_Comm_Process¼ÌĞø±£³Ö½ÓÊÕ
 	}
-	BspUartWrite(2,SIZE_OF("UpdataRequestCommå‡çº§è¯·æ±‚å¯†ç ä¸æ­£ç¡®ï¼\r\n"));
-	return 0;																	//é‡è¯•è¶…æ¬¡æ•°ã€ç­‰å¾…è¶…æ—¶éƒ½è¿”å›0
+	BspUartWrite(2,SIZE_OF("UpdataRequestCommÉı¼¶ÇëÇóÃÜÂë²»ÕıÈ·£¡\r\n"));
+	return 0;																	//ÖØÊÔ³¬´ÎÊı¡¢µÈ´ı³¬Ê±¶¼·µ»Ø0
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U UpdataDownloadComm(u8 *InBuff)
-åŠŸèƒ½ï¼šä¸»ç«™å‡çº§åŒ…ä¸‹å‘ï¼Œæ§åˆ¶å­—ï¼šF8H
-ä¸»ç«™ä¸‹å‘å‡çº§åŒ…ï¼Œå‡çº§åŒ…æ•°æ®ä¸ºäºŒè¿›åˆ¶ç æµã€‚æ•°æ®åŒ…ä¸‹å‘é—´éš”ä¸º1ç§’ã€‚
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U UpdataDownloadComm(u8 *InBuff)
+¹¦ÄÜ£ºÖ÷Õ¾Éı¼¶°üÏÂ·¢£¬¿ØÖÆ×Ö£ºF8H
+Ö÷Õ¾ÏÂ·¢Éı¼¶°ü£¬Éı¼¶°üÊı¾İÎª¶ş½øÖÆÂëÁ÷¡£Êı¾İ°üÏÂ·¢¼ä¸ôÎª1Ãë¡£
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U UpdataDownloadComm(u8 *InBuff)
 {
-	if(!PassworkCheckAndReport(InBuff));										//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-	else																		//è‹¥ç›¸åŒï¼Œå¯†ç æ­£ç¡®
+	if(!PassworkCheckAndReport(InBuff));										//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+	else																		//ÈôÏàÍ¬£¬ÃÜÂëÕıÈ·
 	{
-		if(update_start==true) 													//é˜²æ­¢ä¸»ç«™æ„å¤–ä¸‹å‘å‡çº§åŒ…ï¼Œç ´åFLASHã€‚
+		if(update_start==true) 													//·ÀÖ¹Ö÷Õ¾ÒâÍâÏÂ·¢Éı¼¶°ü£¬ÆÆ»µFLASH¡£
 		{
-			BspUartWrite(2,SIZE_OF("å‡çº§åŒ…ä¸‹å‘ï¼Œæ§åˆ¶å­—ï¼šF8H"));
-			SubbagUpdateToFlash( InBuff );										//è§£ææ–‡ä»¶å’Œä¿å­˜ï¼ˆå†™å…¥FLASHï¼‰ã€‚
+			BspUartWrite(2,SIZE_OF("Éı¼¶°üÏÂ·¢£¬¿ØÖÆ×Ö£ºF8H"));
+			SubbagUpdateToFlash( InBuff );										//½âÎöÎÄ¼şºÍ±£´æ£¨Ğ´ÈëFLASH£©¡£
 		}
-		else BspUartWrite(2,SIZE_OF("å½“å‰ä¸åœ¨å‡çº§çŠ¶æ€ï¼Œå‡çº§åŒ…æœªå†™å…¥FLASHï¼"));
-		return 1;																//é€šä¿¡å®Œæˆæˆ–ä¸åœ¨å‡çº§çŠ¶æ€æ—¶è¿”å›1ï¼Œä»¤NW_Comm_Processç»§ç»­ä¿æŒæ¥
+		else BspUartWrite(2,SIZE_OF("µ±Ç°²»ÔÚÉı¼¶×´Ì¬£¬Éı¼¶°üÎ´Ğ´ÈëFLASH£¡"));
+		return 1;																//Í¨ĞÅÍê³É»ò²»ÔÚÉı¼¶×´Ì¬Ê±·µ»Ø1£¬ÁîNW_Comm_Process¼ÌĞø±£³Ö½Ó
 	}
-	BspUartWrite(2,SIZE_OF("UpdataDownloadCommå‡çº§åŒ…ä¸‹å‘å¯†ç ä¸æ­£ç¡®ï¼\r\n"));
-	return 0;																	//é‡è¯•è¶…æ¬¡æ•°ã€ç­‰å¾…è¶…æ—¶éƒ½è¿”å›0
+	BspUartWrite(2,SIZE_OF("UpdataDownloadCommÉı¼¶°üÏÂ·¢ÃÜÂë²»ÕıÈ·£¡\r\n"));
+	return 0;																	//ÖØÊÔ³¬´ÎÊı¡¢µÈ´ı³¬Ê±¶¼·µ»Ø0
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U UpdataFinishComm(u8 *InBuff)
-åŠŸèƒ½ï¼šä¸»ç«™å‡çº§åŒ…ä¸‹å‘ç»“æŸï¼Œæ§åˆ¶å­—ï¼šF9H
-å…¨éƒ¨å‡çº§åŒ…ä¸‹å‘ç»“æŸå2ç§’ï¼Œä¸»ç«™å‘é€è¯¥æŒ‡ä»¤ï¼Œè£…ç½®æ”¶åˆ°åç«‹å³ä¸Šä¼ æ–‡ä»¶è¡¥åŒ…ï¼ˆFAHï¼‰ã€‚
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U UpdataFinishComm(u8 *InBuff)
+¹¦ÄÜ£ºÖ÷Õ¾Éı¼¶°üÏÂ·¢½áÊø£¬¿ØÖÆ×Ö£ºF9H
+È«²¿Éı¼¶°üÏÂ·¢½áÊøºó2Ãë£¬Ö÷Õ¾·¢ËÍ¸ÃÖ¸Áî£¬×°ÖÃÊÕµ½ºóÁ¢¼´ÉÏ´«ÎÄ¼ş²¹°ü£¨FAH£©¡£
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U UpdataFinishComm(u8 *InBuff)
 {
-	INT16U	len_frame=0;														//å¸§é•¿åº¦
+	INT16U	len_frame=0;														//Ö¡³¤¶È
 	
-	if(!PassworkCheckAndReport(InBuff));										//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-	else																		//è‹¥ç›¸åŒï¼Œå¯†ç æ­£ç¡®
+	if(!PassworkCheckAndReport(InBuff));										//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+	else																		//ÈôÏàÍ¬£¬ÃÜÂëÕıÈ·
 	{
-		if(update_start==true)													//é˜²æ­¢ä¸»ç«™æ„å¤–ä¸‹å‘å‡çº§åŒ…ï¼Œç ´åFLASH																				
+		if(update_start==true)													//·ÀÖ¹Ö÷Õ¾ÒâÍâÏÂ·¢Éı¼¶°ü£¬ÆÆ»µFLASH																				
 		{
-			BspUartWrite(2,SIZE_OF("å‡çº§åŒ…ä¸‹å‘ç»“æŸï¼Œæ§åˆ¶å­—ï¼šF9H\r\n"));
-			len_frame=NW_Framing(EX_UPDATA_FILLING,LTE_Tx_Buff);				//å°†å¾…è¡¥åŒ…ä¿¡æ¯ä¸ç‰ˆæœ¬å·ç»„å¸§ï¼ˆæ§åˆ¶å­—FAï¼‰
-			LteCommunication(LTE_Tx_Buff,len_frame,0,0);						//ä¸ŠæŠ¥ï¼Œä¸ç­‰å¾…å›å¤
-			if( len_frame==18 )													//å³è¡¥åŒ…æ•°ä¸º0ï¼ˆ12+6ï¼‰ï¼Œè¡¨ç¤ºå‡çº§åŒ…å·²æ¥æ”¶å®Œå…¨
-				RestartAfterCrcCheckPassed();									//è‹¥CRCæ ¡éªŒé€šè¿‡ï¼Œæ ‡è®°å¤‡ä»½å¯„å­˜å™¨ï¼Œç„¶åé‡å¯ã€‚
+			BspUartWrite(2,SIZE_OF("Éı¼¶°üÏÂ·¢½áÊø£¬¿ØÖÆ×Ö£ºF9H\r\n"));
+			len_frame=NW_Framing(EX_UPDATA_FILLING,LTE_Tx_Buff);				//½«´ı²¹°üĞÅÏ¢Óë°æ±¾ºÅ×éÖ¡£¨¿ØÖÆ×ÖFA£©
+			LteCommunication(LTE_Tx_Buff,len_frame,0,0);						//ÉÏ±¨£¬²»µÈ´ı»Ø¸´
+			if( len_frame==18 )													//¼´²¹°üÊıÎª0£¨12+6£©£¬±íÊ¾Éı¼¶°üÒÑ½ÓÊÕÍêÈ«
+				RestartAfterCrcCheckPassed();									//ÈôCRCĞ£ÑéÍ¨¹ı£¬±ê¼Ç±¸·İ¼Ä´æÆ÷£¬È»ºóÖØÆô¡£
 		}
-		else BspUartWrite(2,SIZE_OF("å½“å‰ä¸åœ¨å‡çº§çŠ¶æ€ï¼Œæ”¶åˆ°å¼‚å¸¸F9HæŒ‡ä»¤ï¼"));
-		return 1;																//é€šä¿¡å®Œæˆæˆ–ä¸åœ¨å‡çº§çŠ¶æ€æ—¶è¿”å›1ï¼Œä»¤NW_Comm_Processç»§ç»­ä¿æŒæ¥æ”¶
+		else BspUartWrite(2,SIZE_OF("µ±Ç°²»ÔÚÉı¼¶×´Ì¬£¬ÊÕµ½Òì³£F9HÖ¸Áî£¡"));
+		return 1;																//Í¨ĞÅÍê³É»ò²»ÔÚÉı¼¶×´Ì¬Ê±·µ»Ø1£¬ÁîNW_Comm_Process¼ÌĞø±£³Ö½ÓÊÕ
 	}
-	BspUartWrite(2,SIZE_OF("UpdataFinishCommå‡çº§åŒ…ä¸‹å‘ç»“æŸå¯†ç ä¸æ­£ç¡®ï¼\r\n"));
-	return 0;																	//é‡è¯•è¶…æ¬¡æ•°ã€ç­‰å¾…è¶…æ—¶éƒ½è¿”å›0
+	BspUartWrite(2,SIZE_OF("UpdataFinishCommÉı¼¶°üÏÂ·¢½áÊøÃÜÂë²»ÕıÈ·£¡\r\n"));
+	return 0;																	//ÖØÊÔ³¬´ÎÊı¡¢µÈ´ı³¬Ê±¶¼·µ»Ø0
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U FormatFlashComm(u8 *InBuff, u16 Len)
-åŠŸèƒ½ï¼šåŒ…æ‹¬å¯†ç æ£€éªŒã€å›å¤é€šä¿¡ã€æ ¼å¼åŒ–FLASHåŠŸèƒ½æ‰§è¡Œï¼Œæ§åˆ¶å­—ï¼šFBH
-å…¥å‚ï¼šu8 *InBuffï¼Œä¼ å…¥çš„å†…å®¹ï¼Œæ­£å¸¸ä¸ºæ¥æ”¶åˆ°çš„å¸§ï¼›u16 Lenï¼Œé•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæˆåŠŸè¿”å›1ï¼Œå¤±è´¥è¿”å›0
+Ãû³Æ£ºINT8U FormatFlashComm(u8 *InBuff, u16 Len)
+¹¦ÄÜ£º°üÀ¨ÃÜÂë¼ìÑé¡¢»Ø¸´Í¨ĞÅ¡¢¸ñÊ½»¯FLASH¹¦ÄÜÖ´ĞĞ£¬¿ØÖÆ×Ö£ºFBH
+Èë²Î£ºu8 *InBuff£¬´«ÈëµÄÄÚÈİ£¬Õı³£Îª½ÓÊÕµ½µÄÖ¡£»u16 Len£¬³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£º³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT8U FormatFlashComm(u8 *InBuff, u16 Len)
 {
 	FRESULT				res;													/* API result code */
 	
-	if(!PassworkCheckAndReport(InBuff));										//åˆ¤æ–­ä¸»ç«™ä¸‹å‘æŠ¥æ–‡ä¸­å¯†ç æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®æ—¶ä¸ŠæŠ¥å¯†ç å‡ºé”™ä¿¡æ¯ã€‚
-	else																		//è‹¥ç›¸åŒï¼Œå¯†ç æ­£ç¡®
+	if(!PassworkCheckAndReport(InBuff));										//ÅĞ¶ÏÖ÷Õ¾ÏÂ·¢±¨ÎÄÖĞÃÜÂëÊÇ·ñÕıÈ·£¬²»ÕıÈ·Ê±ÉÏ±¨ÃÜÂë³ö´íĞÅÏ¢¡£
+	else																		//ÈôÏàÍ¬£¬ÃÜÂëÕıÈ·
 	{
-		if(InBuff[14]==0xFF)													//å¼ºåˆ¶æ ¼å¼åŒ–FLASHã€‚ç›®å‰åªæœ‰æ­¤å‘½ä»¤
+		if(InBuff[14]==0xFF)													//Ç¿ÖÆ¸ñÊ½»¯FLASH¡£Ä¿Ç°Ö»ÓĞ´ËÃüÁî
 		{
 			/* Create FAT volume */
 			res = f_mkfs(	"", 												// If it has no drive number in it, it means the default drive.
@@ -187,24 +187,24 @@ INT8U FormatFlashComm(u8 *InBuff, u16 Len)
 							sizeof work);										// It needs to be the sector size of the corresponding physical drive at least.
 			if(res==FR_OK) 
 			{
-				LteCommunication(InBuff,Len,0,0);								//æ“ä½œæˆåŠŸï¼ŒæŒ‰ç…§åŸå‘½ä»¤è¿”å›ï¼Œä¸æ¥æ”¶ï¼ˆLteCommunicationè¿”å›0ï¼‰
-				BspUartWrite(2,SIZE_OF("f_mkfs() æ ¼å¼åŒ–æˆåŠŸï¼3ç§’åé‡å¯ï¼\r\n"));
+				LteCommunication(InBuff,Len,0,0);								//²Ù×÷³É¹¦£¬°´ÕÕÔ­ÃüÁî·µ»Ø£¬²»½ÓÊÕ£¨LteCommunication·µ»Ø0£©
+				BspUartWrite(2,SIZE_OF("f_mkfs() ¸ñÊ½»¯³É¹¦£¡3ÃëºóÖØÆô£¡\r\n"));
 				OSTimeDly(3*20);
-				McuSoftReset();													//è¿”å›åç›´æ¥é‡å¯					
+				McuSoftReset();													//·µ»ØºóÖ±½ÓÖØÆô					
 			}
-			else BspUartWrite(2,SIZE_OF("f_mkfs() æ ¼å¼åŒ–é”™è¯¯ï¼\r\n"));
+			else BspUartWrite(2,SIZE_OF("f_mkfs() ¸ñÊ½»¯´íÎó£¡\r\n"));
 		}
 	}
-	BspUartWrite(2,SIZE_OF("FormatFlashCommæ ¼å¼åŒ–FLASHé€šä¿¡å¤±è´¥ï¼\r\n"));
+	BspUartWrite(2,SIZE_OF("FormatFlashComm¸ñÊ½»¯FLASHÍ¨ĞÅÊ§°Ü£¡\r\n"));
 	return 0;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U GetExtendedHeartbeatData(u8 *OutBuff)
-åŠŸèƒ½ï¼šè·å–æ‰©å±•å¿ƒè·³ä¿¡æ¯æ•°æ®ï¼Œæ ¹æ®æ‰©å±•åè®®æ ¼å¼ä¼ å‡ºï¼Œå¹¶è¿”å›é•¿åº¦11å­—èŠ‚ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šu8 *OutBuffï¼Œæ‰©å±•å¿ƒè·³ä¿¡æ¯æ•°æ®å­˜æ”¾åœ°å€
-è¿”å›ï¼š11ï¼šé•¿åº¦
+Ãû³Æ£ºINT8U GetExtendedHeartbeatData(u8 *OutBuff)
+¹¦ÄÜ£º»ñÈ¡À©Õ¹ĞÄÌøĞÅÏ¢Êı¾İ£¬¸ù¾İÀ©Õ¹Ğ­Òé¸ñÊ½´«³ö£¬²¢·µ»Ø³¤¶È11×Ö½Ú¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºu8 *OutBuff£¬À©Õ¹ĞÄÌøĞÅÏ¢Êı¾İ´æ·ÅµØÖ·
+·µ»Ø£º11£º³¤¶È
 *******************************************************************************/
 INT8U GetExtendedHeartbeatData(u8 *OutBuff)
 {
@@ -212,32 +212,32 @@ INT8U GetExtendedHeartbeatData(u8 *OutBuff)
 	float	f_temp=0;
   
 	NW_GetTime((struct NW_TIME *)OutBuff);
-	if(!Get_DS18B20Temp(&temp))													//è¿”å›çš„æ˜¯DS18B20çš„F8æ ¼å¼æ¸©åº¦
+	if(!Get_DS18B20Temp(&temp))													//·µ»ØµÄÊÇDS18B20µÄF8¸ñÊ½ÎÂ¶È
 	{
 		BspUartWrite(2,SIZE_OF("DS18B20---->Error!\r\n"));
 	}
-	f_temp = TempU16toFloat(temp);												//DS18B20å¾—åˆ°çš„æ¸©åº¦æ•°æ®è½¬æµ®ç‚¹å‹
-	//Equipment_stateç»“æ„ä½“å·²åœ¨å¿ƒè·³ç»„å¸§æ—¶æ›´æ–°
-	OutBuff[6]=(INT8U)(Equipment_state.FALA_Volt*10);							//è·å–æ³•æ‹‰ç”µå®¹ç”µå‹ï¼ˆ10å€ï¼‰
-	OutBuff[7]=(((INT16U)(f_temp*10+500))>>8)&0xFF;								//å–18b20æ¸©åº¦é«˜8ä½
-	OutBuff[8]=(((INT16U)(f_temp*10+500)))&0xFF;								//å–18b20æ¸©åº¦ä½8ä½    
-	OutBuff[9]=(((INT16U)(Equipment_state.MCU_Temp*10+500))>>8)&0xFF;			//MCUæ¸©åº¦é«˜8ä½
-	OutBuff[10]=(INT16U)(Equipment_state.MCU_Temp*10+500)&0xFF;					//MCUæ¸©åº¦ä½8ä½
+	f_temp = TempU16toFloat(temp);												//DS18B20µÃµ½µÄÎÂ¶ÈÊı¾İ×ª¸¡µãĞÍ
+	//Equipment_state½á¹¹ÌåÒÑÔÚĞÄÌø×éÖ¡Ê±¸üĞÂ
+	OutBuff[6]=(INT8U)(Equipment_state.FALA_Volt*10);							//»ñÈ¡·¨À­µçÈİµçÑ¹£¨10±¶£©
+	OutBuff[7]=(((INT16U)(f_temp*10+500))>>8)&0xFF;								//È¡18b20ÎÂ¶È¸ß8Î»
+	OutBuff[8]=(((INT16U)(f_temp*10+500)))&0xFF;								//È¡18b20ÎÂ¶ÈµÍ8Î»    
+	OutBuff[9]=(((INT16U)(Equipment_state.MCU_Temp*10+500))>>8)&0xFF;			//MCUÎÂ¶È¸ß8Î»
+	OutBuff[10]=(INT16U)(Equipment_state.MCU_Temp*10+500)&0xFF;					//MCUÎÂ¶ÈµÍ8Î»
 	return 11;	
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U GetDeviceVersionAndCardNumber(INT8U* pOutBuff)
-åŠŸèƒ½ï¼šè·å–è£…ç½®ç‰ˆæœ¬å·ä»¥åŠå¡å·ï¼Œæ ¹æ®æ‰©å±•åè®®æ ¼å¼ä¼ å‡ºï¼Œå¹¶è¿”å›æ•°æ®åŸŸé•¿åº¦ã€‚
-å…¥å‚ï¼šINT8U* pOutBuff
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼š33ï¼šé•¿åº¦
+Ãû³Æ£ºINT8U GetDeviceVersionAndCardNumber(INT8U* pOutBuff)
+¹¦ÄÜ£º»ñÈ¡×°ÖÃ°æ±¾ºÅÒÔ¼°¿¨ºÅ£¬¸ù¾İÀ©Õ¹Ğ­Òé¸ñÊ½´«³ö£¬²¢·µ»ØÊı¾İÓò³¤¶È¡£
+Èë²Î£ºINT8U* pOutBuff
+³ö²Î£ºÎŞ
+·µ»Ø£º33£º³¤¶È
 *******************************************************************************/
 INT8U GetDeviceVersionAndCardNumber(INT8U* pOutBuff)
 {
 	INT8U				i = 0, k = 0, *p;
 	
-	BspUartWrite(2,SIZE_OF("æŸ¥è¯¢ç‰ˆæœ¬åŠå¡å·ï¼Œæ§åˆ¶å­—ï¼šF6H\r\n"));
+	BspUartWrite(2,SIZE_OF("²éÑ¯°æ±¾¼°¿¨ºÅ£¬¿ØÖÆ×Ö£ºF6H\r\n"));
 	
 	pOutBuff[0]=(HV>>24) & 0xFF;
 	pOutBuff[1]=(HV>>16) & 0xFF;
@@ -248,60 +248,60 @@ INT8U GetDeviceVersionAndCardNumber(INT8U* pOutBuff)
 	pOutBuff[6]=(VERSION>>8) & 0xFF;
 	pOutBuff[7]=(VERSION>>0) & 0xFF;
 
-	ME909S_Trans_OFF();															//å…³é—­é€ä¼ 
+	ME909S_Trans_OFF();															//¹Ø±ÕÍ¸´«
 	p=ME909SCommandP(AT_CNUM, "\",\"", 1)+1;									//+CNUM: "","+8615088666002",145
 	for(i=0;i<7;i++)
 	{
 		k = i*2;
 		*(p+k)<0x30 ? *(p+k)=0x0F : (*(p+k)-=0x30);
 		*(p+k+1)<0x30 ? *(p+k+1)=0x0F : (*(p+k+1)-=0x30);
-		pOutBuff[8+i] = (*(p+k)<<4) | *(p+k+1);									//æŒ‰åè®®å¡«å…¥æ•°å€¼	pOutBuff[8]
+		pOutBuff[8+i] = (*(p+k)<<4) | *(p+k+1);									//°´Ğ­ÒéÌîÈëÊıÖµ	pOutBuff[8]
 	}
 	
-	p=ME909SCommandP(AT_ICCID, "OK", 1)-26;										//20ä½ICCID+0D0A+0D0A+OK=26
+	p=ME909SCommandP(AT_ICCID, "OK", 1)-26;										//20Î»ICCID+0D0A+0D0A+OK=26
 	for(i=0;i<10;i++)
 	{
 		k = i*2;
 		*(p+k)<0x30 ? *(p+k)=0x0F : (*(p+k)-=0x30);
 		*(p+k+1)<0x30 ? *(p+k+1)=0x0F : (*(p+k+1)-=0x30);
-		pOutBuff[15+i] = (*(p+k)<<4) | *(p+k+1);								//æŒ‰åè®®å¡«å…¥æ•°å€¼	pOutBuff[15]
+		pOutBuff[15+i] = (*(p+k)<<4) | *(p+k+1);								//°´Ğ­ÒéÌîÈëÊıÖµ	pOutBuff[15]
 	}
 	
-	p=ME909SCommandP(AT_IMSI, "OK", 1)-22;										//15ä½ICCID+0D0A+0D0A+OK=21ï¼Œä¸ºäº†æœ€é«˜ä½F 20
+	p=ME909SCommandP(AT_IMSI, "OK", 1)-22;										//15Î»ICCID+0D0A+0D0A+OK=21£¬ÎªÁË×î¸ßÎ»F 20
 	for(i=0;i<8;i++)
 	{
 		k = i*2;
 		*(p+k)<0x30 ? *(p+k)=0x0F : (*(p+k)-=0x30);
 		*(p+k+1)<0x30 ? *(p+k+1)=0x0F : (*(p+k+1)-=0x30);
-		pOutBuff[25+i] = (*(p+k)<<4) | *(p+k+1);								//æŒ‰åè®®å¡«å…¥æ•°å€¼	pOutBuff[25]
+		pOutBuff[25+i] = (*(p+k)<<4) | *(p+k+1);								//°´Ğ­ÒéÌîÈëÊıÖµ	pOutBuff[25]
 	}
-	ME909S_Trans_ON();															//é‡æ–°æ‰“å¼€é€ä¼ 
+	ME909S_Trans_ON();															//ÖØĞÂ´ò¿ªÍ¸´«
 	
 	return 33;	
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U GetUpdataRequestData(u8 *OutBuff)
-åŠŸèƒ½ï¼šè·å–å‡çº§è¯·æ±‚å›å¤å¸§å†…å®¹ï¼Œæ ¹æ®æ‰©å±•åè®®æ ¼å¼ä¼ å‡ºï¼Œå¹¶è¿”å›æ•°æ®åŸŸé•¿åº¦ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šu8 *OutBuffï¼Œç»„å¸§æ•°æ®åŸŸé¦–åœ°å€
-è¿”å›ï¼š5ï¼šé•¿åº¦
+Ãû³Æ£ºINT8U GetUpdataRequestData(u8 *OutBuff)
+¹¦ÄÜ£º»ñÈ¡Éı¼¶ÇëÇó»Ø¸´Ö¡ÄÚÈİ£¬¸ù¾İÀ©Õ¹Ğ­Òé¸ñÊ½´«³ö£¬²¢·µ»ØÊı¾İÓò³¤¶È¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºu8 *OutBuff£¬×éÖ¡Êı¾İÓòÊ×µØÖ·
+·µ»Ø£º5£º³¤¶È
 *******************************************************************************/
 INT8U GetUpdataRequestData(u8 *OutBuff)
 {
-	INT32U version = VERSION;													//ç‰ˆæœ¬å·å®å®šä¹‰ï¼Œç‚¹é­”æœ¯æ£’
-	version = htonl(version);													//å¤§å°ç«¯è½¬æ¢
-	memcpy(OutBuff,&version,4);													//æœ¬åœ°ç‰ˆæœ¬å·
-	OutBuff[4] = device_status;													//å·²åœ¨æ¥æ”¶åˆ°å‡çº§è¯·æ±‚æ—¶ï¼Œè·å–è¿‡è®¾å¤‡çŠ¶æ€														
+	INT32U version = VERSION;													//°æ±¾ºÅºê¶¨Òå£¬µãÄ§Êõ°ô
+	version = htonl(version);													//´óĞ¡¶Ë×ª»»
+	memcpy(OutBuff,&version,4);													//±¾µØ°æ±¾ºÅ
+	OutBuff[4] = device_status;													//ÒÑÔÚ½ÓÊÕµ½Éı¼¶ÇëÇóÊ±£¬»ñÈ¡¹ıÉè±¸×´Ì¬														
 	return 5;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U GetUpdataFillingData(u8 *OutBuff)
-åŠŸèƒ½ï¼šè·å–è¡¥åŒ…å›å¤å¸§å†…å®¹ï¼Œæ ¹æ®æ‰©å±•åè®®æ ¼å¼ä¼ å‡ºï¼Œå¹¶è¿”å›æ•°æ®åŸŸé•¿åº¦ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šu8 *OutBuffï¼Œç»„å¸§æ•°æ®åŸŸé¦–åœ°å€
-è¿”å›ï¼šæ•°æ®åŸŸé•¿åº¦
+Ãû³Æ£ºINT8U GetUpdataFillingData(u8 *OutBuff)
+¹¦ÄÜ£º»ñÈ¡²¹°ü»Ø¸´Ö¡ÄÚÈİ£¬¸ù¾İÀ©Õ¹Ğ­Òé¸ñÊ½´«³ö£¬²¢·µ»ØÊı¾İÓò³¤¶È¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºu8 *OutBuff£¬×éÖ¡Êı¾İÓòÊ×µØÖ·
+·µ»Ø£ºÊı¾İÓò³¤¶È
 *******************************************************************************/
 INT8U GetUpdataFillingData(u8 *OutBuff)
 {
@@ -309,128 +309,128 @@ INT8U GetUpdataFillingData(u8 *OutBuff)
 	INT16U				i,sum=0,sum_byte=0,lost_count=0,lost_number=0;
 	TCHAR				temp[20]={0};
 	
-	sum=(file_update.Sub_package_Sum_High<<8)+file_update.Sub_package_Sum_Low;	//å­åŒ…æ€»æ•°
-	sum_byte = (sum>>3)+1;														//å ç”¨çš„å­—èŠ‚æ•°
+	sum=(file_update.Sub_package_Sum_High<<8)+file_update.Sub_package_Sum_Low;	//×Ó°ü×ÜÊı
+	sum_byte = (sum>>3)+1;														//Õ¼ÓÃµÄ×Ö½ÚÊı
 	for(i=0;i<sum_byte;i++)
 	{
-		buff = subbag_statistics[i];											//å–å½“å‰å­—èŠ‚
-		if(buff==0xFF) continue;												//è‹¥å½“å‰å­—èŠ‚æ— ä¸¢åŒ…æ ‡è®°ï¼Œå¿«é€Ÿè·³è¿‡
+		buff = subbag_statistics[i];											//È¡µ±Ç°×Ö½Ú
+		if(buff==0xFF) continue;												//Èôµ±Ç°×Ö½ÚÎŞ¶ª°ü±ê¼Ç£¬¿ìËÙÌø¹ı
 		for(j=0;j<8;j++)
 		{
-			if(0==(buff & 0x80))												//ä¸ä¸º1ï¼Œè¡¨ç¤ºå½“å‰å­åŒ…ä¸¢å¤±			
+			if(0==(buff & 0x80))												//²»Îª1£¬±íÊ¾µ±Ç°×Ó°ü¶ªÊ§			
 			{
-				lost_number = (i<<3)+j+1;										//è®¡ç®—çœŸå®å­åŒ…å·
-				if(lost_number>sum) break;										//è¶…è¿‡æ€»åŒ…æ•°çš„ä¸ç®—
-				OutBuff[6+2*lost_count] = (lost_number<<8)&0xFF;				//å­åŒ…å·é«˜å­—èŠ‚
-				OutBuff[6+2*lost_count+1] = lost_number&0xFF;					//å­åŒ…å·ä½å­—èŠ‚
-				lost_count++;													//ä¸¢åŒ…åŒ…æ•°
+				lost_number = (i<<3)+j+1;										//¼ÆËãÕæÊµ×Ó°üºÅ
+				if(lost_number>sum) break;										//³¬¹ı×Ü°üÊıµÄ²»Ëã
+				OutBuff[6+2*lost_count] = (lost_number<<8)&0xFF;				//×Ó°üºÅ¸ß×Ö½Ú
+				OutBuff[6+2*lost_count+1] = lost_number&0xFF;					//×Ó°üºÅµÍ×Ö½Ú
+				lost_count++;													//¶ª°ü°üÊı
 			}
-			buff <<= 1;															//å·¦ç§»1ä½
+			buff <<= 1;															//×óÒÆ1Î»
 		}
 	}
 	
-	sprintf(temp, "ä¸¢å¤±ï¼š%d åŒ…\r\n", lost_count);
+	sprintf(temp, "¶ªÊ§£º%d °ü\r\n", lost_count);
 	BspUartWrite(2,(INT8U*)temp,strlen(temp));
-	memcpy(OutBuff,file_update.Version,4);										//å‡çº§è½¯ä»¶ç‰ˆæœ¬å·	ï¼ˆè¿™ä¸ªå¯¹çš„ï¼‰
-	OutBuff[4] = (lost_count>>8)&0xFF;											//è¡¥åŒ…æ•°é«˜8ä½
-	OutBuff[5] = lost_count&0xFF;												//è¡¥åŒ…æ•°ä½8ä½
-	return 6+2*lost_count;														//è¿”å›æ•°æ®åŸŸé•¿åº¦
+	memcpy(OutBuff,file_update.Version,4);										//Éı¼¶Èí¼ş°æ±¾ºÅ	£¨Õâ¸ö¶ÔµÄ£©
+	OutBuff[4] = (lost_count>>8)&0xFF;											//²¹°üÊı¸ß8Î»
+	OutBuff[5] = lost_count&0xFF;												//²¹°üÊıµÍ8Î»
+	return 6+2*lost_count;														//·µ»ØÊı¾İÓò³¤¶È
 }
 
 /*******************************************************************************
-åç§°ï¼švoid GetDeviceStatusBeforeUpgrade(void)
-åŠŸèƒ½ï¼šå‡çº§å‰æ£€æµ‹è®¾å¤‡çŠ¶æ€ã€‚ä¸ºFFHæ—¶ï¼Œè¡¨ç¤ºå…è®¸å‡çº§ï¼›00Hè¡¨ç¤ºç”µæ± ç”µå‹ä¸è¶³ï¼Œ01Hè¡¨ç¤ºå­˜å‚¨ç©ºé—´
-ä¸è¶³ï¼Œ02Hè¡¨ç¤ºå½“å‰æœ‰æœªä¸ŠæŠ¥çš„å†å²æ•°æ®ï¼Œ03Hè¡¨ç¤ºè£…ç½®å­˜åœ¨æ•…éšœã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šè®¾å¤‡çŠ¶æ€
+Ãû³Æ£ºvoid GetDeviceStatusBeforeUpgrade(void)
+¹¦ÄÜ£ºÉı¼¶Ç°¼ì²âÉè±¸×´Ì¬¡£ÎªFFHÊ±£¬±íÊ¾ÔÊĞíÉı¼¶£»00H±íÊ¾µç³ØµçÑ¹²»×ã£¬01H±íÊ¾´æ´¢¿Õ¼ä
+²»×ã£¬02H±íÊ¾µ±Ç°ÓĞÎ´ÉÏ±¨µÄÀúÊ·Êı¾İ£¬03H±íÊ¾×°ÖÃ´æÔÚ¹ÊÕÏ¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£ºÉè±¸×´Ì¬
 *******************************************************************************/
 void GetDeviceStatusBeforeUpgrade(void)
 {
 	INT32U	size = 0;
 
-	size = htonl( *(INT32U*)file_update.Program_Size );							//å–æ–‡ä»¶å¤§å°ï¼Œå¤§å°ç«¯è½¬æ¢
+	size = htonl( *(INT32U*)file_update.Program_Size );							//È¡ÎÄ¼ş´óĞ¡£¬´óĞ¡¶Ë×ª»»
 	if(file_update.forced_upgrade==0xFF) 
 	{
-		if(BKP->DR3==0x02) device_status = 0xFE;								//è‹¥å½“å‰è¿è¡Œç³»ç»Ÿä¸€ï¼Œåˆ‡æ¢ç³»ç»Ÿå‡çº§
-		else device_status = 0xFF;												//è¢«è¿«å…è®¸å‡çº§
-		BspUartWrite(2,SIZE_OF("å¼ºåˆ¶å‡çº§\r\n"));
+		if(BKP->DR3==0x02) device_status = 0xFE;								//Èôµ±Ç°ÔËĞĞÏµÍ³Ò»£¬ÇĞ»»ÏµÍ³Éı¼¶
+		else device_status = 0xFF;												//±»ÆÈÔÊĞíÉı¼¶
+		BspUartWrite(2,SIZE_OF("Ç¿ÖÆÉı¼¶\r\n"));
 		return;
 	}
-	else if(Equipment_state.BAT_Volt<BAT_UP && Equipment_state.FALA_Volt<FALA_UP)//ä¿é™©ç‚¹ï¼Œç”¨ä¸Šé™	
+	else if(Equipment_state.BAT_Volt<BAT_UP && Equipment_state.FALA_Volt<FALA_UP)//±£ÏÕµã£¬ÓÃÉÏÏŞ	
 	{
-		device_status=0x00;														//ç”µæºç”µå‹ä¸è¶³
-		BspUartWrite(2,SIZE_OF("ç”µæºæ¬ å‹\r\n"));
+		device_status=0x00;														//µçÔ´µçÑ¹²»×ã
+		BspUartWrite(2,SIZE_OF("µçÔ´Ç·Ñ¹\r\n"));
 	}
-	else if(size > (FLASH_UPDATE_PAGES<<11))									//ä¸€é¡µ2Kï¼Œ<<11
+	else if(size > (FLASH_UPDATE_PAGES<<11))									//Ò»Ò³2K£¬<<11
 	{
-		device_status=0x01;														//å­˜å‚¨ç©ºé—´ä¸è¶³	
-		BspUartWrite(2,SIZE_OF("å­˜å‚¨ç©ºé—´ä¸è¶³\r\n"));
+		device_status=0x01;														//´æ´¢¿Õ¼ä²»×ã	
+		BspUartWrite(2,SIZE_OF("´æ´¢¿Õ¼ä²»×ã\r\n"));
 	}
 	else if(IsUploadCompletely())
 	{
-		device_status=0x02;														//æœ‰æœªä¸Šä¼ çš„å†å²æ•°æ®	
-		BspUartWrite(2,SIZE_OF("æœ‰æœªä¸Šä¼ çš„å†å²æ•°æ®\r\n"));
+		device_status=0x02;														//ÓĞÎ´ÉÏ´«µÄÀúÊ·Êı¾İ	
+		BspUartWrite(2,SIZE_OF("ÓĞÎ´ÉÏ´«µÄÀúÊ·Êı¾İ\r\n"));
 	}
 	else if(Fault_Manage.Need_Report)											
 	{
-		device_status=0x03;														//æœ‰æœªä¸ŠæŠ¥çš„æ•…éšœä¿¡æ¯	
-		BspUartWrite(2,SIZE_OF("æœ‰æœªä¸ŠæŠ¥çš„æ•…éšœä¿¡æ¯\r\n"));
+		device_status=0x03;														//ÓĞÎ´ÉÏ±¨µÄ¹ÊÕÏĞÅÏ¢	
+		BspUartWrite(2,SIZE_OF("ÓĞÎ´ÉÏ±¨µÄ¹ÊÕÏĞÅÏ¢\r\n"));
 	}
-	/*å…¶ä»–å‡çº§æ¡ä»¶å·²å…·å¤‡ï¼Œåˆ¤æ–­ç³»ç»Ÿ*/
-	else if(BKP->DR3==0x02) 													//è‹¥å½“å‰è¿è¡Œç³»ç»Ÿä¸€
+	/*ÆäËûÉı¼¶Ìõ¼şÒÑ¾ß±¸£¬ÅĞ¶ÏÏµÍ³*/
+	else if(BKP->DR3==0x02) 													//Èôµ±Ç°ÔËĞĞÏµÍ³Ò»
 	{
-		device_status = 0xFE;													//åˆ‡æ¢ç³»ç»Ÿå‡çº§
-		BspUartWrite(2,SIZE_OF("æ¡ä»¶å…·å¤‡ï¼Œåˆ‡æ¢ç³»ç»Ÿä¸€å‡çº§\r\n"));	
+		device_status = 0xFE;													//ÇĞ»»ÏµÍ³Éı¼¶
+		BspUartWrite(2,SIZE_OF("Ìõ¼ş¾ß±¸£¬ÇĞ»»ÏµÍ³Ò»Éı¼¶\r\n"));	
 	}
 	
 	else 
 	{
-		device_status = 0xFF;													//ä¸Šè¿°æ¡ä»¶å…¨éƒ¨æ»¡è¶³ï¼Œå…è®¸å‡çº§
-		BspUartWrite(2,SIZE_OF("æ¡ä»¶å…·å¤‡ï¼Œå…è®¸å‡çº§\r\n"));	
+		device_status = 0xFF;													//ÉÏÊöÌõ¼şÈ«²¿Âú×ã£¬ÔÊĞíÉı¼¶
+		BspUartWrite(2,SIZE_OF("Ìõ¼ş¾ß±¸£¬ÔÊĞíÉı¼¶\r\n"));	
 	}
 }
 
 /*******************************************************************************
-åç§°ï¼švoid RestartAfterCrcCheckPassed(void)
-åŠŸèƒ½ï¼šè‹¥CRCæ ¡éªŒé€šè¿‡ï¼Œæ ‡è®°å¤‡ä»½å¯„å­˜å™¨ï¼Œç„¶åé‡å¯ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 	
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid RestartAfterCrcCheckPassed(void)
+¹¦ÄÜ£ºÈôCRCĞ£ÑéÍ¨¹ı£¬±ê¼Ç±¸·İ¼Ä´æÆ÷£¬È»ºóÖØÆô¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ	
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void RestartAfterCrcCheckPassed(void)
 {
 	INT16U				subbag_sum;
 	
-	update_start = false;														//æ ‡è®°å‡çº§ç»“æŸ
+	update_start = false;														//±ê¼ÇÉı¼¶½áÊø
 	subbag_sum=(file_update.Sub_package_Sum_High<<8)+file_update.Sub_package_Sum_Low;
-	if(FlashCrcCheckFromNeiFlash( bin_file_adress, subbag_sum>>1)) 				//è‹¥CRCé€šè¿‡ï¼Œå†™å…¥flashçš„æœ€åä¸€é¡µçš„é¡µæ•°ä¸º1024Bä¸€åŒ…çš„ï¼ˆæ€»åŒ…æ•°-1ï¼‰/2+1
+	if(FlashCrcCheckFromNeiFlash( bin_file_adress, subbag_sum>>1)) 				//ÈôCRCÍ¨¹ı£¬Ğ´ÈëflashµÄ×îºóÒ»Ò³µÄÒ³ÊıÎª1024BÒ»°üµÄ£¨×Ü°üÊı-1£©/2+1
 	{
 		if(BKP->DR3==0x01)
 		{
-			PWR->CR|=1<<8;														//DBPä½ï¼šå–æ¶ˆåå¤‡åŒºåŸŸçš„å†™ä¿æŠ¤ã€‚1ï¼šå…è®¸å†™å…¥RTCå’Œåå¤‡å¯„å­˜å™¨
-			BKP->DR2=0x00;														//æ¸…SYS1å¤±è´¥è®¡æ•°ï¼Œä¸‹æ¬¡é‡å¯åä¼šè¿›å…¥SYS1
-			PWR->CR &= ~(1<<8);													//å¯ç”¨åå¤‡åŒºåŸŸçš„å†™ä¿æŠ¤
-			sys2_upgrade_time = RtcGetTimeSecond();								//ä¸–çºªç§’
-			BSP_WriteDataToFm(sys2_upgrade_time_Addr,(INT8U*)&sys2_upgrade_time,sys2_upgrade_time_Len);			//ç³»ç»Ÿ2å‡çº§æ—¶é—´å†™å…¥é“ç”µ
+			PWR->CR|=1<<8;														//DBPÎ»£ºÈ¡Ïûºó±¸ÇøÓòµÄĞ´±£»¤¡£1£ºÔÊĞíĞ´ÈëRTCºÍºó±¸¼Ä´æÆ÷
+			BKP->DR2=0x00;														//ÇåSYS1Ê§°Ü¼ÆÊı£¬ÏÂ´ÎÖØÆôºó»á½øÈëSYS1
+			PWR->CR &= ~(1<<8);													//ÆôÓÃºó±¸ÇøÓòµÄĞ´±£»¤
+			sys2_upgrade_time = RtcGetTimeSecond();								//ÊÀ¼ÍÃë
+			BSP_WriteDataToFm(sys2_upgrade_time_Addr,(INT8U*)&sys2_upgrade_time,sys2_upgrade_time_Len);			//ÏµÍ³2Éı¼¶Ê±¼äĞ´ÈëÌúµç
 		}
-		BspUartWrite(2,SIZE_OF("\r\n--------å½“å‰è¿è¡Œç³»ç»Ÿ 0 ï¼Œé‡å¯ååˆ‡æ¢ç³»ç»Ÿ-------\r\n\r\n"));
+		BspUartWrite(2,SIZE_OF("\r\n--------µ±Ç°ÔËĞĞÏµÍ³ 0 £¬ÖØÆôºóÇĞ»»ÏµÍ³-------\r\n\r\n"));
 		OSTimeDly(2);
-		McuSoftReset();															//è½¯ä»¶å¤ä½ï¼Œæ ‡è®°çƒ­å¯åŠ¨
+		McuSoftReset();															//Èí¼ş¸´Î»£¬±ê¼ÇÈÈÆô¶¯
 	}
-	else																		//CRCæ ¡éªŒå¤±è´¥
+	else																		//CRCĞ£ÑéÊ§°Ü
 	{
-		BspUartWrite(2,SIZE_OF("\r\n--------CRCæ ¡éªŒä¸é€šè¿‡ï¼Œå‡çº§å¤±è´¥ï¼-------\r\n\r\n"));
+		BspUartWrite(2,SIZE_OF("\r\n--------CRCĞ£Ñé²»Í¨¹ı£¬Éı¼¶Ê§°Ü£¡-------\r\n\r\n"));
 		OSTimeDly(1);
 	}
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U FlashCrcCheckFromNeiFlash( INT32U Address, INT16U LastBlockNo ) 
-åŠŸèƒ½ï¼šå¯¹ç›®æ ‡Flashåœ°å€è¿›è¡ŒCRCæ ¡éªŒ
-å…¥å‚ï¼šAddress èµ·å§‹åœ°å€   LastBlockNo  æ›´æ–°ä»£ç å†™åœ¨Flashçš„æœ€åä¸€é¡µçš„é¡µæ•°
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼š1ï¼šCRCé€šè¿‡   0ï¼šCRCå¤±è´¥
+Ãû³Æ£ºINT8U FlashCrcCheckFromNeiFlash( INT32U Address, INT16U LastBlockNo ) 
+¹¦ÄÜ£º¶ÔÄ¿±êFlashµØÖ·½øĞĞCRCĞ£Ñé
+Èë²Î£ºAddress ÆğÊ¼µØÖ·   LastBlockNo  ¸üĞÂ´úÂëĞ´ÔÚFlashµÄ×îºóÒ»Ò³µÄÒ³Êı
+³ö²Î£ºÎŞ
+·µ»Ø£º1£ºCRCÍ¨¹ı   0£ºCRCÊ§°Ü
 *******************************************************************************/
 INT8U FlashCrcCheckFromNeiFlash( INT32U Address, INT16U LastBlockNo ) 
 {
@@ -440,41 +440,41 @@ INT8U FlashCrcCheckFromNeiFlash( INT32U Address, INT16U LastBlockNo )
 	INT16U Blockindex; 
 	INT16U i;
 	
-	__disable_irq();															//ç¦ç”¨æ‰€æœ‰ä¸­æ–­
-	RCC_AHBPeriphClockCmd( RCC_AHBPeriph_CRC, ENABLE );							//å¼€CRCè®¡ç®—å•å…ƒæ—¶é’Ÿ
+	__disable_irq();															//½ûÓÃËùÓĞÖĞ¶Ï
+	RCC_AHBPeriphClockCmd( RCC_AHBPeriph_CRC, ENABLE );							//¿ªCRC¼ÆËãµ¥ÔªÊ±ÖÓ
 	FlashAddr= Address;
-	CRC_ResetDR();																//Resets the CRC Data register (DR).DRåˆå€¼ffffffff
+	CRC_ResetDR();																//Resets the CRC Data register (DR).DR³õÖµffffffff
 	
 	for( Blockindex=0; Blockindex<LastBlockNo; Blockindex++ )
 	{
-		for( i=0; i<(FLASH_PAGE_LEN>>2); i++ )									//FLASH_PAGE_LEN/4æ¬¡
+		for( i=0; i<(FLASH_PAGE_LEN>>2); i++ )									//FLASH_PAGE_LEN/4´Î
 		{
-			value_in_memory=*( vu32*) FlashAddr;								//å–å€¼
-			value_in_memory = htonl( value_in_memory );							//binæ–‡ä»¶æ˜¯å¤§ç«¯æ¨¡å¼ï¼Œå•ç‰‡æœºæ˜¯å°ç«¯æ¨¡å¼ï¼Œæ‰€ä»¥ç®—CRCå‰è¿›è¡Œå¤§å°ç«¯è½¬åŒ–ï¼ˆBOOTç¨‹åºé‡Œçš„æ²¡è¿™ä¸ªï¼Œå› ä¸ºä¸Šä½æœºè½¯ä»¶ä¸­å·²ç»è½¬äº†ï¼‰
-			CRCR=CRC_CalcCRC(value_in_memory);									//åˆ©ç”¨CRCè®¡ç®—å•å…ƒè®¡ç®—CRC
-			FlashAddr+=4;														//ä¸‹ä¸€åœ°å€
+			value_in_memory=*( vu32*) FlashAddr;								//È¡Öµ
+			value_in_memory = htonl( value_in_memory );							//binÎÄ¼şÊÇ´ó¶ËÄ£Ê½£¬µ¥Æ¬»úÊÇĞ¡¶ËÄ£Ê½£¬ËùÒÔËãCRCÇ°½øĞĞ´óĞ¡¶Ë×ª»¯£¨BOOT³ÌĞòÀïµÄÃ»Õâ¸ö£¬ÒòÎªÉÏÎ»»úÈí¼şÖĞÒÑ¾­×ªÁË£©
+			CRCR=CRC_CalcCRC(value_in_memory);									//ÀûÓÃCRC¼ÆËãµ¥Ôª¼ÆËãCRC
+			FlashAddr+=4;														//ÏÂÒ»µØÖ·
 		}
-		OSTimeDly(1);															//æ¯ä¸ªåŒºå—ç®—å®Œå–‚ç‹—
+		OSTimeDly(1);															//Ã¿¸öÇø¿éËãÍêÎ¹¹·
 	} 
 	__enable_irq();
 	if(CRCR==0)
 	{
-		BspUartWrite(2,SIZE_OF("Flash CRCé€šè¿‡ï¼\r\n"));OSTimeDly(1);
+		BspUartWrite(2,SIZE_OF("Flash CRCÍ¨¹ı£¡\r\n"));OSTimeDly(1);
 		return 1;										
 	}		
 	else 
 	{
-		BspUartWrite(2,SIZE_OF("Flash CRCå¤±è´¥ï¼\r\n"));OSTimeDly(1);
+		BspUartWrite(2,SIZE_OF("Flash CRCÊ§°Ü£¡\r\n"));OSTimeDly(1);
 		return 0;
 	}
 }
 
 /*******************************************************************************
-åç§°ï¼švoid SubbagUpdateToFlash(INT8U *Inbuff)
-åŠŸèƒ½ï¼šè§£ææ›´æ–°æ–‡ä»¶çš„æ•°æ®å¸§å’Œä¿å­˜å†™å…¥å¯¹åº”åœ°å€Flash
-å…¥å‚ï¼šINT8U *Inbuff	æ¥æ”¶åˆ°çš„æ•°æ®å¸§æŒ‡é’ˆ		INT16U leng		æ•°æ®å¸§é•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid SubbagUpdateToFlash(INT8U *Inbuff)
+¹¦ÄÜ£º½âÎö¸üĞÂÎÄ¼şµÄÊı¾İÖ¡ºÍ±£´æĞ´Èë¶ÔÓ¦µØÖ·Flash
+Èë²Î£ºINT8U *Inbuff	½ÓÊÕµ½µÄÊı¾İÖ¡Ö¸Õë		INT16U leng		Êı¾İÖ¡³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void SubbagUpdateToFlash(INT8U *Inbuff)
 {
@@ -483,29 +483,29 @@ void SubbagUpdateToFlash(INT8U *Inbuff)
 	INT16U				sub_num;
 	TCHAR				char_array[50]={0};
 	
-	data_32_p = (INT32U*)(Inbuff+16);											//æŒ‡å‘å‡çº§åŒ…æ•°æ®èµ·å§‹åœ°å€
-	data_len = ((INT16U)Inbuff[8]<<8) + Inbuff[9] -6;							//è®¡ç®—å‡çº§åŒ…æ•°æ®é•¿åº¦ï¼ˆä¿é™©èµ·è§ï¼Œè¿›è¡Œå¼ºåˆ¶è½¬æ¢ï¼‰ï¼Œä¸åŒ…å«å­åŒ…åŒ…å·çš„ä¸¤ä¸ªå­—èŠ‚,ä¹Ÿä¸åŒ…å«è£…ç½®å¯†ç 
-	sub_num=((INT16U)Inbuff[14]<<8) + Inbuff[15];								//å­åŒ…åŒ…å·é«˜ä½ä¹˜ä»¥256åŠ ä¸Šå­åŒ…åŒ…å·ä½ä½ï¼Œä»1å¼€å§‹è®¡æ•°ï¼›
-	MarkSubbagStatisticsArray(sub_num);											//æ ‡è®°subbag_statisticsæ•°ç»„ï¼Œæ¥æ”¶å®Œæˆçš„åŒ…å¯¹åº”ä½ç½®ç½®1	
+	data_32_p = (INT32U*)(Inbuff+16);											//Ö¸ÏòÉı¼¶°üÊı¾İÆğÊ¼µØÖ·
+	data_len = ((INT16U)Inbuff[8]<<8) + Inbuff[9] -6;							//¼ÆËãÉı¼¶°üÊı¾İ³¤¶È£¨±£ÏÕÆğ¼û£¬½øĞĞÇ¿ÖÆ×ª»»£©£¬²»°üº¬×Ó°ü°üºÅµÄÁ½¸ö×Ö½Ú,Ò²²»°üº¬×°ÖÃÃÜÂë
+	sub_num=((INT16U)Inbuff[14]<<8) + Inbuff[15];								//×Ó°ü°üºÅ¸ßÎ»³ËÒÔ256¼ÓÉÏ×Ó°ü°üºÅµÍÎ»£¬´Ó1¿ªÊ¼¼ÆÊı£»
+	MarkSubbagStatisticsArray(sub_num);											//±ê¼Çsubbag_statisticsÊı×é£¬½ÓÊÕÍê³ÉµÄ°ü¶ÔÓ¦Î»ÖÃÖÃ1	
 	
 	switch(file_update.Format)
 	{
-		case 0xFC:																//axfæ–‡ä»¶ï¼Œä¸ä»…åŒ…å«ä»£ç æ•°æ®ï¼Œè€Œä¸”è¿˜åŒ…å«ç€è°ƒè¯•ä¿¡æ¯çš„ç¼–è¯‘æ–‡ä»¶
+		case 0xFC:																//axfÎÄ¼ş£¬²»½ö°üº¬´úÂëÊı¾İ£¬¶øÇÒ»¹°üº¬×Åµ÷ÊÔĞÅÏ¢µÄ±àÒëÎÄ¼ş
 				break;
 		
-		case 0xFD:																//Binæ–‡ä»¶ï¼ŒåªåŒ…å«æœ€ç›´æ¥çš„ä»£ç æ˜ åƒï¼Œä¸åŒ…å«åœ°å€ä¿¡æ¯çš„ç¼–è¯‘æ–‡ä»¶		
-				if(data_len==1024)												//ä¸€åŒ…æœ‰æ•ˆæ•°258ä¸ªå­—ï¼Œ1024å­—èŠ‚				
+		case 0xFD:																//BinÎÄ¼ş£¬Ö»°üº¬×îÖ±½ÓµÄ´úÂëÓ³Ïñ£¬²»°üº¬µØÖ·ĞÅÏ¢µÄ±àÒëÎÄ¼ş		
+				if(data_len==1024)												//Ò»°üÓĞĞ§Êı258¸ö×Ö£¬1024×Ö½Ú				
 				{
-					Feed_Dog();													//ä¸‹å‘é€Ÿåº¦å¿«æ—¶ï¼Œå–‚ç‹—ä»»åŠ¡ç”±äºä¼˜å…ˆçº§ä½ä¸å®¹æ˜“è¿›ï¼Œä¼šå¯¼è‡´å¤ä½
-					Wrtie_NFlashNoErase(bin_file_adress+((sub_num-1)<<10), data_32_p, 256);		//å°†æ¥æ”¶åˆ°çš„æ•°æ®å†™å…¥STM32å†…éƒ¨FLASH
+					Feed_Dog();													//ÏÂ·¢ËÙ¶È¿ìÊ±£¬Î¹¹·ÈÎÎñÓÉÓÚÓÅÏÈ¼¶µÍ²»ÈİÒ×½ø£¬»áµ¼ÖÂ¸´Î»
+					Wrtie_NFlashNoErase(bin_file_adress+((sub_num-1)<<10), data_32_p, 256);		//½«½ÓÊÕµ½µÄÊı¾İĞ´ÈëSTM32ÄÚ²¿FLASH
 					Feed_Dog();
-					sprintf(char_array, "---------ç¬¬ %d åŒ…å·²å†™å…¥---------\r\n", sub_num);
+					sprintf(char_array, "---------µÚ %d °üÒÑĞ´Èë---------\r\n", sub_num);
 					BspUartWrite(2,(INT8U*)char_array,strlen(char_array));
-//					OSTimeDly(7);												//ä¸åŠ å»¶æ—¶ï¼Œå› ä¸ºä¼šç›´æ¥å›åˆ°ç­‰å¾…æ¥æ”¶ã€‚åŠ äº†å®¹æ˜“ä¸¢åŒ…ã€‚æŒ‰38400æ³¢ç‰¹ç‡è®¡ç®—ï¼Œéœ€è¦6.25ä¸ªæ—¶é—´ç‰‡æ‰“å°å®Œæˆ
+//					OSTimeDly(7);												//²»¼ÓÑÓÊ±£¬ÒòÎª»áÖ±½Ó»Øµ½µÈ´ı½ÓÊÕ¡£¼ÓÁËÈİÒ×¶ª°ü¡£°´38400²¨ÌØÂÊ¼ÆËã£¬ĞèÒª6.25¸öÊ±¼äÆ¬´òÓ¡Íê³É
 				}
 				break;
 		
-		case 0xFE:																//Hexæ–‡ä»¶ï¼ŒåŒ…å«åœ°å€ä¿¡æ¯çš„ç¼–è¯‘æ–‡ä»¶
+		case 0xFE:																//HexÎÄ¼ş£¬°üº¬µØÖ·ĞÅÏ¢µÄ±àÒëÎÄ¼ş
 				break;		 
 
 		default:
@@ -514,93 +514,93 @@ void SubbagUpdateToFlash(INT8U *Inbuff)
 }
 
 /*******************************************************************************
-åç§°ï¼švoid MarkSubbagStatisticsArray( INT16U num )
-åŠŸèƒ½ï¼šæ ‡è®°subbag_statisticsæ•°ç»„ï¼Œæ¥æ”¶å®Œæˆçš„åŒ…å¯¹åº”ä½ç½®ç½®1
-å…¥å‚ï¼šæ¥æ”¶å®Œæˆçš„å­åŒ…å·		
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid MarkSubbagStatisticsArray( INT16U num )
+¹¦ÄÜ£º±ê¼Çsubbag_statisticsÊı×é£¬½ÓÊÕÍê³ÉµÄ°ü¶ÔÓ¦Î»ÖÃÖÃ1
+Èë²Î£º½ÓÊÕÍê³ÉµÄ×Ó°üºÅ		
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void MarkSubbagStatisticsArray( INT16U num )
 {
 	INT16U				num_byte = 0;
 	INT8U				num_bit = 0;
 	
-	num -= 1;																	//æŒ‰åè®®è§„å®šï¼ŒåŒ…å·ä»1å¼€å§‹è®¡æ•°ï¼Œè¿˜åŸåˆ°0
-	num_byte = num>>3;															//æ ‡è®°åœ¨ç¬¬å‡ ä¸ªå­—èŠ‚
-	num_bit = num%8;															//æ ‡è®°åœ¨ç¬¬å‡ ä½
+	num -= 1;																	//°´Ğ­Òé¹æ¶¨£¬°üºÅ´Ó1¿ªÊ¼¼ÆÊı£¬»¹Ô­µ½0
+	num_byte = num>>3;															//±ê¼ÇÔÚµÚ¼¸¸ö×Ö½Ú
+	num_bit = num%8;															//±ê¼ÇÔÚµÚ¼¸Î»
 	
 	subbag_statistics[num_byte] |= (0x80>>num_bit);
 }
 
 /*******************************************************************************
-åç§°ï¼švoid UpgradePreparation(INT8U *inbuff)
-åŠŸèƒ½ï¼šæ ‡è®°ä¸ºå¼€å§‹å‡çº§ï¼Œå¹¶å‡†å¤‡æ›´æ–°ã€‚
-å…¥å‚ï¼šINT8U *inbuff	æ•°æ®å¸§æŒ‡é’ˆ
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid UpgradePreparation(INT8U *inbuff)
+¹¦ÄÜ£º±ê¼ÇÎª¿ªÊ¼Éı¼¶£¬²¢×¼±¸¸üĞÂ¡£
+Èë²Î£ºINT8U *inbuff	Êı¾İÖ¡Ö¸Õë
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void UpgradePreparation(INT8U *inbuff)
 {
-	BspUartWrite(2,SIZE_OF("\r\n---------->è¿œç¨‹å‡çº§<----------\r\n"));OSTimeDly(1);
-	update_start = true;														//æ ‡è®°ä¸ºå¼€å§‹å‡çº§
-	Wrtie_ErasePage(bin_file_adress, FLASH_UPDATE_PAGES);						//æ“¦é™¤ bin_file_adress å¼€å§‹çš„40*2K=80Kç©ºé—´ï¼ˆæ“¦é™¤å°±æ˜¯å…¨å†™ffï¼‰
-	memset(subbag_statistics,0,STA_NUM);										//æ¸…ç©ºå­åŒ…è®°å½•æ•°ç»„
+	BspUartWrite(2,SIZE_OF("\r\n---------->Ô¶³ÌÉı¼¶<----------\r\n"));OSTimeDly(1);
+	update_start = true;														//±ê¼ÇÎª¿ªÊ¼Éı¼¶
+	Wrtie_ErasePage(bin_file_adress, FLASH_UPDATE_PAGES);						//²Á³ı bin_file_adress ¿ªÊ¼µÄ40*2K=80K¿Õ¼ä£¨²Á³ı¾ÍÊÇÈ«Ğ´ff£©
+	memset(subbag_statistics,0,STA_NUM);										//Çå¿Õ×Ó°ü¼ÇÂ¼Êı×é
 }
 
 /*******************************************************************************
-åç§°ï¼švoid RestartToUpgrade(void)
-åŠŸèƒ½ï¼šè£…ç½®åˆ‡æ¢åˆ°ç¨³å®šç‰ˆæœ¬ç¨‹åºè¿›è¡Œæ¥æ”¶å¹¶å‡çº§ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid RestartToUpgrade(void)
+¹¦ÄÜ£º×°ÖÃÇĞ»»µ½ÎÈ¶¨°æ±¾³ÌĞò½øĞĞ½ÓÊÕ²¢Éı¼¶¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void RestartToUpgrade(void)
 {
 	PWR->CR|=1<<8;																
 	BKP->DR2=0xff;
-	PWR->CR &= ~(1<<8);															//å¯ç”¨åå¤‡åŒºåŸŸçš„å†™ä¿æŠ¤
-	BspUartWrite(2,SIZE_OF("\r\n--------å½“å‰è¿è¡Œç³»ç»Ÿ 1 ï¼Œåˆ‡æ¢ç³»ç»Ÿå‡çº§-------\r\n\r\n"));
+	PWR->CR &= ~(1<<8);															//ÆôÓÃºó±¸ÇøÓòµÄĞ´±£»¤
+	BspUartWrite(2,SIZE_OF("\r\n--------µ±Ç°ÔËĞĞÏµÍ³ 1 £¬ÇĞ»»ÏµÍ³Éı¼¶-------\r\n\r\n"));
 	OSTimeDly(2);		
 	McuSoftReset();
 }
 
 /*******************************************************************************
-åç§°ï¼švoid CheckSys2OperatingNormally(struct BSPRTC_TIME *pTime)
-åŠŸèƒ½ï¼šæˆåŠŸè¿è¡Œ24håï¼Œè®¤ä¸ºç¨‹åºæ­£å¸¸ï¼ŒSYS1è¿è¡Œæ¬¡æ•°æ¸…é›¶ã€‚ä»¥ä¼ å…¥çš„åŒ—äº¬æ—¶é—´è®¡ç®—åˆ¤æ–­ã€‚
-å…¥å‚ï¼šINT8U* Timeï¼ŒåŒ—äº¬æ—¶é—´ï¼Œä¸œ8åŒº
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid CheckSys2OperatingNormally(struct BSPRTC_TIME *pTime)
+¹¦ÄÜ£º³É¹¦ÔËĞĞ24hºó£¬ÈÏÎª³ÌĞòÕı³££¬SYS1ÔËĞĞ´ÎÊıÇåÁã¡£ÒÔ´«ÈëµÄ±±¾©Ê±¼ä¼ÆËãÅĞ¶Ï¡£
+Èë²Î£ºINT8U* Time£¬±±¾©Ê±¼ä£¬¶«8Çø
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void CheckSys2OperatingNormally(struct BSPRTC_TIME *pTime)
 {
 	time_t sceond = 0;															//typedef unsigned int time_t;     /* date/time in unix secs past 1-Jan-70 */
 	struct tm TTM = {0};   
 	
-	if(BKP->DR3==0x02) 															//è‹¥å½“å‰è¿è¡Œç³»ç»Ÿä¸€
+	if(BKP->DR3==0x02) 															//Èôµ±Ç°ÔËĞĞÏµÍ³Ò»
 	{
-		TTM.tm_year = BcdToHex(pTime->Year)+100;  								/* å¹´ä»½ï¼Œå…¶å€¼ç­‰äºå®é™…å¹´ä»½å‡å»1900 */
-		TTM.tm_mon  = BcdToHex(pTime->Month)-1;   								/* æœˆä»½ï¼ˆä»ä¸€æœˆå¼€å§‹ï¼Œ0ä»£è¡¨ä¸€æœˆï¼‰ - å–å€¼åŒºé—´ä¸º[0,11] */
-		TTM.tm_mday = BcdToHex(pTime->Day);       								/* ä¸€ä¸ªæœˆä¸­çš„æ—¥æœŸ - å–å€¼åŒºé—´ä¸º[1,31] */
-		TTM.tm_hour = BcdToHex(pTime->Hour);      								/* æ—¶ - å–å€¼åŒºé—´ä¸º[0,23] */
-		TTM.tm_min  = BcdToHex(pTime->Minute);    								/* åˆ† - å–å€¼åŒºé—´ä¸º[0,59] */
-		TTM.tm_sec  = BcdToHex(pTime->Second);    								/* ç§’ â€“ å–å€¼åŒºé—´ä¸º[0,59] */
-		sceond = mktime(&TTM)-8*3600;                  							//æ—¶é—´è½¬æ¢æˆä¸–çºªç§’	-8*3600ï¼šåŒ—äº¬æ—¶é—´è½¬æ¢ä¸º0åŒº
+		TTM.tm_year = BcdToHex(pTime->Year)+100;  								/* Äê·İ£¬ÆäÖµµÈÓÚÊµ¼ÊÄê·İ¼õÈ¥1900 */
+		TTM.tm_mon  = BcdToHex(pTime->Month)-1;   								/* ÔÂ·İ£¨´ÓÒ»ÔÂ¿ªÊ¼£¬0´ú±íÒ»ÔÂ£© - È¡ÖµÇø¼äÎª[0,11] */
+		TTM.tm_mday = BcdToHex(pTime->Day);       								/* Ò»¸öÔÂÖĞµÄÈÕÆÚ - È¡ÖµÇø¼äÎª[1,31] */
+		TTM.tm_hour = BcdToHex(pTime->Hour);      								/* Ê± - È¡ÖµÇø¼äÎª[0,23] */
+		TTM.tm_min  = BcdToHex(pTime->Minute);    								/* ·Ö - È¡ÖµÇø¼äÎª[0,59] */
+		TTM.tm_sec  = BcdToHex(pTime->Second);    								/* Ãë ¨C È¡ÖµÇø¼äÎª[0,59] */
+		sceond = mktime(&TTM)-8*3600;                  							//Ê±¼ä×ª»»³ÉÊÀ¼ÍÃë	-8*3600£º±±¾©Ê±¼ä×ª»»Îª0Çø
 		
-		if(sceond-sys2_upgrade_time>86400)										//è¿è¡Œè¶…è¿‡24å°æ—¶æ‰æ¸…BKP->DR2
+		if(sceond-sys2_upgrade_time>86400)										//ÔËĞĞ³¬¹ı24Ğ¡Ê±²ÅÇåBKP->DR2
 		{
-			PWR->CR|=1<<8;														//DBPä½ï¼šå–æ¶ˆåå¤‡åŒºåŸŸçš„å†™ä¿æŠ¤ã€‚1ï¼šå…è®¸å†™å…¥RTCå’Œåå¤‡å¯„å­˜å™¨
-			BKP->DR2=0x00;														//æ¸…SYS1å¤±è´¥è®¡æ•°ï¼Œä¸‹æ¬¡é‡å¯åç»§ç»­è¿›å…¥SYS1
-			PWR->CR &= ~(1<<8);													//å¯ç”¨åå¤‡åŒºåŸŸçš„å†™ä¿æŠ¤
+			PWR->CR|=1<<8;														//DBPÎ»£ºÈ¡Ïûºó±¸ÇøÓòµÄĞ´±£»¤¡£1£ºÔÊĞíĞ´ÈëRTCºÍºó±¸¼Ä´æÆ÷
+			BKP->DR2=0x00;														//ÇåSYS1Ê§°Ü¼ÆÊı£¬ÏÂ´ÎÖØÆôºó¼ÌĞø½øÈëSYS1
+			PWR->CR &= ~(1<<8);													//ÆôÓÃºó±¸ÇøÓòµÄĞ´±£»¤
 		}
 	}
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U GetUpgradeTime(void)
-åŠŸèƒ½ï¼šä»é“ç”µè¯»å–ç³»ç»Ÿ2å‡çº§æ—¶é—´ï¼Œå­˜å…¥sys2_upgrade_timeæ•°ç»„ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºINT8U GetUpgradeTime(void)
+¹¦ÄÜ£º´ÓÌúµç¶ÁÈ¡ÏµÍ³2Éı¼¶Ê±¼ä£¬´æÈësys2_upgrade_timeÊı×é¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 INT8U GetUpgradeTime(void)
 {
@@ -609,11 +609,11 @@ INT8U GetUpgradeTime(void)
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U IsUploadCompletely(void)
-åŠŸèƒ½ï¼šåˆ¤æ–­æ˜¯å¦æœ‰æœªä¸Šä¼ çš„å†å²æ•°æ®ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼š1ï¼šæœ‰		0ï¼šæ— 
+Ãû³Æ£ºINT8U IsUploadCompletely(void)
+¹¦ÄÜ£ºÅĞ¶ÏÊÇ·ñÓĞÎ´ÉÏ´«µÄÀúÊ·Êı¾İ¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£º1£ºÓĞ		0£ºÎŞ
 *******************************************************************************/
 INT8U IsUploadCompletely(void)
 {
@@ -623,8 +623,8 @@ INT8U IsUploadCompletely(void)
 	{
 		for(j=0;j<3;j++)
 		{
-			if(Unreport_Index[i][j]^0xff) return 1;								//æœ‰æœªä¸Šä¼ çš„å†å²è®°å½•
+			if(Unreport_Index[i][j]^0xff) return 1;								//ÓĞÎ´ÉÏ´«µÄÀúÊ·¼ÇÂ¼
 		}	
 	}
-	return 0;																	//æ— ä¸Šä¼ çš„å†å²è®°å½•
+	return 0;																	//ÎŞÉÏ´«µÄÀúÊ·¼ÇÂ¼
 }

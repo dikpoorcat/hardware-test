@@ -1,140 +1,140 @@
-/***************************** (C) COPYRIGHT 2019 æ–¹è¯šç”µåŠ› *****************************
+/***************************** (C) COPYRIGHT 2019 ·½³ÏµçÁ¦ *****************************
 * File Name          : RF.c
-* Author             : æœé¢–æˆã€é™ˆå¨ã€ç­‰
-* Version            : è§å†å²ç‰ˆæœ¬ä¿¡æ¯
+* Author             : ¶ÅÓ±³É¡¢³ÂÍş¡¢µÈ
+* Version            : ¼ûÀúÊ·°æ±¾ĞÅÏ¢
 * Date               : 2019/03/7
-* Description        : RFé€šä¿¡åŠæ•°æ®å¤„ç†åŠŸèƒ½å®ç°ï¼Œéœ€è¦è°ƒç”¨å­˜å‚¨ã€ä¸²å£ç­‰é©±åŠ¨æ–‡ä»¶ã€‚
-************************************  å†å²ç‰ˆæœ¬ä¿¡æ¯  ************************************
+* Description        : RFÍ¨ĞÅ¼°Êı¾İ´¦Àí¹¦ÄÜÊµÏÖ£¬ĞèÒªµ÷ÓÃ´æ´¢¡¢´®¿ÚµÈÇı¶¯ÎÄ¼ş¡£
+************************************  ÀúÊ·°æ±¾ĞÅÏ¢  ************************************
 * 2019/03/28     : V4.1.0
-* Description   : å—ç½‘æµ‹æ¸©é¡¹ç›®åˆç‰ˆã€‚åŸºç¡€åŠŸèƒ½å®Œæˆï¼Œè°ƒè¯•ä¸­ã€‚
+* Description   : ÄÏÍø²âÎÂÏîÄ¿³õ°æ¡£»ù´¡¹¦ÄÜÍê³É£¬µ÷ÊÔÖĞ¡£
 *******************************************************************************/
 #include "RF.h"
 
-/*å…¨å±€å˜é‡å®šä¹‰*/
-INT8U 					TT_Sample[55][2]={0};									//55ä¸ªæ¢å¤´æ¯æ¬¡é‡‡æ ·çš„æ•°æ®,å†…å­˜ä½ç½®
-INT8U					TT_RF_Fault_Count[55]={0};								//55ä¸ªæ¢å¤´å°„é¢‘æ¥æ”¶é”™è¯¯åˆ†åˆ«è®¡æ•°
+/*È«¾Ö±äÁ¿¶¨Òå*/
+INT8U 					TT_Sample[55][2]={0};									//55¸öÌ½Í·Ã¿´Î²ÉÑùµÄÊı¾İ,ÄÚ´æÎ»ÖÃ
+INT8U					TT_RF_Fault_Count[55]={0};								//55¸öÌ½Í·ÉäÆµ½ÓÊÕ´íÎó·Ö±ğ¼ÆÊı
 INT8U					FATFS_Lock=0;
-INT8U					RF_Uart_RxBuff[RF_BuffLen] = {0};						//RFä¸²å£æ¥æ”¶ç¼“å­˜
-INT8U					RF_Uart_TxBuff[RF_BuffLen] = {0};						//RFä¸²å£å‘é€ç¼“å­˜
-struct TT_STR			TT_Info={0};											//å­˜æ”¾å·²å½•å…¥çš„æ¢å¤´ä¿¡æ¯
-struct SAMP_MANAGE		TT_Sample_Manage={0}; 									//æ¯ä¸ªå°æ—¶çš„æ¸©åº¦é‡‡é›†ç®¡ç†ç»“æ„ä½“
-struct LteWakeupEnable 	wakeup_en={true,true,true,true};						//å½“é€šä¿¡æ•…éšœã€æ— ç½‘ç»œã€ç”µæºæ¬ å‹ç­‰æƒ…å†µä¸‹ç¦æ­¢ä»ä¼‘çœ æ¨¡å¼å”¤é†’ã€‚trueä½¿èƒ½ï¼Œfalseç¦æ­¢
+INT8U					RF_Uart_RxBuff[RF_BuffLen] = {0};						//RF´®¿Ú½ÓÊÕ»º´æ
+INT8U					RF_Uart_TxBuff[RF_BuffLen] = {0};						//RF´®¿Ú·¢ËÍ»º´æ
+struct TT_STR			TT_Info={0};											//´æ·ÅÒÑÂ¼ÈëµÄÌ½Í·ĞÅÏ¢
+struct SAMP_MANAGE		TT_Sample_Manage={0}; 									//Ã¿¸öĞ¡Ê±µÄÎÂ¶È²É¼¯¹ÜÀí½á¹¹Ìå
+struct LteWakeupEnable 	wakeup_en={true,true,true,true};						//µ±Í¨ĞÅ¹ÊÕÏ¡¢ÎŞÍøÂç¡¢µçÔ´Ç·Ñ¹µÈÇé¿öÏÂ½ûÖ¹´ÓĞİÃßÄ£Ê½»½ĞÑ¡£trueÊ¹ÄÜ£¬false½ûÖ¹
 
 
 
-/*é—ç•™æœªæ•´ç†*/
-INT16U HT_Data[2] = {0};        												// ä¿å­˜æ¸©æ¹¿åº¦æ•°æ®ï¼Œæ¹¿åº¦ï¼Œæ¸©åº¦=================æœ‰ç”¨å—ï¼Ÿï¼Ÿï¼Ÿæ²¡ç”¨æ¸…ç†æ‰
+/*ÒÅÁôÎ´ÕûÀí*/
+INT16U HT_Data[2] = {0};        												// ±£´æÎÂÊª¶ÈÊı¾İ£¬Êª¶È£¬ÎÂ¶È=================ÓĞÓÃÂğ£¿£¿£¿Ã»ÓÃÇåÀíµô
 OS_EVENT  * RFSGIN = (OS_EVENT *)0;
 
-/*å†…éƒ¨å‡½æ•°ç”³æ˜*/
+/*ÄÚ²¿º¯ÊıÉêÃ÷*/
 INT8U RF_Data_Judge(struct Str_Msg * pMsg);
 INT8U RF_Received_Data_DealWith(struct Str_Msg * pMsg);
 
 /*******************************************************************************
 * Function Name : void Task_LORA_Main(void *arg)                                                    
-* Description   : RFä»»åŠ¡å‡½æ•°ï¼ŒRFé€šä¿¡åŠæ•°æ®å¤„ç†åŠŸèƒ½å®ç°ã€‚
+* Description   : RFÈÎÎñº¯Êı£¬RFÍ¨ĞÅ¼°Êı¾İ´¦Àí¹¦ÄÜÊµÏÖ¡£
 *******************************************************************************/
 void Task_RF_Main(void *arg)
 {
 	static INT8U	msg_fault = 0;
 	static INT8U	msg_cmd=0;
-	memset(TT_Sample,0xFF,sizeof(TT_Sample));									//å°†æ¸©åº¦æ•°æ®åˆå§‹åŒ–ä¸º0xFFFFï¼ˆå—ç½‘åè®®è§„å®šï¼‰
+	memset(TT_Sample,0xFF,sizeof(TT_Sample));									//½«ÎÂ¶ÈÊı¾İ³õÊ¼»¯Îª0xFFFF£¨ÄÏÍøĞ­Òé¹æ¶¨£©
 	
-	TaskActive &= RF_INACT;														//ä¸å†è½®å·¡è¯¥ä»»åŠ¡çš„ä»»åŠ¡çœ‹é—¨ç‹—
-	OSTaskSuspend(OS_PRIO_SELF);												//æŒ‚èµ·è‡ªèº«ä»»åŠ¡
-	TaskActive |= RF_ACT;       												//ä»»åŠ¡æ¢å¤ï¼Œç»§ç»­è½®å·¡è¯¥ä»»åŠ¡çœ‹é—¨ç‹—
+	TaskActive &= RF_INACT;														//²»ÔÙÂÖÑ²¸ÃÈÎÎñµÄÈÎÎñ¿´ÃÅ¹·
+	OSTaskSuspend(OS_PRIO_SELF);												//¹ÒÆğ×ÔÉíÈÎÎñ
+	TaskActive |= RF_ACT;       												//ÈÎÎñ»Ö¸´£¬¼ÌĞøÂÖÑ²¸ÃÈÎÎñ¿´ÃÅ¹·
 	
-	B485_init(38400);															//485åˆå§‹åŒ–æ³¢ç‰¹ç‡38400ï¼ˆæ ¹æ®B485DISå®å®šä¹‰è‡ªåŠ¨åˆ¤æ–­ï¼Œä½†LOCALä»»åŠ¡å­˜åœ¨æ—¶ä¼šå¼ºåˆ¶æ‰“å¼€ï¼‰
-	RF_Power_Init();       														//RFæ¨¡å—ç”µæºåˆå§‹åŒ–
-	PWRFEN();				 													//æ‰“å¼€ç”µæºï¼ˆå¸¸å¼€ï¼‰
+	B485_init(38400);															//485³õÊ¼»¯²¨ÌØÂÊ38400£¨¸ù¾İB485DISºê¶¨Òå×Ô¶¯ÅĞ¶Ï£¬µ«LOCALÈÎÎñ´æÔÚÊ±»áÇ¿ÖÆ´ò¿ª£©
+	RF_Power_Init();       														//RFÄ£¿éµçÔ´³õÊ¼»¯
+	PWRFEN();				 													//´ò¿ªµçÔ´£¨³£¿ª£©
 						
 	while(1)
 	{
-	/*ä»»åŠ¡çœ‹é—¨ç‹—ç»´æŠ¤å¹¶å»¶æ—¶*/
+	/*ÈÎÎñ¿´ÃÅ¹·Î¬»¤²¢ÑÓÊ±*/
 		WDTClear(RF_Task_Prio);
 		OSTimeDly(20);
 	
-		/*RFæ¥æ”¶æ•°æ®*/
-		if(Time_Proofread==DONE)												//è‹¥å·²å®Œæˆæ ¡æ—¶
+		/*RF½ÓÊÕÊı¾İ*/
+		if(Time_Proofread==DONE)												//ÈôÒÑÍê³ÉĞ£Ê±
 		{	
-			BSP_InitFm(RF_Num);													//è°ƒç”¨ä½åŠŸè€—å‡½æ•°åéœ€è¦é‡æ–°åˆå§‹åŒ–
-			RF_Data_Sample(30*20);												//ç­‰å¾…é‡‡é›†å‘½ä»¤é‚®ç®±30ç§’ï¼Œå¹¶å­˜å‚¨é‡‡é›†çš„æ•°æ®
-			RF_Receive_Data(1200,50);											//ä»RFæ¨¡å—è·å–æ•°æ®ï¼Œ1200æ³¢ç‰¹ç‡ï¼Œ50æ—¶é—´ç‰‡è¶…æ—¶ï¼ˆå°„é¢‘æ¨¡å—ä¸²å£æœ€å¤šç»™256å­—èŠ‚ï¼Œ1200æ³¢ç‰¹ç‡æ—¶çº¦2.13ç§’ï¼‰
-			FM_LowPower(RF_Num);												//é“ç”µå¼•è„šä½åŠŸè€—é…ç½®		
+			BSP_InitFm(RF_Num);													//µ÷ÓÃµÍ¹¦ºÄº¯ÊıºóĞèÒªÖØĞÂ³õÊ¼»¯
+			RF_Data_Sample(30*20);												//µÈ´ı²É¼¯ÃüÁîÓÊÏä30Ãë£¬²¢´æ´¢²É¼¯µÄÊı¾İ
+			RF_Receive_Data(1200,50);											//´ÓRFÄ£¿é»ñÈ¡Êı¾İ£¬1200²¨ÌØÂÊ£¬50Ê±¼äÆ¬³¬Ê±£¨ÉäÆµÄ£¿é´®¿Ú×î¶à¸ø256×Ö½Ú£¬1200²¨ÌØÂÊÊ±Ô¼2.13Ãë£©
+			FM_LowPower(RF_Num);												//ÌúµçÒı½ÅµÍ¹¦ºÄÅäÖÃ		
 			
-			/*æ•…éšœè½®è¯¢ï¼Œå½“æ•…éšœå‘ç”Ÿå¯åŠæ—¶ä¸ŠæŠ¥*/
-			if((wakeup_en.overtime & wakeup_en.reply & wakeup_en.network & wakeup_en.battle & wakeup_en.rf_tem)&&(Fault_Manage.Need_Report==0x55))	//è‹¥å…è®¸ä»ä¼‘çœ æ¨¡å¼å”¤é†’ï¼Œä¸”å­˜åœ¨æ•…éšœã€‚æ•…éšœä¿¡æ¯ä¸ŠæŠ¥æ”¾åœ¨æ­¤å¤„å¯é”™å¼€æ¢å¤´æ•…éšœåˆ¤æ–­çš„è¿‡ç¨‹ï¼ˆå¯èƒ½å­˜åœ¨å¤šä¸ªæ¢å¤´åŒæ—¶æ•…éšœï¼Œå°±åŒä¸€å¤„ç†å®Œå†ä¸ŠæŠ¥ï¼‰	ï¼ˆä¸æ”¾åœ¨çœ‹é—¨ç‹—ä»»åŠ¡çš„åŸå› ï¼Œæ˜¯å› ä¸ºæœ‰å¯èƒ½é”™ä¸å¼€ï¼‰
+			/*¹ÊÕÏÂÖÑ¯£¬µ±¹ÊÕÏ·¢Éú¿É¼°Ê±ÉÏ±¨*/
+			if((wakeup_en.overtime & wakeup_en.reply & wakeup_en.network & wakeup_en.battle & wakeup_en.rf_tem)&&(Fault_Manage.Need_Report==0x55))	//ÈôÔÊĞí´ÓĞİÃßÄ£Ê½»½ĞÑ£¬ÇÒ´æÔÚ¹ÊÕÏ¡£¹ÊÕÏĞÅÏ¢ÉÏ±¨·ÅÔÚ´Ë´¦¿É´í¿ªÌ½Í·¹ÊÕÏÅĞ¶ÏµÄ¹ı³Ì£¨¿ÉÄÜ´æÔÚ¶à¸öÌ½Í·Í¬Ê±¹ÊÕÏ£¬¾ÍÍ¬Ò»´¦ÀíÍêÔÙÉÏ±¨£©	£¨²»·ÅÔÚ¿´ÃÅ¹·ÈÎÎñµÄÔ­Òò£¬ÊÇÒòÎªÓĞ¿ÉÄÜ´í²»¿ª£©
 			{
-				msg_cmd = WAKE_CMD;												//é€šçŸ¥LTEä»»åŠ¡åˆ‡æ¢åˆ°å”¤é†’çŠ¶æ€		
-				OSMboxPost(Dev_CMDB0X, &msg_cmd);								//å‘å‡ºå‘½ä»¤		å³ä½¿åœ¨çº¿çŠ¶æ€æ”¶åˆ°ä¹Ÿä¸ä¼šæ”¹å˜ä»»ä½•ä¸œè¥¿ï¼Œè‹¥åœ¨ç¡çœ çŠ¶æ€åˆ™å”¤é†’è¿›è¡Œæ•…éšœä¸ŠæŠ¥
-				msg_fault = FAULT_CMD;											//ç”¨äºå‘å‡ºï¼Œé€šçŸ¥LTEä»»åŠ¡åˆ‡æ¢åˆ°æ•…éšœä¿¡æ¯ä¸ŠæŠ¥çŠ¶æ€
-				OSMboxPost(Fault_CMDB0X, &msg_fault);							//é€šè¿‡é‚®ç®±å°†æ•…éšœä¿¡æ¯å‘å‡º
+				msg_cmd = WAKE_CMD;												//Í¨ÖªLTEÈÎÎñÇĞ»»µ½»½ĞÑ×´Ì¬		
+				OSMboxPost(Dev_CMDB0X, &msg_cmd);								//·¢³öÃüÁî		¼´Ê¹ÔÚÏß×´Ì¬ÊÕµ½Ò²²»»á¸Ä±äÈÎºÎ¶«Î÷£¬ÈôÔÚË¯Ãß×´Ì¬Ôò»½ĞÑ½øĞĞ¹ÊÕÏÉÏ±¨
+				msg_fault = FAULT_CMD;											//ÓÃÓÚ·¢³ö£¬Í¨ÖªLTEÈÎÎñÇĞ»»µ½¹ÊÕÏĞÅÏ¢ÉÏ±¨×´Ì¬
+				OSMboxPost(Fault_CMDB0X, &msg_fault);							//Í¨¹ıÓÊÏä½«¹ÊÕÏĞÅÏ¢·¢³ö
 			}
 		}
 	}
 }
 
 /*******************************************************************************
-åç§°ï¼švoid RF_Data_Sample(u16 timeout)
-åŠŸèƒ½: æ¥æ”¶é‡‡æ ·å‘½ä»¤ï¼Œå°†é‡‡æ ·æ•°æ®å­˜å‚¨åˆ°é“ç”µ ã€‚
-å…¥å‚ï¼šu16 timeoutï¼Œé‚®ç®±è¶…æ—¶ç­‰å¾…æ—¶é•¿ã€‚
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid RF_Data_Sample(u16 timeout)
+¹¦ÄÜ: ½ÓÊÕ²ÉÑùÃüÁî£¬½«²ÉÑùÊı¾İ´æ´¢µ½Ìúµç ¡£
+Èë²Î£ºu16 timeout£¬ÓÊÏä³¬Ê±µÈ´ıÊ±³¤¡£
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void RF_Data_Sample(u16 timeout)
 {
 	INT8U	msg_data;
 	INT8U  	Err=0;
-	INT32U  time=0;																					//é‡‡æ ·æ—¶é—´	
+	INT32U  time=0;																					//²ÉÑùÊ±¼ä	
 	INT8U 	i=0;
 	TCHAR   BUFF[50]={0};
-	INT16U  TT_Data_Addr=0;																			//æ¢å¤´é‡‡æ ·æ•°æ®å†é“ç”µä¸­çš„å­˜æ”¾åœ°å€
+	INT16U  TT_Data_Addr=0;																			//Ì½Í·²ÉÑùÊı¾İÔÙÌúµçÖĞµÄ´æ·ÅµØÖ·
 	
-/*åˆ¤æ–­æ•´ç‚¹ï¼Œæ‰§è¡Œå†å²æ•°æ®æ•´ç†å·¥ä½œ*/
+/*ÅĞ¶ÏÕûµã£¬Ö´ĞĞÀúÊ·Êı¾İÕûÀí¹¤×÷*/
 	time = RtcGetTimeSecond();
-	if((time/3600)!=(TT_Sample_Manage.Time[0]/3600) && TT_Sample_Manage.Time[0])					//å·²ç»æ˜¯ä¸‹ä¸ªå°æ—¶äº†ï¼   (å½“æœ‰é‡‡é›†çš„æ—¶å€™)
+	if((time/3600)!=(TT_Sample_Manage.Time[0]/3600) && TT_Sample_Manage.Time[0])					//ÒÑ¾­ÊÇÏÂ¸öĞ¡Ê±ÁË£¡   (µ±ÓĞ²É¼¯µÄÊ±ºò)
 	{	
-		History_Data_Store();																		//å°†ä¸Šä¸ªå°æ—¶æ•°æ®å­˜å‚¨ï¼ˆåè®®ä¸­ä¸ŠæŠ¥ä¸»ç«™çš„æ•°æ®éƒ½ä»è¿™é‡Œæ¥ï¼‰
-		memset((INT8U*)&TT_Sample_Manage,0,Sample_Manage_Len);										//å¹¶æ¸…ç©ºé‡‡é›†ç®¡ç†ç»“æ„ä½“
-		TT_Sample_Manage.TT_Count=TT_Info.TT_Count;													//å¡«å……æ¢å¤´ä¸ªæ•°
-		memcpy(TT_Sample_Manage.Newline,SIZE_OF("\r\n"));											//æ·»åŠ æ–°è¡Œ
-		BSP_WriteDataToFm(Sample_Manage_Addr,(INT8U *)&TT_Sample_Manage.Len,Sample_Manage_Len);		//å†™ç®¡ç†ç»“æ„ä½“åˆ°é“ç”µ
+		History_Data_Store();																		//½«ÉÏ¸öĞ¡Ê±Êı¾İ´æ´¢£¨Ğ­ÒéÖĞÉÏ±¨Ö÷Õ¾µÄÊı¾İ¶¼´ÓÕâÀïÀ´£©
+		memset((INT8U*)&TT_Sample_Manage,0,Sample_Manage_Len);										//²¢Çå¿Õ²É¼¯¹ÜÀí½á¹¹Ìå
+		TT_Sample_Manage.TT_Count=TT_Info.TT_Count;													//Ìî³äÌ½Í·¸öÊı
+		memcpy(TT_Sample_Manage.Newline,SIZE_OF("\r\n"));											//Ìí¼ÓĞÂĞĞ
+		BSP_WriteDataToFm(Sample_Manage_Addr,(INT8U *)&TT_Sample_Manage.Len,Sample_Manage_Len);		//Ğ´¹ÜÀí½á¹¹Ìåµ½Ìúµç
 	}
 	
-/*è‹¥æ”¶åˆ°æ•°æ®é‡‡é›†æŒ‡ä»¤ï¼Œå°†å½“å‰å†…å­˜æ•°æ®å†™å…¥é“ç”µ*/
-	msg_data = *(INT8U *)OSMboxPend(Data_CMDB0X,timeout,&Err);										//æŸ¥è¯¢é‚®ç®±
-	if((Err==OS_NO_ERR)&&(msg_data==DATA_CMD))														//æ¥åˆ°é‡‡é›†æ•°æ®æŒ‡ä»¤
+/*ÈôÊÕµ½Êı¾İ²É¼¯Ö¸Áî£¬½«µ±Ç°ÄÚ´æÊı¾İĞ´ÈëÌúµç*/
+	msg_data = *(INT8U *)OSMboxPend(Data_CMDB0X,timeout,&Err);										//²éÑ¯ÓÊÏä
+	if((Err==OS_NO_ERR)&&(msg_data==DATA_CMD))														//½Óµ½²É¼¯Êı¾İÖ¸Áî
 	{	
-		if(!TT_Sample_Manage.TT_Count||TT_Sample_Manage.Sample_Num>=60)	return;						//è‹¥æ— æ¢å¤´å½•å…¥ï¼Œåˆ™ç›´æ¥ä¸è¿›è¡Œæ•°æ®é‡‡é›†ï¼Œè‹¥æœ¬å°æ—¶é‡‡é›†æ¬¡æ•°å·²è¶…è¿‡60æ¬¡åˆ™ä¸å†é‡‡é›†
-		for(i=0;i<55;i++)																			//å°†æ•°æ®å†™å…¥é“ç”µ
+		if(!TT_Sample_Manage.TT_Count||TT_Sample_Manage.Sample_Num>=60)	return;						//ÈôÎŞÌ½Í·Â¼Èë£¬ÔòÖ±½Ó²»½øĞĞÊı¾İ²É¼¯£¬Èô±¾Ğ¡Ê±²É¼¯´ÎÊıÒÑ³¬¹ı60´ÎÔò²»ÔÙ²É¼¯
+		for(i=0;i<55;i++)																			//½«Êı¾İĞ´ÈëÌúµç
 		{			
-			if(TT_Info.HaveTT[i]==0x55) 															//åªè¦å­˜åœ¨æ¢å¤´ï¼Œå°±è¦å¡«å…¥æ•°æ®å¹¶å†™å…¥é“ç”µï¼Œæ— æ•ˆæ•°æ®ç”¨FFFFä»£æ›¿ã€‚ï¼ˆå¼€æœºæ—¶å·²åœ¨Read_TT_From_FMä¸­å°†æ¸©åº¦æ•°æ®åˆå§‹åŒ–ä¸º0xFFFFï¼‰
+			if(TT_Info.HaveTT[i]==0x55) 															//Ö»Òª´æÔÚÌ½Í·£¬¾ÍÒªÌîÈëÊı¾İ²¢Ğ´ÈëÌúµç£¬ÎŞĞ§Êı¾İÓÃFFFF´úÌæ¡££¨¿ª»úÊ±ÒÑÔÚRead_TT_From_FMÖĞ½«ÎÂ¶ÈÊı¾İ³õÊ¼»¯Îª0xFFFF£©
 			{	
-				/*æ•…éšœåˆ¤æ–­ï¼Œå¹¶ä¿®æ”¹å†…å­˜æ•°æ®*/
-				RF_Fault_Judge(i);																	//åˆ¤æ–­æ¢å¤´æ˜¯å¦å‡ºæ•…éšœäº†ï¼ˆå«æ•°æ®é”™è¯¯å’Œå°„é¢‘æ¥æ”¶ä¸åˆ°æ•°æ®ï¼‰ï¼Œå¹¶æ ¹æ®å—ç½‘åè®®ï¼Œå°†æ— æ•ˆæ•°æ®å¡«å……ä¸ºFFFFã€‚
+				/*¹ÊÕÏÅĞ¶Ï£¬²¢ĞŞ¸ÄÄÚ´æÊı¾İ*/
+				RF_Fault_Judge(i);																	//ÅĞ¶ÏÌ½Í·ÊÇ·ñ³ö¹ÊÕÏÁË£¨º¬Êı¾İ´íÎóºÍÉäÆµ½ÓÊÕ²»µ½Êı¾İ£©£¬²¢¸ù¾İÄÏÍøĞ­Òé£¬½«ÎŞĞ§Êı¾İÌî³äÎªFFFF¡£
 				
-				/*å†…å­˜æ•°æ®å†™å…¥é“ç”µ*/
+				/*ÄÚ´æÊı¾İĞ´ÈëÌúµç*/
 				TT_Data_Addr=Sample_Data_Addr+One_TT_Sample_Data_Len*i+TT_Sample_Manage.Sample_Num*2;
-				BSP_WriteDataToFm(TT_Data_Addr,&TT_Sample[i][0],2);									//å°†æ­¤æ¸©åº¦å†™å…¥é“ç”µã€‚å­˜å®Œä¹‹åæ‰è¿›è¡ŒSample_Num++ï¼Œå­˜æ”¾ç”±0ä½ç½®å¼€å§‹	
+				BSP_WriteDataToFm(TT_Data_Addr,&TT_Sample[i][0],2);									//½«´ËÎÂ¶ÈĞ´ÈëÌúµç¡£´æÍêÖ®ºó²Å½øĞĞSample_Num++£¬´æ·ÅÓÉ0Î»ÖÃ¿ªÊ¼	
 				
-				/*é‡ç½®ä¸ºé»˜è®¤å€¼*/
-				TT_Sample[i][0]=0xFF;																//å†™å…¥ä¹‹åå°±å°†æ•°æ®åˆå§‹åŒ–ä¸ºFFFFï¼ˆæ ¹æ®åè®®4.3æ¡ä¾‹ï¼Œæ— æ•ˆæ•°æ®ç”¨FFHè¡¨ç¤ºï¼‰
+				/*ÖØÖÃÎªÄ¬ÈÏÖµ*/
+				TT_Sample[i][0]=0xFF;																//Ğ´ÈëÖ®ºó¾Í½«Êı¾İ³õÊ¼»¯ÎªFFFF£¨¸ù¾İĞ­Òé4.3ÌõÀı£¬ÎŞĞ§Êı¾İÓÃFFH±íÊ¾£©
 				TT_Sample[i][1]=0xFF;	
 			}				
 		}
-		TT_Sample_Manage.Time[TT_Sample_Manage.Sample_Num] = time;									//é‡‡é›†æ—¶é—´å¡«å…¥
-		TT_Sample_Manage.Sample_Num++;																//æœ¬å°æ—¶æ¢å¤´é‡‡é›†æ•°+1		
-		BSP_WriteDataToFm(Sample_Manage_Addr,(INT8U *)&TT_Sample_Manage.Len,Sample_Manage_Len);		//å†™ç®¡ç†ç»“æ„ä½“åˆ°é“ç”µ
+		TT_Sample_Manage.Time[TT_Sample_Manage.Sample_Num] = time;									//²É¼¯Ê±¼äÌîÈë
+		TT_Sample_Manage.Sample_Num++;																//±¾Ğ¡Ê±Ì½Í·²É¼¯Êı+1		
+		BSP_WriteDataToFm(Sample_Manage_Addr,(INT8U *)&TT_Sample_Manage.Len,Sample_Manage_Len);		//Ğ´¹ÜÀí½á¹¹Ìåµ½Ìúµç
 																				
-		sprintf(BUFF, "æœ¬å°æ—¶å·²é‡‡é›†%dæ¬¡\r\n",TT_Sample_Manage.Sample_Num);
+		sprintf(BUFF, "±¾Ğ¡Ê±ÒÑ²É¼¯%d´Î\r\n",TT_Sample_Manage.Sample_Num);
 		BspUartWrite(2,(INT8U*)BUFF,strlen(BUFF));
 	}
 }
 
 /*******************************************************************************
 * Function Name : void RF_Fault_Judge(INT8U Index)
-* Description   : åˆ¤æ–­æ¢å¤´æ˜¯å¦å‡ºæ•…éšœäº†ï¼ˆå«æ•°æ®é”™è¯¯å’Œå°„é¢‘æ¥æ”¶ä¸åˆ°æ•°æ®ï¼‰ï¼Œå¹¶è®°å½•åˆ°Fault_Manageå¯¹åº”çš„æ ‡å¿—ä½ä¸­ã€‚å¹¶æ ¹æ®å—ç½‘åè®®ï¼Œå°†æ— æ•ˆæ•°æ®å¡«å……ä¸ºFFFFã€‚
-* Input         : Index:æ¢å¤´å·ç´¢å¼•
+* Description   : ÅĞ¶ÏÌ½Í·ÊÇ·ñ³ö¹ÊÕÏÁË£¨º¬Êı¾İ´íÎóºÍÉäÆµ½ÓÊÕ²»µ½Êı¾İ£©£¬²¢¼ÇÂ¼µ½Fault_Manage¶ÔÓ¦µÄ±êÖ¾Î»ÖĞ¡£²¢¸ù¾İÄÏÍøĞ­Òé£¬½«ÎŞĞ§Êı¾İÌî³äÎªFFFF¡£
+* Input         : Index:Ì½Í·ºÅË÷Òı
 *
 * Return        : None
 *******************************************************************************/
@@ -143,48 +143,48 @@ void RF_Fault_Judge(INT8U Index)
 	INT16U Temp=0;
 	TCHAR BUFF[50] = {0};
 	
-	/*RFæœªæ¥æ”¶åˆ°æ•°æ®*/
-	if( (TT_Sample[Index][0]&TT_Sample[Index][1])==0xFF )											//æ”¶åˆ°FFFFä»£è¡¨å°„é¢‘æœªæ¥æ”¶åˆ°æ•°æ®ï¼Œå°„é¢‘é”™è¯¯01H
+	/*RFÎ´½ÓÊÕµ½Êı¾İ*/
+	if( (TT_Sample[Index][0]&TT_Sample[Index][1])==0xFF )											//ÊÕµ½FFFF´ú±íÉäÆµÎ´½ÓÊÕµ½Êı¾İ£¬ÉäÆµ´íÎó01H
 	{
 		if(TT_RF_Fault_Count[Index]<5) TT_RF_Fault_Count[Index]++;									
-		if((TT_RF_Fault_Count[Index]==5) && (!Fault_Manage.F_RF[Index]))							//è¿ç»­æœªæ”¶åˆ°æ•°æ®è¾¾5æ¬¡ï¼Œåˆ™ä¸ŠæŠ¥é”™è¯¯
-			NW_Fault_Manage(Index, FAULT_STA);														//æ ‡è®°æ•…éšœå‘ç”Ÿä¸”æœªæ¢å¤ã€‚è°ƒç”¨æ­¤å‡½æ•°ä¸»è¦ä¼šæ ‡è®°Need_Reportï¼Œåœ¨Task_RF_Mainä¸­è¢«è½®è¯¢åˆ°ï¼Œä»è€Œå¼•å‘æ•…éšœä¸ŠæŠ¥åŠ¨ä½œ
+		if((TT_RF_Fault_Count[Index]==5) && (!Fault_Manage.F_RF[Index]))							//Á¬ĞøÎ´ÊÕµ½Êı¾İ´ï5´Î£¬ÔòÉÏ±¨´íÎó
+			NW_Fault_Manage(Index, FAULT_STA);														//±ê¼Ç¹ÊÕÏ·¢ÉúÇÒÎ´»Ö¸´¡£µ÷ÓÃ´Ëº¯ÊıÖ÷Òª»á±ê¼ÇNeed_Report£¬ÔÚTask_RF_MainÖĞ±»ÂÖÑ¯µ½£¬´Ó¶øÒı·¢¹ÊÕÏÉÏ±¨¶¯×÷
 		
 		#ifdef RF_Test				
-		sprintf(BUFF, "ç¬¬ %d ä¸ªæ¢å¤´ï¼ˆ%Xï¼‰æœªæ¥æ”¶åˆ°æ•°æ®ï¼\r\n",Index+1,Unit_ID_Code[Index]);			//ä»1å¼€å§‹è®¡æ•°
+		sprintf(BUFF, "µÚ %d ¸öÌ½Í·£¨%X£©Î´½ÓÊÕµ½Êı¾İ£¡\r\n",Index+1,Unit_ID_Code[Index]);			//´Ó1¿ªÊ¼¼ÆÊı
 		BspUartWrite(2,(INT8U*)BUFF,strlen(BUFF));
 		#endif
 	}
 	
-	/*æ¥æ”¶åˆ°æ•°æ®*/
+	/*½ÓÊÕµ½Êı¾İ*/
 	else
 	{		
-		TT_RF_Fault_Count[Index]=0;																	//æ”¶åˆ°ä»»æ„æ•°æ®å³æ¸…é›¶
-		if(Fault_Manage.F_RF[Index])																//è‹¥æ­¤æ—¶å­˜åœ¨å°„é¢‘æœªæ¥æ”¶åˆ°æ•°æ®æ•…éšœ
-			NW_Fault_Manage(Index, NOFAULT_STA);													//å°„é¢‘æ¥æ”¶æ•…éšœæ¢å¤ã€‚	01H
+		TT_RF_Fault_Count[Index]=0;																	//ÊÕµ½ÈÎÒâÊı¾İ¼´ÇåÁã
+		if(Fault_Manage.F_RF[Index])																//Èô´ËÊ±´æÔÚÉäÆµÎ´½ÓÊÕµ½Êı¾İ¹ÊÕÏ
+			NW_Fault_Manage(Index, NOFAULT_STA);													//ÉäÆµ½ÓÊÕ¹ÊÕÏ»Ö¸´¡£	01H
 		
 		Temp=(TT_Sample[Index][0]<<8)+TT_Sample[Index][1];
 		#if RF_Test
-		sprintf(BUFF, "ç¬¬ %d ä¸ªæ¢å¤´æ¸©åº¦ï¼š %d.%d\r\n",Index+1,Temp/10,Temp%10);						//ä»1å¼€å§‹è®¡æ•°
+		sprintf(BUFF, "µÚ %d ¸öÌ½Í·ÎÂ¶È£º %d.%d\r\n",Index+1,Temp/10,Temp%10);						//´Ó1¿ªÊ¼¼ÆÊı
 		BspUartWrite(2,(INT8U*)BUFF,strlen(BUFF));
 		#endif
 		
-		/*æ­¤æ¢å¤´æ¸©åº¦æ•°æ®å¼‚å¸¸*/
-		if(((0xf800>Temp)&&(Temp>Tem_Upper)) || (Temp>Tem_Lower))									//è‹¥æ¸©åº¦å¼‚å¸¸ï¼ˆè¶…é‡ç¨‹æˆ–æœ‰é”™è¯¯ä»£ç ï¼‰
+		/*´ËÌ½Í·ÎÂ¶ÈÊı¾İÒì³£*/
+		if(((0xf800>Temp)&&(Temp>Tem_Upper)) || (Temp>Tem_Lower))									//ÈôÎÂ¶ÈÒì³££¨³¬Á¿³Ì»òÓĞ´íÎó´úÂë£©
 		{
-			/*Temp-3984ï¼Œä¾‹å¦‚4000->0x10ï¼Œè¡¨ç¤ºæœªæ¥æ”¶åˆ°æ•°æ®ï¼Œè¯¦è§æµ‹æ¸©æ¢å¤´é”™è¯¯ä»£ç è¡¨ã€‚ï¼ˆ<=-55æˆ–>=125åº¦è¶…é‡ç¨‹æ—¶ï¼ŒæŠ¥æ­£å¸¸æ•°æ®ï¼Œä¸ä¼šè¿›è¿™é‡Œï¼‰*/
-			if((4000>Temp) || (Temp>4019)) Temp=3986;												//è‹¥æ¥æ”¶åˆ°å…¶ä»–å¼‚å¸¸å€¼ï¼ˆé™¤4000~4020å¤–çš„ï¼š1250~F800ï¼ŒFA26~FFFFï¼‰ï¼Œè®¤ä¸ºæ˜¯æ¸©åº¦å¼‚å¸¸ï¼Œä½¿ç”¨å—ç½‘â€œæ¸©åº¦å¼‚å¸¸æ•…éšœç¼–ç â€0x02ï¼ˆ3986-3984ï¼‰
-			NW_Fault_Manage(Index+55, Temp - 3984);													//æ ‡è®°æ¸©åº¦å¼‚å¸¸æ•…éšœå‘ç”Ÿã€‚Index+55ä¼ å…¥åä»£è¡¨çš„æ˜¯ 02Hæ¸©åº¦å¼‚å¸¸çš„é”™è¯¯	åŸï¼šNW_Fault_Manage(Index+55, FAULT_STA);	
+			/*Temp-3984£¬ÀıÈç4000->0x10£¬±íÊ¾Î´½ÓÊÕµ½Êı¾İ£¬Ïê¼û²âÎÂÌ½Í·´íÎó´úÂë±í¡££¨<=-55»ò>=125¶È³¬Á¿³ÌÊ±£¬±¨Õı³£Êı¾İ£¬²»»á½øÕâÀï£©*/
+			if((4000>Temp) || (Temp>4019)) Temp=3986;												//Èô½ÓÊÕµ½ÆäËûÒì³£Öµ£¨³ı4000~4020ÍâµÄ£º1250~F800£¬FA26~FFFF£©£¬ÈÏÎªÊÇÎÂ¶ÈÒì³££¬Ê¹ÓÃÄÏÍø¡°ÎÂ¶ÈÒì³£¹ÊÕÏ±àÂë¡±0x02£¨3986-3984£©
+			NW_Fault_Manage(Index+55, Temp - 3984);													//±ê¼ÇÎÂ¶ÈÒì³£¹ÊÕÏ·¢Éú¡£Index+55´«Èëºó´ú±íµÄÊÇ 02HÎÂ¶ÈÒì³£µÄ´íÎó	Ô­£ºNW_Fault_Manage(Index+55, FAULT_STA);	
 
-			/*æ³¨æ„ï¼ä¿®æ”¹å†…å­˜ä¸­çš„æ— æ•ˆæ¸©åº¦æ•°æ®*/
-			TT_Sample[Index][0] = 0xFF;																//æ ¹æ®å—ç½‘åè®®ï¼Œæ— æ•ˆæ•°æ®å¡«å……ä¸ºFFFF
+			/*×¢Òâ£¡ĞŞ¸ÄÄÚ´æÖĞµÄÎŞĞ§ÎÂ¶ÈÊı¾İ*/
+			TT_Sample[Index][0] = 0xFF;																//¸ù¾İÄÏÍøĞ­Òé£¬ÎŞĞ§Êı¾İÌî³äÎªFFFF
 			TT_Sample[Index][1] = 0xFF;
 		}
-		/*æ­¤æ¢å¤´æ¸©åº¦æ•°æ®æ­£å¸¸*/
+		/*´ËÌ½Í·ÎÂ¶ÈÊı¾İÕı³£*/
 		else
 		{
-			if(Fault_Manage.F_TEM[Index])															//éœ€è¦æ¸©åº¦å¼‚å¸¸æ•…éšœè§£é™¤
-				NW_Fault_Manage(Index+55, NOFAULT_STA);												//æ¸©åº¦å¼‚å¸¸æ•…éšœæ¢å¤ã€‚ç›´æ¥å†™å…¥0x80
+			if(Fault_Manage.F_TEM[Index])															//ĞèÒªÎÂ¶ÈÒì³£¹ÊÕÏ½â³ı
+				NW_Fault_Manage(Index+55, NOFAULT_STA);												//ÎÂ¶ÈÒì³£¹ÊÕÏ»Ö¸´¡£Ö±½ÓĞ´Èë0x80
 		}
 	}
 }
@@ -192,7 +192,7 @@ void RF_Fault_Judge(INT8U Index)
 
 /*******************************************************************************
 * Function Name : void History_Data_Store(void)
-* Description   : æ¥æ”¶é‡‡æ ·å‘½ä»¤ï¼Œå°†é‡‡æ ·æ•°æ®å­˜å‚¨åˆ°FLASHæ–‡ä»¶ä¸­ã€‚
+* Description   : ½ÓÊÕ²ÉÑùÃüÁî£¬½«²ÉÑùÊı¾İ´æ´¢µ½FLASHÎÄ¼şÖĞ¡£
 * Input         : None
 *
 * Return        : None
@@ -200,110 +200,110 @@ void RF_Fault_Judge(INT8U Index)
 void History_Data_Store(void)
 {
 	INT8U 				i=0;
-	struct NW_TIME		time = {0};												//å¹´æœˆæ—¥æ—¶åˆ†ç§’
-	INT8U 				Store_Buff[60*2+1+2+2]={0};								//æœ€å¤§ä¸ºæ¯ä¸ªå°æ—¶60ä¸ªæ•°æ®+1ï¼ˆæ¢å¤´ç´¢å¼•ï¼‰+2(CRC)+2ï¼ˆ0d0aï¼‰
+	struct NW_TIME		time = {0};												//ÄêÔÂÈÕÊ±·ÖÃë
+	INT8U 				Store_Buff[60*2+1+2+2]={0};								//×î´óÎªÃ¿¸öĞ¡Ê±60¸öÊı¾İ+1£¨Ì½Í·Ë÷Òı£©+2(CRC)+2£¨0d0a£©
 	INT16U 				crc;																		
 	struct SAMP_MANAGE	TT_Store_Manage={0};
 	TCHAR 				BUFF[100]={0};
-	INT16U				TT_Data_Addr=0;											//æ¢å¤´é‡‡æ ·æ•°æ®å†é“ç”µä¸­çš„å­˜æ”¾åœ°å€
-	INT8U  				Hour_Byte=0;											//æŒ‡å‘Unreport_Indexæ–‡ä»¶ç´¢å¼•è¡¨ å°æ—¶Byte
-	INT8U				Hour_Bit=0;												//æŒ‡å‘Unreport_Indexæ–‡ä»¶ç´¢å¼•è¡¨ å°æ—¶bit
+	INT16U				TT_Data_Addr=0;											//Ì½Í·²ÉÑùÊı¾İÔÙÌúµçÖĞµÄ´æ·ÅµØÖ·
+	INT8U  				Hour_Byte=0;											//Ö¸ÏòUnreport_IndexÎÄ¼şË÷Òı±í Ğ¡Ê±Byte
+	INT8U				Hour_Bit=0;												//Ö¸ÏòUnreport_IndexÎÄ¼şË÷Òı±í Ğ¡Ê±bit
 	TCHAR 				File_Name[20]={0};
 	UINT 				bw;
-	INT8U				Head[2]={0XFF,0XAA};									//æ–‡ä»¶å¤´ FF AA
-	INT8U   			Tail[2]={0XFF,0XBB};									//æ–‡ä»¶å¤´ FF BB
+	INT8U				Head[2]={0XFF,0XAA};									//ÎÄ¼şÍ· FF AA
+	INT8U   			Tail[2]={0XFF,0XBB};									//ÎÄ¼şÍ· FF BB
 		
-	if(!TT_Sample_Manage.Sample_Num) return;									//æœªé‡‡é›†æ•°æ®ï¼Œç›´æ¥é€€å‡ºï¼Œä¸åˆ›å»ºæ–‡ä»¶
-	if(!SecondToNwTime(TT_Sample_Manage.Time[0],&time)) 						//è¿”å›æ—¶é—´æ ¼å¼é”™è¯¯ï¼Œä¸è¿›è¡Œå­˜å‚¨
+	if(!TT_Sample_Manage.Sample_Num) return;									//Î´²É¼¯Êı¾İ£¬Ö±½ÓÍË³ö£¬²»´´½¨ÎÄ¼ş
+	if(!SecondToNwTime(TT_Sample_Manage.Time[0],&time)) 						//·µ»ØÊ±¼ä¸ñÊ½´íÎó£¬²»½øĞĞ´æ´¢
 	{																								
-		BspUartWrite(2,SIZE_OF("æ—¶é—´é”™è¯¯ï¼Œæ— æ³•åˆ›å»ºæ–‡ä»¶----------------------------------\r\n"));OSTimeDly(2);
+		BspUartWrite(2,SIZE_OF("Ê±¼ä´íÎó£¬ÎŞ·¨´´½¨ÎÄ¼ş----------------------------------\r\n"));OSTimeDly(2);
 		return;
 	}
 	
-	sprintf(File_Name,"SUB%d/%02d%02d",time.mday,time.mday,time.hour);								//ç”Ÿæˆæ–‡ä»¶å
+	sprintf(File_Name,"SUB%d/%02d%02d",time.mday,time.mday,time.hour);								//Éú³ÉÎÄ¼şÃû
 	while(FATFS_Lock)	OSTimeDly(20);
 	FATFS_Lock=1;
 	BspUartWrite(2,(INT8U*)File_Name,strlen(File_Name));	
-	BspUartWrite(2,SIZE_OF("æ–‡ä»¶å¼€å§‹å†™å…¥\r\n"));
+	BspUartWrite(2,SIZE_OF("ÎÄ¼ş¿ªÊ¼Ğ´Èë\r\n"));
 
-	/*æ‰“å¼€å¯¹åº”æ—¥æœŸç›®å½•ï¼Œåˆ›å»ºæ–‡ä»¶ï¼Œå†™å…¥æ–‡ä»¶*/
+	/*´ò¿ª¶ÔÓ¦ÈÕÆÚÄ¿Â¼£¬´´½¨ÎÄ¼ş£¬Ğ´ÈëÎÄ¼ş*/
 	for(i=0;i<3;i++)
 	{
-		if (f_mount(&fs, "", 1))continue;													    	//æŒ‚è½½
-		if (f_open(&fil,File_Name, FA_CREATE_ALWAYS | FA_READ | FA_WRITE ))continue;				//åˆ›å»ºå¹¶è¦†ç›–æ–‡ä»¶ï¼ˆä»¥ç»å¯¹è·¯å¾„æ¥åˆ›å»ºï¼‰ï¼Œä»¥å½“å‰æ—¶é—´ï¼ˆæ—¥æ—¶ï¼‰å‘½å
+		if (f_mount(&fs, "", 1))continue;													    	//¹ÒÔØ
+		if (f_open(&fil,File_Name, FA_CREATE_ALWAYS | FA_READ | FA_WRITE ))continue;				//´´½¨²¢¸²¸ÇÎÄ¼ş£¨ÒÔ¾ø¶ÔÂ·¾¶À´´´½¨£©£¬ÒÔµ±Ç°Ê±¼ä£¨ÈÕÊ±£©ÃüÃû
 
 		
-		f_write(&fil, Head,2, &bw);																	//å†™æ–‡ä»¶å¤´ FF AA
-		/*ä»é“ç”µä¸­å°†ä¸€ä¸ªå°æ—¶çš„æ•°æ®è¯»å–å‡ºæ¥ï¼Œå†™å…¥åˆ°W25Q256*/
+		f_write(&fil, Head,2, &bw);																	//Ğ´ÎÄ¼şÍ· FF AA
+		/*´ÓÌúµçÖĞ½«Ò»¸öĞ¡Ê±µÄÊı¾İ¶ÁÈ¡³öÀ´£¬Ğ´Èëµ½W25Q256*/
 		BSP_ReadDataFromFm(Sample_Manage_Addr,(INT8U *)&TT_Store_Manage,Sample_Manage_Len);
-		TT_Store_Manage.Len=TT_Store_Manage.Sample_Num*2+1+2+2;										//æ¯æ¡æ•°æ®çš„é•¿åº¦  é‡‡æ ·æ¬¡æ•°*2+1ï¼ˆæ¢å¤´ç´¢å¼•ï¼‰++2(CRC)+2ï¼ˆ0D0Aï¼‰
-		TT_Store_Manage.crc=RTU_CRC((INT8U *)&TT_Store_Manage,Sample_Manage_Len-2-2);				//è®¡ç®—CRCï¼Œç”¨äºè¯»å†™æ ¡éªŒ ã€æ ¡éªŒé•¿åº¦ï¼šæ€»é•¿åº¦-2ï¼ˆ0D0Aï¼‰-2ï¼ˆcrcã€‘	
+		TT_Store_Manage.Len=TT_Store_Manage.Sample_Num*2+1+2+2;										//Ã¿ÌõÊı¾İµÄ³¤¶È  ²ÉÑù´ÎÊı*2+1£¨Ì½Í·Ë÷Òı£©++2(CRC)+2£¨0D0A£©
+		TT_Store_Manage.crc=RTU_CRC((INT8U *)&TT_Store_Manage,Sample_Manage_Len-2-2);				//¼ÆËãCRC£¬ÓÃÓÚ¶ÁĞ´Ğ£Ñé ¡¾Ğ£Ñé³¤¶È£º×Ü³¤¶È-2£¨0D0A£©-2£¨crc¡¿	
 		memcpy(TT_Store_Manage.Newline,SIZE_OF("\r\n"));
-		f_write(&fil, (INT8U *)&TT_Store_Manage,Sample_Manage_Len, &bw);							//å†™å®ŒæŒ‡é’ˆè‡ªåŠ¨æŒ‡å‘ä¸‹ä¸€ä½				éœ€è¦è¯»å‡ºæ¥æ£€éªŒä¸€ä¸‹ï¼Ÿï¼Ÿ
+		f_write(&fil, (INT8U *)&TT_Store_Manage,Sample_Manage_Len, &bw);							//Ğ´ÍêÖ¸Õë×Ô¶¯Ö¸ÏòÏÂÒ»Î»				ĞèÒª¶Á³öÀ´¼ìÑéÒ»ÏÂ£¿£¿
 		
 		
-		for(i=0;i<55;i++)																			//æ¢å¤´æ•°æ®ä¾æ¬¡å†™å…¥W25Q256
+		for(i=0;i<55;i++)																			//Ì½Í·Êı¾İÒÀ´ÎĞ´ÈëW25Q256
 		{
 			if(TT_Info.HaveTT[i]==0x55)
 			{
-				Store_Buff[0]=Unit_ID_Code[i];														//å¡«å…¥æ¢å¤´å¯¹åº”çš„åŠŸèƒ½å•å…ƒç 
+				Store_Buff[0]=Unit_ID_Code[i];														//ÌîÈëÌ½Í·¶ÔÓ¦µÄ¹¦ÄÜµ¥ÔªÂë
 				TT_Data_Addr=Sample_Data_Addr+One_TT_Sample_Data_Len*i;
-				BSP_ReadDataFromFm(TT_Data_Addr,&Store_Buff[1],TT_Store_Manage.Sample_Num*2);		//å¡«å……è¯¥æ¢å¤´ä¸€ä¸ªå°æ—¶çš„é‡‡æ ·æ•°æ®
-				crc=RTU_CRC(Store_Buff,TT_Store_Manage.Len-2-2);									//-2ï¼ˆ0D0Aï¼‰-2ï¼ˆcrcï¼‰
+				BSP_ReadDataFromFm(TT_Data_Addr,&Store_Buff[1],TT_Store_Manage.Sample_Num*2);		//Ìî³ä¸ÃÌ½Í·Ò»¸öĞ¡Ê±µÄ²ÉÑùÊı¾İ
+				crc=RTU_CRC(Store_Buff,TT_Store_Manage.Len-2-2);									//-2£¨0D0A£©-2£¨crc£©
 				Store_Buff[TT_Store_Manage.Len-2-2]=(crc>>8)&0xff;
 				Store_Buff[TT_Store_Manage.Len-1-2]=crc&0xff;
-				memcpy(&Store_Buff[TT_Store_Manage.Len-2],SIZE_OF("\r\n"));							//æ•°æ®å°¾åŠ 0D0A
-				f_write(&fil,Store_Buff,TT_Store_Manage.Len, &bw);									//å†™å®ŒæŒ‡é’ˆè‡ªåŠ¨æŒ‡å‘ä¸‹ä¸€ä½
+				memcpy(&Store_Buff[TT_Store_Manage.Len-2],SIZE_OF("\r\n"));							//Êı¾İÎ²¼Ó0D0A
+				f_write(&fil,Store_Buff,TT_Store_Manage.Len, &bw);									//Ğ´ÍêÖ¸Õë×Ô¶¯Ö¸ÏòÏÂÒ»Î»
 				
 				memset(Store_Buff,0,sizeof(Store_Buff));	
 			}				
 		}
-		f_write(&fil, Tail,2, &bw);																	//å†™æ–‡ä»¶å°¾ FF BB	
+		f_write(&fil, Tail,2, &bw);																	//Ğ´ÎÄ¼şÎ² FF BB	
 
 		Hour_Byte = time.hour/8;																				
 		Hour_Bit  = time.hour%8;
-		Unreport_Index[time.mday-1][Hour_Byte]&=~(0x80>>Hour_Bit);									//å°†è¯¥æ–‡ä»¶å¯¹åº”æ–‡ä»¶ç´¢å¼•è¡¨ä¸­æ ‡å¿—ä½å†™0ï¼Œä»£è¡¨è¯¥æ–‡ä»¶æœªä¸ŠæŠ¥
-		BSP_WriteDataToFm(Unreport_Index_Addr,(INT8U*)Unreport_Index,Unreport_Index_Len);			//æœªä¸ŠæŠ¥æ•°æ®ç´¢å¼•è¡¨å†™å…¥é“ç”µ
+		Unreport_Index[time.mday-1][Hour_Byte]&=~(0x80>>Hour_Bit);									//½«¸ÃÎÄ¼ş¶ÔÓ¦ÎÄ¼şË÷Òı±íÖĞ±êÖ¾Î»Ğ´0£¬´ú±í¸ÃÎÄ¼şÎ´ÉÏ±¨
+		BSP_WriteDataToFm(Unreport_Index_Addr,(INT8U*)Unreport_Index,Unreport_Index_Len);			//Î´ÉÏ±¨Êı¾İË÷Òı±íĞ´ÈëÌúµç
 		
 #ifdef RF_Test	
 		BspUartWrite(2,(INT8U*)File_Name,strlen(File_Name));
-		BspUartWrite(2,SIZE_OF("æ–‡ä»¶å†™å…¥å®Œæˆ\r\n"));OSTimeDly(2);	
-		sprintf(BUFF, "å…±%dä¸ªæ¢å¤´ï¼Œå®Œæˆé‡‡é›†%dæ¬¡\r\n",TT_Store_Manage.TT_Count,TT_Store_Manage.Sample_Num);			
+		BspUartWrite(2,SIZE_OF("ÎÄ¼şĞ´ÈëÍê³É\r\n"));OSTimeDly(2);	
+		sprintf(BUFF, "¹²%d¸öÌ½Í·£¬Íê³É²É¼¯%d´Î\r\n",TT_Store_Manage.TT_Count,TT_Store_Manage.Sample_Num);			
 		BspUartWrite(2,(INT8U*)BUFF,strlen(BUFF));OSTimeDly(2);
 		memset(BUFF,0,sizeof(BUFF));
-		/*æ£€éªŒå†™çš„æ•ˆæœçš„éƒ¨åˆ†ï¼(å†å¼€å¤§ç©ºé—´è¿›è¡Œæ¯”è¾ƒæ‰€æœ‰å†…å®¹ä¼šå†…å­˜æº¢å‡º)åªè¿›è¡ŒCRCæ ¡éªŒ*/
+		/*¼ìÑéĞ´µÄĞ§¹ûµÄ²¿·Ö£¡(ÔÙ¿ª´ó¿Õ¼ä½øĞĞ±È½ÏËùÓĞÄÚÈİ»áÄÚ´æÒç³ö)Ö»½øĞĞCRCĞ£Ñé*/
 		memset(&TT_Store_Manage,0,Sample_Manage_Len);
 		f_lseek(&fil,2);
 		f_read(&fil,&TT_Store_Manage,Sample_Manage_Len,&bw);
 		if(TT_Store_Manage.crc!=RTU_CRC((INT8U *)&TT_Store_Manage,Sample_Manage_Len-2-2))			
-			BspUartWrite(2,SIZE_OF("æ–‡ä»¶é‡‡é›†ç®¡ç†æ•°æ®æ ¡éªŒé”™è¯¯\r\n"));OSTimeDly(2);	
+			BspUartWrite(2,SIZE_OF("ÎÄ¼ş²É¼¯¹ÜÀíÊı¾İĞ£Ñé´íÎó\r\n"));OSTimeDly(2);	
 		
 		for(i=0;i<TT_Store_Manage.TT_Count;i++)
 		{
 			f_read(&fil,Store_Buff,TT_Store_Manage.Len,&bw);
 			crc=(Store_Buff[TT_Store_Manage.Len-2-2]<<8)+Store_Buff[TT_Store_Manage.Len-1-2];
 			if(crc!=RTU_CRC(Store_Buff,TT_Store_Manage.Len-2-2))
-				sprintf(BUFF, "æ–‡ä»¶é‡‡é›†æ¸©åº¦æ•°æ®ç¬¬%dæ ¡éªŒé”™è¯¯\r\n", i);	
+				sprintf(BUFF, "ÎÄ¼ş²É¼¯ÎÂ¶ÈÊı¾İµÚ%dĞ£Ñé´íÎó\r\n", i);	
 				BspUartWrite(2,(INT8U*)BUFF,strlen(BUFF));OSTimeDly(2);
 				memset(BUFF,0,sizeof(BUFF));			
 			memset(Store_Buff,0,sizeof(Store_Buff));			
 		}
 		
-		BspUartWrite(2,SIZE_OF("æ–‡ä»¶æ•°æ®æ ¡éªŒç»“æŸ\r\n"));OSTimeDly(5);
+		BspUartWrite(2,SIZE_OF("ÎÄ¼şÊı¾İĞ£Ñé½áÊø\r\n"));OSTimeDly(5);
 #endif			
-		f_close(&fil);																				//å…³æ–‡ä»¶
-		f_mount(0, "", 0);																			//å¸è½½
+		f_close(&fil);																				//¹ØÎÄ¼ş
+		f_mount(0, "", 0);																			//Ğ¶ÔØ
 		break;
 	}
 	FATFS_Lock=0;
 }
 
 /*******************************************************************************
-åç§°ï¼švoid RF_Receive_Data(u32 rate, u16 timeout)
-åŠŸèƒ½: è¯»å–RFæ¥æ”¶æ¿ä¸­çš„æ¸©åº¦æ•°æ®è¿›è¡Œè§£æå¹¶å¡«å…¥å¯¹åº”çš„æ•°æ®ç»“æ„ä½“ä¸­ã€‚
-å…¥å‚ï¼šu32 rateï¼Œä¸²å£é€šä¿¡æ³¢ç‰¹ç‡ï¼›u16 timeoutï¼Œè¶…æ—¶ç­‰å¾…æ—¶é•¿ã€‚
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid RF_Receive_Data(u32 rate, u16 timeout)
+¹¦ÄÜ: ¶ÁÈ¡RF½ÓÊÕ°åÖĞµÄÎÂ¶ÈÊı¾İ½øĞĞ½âÎö²¢ÌîÈë¶ÔÓ¦µÄÊı¾İ½á¹¹ÌåÖĞ¡£
+Èë²Î£ºu32 rate£¬´®¿ÚÍ¨ĞÅ²¨ÌØÂÊ£»u16 timeout£¬³¬Ê±µÈ´ıÊ±³¤¡£
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void RF_Receive_Data(u32 rate, u16 timeout)
 {
@@ -312,35 +312,35 @@ void RF_Receive_Data(u32 rate, u16 timeout)
 	INT8U Err =0;
 	struct Str_Msg *pRfMsg = (struct Str_Msg *)0; 
 				
-	RF_Uart_init(rate);																				//åˆå§‹åŒ–RFä¸²å£
-	memset(RF_Uart_RxBuff,0x00,RF_BuffLen);															//æ¸…ç©ºä¸²å£æ¥æ”¶ç¼“å­˜
-	BspUartWrite(1,RFCmd,RFCmdLen);    																//å‘é€è·å–æ•°æ®æŒ‡ä»¤
+	RF_Uart_init(rate);																				//³õÊ¼»¯RF´®¿Ú
+	memset(RF_Uart_RxBuff,0x00,RF_BuffLen);															//Çå¿Õ´®¿Ú½ÓÊÕ»º´æ
+	BspUartWrite(1,RFCmd,RFCmdLen);    																//·¢ËÍ»ñÈ¡Êı¾İÖ¸Áî
 	StopModeLock++;
-	pRfMsg = (struct Str_Msg *)OSMboxPend(RFSGIN,timeout,&Err);   									//ç­‰å¾…ä¸²å£æ¶ˆæ¯ timeoutä¸ªæ—¶é—´ç‰‡ï¼ˆå°„é¢‘æ¨¡å—ä¸²å£æœ€å¤šç»™256å­—èŠ‚ï¼Œ1200æ³¢ç‰¹ç‡æ—¶çº¦2.13ç§’ï¼‰
+	pRfMsg = (struct Str_Msg *)OSMboxPend(RFSGIN,timeout,&Err);   									//µÈ´ı´®¿ÚÏûÏ¢ timeout¸öÊ±¼äÆ¬£¨ÉäÆµÄ£¿é´®¿Ú×î¶à¸ø256×Ö½Ú£¬1200²¨ÌØÂÊÊ±Ô¼2.13Ãë£©
 	if(StopModeLock) StopModeLock--;
 
 	if(Err==OS_NO_ERR && pRfMsg)
 	{
-		if( pRfMsg->MsgID == BSP_MSGID_RFDataIn )													//åˆ¤æ–­é‚®ç®±ä¸­çš„æ¶ˆæ¯æ˜¯å¦ä¸ºRFä¸²å£ç»™çš„
+		if( pRfMsg->MsgID == BSP_MSGID_RFDataIn )													//ÅĞ¶ÏÓÊÏäÖĞµÄÏûÏ¢ÊÇ·ñÎªRF´®¿Ú¸øµÄ
 		{
-			 if(pRfMsg->DataLen <= 256)																//ä¸”æ•°æ®ä¸è¶…è¿‡é•¿åº¦256å­—èŠ‚ï¼ˆç”±å°„é¢‘æ¨¡å—å†³å®šï¼‰
+			 if(pRfMsg->DataLen <= 256)																//ÇÒÊı¾İ²»³¬¹ı³¤¶È256×Ö½Ú£¨ÓÉÉäÆµÄ£¿é¾ö¶¨£©
 			 {
-				 if(RF_Data_Judge(pRfMsg))															//ä¸”åè®®æ ¡éªŒé€šè¿‡
+				 if(RF_Data_Judge(pRfMsg))															//ÇÒĞ­ÒéĞ£ÑéÍ¨¹ı
 				 {						
-					if(pRfMsg->pData[2]==0x01) 														//è‹¥CMD=0X01ï¼Œè¡¨ç¤ºè·å–æ¥æ”¶æ¿çš„æµ‹æ¸©æ•°æ®
-						RF_Received_Data_DealWith(pRfMsg);											//å°†æ•°æ®å¡«å…¥åˆ°æ¢å¤´æ•°æ®ç»“æ„ä½“å½“ä¸­
+					if(pRfMsg->pData[2]==0x01) 														//ÈôCMD=0X01£¬±íÊ¾»ñÈ¡½ÓÊÕ°åµÄ²âÎÂÊı¾İ
+						RF_Received_Data_DealWith(pRfMsg);											//½«Êı¾İÌîÈëµ½Ì½Í·Êı¾İ½á¹¹Ìåµ±ÖĞ
 				 }
 			 }
 		}						
 	}
-	BSP_UART_RxClear(pRfMsg->DivNum);																//æ¸…æ¶ˆæ¯ç¼“å­˜
-	RF_LowPower();																					//ä¸ä¸Šé¢RFåˆå§‹åŒ–é…å¯¹ä½¿ç”¨	
+	BSP_UART_RxClear(pRfMsg->DivNum);																//ÇåÏûÏ¢»º´æ
+	RF_LowPower();																					//ÓëÉÏÃæRF³õÊ¼»¯Åä¶ÔÊ¹ÓÃ	
 }
 
 
 /******************************************************************************
 * Function Name: void RF_Power_Init(void)
-* Description:   RF ç”µæºå¼•è„šé…ç½®								 
+* Description:   RF µçÔ´Òı½ÅÅäÖÃ								 
 * Input:  Nothing
 * Output: Nothing
 ******************************************************************************/
@@ -348,8 +348,8 @@ void RF_Power_Init(void)
 {
 	GPIO_InitTypeDef	GPIO_InitStructure;
 	
-	RCC_APB2PeriphClockCmd(PWRF_Port_CK,ENABLE);													//å¼€æ—¶é’Ÿ
-	PWRFDIS();																						//è®¾ç½®ä¸ºå…³é—­	
+	RCC_APB2PeriphClockCmd(PWRF_Port_CK,ENABLE);													//¿ªÊ±ÖÓ
+	PWRFDIS();																						//ÉèÖÃÎª¹Ø±Õ	
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Pin =PWRF_PIN;
@@ -358,8 +358,8 @@ void RF_Power_Init(void)
 
 /*******************************************************************************
 * Function Name : void RF_Uart_init(unsigned int rate)
-* Description   : Rfæ¥æ”¶ä¸²å£åˆå§‹åŒ–
-* Input         : rate : æ³¢ç‰¹ç‡
+* Description   : Rf½ÓÊÕ´®¿Ú³õÊ¼»¯
+* Input         : rate : ²¨ÌØÂÊ
 *
 * Return        : None
 *******************************************************************************/
@@ -368,7 +368,7 @@ void RF_Uart_init(unsigned int rate)
 	UARTx_Setting_Struct UARTInit = {0};	
 	
 	if(RFSGIN == NULL) RFSGIN = OSMboxCreate(0);
-	else RFSGIN->OSEventPtr= (void *)0;																//æ¸…æ¶ˆæ¯é‚®ç®±ï¼Œä¸æ¸…ä¼šå¯¼è‡´è¯¯åˆ¤ ZE
+	else RFSGIN->OSEventPtr= (void *)0;																//ÇåÏûÏ¢ÓÊÏä£¬²»Çå»áµ¼ÖÂÎóÅĞ ZE
 		
 	UARTInit.BaudRate = rate;
 	UARTInit.Parity   = BSPUART_PARITY_NO;
@@ -378,14 +378,14 @@ void RF_Uart_init(unsigned int rate)
 	UARTInit.RxBufLen = RF_BuffLen;     
 	UARTInit.TxBuf    = RF_Uart_TxBuff;
 	UARTInit.TxBufLen = RF_BuffLen;     
-	UARTInit.Mode     = UART_DEFAULT_MODE;	  														//æ™®é€šä¸²å£
+	UARTInit.Mode     = UART_DEFAULT_MODE;	  														//ÆÕÍ¨´®¿Ú
 	
 	BSP_UART_Init(1,&UARTInit,RFSGIN);
 }
 
 /******************************************************************************* 
 * Function Name  : void RF_LowPower(void)
-* Description    : RFè¿›å…¥ä½åŠŸè€—ï¼Œå¹¶å¯¹ç›¸åº”IOå£ä½œä½åŠŸè€—å¤„ç†
+* Description    : RF½øÈëµÍ¹¦ºÄ£¬²¢¶ÔÏàÓ¦IO¿Ú×÷µÍ¹¦ºÄ´¦Àí
 * Input          : None 
 * Output         : None 
 * Return         : None 
@@ -394,11 +394,11 @@ void RF_LowPower(void)
 {
 	GPIO_InitTypeDef 	GPIO_InitStructure;
 	
-	RCC_APB2PeriphClockCmd( RCC_APB2Periph_USART1 ,DISABLE);										//å…³é—­U1æ—¶é’ŸåŠå¤ç”¨æ—¶é’Ÿï¼ˆæ³¨æ„ï¼šADCä¹Ÿç”¨åˆ°è¿™ä¸ªï¼‰ | RCC_APB2Periph_AFIO	//ä¸å…³å¤ç”¨æ—¶é’Ÿ|RCC_APB2Periph_AFIOï¼ˆå„ä¸²å£å’ŒADéƒ½ç”¨åˆ°è¿™ä¸ªï¼‰
+	RCC_APB2PeriphClockCmd( RCC_APB2Periph_USART1 ,DISABLE);										//¹Ø±ÕU1Ê±ÖÓ¼°¸´ÓÃÊ±ÖÓ£¨×¢Òâ£ºADCÒ²ÓÃµ½Õâ¸ö£© | RCC_APB2Periph_AFIO	//²»¹Ø¸´ÓÃÊ±ÖÓ|RCC_APB2Periph_AFIO£¨¸÷´®¿ÚºÍAD¶¼ÓÃµ½Õâ¸ö£©
 	
-	/*ç”µæºä½¿èƒ½ã€TXã€RXæ¨¡æ‹Ÿè¾“å…¥*/
+	/*µçÔ´Ê¹ÄÜ¡¢TX¡¢RXÄ£ÄâÊäÈë*/
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;													//æ¨¡æ‹Ÿè¾“å…¥
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;													//Ä£ÄâÊäÈë
 	
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;														///PA9/U1_TX
 	GPIO_Init(GPIOA, &GPIO_InitStructure);										
@@ -413,7 +413,7 @@ void RF_LowPower(void)
 
 /*******************************************************************************
 * Function Name : INT8U RF_Data_Judge( struct Str_Msg * pMsg)
-* Description   : å°„é¢‘å¤´ä¼ æ¥çš„æ•°æ®æœ‰æ•ˆæ€§åˆ¤æ–­
+* Description   : ÉäÆµÍ·´«À´µÄÊı¾İÓĞĞ§ĞÔÅĞ¶Ï
 * Input         : 
 * Return        : 
 *******************************************************************************/
@@ -426,35 +426,35 @@ INT8U RF_Data_Judge(struct Str_Msg * pMsg)
 	if(pMsg->DivNum!=1) return 0;
 	if(pMsg->DataLen<11) return 0;
 	
-	Length = pMsg->pData[3] + 4;																	//æ•°æ®åŸŸé•¿åº¦+AA 2D 01 DataLen
-	for(i = 0;i < Length;i++) CS += pMsg->pData[i];													//è®¡ç®—ç´¯åŠ å’Œ
-	if(CS != pMsg->pData[Length]) return 0;															//ç´¯åŠ å’Œæ ¡éªŒ
+	Length = pMsg->pData[3] + 4;																	//Êı¾İÓò³¤¶È+AA 2D 01 DataLen
+	for(i = 0;i < Length;i++) CS += pMsg->pData[i];													//¼ÆËãÀÛ¼ÓºÍ
+	if(CS != pMsg->pData[Length]) return 0;															//ÀÛ¼ÓºÍĞ£Ñé
 	
 	return 1;
 }
 
 /*******************************************************************************
 * Function Name : void RF_Data_Extract(struct Str_Msg * pMsg)
-* Description   : å°„é¢‘å¤´ä¸Šä¼ æ¥çš„æ•°æ®çš„è§£æï¼Œä¸¢å¼ƒæ— æ•ˆæ•°æ®ï¼Œå¹¶æŒ‰ç»‘å®šçš„æ¢å¤´æŸ¥æ‰¾Indexï¼Œå­˜å…¥TT_Sample[Index]ã€‚
-* Input         : pMsg:ä¿¡æ¯ç»“æ„ä½“æŒ‡é’ˆ
+* Description   : ÉäÆµÍ·ÉÏ´«À´µÄÊı¾İµÄ½âÎö£¬¶ªÆúÎŞĞ§Êı¾İ£¬²¢°´°ó¶¨µÄÌ½Í·²éÕÒIndex£¬´æÈëTT_Sample[Index]¡£
+* Input         : pMsg:ĞÅÏ¢½á¹¹ÌåÖ¸Õë
 *
-* Return        : æ— 
+* Return        : ÎŞ
 *******************************************************************************/
 INT8U RF_Received_Data_DealWith(struct Str_Msg * pMsg)
 {
-	INT8U 	i = 0;																					//AA 2B 01 DataLen CNT â€¦â€¦
-	INT8U 	Cnt = pMsg->pData[4];																	//æ•°æ®åŸŸçš„ç¬¬ä¸€ä¸ªå­—èŠ‚ï¼Œè¡¨ç¤ºæœ‰æ•ˆæµ‹æ¸©ç‚¹ä¸ªæ•°
-	INT8U 	*Ptr = &pMsg->pData[5];																	//æŒ‡å‘æ•°æ®åŸŸä¸­ï¼Œæµ‹æ¸©ç‚¹æ•°æ®çš„æŒ‡é’ˆ
+	INT8U 	i = 0;																					//AA 2B 01 DataLen CNT ¡­¡­
+	INT8U 	Cnt = pMsg->pData[4];																	//Êı¾İÓòµÄµÚÒ»¸ö×Ö½Ú£¬±íÊ¾ÓĞĞ§²âÎÂµã¸öÊı
+	INT8U 	*Ptr = &pMsg->pData[5];																	//Ö¸ÏòÊı¾İÓòÖĞ£¬²âÎÂµãÊı¾İµÄÖ¸Õë
 	INT8U	Index = 0;   
 	
-	if(!TT_Info.TT_Count) return 0;																	//æ²¡æœ‰å½•å…¥æ¢å¤´
+	if(!TT_Info.TT_Count) return 0;																	//Ã»ÓĞÂ¼ÈëÌ½Í·
 	
 	for(i=0; i<Cnt; i++)
 	{	
-		Index = CMP_TT_ID(Ptr);																		//å¾—åˆ°æ¯”å¯¹æˆåŠŸçš„æ¢å¤´ç´¢å¼•
-		if(Index != 0xff)	  																		//0XFFè¡¨ç¤ºåŒ¹é…å¤±è´¥ï¼Œä¸¢å¼ƒæ­¤æ¢å¤´æ•°æ®
+		Index = CMP_TT_ID(Ptr);																		//µÃµ½±È¶Ô³É¹¦µÄÌ½Í·Ë÷Òı
+		if(Index != 0xff)	  																		//0XFF±íÊ¾Æ¥ÅäÊ§°Ü£¬¶ªÆú´ËÌ½Í·Êı¾İ
 		{
-			memcpy(TT_Sample[Index],&Ptr[2],2);														//æŒ‰ç…§ç´¢å¼•å°†å¯¹åº”æ¢å¤´çš„æ¸©åº¦å¡«å…¥ï¼Œè‹¥æœªåˆ°ä¸‹æ¬¡é‡‡æ ·å‘½ä»¤è¿‡æ¥å–å€¼ï¼Œæ–°çš„æ•°æ®ä¼šè¦†ç›–æ—§çš„æ•°æ®			
+			memcpy(TT_Sample[Index],&Ptr[2],2);														//°´ÕÕË÷Òı½«¶ÔÓ¦Ì½Í·µÄÎÂ¶ÈÌîÈë£¬ÈôÎ´µ½ÏÂ´Î²ÉÑùÃüÁî¹ıÀ´È¡Öµ£¬ĞÂµÄÊı¾İ»á¸²¸Ç¾ÉµÄÊı¾İ			
 		}
 		Ptr += 4;  
 	}
@@ -463,24 +463,24 @@ INT8U RF_Received_Data_DealWith(struct Str_Msg * pMsg)
 																				
 /*******************************************************************************
 * Function Name : INT8U CMP_TT_ID(INT8U* pIn)                                                     
-* Description   : æ¯”å¯¹æ”¶åˆ°çš„æ¢å¤´æ•°æ®æ˜¯å¦åœ¨å·²å½•å…¥çš„æ¢å¤´èŒƒå›´å†…
-* Input         : pIn ï¼šè¾“å…¥æ•°ç»„               
-* Return        : æ¢å¤´ç´¢å¼•0~54  ï¼ˆç´¢å¼•å¯å¯¹åº”åˆ°åŠŸèƒ½å•å…ƒè¯†åˆ«ç ï¼‰
-				  0xff:ä¸åœ¨ç´¢å¼•èŒƒå›´å†…
+* Description   : ±È¶ÔÊÕµ½µÄÌ½Í·Êı¾İÊÇ·ñÔÚÒÑÂ¼ÈëµÄÌ½Í··¶Î§ÄÚ
+* Input         : pIn £ºÊäÈëÊı×é               
+* Return        : Ì½Í·Ë÷Òı0~54  £¨Ë÷Òı¿É¶ÔÓ¦µ½¹¦ÄÜµ¥ÔªÊ¶±ğÂë£©
+				  0xff:²»ÔÚË÷Òı·¶Î§ÄÚ
 *******************************************************************************/
 INT8U CMP_TT_ID(INT8U* pIn)
 {
 	INT8U i=0;
 	for(i=0;i<55;i++)
 	{
-		if(!memcmp(pIn,&TT_Info.TT_ID[i][0],2)) return i;											//å¦‚æœç¬¦åˆï¼Œåˆ™è¿”å›ç´¢å¼•ï¼Œæ•°æ®æŒ‰ç´¢å¼•ä½ç½®å­˜æ”¾				
+		if(!memcmp(pIn,&TT_Info.TT_ID[i][0],2)) return i;											//Èç¹û·ûºÏ£¬Ôò·µ»ØË÷Òı£¬Êı¾İ°´Ë÷ÒıÎ»ÖÃ´æ·Å				
 	}
-	return 0xff;																					//æœªåŒ¹é…ä¸Šå·²å½•å…¥çš„æ¢å¤´ID
+	return 0xff;																					//Î´Æ¥ÅäÉÏÒÑÂ¼ÈëµÄÌ½Í·ID
 }
 
 /*******************************************************************************
 * Function Name : void Read_TT_From_FM(void);	                                                   
-* Description   : å°†å½•å…¥çš„æ¢å¤´ä¿¡æ¯ä»é“ç”µä¸­è¯»å–å‡ºæ¥ï¼Œç”¨äºåŒ¹é…æ”¶åˆ°çš„æ¢å¤´æ¸©åº¦,å¹¶æŒ‰é¡ºåºå¡«å……æ¢å¤´æ¸©åº¦ä¿¡æ¯ç»“æ„ä½“çš„æ¢å¤´IDéƒ¨åˆ†,ä¸ºåç»­æ¢å¤´å¡«å…¥æ•°æ®åšå‡†å¤‡
+* Description   : ½«Â¼ÈëµÄÌ½Í·ĞÅÏ¢´ÓÌúµçÖĞ¶ÁÈ¡³öÀ´£¬ÓÃÓÚÆ¥ÅäÊÕµ½µÄÌ½Í·ÎÂ¶È,²¢°´Ë³ĞòÌî³äÌ½Í·ÎÂ¶ÈĞÅÏ¢½á¹¹ÌåµÄÌ½Í·ID²¿·Ö,ÎªºóĞøÌ½Í·ÌîÈëÊı¾İ×ö×¼±¸
 * Input         :              
 * Return        : 		 
 *******************************************************************************/
@@ -488,14 +488,14 @@ void Read_TT_From_FM(void)
 {	
 	INT8U i=0;
 	
-	BSP_ReadDataFromFm(TT_Count_Addr,&TT_Info.TT_Count,sizeof(TT_Info));							//ä¸Šç”µè¯»å‡ºå½•å…¥çš„æ¢å¤´ä¿¡æ¯åˆ°TT_Infoç»“æ„ä½“
-	BSP_ReadDataFromFm(Sample_Manage_Addr,(u8*)&TT_Sample_Manage,Sample_Manage_Len);				//ä¸Šç”µè¯»å‡ºé‡‡é›†ç®¡ç†ç»“æ„ä½“
-	memcpy(TT_Sample_Manage.Newline,SIZE_OF("\r\n"));												//ç»“æ„ä½“ç»“å°¾åŠ ä¸Š0x0D 0x0A
+	BSP_ReadDataFromFm(TT_Count_Addr,&TT_Info.TT_Count,sizeof(TT_Info));							//ÉÏµç¶Á³öÂ¼ÈëµÄÌ½Í·ĞÅÏ¢µ½TT_Info½á¹¹Ìå
+	BSP_ReadDataFromFm(Sample_Manage_Addr,(u8*)&TT_Sample_Manage,Sample_Manage_Len);				//ÉÏµç¶Á³ö²É¼¯¹ÜÀí½á¹¹Ìå
+	memcpy(TT_Sample_Manage.Newline,SIZE_OF("\r\n"));												//½á¹¹Ìå½áÎ²¼ÓÉÏ0x0D 0x0A
 	TT_Sample_Manage.TT_Count=TT_Info.TT_Count;
 	
 	for(i=0;i<55;i++)
 	{
-		if((TT_Info.TT_ID[i][0]==0)&&(TT_Info.TT_ID[i][1]==0))TT_Info.HaveTT[i]=0;					//æ ‡è®°æ­¤ä½ç½®æ— æ¢å¤´ï¼Œï¼ˆå½“ä¸¤å­—èŠ‚éƒ½æ˜¯0æ—¶æ‰æ ‡è®°ä¸ºç©ºï¼‰
+		if((TT_Info.TT_ID[i][0]==0)&&(TT_Info.TT_ID[i][1]==0))TT_Info.HaveTT[i]=0;					//±ê¼Ç´ËÎ»ÖÃÎŞÌ½Í·£¬£¨µ±Á½×Ö½Ú¶¼ÊÇ0Ê±²Å±ê¼ÇÎª¿Õ£©
 		else TT_Info.HaveTT[i]=0x55;
 	}	
 }	

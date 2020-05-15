@@ -3,30 +3,30 @@
 #include "main.h"
 
 
-/*å®å®šä¹‰*/
+/*ºê¶¨Òå*/
 #define	FLASH_PAGE_LEN			2048
-#define	FLASH_UPDATE_PAGES		64												//æš‚å®šå‡çº§æ–‡ä»¶å¤§å°æœ€å¤š2*64=128K
-#define	UPDATA_MAX_PACKAGES		1024											//æš‚å®šæœ€å¤šåˆ†åŒ…1024åŒ…
-#define STA_NUM					(UPDATA_MAX_PACKAGES/8)							//subbag_statisticsæ•°ç»„é•¿åº¦
+#define	FLASH_UPDATE_PAGES		64												//Ôİ¶¨Éı¼¶ÎÄ¼ş´óĞ¡×î¶à2*64=128K
+#define	UPDATA_MAX_PACKAGES		1024											//Ôİ¶¨×î¶à·Ö°ü1024°ü
+#define STA_NUM					(UPDATA_MAX_PACKAGES/8)							//subbag_statisticsÊı×é³¤¶È
 
 
-/*æ–‡ä»¶ç»“æ„ä½“*/
-#pragma pack(1)						//è®¾å®šä¸º1å­—èŠ‚å¯¹é½
+/*ÎÄ¼ş½á¹¹Ìå*/
+#pragma pack(1)						//Éè¶¨Îª1×Ö½Ú¶ÔÆë
 struct FILE_UPDATA
 {
-	INT8U					Version[4];											//æ–‡ä»¶ç‰ˆæœ¬
-	INT8U					forced_upgrade;										//å¼ºåˆ¶å‡çº§
-	INT32U					Check_CRC;											//æ–‡ä»¶CRC
-	INT8U					Format;												//æ–‡ä»¶æ ¼å¼
-	INT8U					Program_Size[4];									//æ–‡ä»¶å¤§å°ï¼Œå¤§ç«¯æ¨¡å¼
-	INT8U					Sub_package_Sum_High;  								//æ–‡ä»¶åˆ†åŒ…æ•°é«˜ä½
-	INT8U					Sub_package_Sum_Low;   								//æ–‡ä»¶åˆ†åŒ…æ•°ä½ä½
+	INT8U					Version[4];											//ÎÄ¼ş°æ±¾
+	INT8U					forced_upgrade;										//Ç¿ÖÆÉı¼¶
+	INT32U					Check_CRC;											//ÎÄ¼şCRC
+	INT8U					Format;												//ÎÄ¼ş¸ñÊ½
+	INT8U					Program_Size[4];									//ÎÄ¼ş´óĞ¡£¬´ó¶ËÄ£Ê½
+	INT8U					Sub_package_Sum_High;  								//ÎÄ¼ş·Ö°üÊı¸ßÎ»
+	INT8U					Sub_package_Sum_Low;   								//ÎÄ¼ş·Ö°üÊıµÍÎ»
 };
-#pragma pack()						//å–æ¶ˆ1å­—èŠ‚å¯¹é½
+#pragma pack()						//È¡Ïû1×Ö½Ú¶ÔÆë
 
 
 
-/*å…¨å±€å˜é‡å£°æ˜*/
+/*È«¾Ö±äÁ¿ÉùÃ÷*/
 extern INT32U				bin_file_adress;
 extern INT8U				subbag_statistics[STA_NUM];
 extern struct FILE_UPDATA	file_update;
@@ -39,7 +39,7 @@ extern INT32U				sys2_upgrade_time;
 
 
 
-/*å‡½æ•°å£°æ˜*/
+/*º¯ÊıÉùÃ÷*/
 INT8U ExtendOnOffComm(u8 *InBuff, u16 Len);
 INT8U SetApnComm(u8 *InBuff, u16 Len);
 INT8U FormatFlashComm(u8 *InBuff, u16 Len);

@@ -20,14 +20,14 @@
 /* Get Drive Status                                                      */
 /*-----------------------------------------------------------------------*/
 
-DSTATUS disk_status (								//读取SD卡状态用的函数，此处可不用管
+DSTATUS disk_status (								//��ȡSD��״̬�õĺ������˴��ɲ��ù�
 	BYTE pdrv		/* Physical drive nmuber to identify the drive */
 )
 {
 	switch (pdrv) {
 	case DEV_WQ256 :
 		
-	if(WQ256_Flag)	return RES_OK;		//若WQ256处于已初始化状态，回复OK
+	if(WQ256_Flag)	return RES_OK;		//��WQ256�����ѳ�ʼ��״̬���ظ�OK
 		else	return STA_NOINIT;
 
 	case DEV_MMC :
@@ -53,9 +53,9 @@ DSTATUS disk_initialize (
 
 	switch (pdrv) {
 	case DEV_WQ256 :	
-		result = W25QXX_Init(FF_Num);							//需填入一个初始化参数，暂时填一个6
-		if(result==1)	return RES_OK;							//WQ256初始化成功
-		else	return STA_NOINIT;								//初始化失败
+		result = W25QXX_Init(FF_Num);							//������һ����ʼ����������ʱ��һ��6
+		if(result==1)	return RES_OK;							//WQ256��ʼ���ɹ�
+		else	return STA_NOINIT;								//��ʼ��ʧ��
 	case DEV_MMC :
 		return STA_NODISK;
 
@@ -82,8 +82,8 @@ DRESULT disk_read (
 	DRESULT res;
 	int result;
 	
-	if(!count) return RES_PARERR; 									// count不能等于0，否则返回参数错误 
-	switch (pdrv) {													//选择设备
+	if(!count) return RES_PARERR; 									// count���ܵ���0�����򷵻ز������� 
+	switch (pdrv) {													//ѡ���豸
 	case DEV_WQ256 :
 		result = W25QXX_Read_By_Sector(buff,sector,count);
 		if(result==1)	res=RES_OK;
@@ -128,7 +128,7 @@ DRESULT disk_write (
 		
 		if(result==1)	
 		{
-			OSTimeDly(1);	//注意事项：在写完之后，有一个延时20ms的动作。这是因为：FatFs写页表和目录表时，如果写完SPIFlash不加延时，就会写入不成功。这导致的后果是：对页表的修改无法生效。也就是说，对已有文件的数据修改（不改变文件大小）会生效，但新增文件、删除文件不会生效。
+			OSTimeDly(1);	//ע�������д��֮����һ����ʱ20ms�Ķ�����������Ϊ��FatFsдҳ����Ŀ¼��ʱ�����д��SPIFlash������ʱ���ͻ�д�벻�ɹ����⵼�µĺ���ǣ���ҳ�����޸��޷���Ч��Ҳ����˵���������ļ��������޸ģ����ı��ļ���С������Ч���������ļ���ɾ���ļ�������Ч��
 			res=RES_OK;
 		}
 		else			res=RES_ERROR;
@@ -163,25 +163,25 @@ DRESULT disk_ioctl (
     WORD  *pword = NULL;
 	
 	switch(cmd) {
-	 case CTRL_SYNC:										//确保写入操作已完成
+	 case CTRL_SYNC:										//ȷ��д����������
 				return RES_OK;
 
-	case GET_SECTOR_COUNT:									//获取扇区数量
+	case GET_SECTOR_COUNT:									//��ȡ��������
 				pdword = (DWORD *)buff;
 				*pdword = Sector_Max + 1;
 				return RES_OK;
 
-	case GET_SECTOR_SIZE:									//获取单个扇区大小
+	case GET_SECTOR_SIZE:									//��ȡ����������С
 				pword = (WORD *)buff;
 				*pword = Sector_Size;
 				return RES_OK;
 	
-	 case GET_BLOCK_SIZE:									//获取擦除块大小（以扇区为单位）
+	 case GET_BLOCK_SIZE:									//��ȡ�������С��������Ϊ��λ��
 				pdword = (DWORD *)buff;
 				*pdword = 1;
 				return RES_OK;
      
-     case CTRL_TRIM:										//强制擦除
+     case CTRL_TRIM:										//ǿ�Ʋ���
 				return RES_PARERR;
 	
 	
@@ -191,17 +191,17 @@ DRESULT disk_ioctl (
 }
 
 /*******************************************************************************
-添加文件时间戳功能，创建/修改文件时记录操作时间：
-*当FF_FS_NORTC设为0：开启文件时间戳功能
-*返回值是32位无符号数：31-25位为当前年份与1980的差值；
-					  24-21位为月；20-16为日；
-					  15-11为时；
-					  10-5为分；
-					  4-0为秒除以2
+�����ļ�ʱ������ܣ�����/�޸��ļ�ʱ��¼����ʱ�䣺
+*��FF_FS_NORTC��Ϊ0�������ļ�ʱ�������
+*����ֵ��32λ�޷�������31-25λΪ��ǰ�����1980�Ĳ�ֵ��
+					  24-21λΪ�£�20-16Ϊ�գ�
+					  15-11Ϊʱ��
+					  10-5Ϊ�֣�
+					  4-0Ϊ�����2
 *******************************************************************************/
 DWORD get_fattime (void)
 {
-	struct NW_TIME		time = {0};											//年月日时分秒（年为年份-2000）
+	struct NW_TIME		time = {0};											//������ʱ���루��Ϊ���-2000��
 	DWORD				fat_time = 0;
 	
 	NW_GetTime(&time);

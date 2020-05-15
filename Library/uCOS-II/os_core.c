@@ -504,7 +504,7 @@ void  OSStatInit (void)
     OS_ENTER_CRITICAL();
     OSIdleCtr    = 0L;                           /* Clear idle counter                                 */
     OS_EXIT_CRITICAL();
-    OSTimeDly(OS_TICKS_PER_SEC / 10);            /* Determine MAX. idle counter value for 1/10 second  */ //åˆå§‹åŒ–ï¼Œåœ¨ä»»åŠ¡æœªè·‘èµ·æ¥çš„æ—¶å€™éƒ½æ˜¯IDLEï¼Œè¿™æ—¶å€™è®¡ç®—å‡ºOSIdleCtrMax
+    OSTimeDly(OS_TICKS_PER_SEC / 10);            /* Determine MAX. idle counter value for 1/10 second  */ //³õÊ¼»¯£¬ÔÚÈÎÎñÎ´ÅÜÆğÀ´µÄÊ±ºò¶¼ÊÇIDLE£¬ÕâÊ±ºò¼ÆËã³öOSIdleCtrMax
     OS_ENTER_CRITICAL();
     OSIdleCtrMax = OSIdleCtr;                    /* Store maximum idle counter count in 1/10 second    */
     OSStatRdy    = OS_TRUE;
@@ -579,9 +579,9 @@ void  OSTimeTick (void)
                                                            /* Check for timeout                            */
                     if ((ptcb->OSTCBStat & OS_STAT_PEND_ANY) != OS_STAT_RDY) {
                         ptcb->OSTCBStat   &= ~OS_STAT_PEND_ANY;                /* Yes, Clear status flag   */
-                        ptcb->OSTCBPendTO  = OS_TRUE;                          /* Indicate PEND timeout    */					//è¶…æ—¶æœªæ”¶åˆ°
+                        ptcb->OSTCBPendTO  = OS_TRUE;                          /* Indicate PEND timeout    */					//³¬Ê±Î´ÊÕµ½
                     } else {
-                        ptcb->OSTCBPendTO  = OS_FALSE;																			//æ¥æ”¶åˆ°ä¿¡å·é‡
+                        ptcb->OSTCBPendTO  = OS_FALSE;																			//½ÓÊÕµ½ĞÅºÅÁ¿
                     }
 
                     if ((ptcb->OSTCBStat & OS_STAT_SUSPEND) == OS_STAT_RDY) {  /* Is task suspended?       */
@@ -1362,15 +1362,15 @@ void  OS_TaskIdle (void *p_arg)
         OSIdleCtr++;
         OS_EXIT_CRITICAL();	
 		if((OSIntNesting==0)&&(StopModeLock==0)&&(BSP_UART_TxState(2)==0)&&(BSP_UART_TxState(1)==0)&&(BSP_UART_TxState(3)==0))   
-			//1.StopModeLockï¼šæ‰‹åŠ¨æ·»åŠ çš„å˜é‡ï¼Œåœ¨éœ€è¦ä¿æŠ¤çš„åœ°æ–¹ç¦å…¥STOPï¼Œé¿å…å‡ºé—®é¢˜ï¼ˆåŒ…æ‹¬ç­‰å¾…é‚®ç®±ï¼Œå­˜æ•°è¿‡ç¨‹ç­‰ï¼‰ï¼›2.ä¸²å£å‘é€è¿‡ç¨‹ï¼Œä¸­æ–­å‡½æ•°å¤„ç†è¿‡ç¨‹ç¦å…¥STOP
+			//1.StopModeLock£ºÊÖ¶¯Ìí¼ÓµÄ±äÁ¿£¬ÔÚĞèÒª±£»¤µÄµØ·½½ûÈëSTOP£¬±ÜÃâ³öÎÊÌâ£¨°üÀ¨µÈ´ıÓÊÏä£¬´æÊı¹ı³ÌµÈ£©£»2.´®¿Ú·¢ËÍ¹ı³Ì£¬ÖĞ¶Ïº¯Êı´¦Àí¹ı³Ì½ûÈëSTOP
 		{
 			OSSchedLock();
 			OSTaskIdleHook();                        /* Call user definable HOOK   */          
 			OSSchedUnlock();
 		}	
 		else{
-//		MCU_INSTOP();			//ç¡çœ æ¨¡å¼ï¼ˆå†…æ ¸ä¼‘çœ ï¼ŒIOå£åŠå¤–è®¾ä¸åŠ¨ï¼‰ï¼Œå¯è¢«æ¯ä¸ªsystickä¸­æ–­å”¤é†’    //å¼ƒç”¨
-		PWR_EnterSLEEPMode(PWR_SLEEPNow,PWR_SLEEPEntry_WFI);    //sleep mode	è¿™ç©æ„ä¼šè¢«ä»»ä½•ä¸­æ–­å”¤é†’ï¼ŒåŒ…æ‹¬systick
+//		MCU_INSTOP();			//Ë¯ÃßÄ£Ê½£¨ÄÚºËĞİÃß£¬IO¿Ú¼°ÍâÉè²»¶¯£©£¬¿É±»Ã¿¸ösystickÖĞ¶Ï»½ĞÑ    //ÆúÓÃ
+		PWR_EnterSLEEPMode(PWR_SLEEPNow,PWR_SLEEPEntry_WFI);    //sleep mode	ÕâÍæÒâ»á±»ÈÎºÎÖĞ¶Ï»½ĞÑ£¬°üÀ¨systick
 		}
     }
 }
@@ -1415,17 +1415,17 @@ void  OS_TaskStat (void *p_arg)
     while (OSStatRdy == OS_FALSE) {
         OSTimeDly(2 * OS_TICKS_PER_SEC / 10);    /* Wait until statistic task is ready                 */
     }
-    max = OSIdleCtrMax / 100L;                    //100ç­‰åˆ†
+    max = OSIdleCtrMax / 100L;                    //100µÈ·Ö
     for (;;) {
         OS_ENTER_CRITICAL();
-        OSIdleCtrRun = OSIdleCtr                ;/* Obtain the of the idle counter for the past second */ //OSIdleCtråœ¨IDLEä»»åŠ¡ä¸­++ï¼Œåœ¨è¿™é‡Œæ¸…é›¶
+        OSIdleCtrRun = OSIdleCtr                ;/* Obtain the of the idle counter for the past second */ //OSIdleCtrÔÚIDLEÈÎÎñÖĞ++£¬ÔÚÕâÀïÇåÁã
         run          = OSIdleCtr;
         OSIdleCtr    = 0L;                       /* Reset the idle counter for the next second         */
         OS_EXIT_CRITICAL();
         if (max > 0L) {
             usage = (INT8S)(100L - run / max);
             if (usage >= 0) {                    /* Make sure we don't have a negative percentage      */
-                OSCPUUsage = usage;              //è¿™å°±æ˜¯CPUå ç”¨ç‡
+                OSCPUUsage = usage;              //Õâ¾ÍÊÇCPUÕ¼ÓÃÂÊ
             } else {
                 OSCPUUsage = 0;
             }

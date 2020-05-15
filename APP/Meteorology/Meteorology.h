@@ -14,20 +14,20 @@
 
 
 #pragma pack(2)
-typedef struct {						//æŠ¥æ–‡å†…å®¹(9-21)ç»“æ„ä½“ï¼Œæ ¹æ®å›½ç½‘è§„çº¦Q/GDW 242-2010ä¸­æ°”è±¡æŠ¥æ–‡æ ¼å¼å®šä¹‰
-	float	Ave_WindSpeed;				//10åˆ†é’Ÿå¹³å‡é£é€Ÿï¼ˆè£…ç½®å®‰è£…ç‚¹å¤„ï¼‰	=============ç”¨äºåå°æ˜¾ç¤ºé£é€Ÿ
-	INT16U	Ave_WindDirection;			//10åˆ†é’Ÿå¹³å‡é£å‘ï¼ˆè£…ç½®å®‰è£…ç‚¹å¤„ï¼‰	=============ç”¨äºåå°æ˜¾ç¤ºé£å‘
-	float	Max_WindSpeed;				//æœ€å¤§é£é€Ÿï¼ˆè£…ç½®å®‰è£…ç‚¹å¤„ï¼‰
-	float	Ext_WindSpeed;				//æå¤§é£é€Ÿï¼ˆè£…ç½®å®‰è£…ç‚¹å¤„ï¼‰
-	float	Std_WindSpeed;				//æ ‡å‡†é£é€Ÿï¼ˆåˆ©ç”¨å¯¹æ•°é£å»“çº¿è½¬æ¢åˆ°æ ‡å‡†çŠ¶æ€çš„é£é€Ÿï¼‰
-	float	Air_Temperature;			//æ°”æ¸©								=============ç”¨äºåå°æ˜¾ç¤ºæ¸©åº¦
-	INT16U	Humidity;					//æ¹¿åº¦								=============ç”¨äºåå°æ˜¾ç¤ºæ¹¿åº¦
-	float	Air_Pressure;				//æ°”å‹								=============ç”¨äºåå°æ˜¾ç¤ºæ°”å‹
-	float	Precipitation;				//é™é›¨é‡							=============ç”¨äºåå°æ˜¾ç¤ºé™é›¨é‡
-	float	Precipitation_Intensity;	//é™é›¨å¼ºåº¦
-	INT16U	Radiation_Intensity;		//å…‰è¾å°„å¼ºåº¦
-	INT32U	Reserve1;					//å¤‡ç”¨
-	INT32U	Reserve2;					//å¤‡ç”¨
+typedef struct {						//±¨ÎÄÄÚÈİ(9-21)½á¹¹Ìå£¬¸ù¾İ¹úÍø¹æÔ¼Q/GDW 242-2010ÖĞÆøÏó±¨ÎÄ¸ñÊ½¶¨Òå
+	float	Ave_WindSpeed;				//10·ÖÖÓÆ½¾ù·çËÙ£¨×°ÖÃ°²×°µã´¦£©	=============ÓÃÓÚºóÌ¨ÏÔÊ¾·çËÙ
+	INT16U	Ave_WindDirection;			//10·ÖÖÓÆ½¾ù·çÏò£¨×°ÖÃ°²×°µã´¦£©	=============ÓÃÓÚºóÌ¨ÏÔÊ¾·çÏò
+	float	Max_WindSpeed;				//×î´ó·çËÙ£¨×°ÖÃ°²×°µã´¦£©
+	float	Ext_WindSpeed;				//¼«´ó·çËÙ£¨×°ÖÃ°²×°µã´¦£©
+	float	Std_WindSpeed;				//±ê×¼·çËÙ£¨ÀûÓÃ¶ÔÊı·çÀªÏß×ª»»µ½±ê×¼×´Ì¬µÄ·çËÙ£©
+	float	Air_Temperature;			//ÆøÎÂ								=============ÓÃÓÚºóÌ¨ÏÔÊ¾ÎÂ¶È
+	INT16U	Humidity;					//Êª¶È								=============ÓÃÓÚºóÌ¨ÏÔÊ¾Êª¶È
+	float	Air_Pressure;				//ÆøÑ¹								=============ÓÃÓÚºóÌ¨ÏÔÊ¾ÆøÑ¹
+	float	Precipitation;				//½µÓêÁ¿							=============ÓÃÓÚºóÌ¨ÏÔÊ¾½µÓêÁ¿
+	float	Precipitation_Intensity;	//½µÓêÇ¿¶È
+	INT16U	Radiation_Intensity;		//¹â·øÉäÇ¿¶È
+	INT32U	Reserve1;					//±¸ÓÃ
+	INT32U	Reserve2;					//±¸ÓÃ
 //	INT16U	Rec_WindSpeed;				//
 //	INT16U	Rec_WindDirection;			//
 }MET_Data_TypeDef;
@@ -36,12 +36,12 @@ typedef struct {						//æŠ¥æ–‡å†…å®¹(9-21)ç»“æ„ä½“ï¼Œæ ¹æ®å›½ç½‘è§„çº¦Q/GDW 24
 
 
 
-//å…¨å±€å˜é‡å£°æ˜
-extern INT16U	WindSpeed;							//æœºæ¢°å¼ä¼ æ„Ÿå™¨é£é€Ÿ
-extern INT16U	WindDirection;						//æœºæ¢°å¼ä¼ æ„Ÿå™¨é£å‘
-extern MET_Data_TypeDef	MET_Data;					//ä¿å­˜å¾®æ°”è±¡æ•°æ®
+//È«¾Ö±äÁ¿ÉùÃ÷
+extern INT16U	WindSpeed;							//»úĞµÊ½´«¸ĞÆ÷·çËÙ
+extern INT16U	WindDirection;						//»úĞµÊ½´«¸ĞÆ÷·çÏò
+extern MET_Data_TypeDef	MET_Data;					//±£´æÎ¢ÆøÏóÊı¾İ
 
-//å‡½æ•°å£°æ˜
+//º¯ÊıÉùÃ÷
 void MET_Main(void *org);
 INT8U Get_Meteorology_Data( INT8U retry );
 INT8U MET_packet_content( INT8U *OutBuff );
@@ -50,7 +50,7 @@ INT8U Test_Meteorology_Data( INT8U retry );
 
 
 
-//æ— å¤´æ–‡ä»¶çš„å¤–éƒ¨å‡½æ•°å£°æ˜
+//ÎŞÍ·ÎÄ¼şµÄÍâ²¿º¯ÊıÉùÃ÷
 extern INT16U  GDGuiYue(INT8U *OutBuff,INT8U *InBuff,INT16U InLen,INT8U Frame_Type,INT8U Packet_Type);
 extern 	void B485_init(unsigned int rate);
 extern 	INT8U GetSysTime(INT8U *OutBuff);

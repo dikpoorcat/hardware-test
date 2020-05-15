@@ -1,22 +1,22 @@
 /*****************************************Copyright(C)******************************************
-**-----------------------------------------æ–‡ä»¶ä¿¡æ¯---------------------------------------------
-**æ–‡    ä»¶    å: bsp_RTC.c
-**åˆ›    å»º    äºº: andydriver
-**åˆ›  å»º  æ—¥  æœŸ: 081210
-**æœ€  æ–°  ç‰ˆ  æœ¬: V1.0
-**æ          è¿°: RS8025é©±åŠ¨
-**---------------------------------------å†å²ç‰ˆæœ¬ä¿¡æ¯-------------------------------------------
-**ä¿®    æ”¹    äºº: æœé¢–æˆ
-**æ—¥          æœŸ: 2019.03.06
-**ç‰ˆ          æœ¬: V1.0
-**æ          è¿°: æ•´ç†ä¿®è®¢ï¼Œåˆ†ç¦»æ‰å›½ç”µè§„çº¦éƒ¨åˆ†å‡½æ•°ã€‚
+**-----------------------------------------ÎÄ¼şĞÅÏ¢---------------------------------------------
+**ÎÄ    ¼ş    Ãû: bsp_RTC.c
+**´´    ½¨    ÈË: andydriver
+**´´  ½¨  ÈÕ  ÆÚ: 081210
+**×î  ĞÂ  °æ  ±¾: V1.0
+**Ãè          Êö: RS8025Çı¶¯
+**---------------------------------------ÀúÊ·°æ±¾ĞÅÏ¢-------------------------------------------
+**ĞŞ    ¸Ä    ÈË: ¶ÅÓ±³É
+**ÈÕ          ÆÚ: 2019.03.06
+**°æ          ±¾: V1.0
+**Ãè          Êö: ÕûÀíĞŞ¶©£¬·ÖÀëµô¹úµç¹æÔ¼²¿·Öº¯Êı¡£
 **----------------------------------------------------------------------------------------------
 ***********************************************************************************************/
 #include "bsp_RTC.h"
 
 
 
-/*å…¨å±€å˜é‡*/
+/*È«¾Ö±äÁ¿*/
 struct BSPRTC_TIME gRtcTime;
 struct BSPRTC_TIME gSetTime;
 
@@ -27,8 +27,8 @@ struct BSPRTC_TIME gSetTime;
 #if 1
 /*******************************************************************************
 * Function Name: static void iic_delay(INT32U time)                                        
-* Description:   æœ¬IICæ¨¡å—å»¶æ—¶å‡½æ•°
-* Input:         timeï¼šå»¶æ—¶å€¼ï¼Œ1 or 2 instruction clock,32Mçš„è¯ï¼ŒTclk=31.25ns
+* Description:   ±¾IICÄ£¿éÑÓÊ±º¯Êı
+* Input:         time£ºÑÓÊ±Öµ£¬1 or 2 instruction clock,32MµÄ»°£¬Tclk=31.25ns
 * Return:        None
 *******************************************************************************/
 static void iic_delay(INT32U time)
@@ -38,7 +38,7 @@ static void iic_delay(INT32U time)
 
 /*******************************************************************************
 * Function Name: static void iic_clk_high(void)                                         
-* Description:   IIC_CLKè¾“å‡ºé«˜ç”µå¹³
+* Description:   IIC_CLKÊä³ö¸ßµçÆ½
 * Input:         None
 * Return:        None
 *******************************************************************************/
@@ -50,7 +50,7 @@ static void iic_clk_high(void)
 
 /*******************************************************************************
 * Function Name: static void iic_clk_low(void)                                          
-* Description:   IIC_CLKè¾“å‡ºä½ç”µå¹³
+* Description:   IIC_CLKÊä³öµÍµçÆ½
 * Input:         None
 * Return:        None
 *******************************************************************************/
@@ -62,42 +62,42 @@ static void iic_clk_low(void)
 
 /*******************************************************************************
 * Function Name: static void iic_data_set_in(void)                                                  
-* Description:   é…ç½®IIC_SDAå¼•è„šä¸ºè¾“å…¥æ¨¡å¼
+* Description:   ÅäÖÃIIC_SDAÒı½ÅÎªÊäÈëÄ£Ê½
 * Input:         None
 * Return:        None
 *******************************************************************************/
 static void iic_data_set_in(void)
 {
 	GPIO_InitTypeDef 	GPIO_InitStructure;
-	// é…ç½®SDA
+	// ÅäÖÃSDA
 	GPIO_InitStructure.GPIO_Pin = SIIC_GPIO_SDA;
  
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;      					//æµ®ç©ºè¾“å…¥
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;      					//¸¡¿ÕÊäÈë
 	
 	GPIO_Init(SIIC_GPIO, &GPIO_InitStructure);	
 }
 																				
 /*******************************************************************************
 * Function Name: static void iic_data_set_out(void)                                           
-* Description:   é…ç½®IIC_SDAå¼•è„šä¸ºè¾“å‡ºæ¨¡å¼
+* Description:   ÅäÖÃIIC_SDAÒı½ÅÎªÊä³öÄ£Ê½
 * Input:         None
 * Return:        None
 *******************************************************************************/
 static void iic_data_set_out(void)
 {
 	GPIO_InitTypeDef 	GPIO_InitStructure;
-	// é…ç½®SDA
+	// ÅäÖÃSDA
 	GPIO_InitStructure.GPIO_Pin = SIIC_GPIO_SDA;
  
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;       						//æ¨æŒ½è¾“å‡º
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;       						//ÍÆÍìÊä³ö
 	GPIO_Init(SIIC_GPIO, &GPIO_InitStructure);	
 }
 
 /*******************************************************************************
 * Function Name: static void iic_data_high(void)                                        
-* Description:   IIC_SDAå¼•è„šè¾“å‡ºé«˜ç”µå¹³(æ•°æ®1)
+* Description:   IIC_SDAÒı½ÅÊä³ö¸ßµçÆ½(Êı¾İ1)
 * Input:         None
 * Return:        None
 *******************************************************************************/
@@ -109,7 +109,7 @@ static void iic_data_high(void)
 
 /*******************************************************************************
 * Function Name: static void iic_data_low(void)                                          
-* Description:   IIC_SDAå¼•è„šè¾“å‡ºä½ç”µå¹³(æ•°æ®0)
+* Description:   IIC_SDAÒı½ÅÊä³öµÍµçÆ½(Êı¾İ0)
 * Input:         None
 * Return:        None
 *******************************************************************************/
@@ -121,9 +121,9 @@ static void iic_data_low(void)
 
 /*******************************************************************************
 * Function Name: static INT8U iic_data_read(void)                                       
-* Description:   æœ¬IICæ¨¡å—å»¶æ—¶å‡½æ•°
+* Description:   ±¾IICÄ£¿éÑÓÊ±º¯Êı
 * Input:         None
-* Return:        I/Oå£ä¸Šçš„ä¸€ä¸ªä½çš„å½“å‰è¯»å…¥ç”µå¹³çŠ¶æ€ï¼Œ1ï¼šé«˜  0ï¼šä½
+* Return:        I/O¿ÚÉÏµÄÒ»¸öÎ»µÄµ±Ç°¶ÁÈëµçÆ½×´Ì¬£¬1£º¸ß  0£ºµÍ
 *******************************************************************************/
 static INT8U iic_data_read(void)
 {
@@ -133,14 +133,14 @@ static INT8U iic_data_read(void)
 
 /*******************************************************************************
 * Function Name: void iic_init(void)                                    
-* Description:   å¤–éƒ¨RTC(Rx8025)èŠ¯ç‰‡æ¥å£I2Cåˆå§‹åŒ–ï¼Œç”¨å•ç‰‡æœºçš„IOå£æ¨¡æ‹Ÿçš„I2C
+* Description:   Íâ²¿RTC(Rx8025)Ğ¾Æ¬½Ó¿ÚI2C³õÊ¼»¯£¬ÓÃµ¥Æ¬»úµÄIO¿ÚÄ£ÄâµÄI2C
 * Input:         None
 * Return:        None
 *******************************************************************************/
 void iic_init(void)
 {
 	GPIO_InitTypeDef 	GPIO_InitStructure;
-	// é…ç½®SCLä¸ºè¾“å‡ºè„š	  
+	// ÅäÖÃSCLÎªÊä³ö½Å	  
 	RCC_APB2PeriphClockCmd(RCCRTCEN ,ENABLE);
 	GPIO_InitStructure.GPIO_Pin = SIIC_GPIO_SCL;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -154,7 +154,7 @@ void iic_init(void)
 
 /*******************************************************************************
 * Function Name: void iic_start(void)                                   
-* Description:   I2Cå¼€å§‹
+* Description:   I2C¿ªÊ¼
 * Input:         None
 * Return:        None
 *******************************************************************************/
@@ -173,7 +173,7 @@ void iic_start(void)
 
 /*******************************************************************************
 * Function Name: void iic_start(void)                                   
-* Description:   I2Cåœæ­¢
+* Description:   I2CÍ£Ö¹
 * Input:         None
 * Return:        None
 *******************************************************************************/
@@ -188,7 +188,7 @@ void iic_stop(void)
 
 /*******************************************************************************
 * Function Name: void iic_ack(void)                               
-* Description:    åº”ç­”:æ•°æ®æ¥æ”¶æˆåŠŸ
+* Description:    Ó¦´ğ:Êı¾İ½ÓÊÕ³É¹¦
 * Input:         None
 * Return:        None
 *******************************************************************************/
@@ -201,7 +201,7 @@ void iic_ack(void)
 
 /*******************************************************************************
 * Function Name: void iic_noack(void)                          
-* Description:   åº”ç­”:æ•°æ®æ¥æ”¶ä¸æˆåŠŸ
+* Description:   Ó¦´ğ:Êı¾İ½ÓÊÕ²»³É¹¦
 * Input:         None
 * Return:        None
 *******************************************************************************/
@@ -214,16 +214,16 @@ void iic_noack(void)
 
 /*******************************************************************************
 * Function Name: INT8U iic_send_byte(INT8U val)                                        
-* Description:   I/Oå£æ¨¡æ‹Ÿçš„IICå‘é€ä¸€ä¸ªå­—èŠ‚çš„æ•°æ®
-* Input:         val:è¦å‘é€çš„å€¼ï¼ˆ1Byteï¼‰
+* Description:   I/O¿ÚÄ£ÄâµÄIIC·¢ËÍÒ»¸ö×Ö½ÚµÄÊı¾İ
+* Input:         val:Òª·¢ËÍµÄÖµ£¨1Byte£©
 * Return:        None
 *******************************************************************************/
 INT8U iic_send_byte(INT8U val)
 {
 	INT8U i=0;
 	
-	iic_clk_low();           // å…ˆæ‹‰ä½æ—¶é’Ÿ
-	iic_data_set_out();      // è®¾ç½®SDAè„šä¸ºè¾“å‡ºæ¨¡å¼
+	iic_clk_low();           // ÏÈÀ­µÍÊ±ÖÓ
+	iic_data_set_out();      // ÉèÖÃSDA½ÅÎªÊä³öÄ£Ê½
 	for(i=0;i<8;i++)
 	{
 		if(val&0x80)
@@ -235,14 +235,14 @@ INT8U iic_send_byte(INT8U val)
 			iic_data_low();
 		}
 		iic_clk_high();
-		                  //zzs note??? CNMï¼Œä¿¡å·éƒ½è¿˜æ²¡å»ºç«‹èµ·æ¥å°±åˆç½®ä½ï¼Œè¿™æ ·ä¹Ÿè¡Œï¼Ÿï¼Ÿï¼Ÿ
+		                  //zzs note??? CNM£¬ĞÅºÅ¶¼»¹Ã»½¨Á¢ÆğÀ´¾ÍÓÖÖÃµÍ£¬ÕâÑùÒ²ĞĞ£¿£¿£¿
 		iic_clk_low();
 		val = val<<1;
 	}
 	
-	/*ç­‰å¾…åº”ç­”*/
+	/*µÈ´ıÓ¦´ğ*/
 	iic_data_set_in();
-	iic_data_read();  //zzs??? readäº†å¹²å˜›å‘¢ï¼Ÿä¹Ÿä¸ç”¨ä¸ªå˜é‡æ¥æ”¶ä¸€ä¸‹ï¼Ÿ
+	iic_data_read();  //zzs??? readÁË¸ÉÂïÄØ£¿Ò²²»ÓÃ¸ö±äÁ¿½ÓÊÕÒ»ÏÂ£¿
 	iic_clk_high();
 	i=0;
 	while(iic_data_read())
@@ -259,9 +259,9 @@ INT8U iic_send_byte(INT8U val)
 
 /*******************************************************************************
 * Function Name: INT8U iic_rec_byte(void)                                 
-* Description:   I/Oå£æ¨¡æ‹Ÿçš„IICæ¥æ”¶ä¸€ä¸ªå­—èŠ‚çš„æ•°æ®
+* Description:   I/O¿ÚÄ£ÄâµÄIIC½ÓÊÕÒ»¸ö×Ö½ÚµÄÊı¾İ
 * Input:         None
-* Return:        val: æ¥æ”¶åˆ°çš„å€¼(1Byte)
+* Return:        val: ½ÓÊÕµ½µÄÖµ(1Byte)
 *******************************************************************************/
 INT8U iic_rec_byte(void)
 {
@@ -270,7 +270,7 @@ INT8U iic_rec_byte(void)
 	
 	val = 0;
 	iic_clk_low();
-	iic_data_set_in();														// SDAè¾“å…¥,å¿…é¡»è¦
+	iic_data_set_in();														// SDAÊäÈë,±ØĞëÒª
 	for(i=0;i<8;i++)
 	{
 		iic_delay(IIC_DELAY_TIME_LONG);
@@ -284,10 +284,10 @@ INT8U iic_rec_byte(void)
 
 /*******************************************************************************
 * Function Name: static void RX8025Write(INT8U addr,INT8U *pData,INT8U len)                                 
-* Description:   I/Oå£æ¨¡æ‹Ÿçš„IICï¼Œå‘RX8025æŒ‡å®šåœ°å€å†™å…¥ä¸€ä¸²æ•°æ®
-* Input:         addr  :  RX8025å†…éƒ¨å¯„å­˜å™¨çš„åœ°å€
-                 pData : ä¸»è°ƒå‡½æ•°ä¸­æŒ‡å®šçš„æŒ‡å‘è¦è¢«æœ¬å‡½æ•°å‘é€çš„æ•°æ®ä¸²çš„é¦–åœ°å€çš„æŒ‡é’ˆ
-                 len   : å‘é€çš„æ•°æ®ä¸²é•¿åº¦ 
+* Description:   I/O¿ÚÄ£ÄâµÄIIC£¬ÏòRX8025Ö¸¶¨µØÖ·Ğ´ÈëÒ»´®Êı¾İ
+* Input:         addr  :  RX8025ÄÚ²¿¼Ä´æÆ÷µÄµØÖ·
+                 pData : Ö÷µ÷º¯ÊıÖĞÖ¸¶¨µÄÖ¸ÏòÒª±»±¾º¯Êı·¢ËÍµÄÊı¾İ´®µÄÊ×µØÖ·µÄÖ¸Õë
+                 len   : ·¢ËÍµÄÊı¾İ´®³¤¶È 
 *
 * Return:        None
 *******************************************************************************/
@@ -319,13 +319,13 @@ static void RX8025Write(INT8U addr,INT8U *pData,INT8U len)
 
 /*******************************************************************************
 * Function Name: static void RX8025Read(INT8U addr,INT8U *pData,INT8U len)                        
-* Description:   I/Oå£æ¨¡æ‹Ÿçš„IICï¼Œä»RX8025æŒ‡å®šåœ°å€è¯»å–ä¸€ä¸²æ•°æ®ï¼ˆè¯»å‡ºæ¥åº”è¯¥å°±æ˜¯8421BCDç  ZEï¼‰
-* Input:         addr  :  RX8025å†…éƒ¨å¯„å­˜å™¨çš„åœ°å€
-                 pData : ä¸»è°ƒå‡½æ•°ä¸­æŒ‡å®šçš„ç”¨äºæ¥æ”¶æ¥è‡ªRX8025çš„æ•°æ® çš„æ¥æ”¶ç©ºé—´çš„é¦–åœ°å€æŒ‡é’ˆ
-                 len   : æ¥æ”¶çš„æ•°æ®ä¸²é•¿åº¦ 
+* Description:   I/O¿ÚÄ£ÄâµÄIIC£¬´ÓRX8025Ö¸¶¨µØÖ·¶ÁÈ¡Ò»´®Êı¾İ£¨¶Á³öÀ´Ó¦¸Ã¾ÍÊÇ8421BCDÂë ZE£©
+* Input:         addr  :  RX8025ÄÚ²¿¼Ä´æÆ÷µÄµØÖ·
+                 pData : Ö÷µ÷º¯ÊıÖĞÖ¸¶¨µÄÓÃÓÚ½ÓÊÕÀ´×ÔRX8025µÄÊı¾İ µÄ½ÓÊÕ¿Õ¼äµÄÊ×µØÖ·Ö¸Õë
+                 len   : ½ÓÊÕµÄÊı¾İ´®³¤¶È 
 *
 *
-* Return:        é€šè¿‡å½¢å‚pDataè¿”å›
+* Return:        Í¨¹ıĞÎ²ÎpData·µ»Ø
 *******************************************************************************/
 static void RX8025Read(INT8U addr,INT8U *pData,INT8U len)
 {
@@ -363,9 +363,9 @@ static void RX8025Read(INT8U addr,INT8U *pData,INT8U len)
 
 /*******************************************************************************
 * Function Name: void BSP_RX8025Write(INT8U *pData,INT8U len)                                     
-* Description:   å‘æ—¶é’ŸèŠ¯ç‰‡RX8025å†™å…¥æ•°æ®
-* Input:         pData : è¦å†™å…¥çš„æ•°æ®
-                 len   : å†™å…¥é•¿åº¦
+* Description:   ÏòÊ±ÖÓĞ¾Æ¬RX8025Ğ´ÈëÊı¾İ
+* Input:         pData : ÒªĞ´ÈëµÄÊı¾İ
+                 len   : Ğ´Èë³¤¶È
 * Return:        None
 *******************************************************************************/
 void BSP_RX8025Write(INT8U *pData,INT8U len)
@@ -375,9 +375,9 @@ void BSP_RX8025Write(INT8U *pData,INT8U len)
 
 /*******************************************************************************
 * Function Name: void BSP_RX8025Read(INT8U *pData,INT8U len)                              
-* Description:   ä»æ—¶é’ŸèŠ¯ç‰‡RX8025è¯»å–æ•°æ®
-* Input:         pData : è¯»å‡ºæ•°æ®çš„å­˜æ”¾åœ°ç‚¹
-                 len   : è¯»å–é•¿åº¦
+* Description:   ´ÓÊ±ÖÓĞ¾Æ¬RX8025¶ÁÈ¡Êı¾İ
+* Input:         pData : ¶Á³öÊı¾İµÄ´æ·ÅµØµã
+                 len   : ¶ÁÈ¡³¤¶È
 * Return:        None
 *******************************************************************************/
 void BSP_RX8025Read(INT8U *pData,INT8U len)
@@ -388,20 +388,20 @@ void BSP_RX8025Read(INT8U *pData,INT8U len)
 #if 0
 /*******************************************************************************
 * Function Name: void BSP_RX8025ControlINTA(_BSPRX8025_INTAOUT state)                            
-* Description:   æ§åˆ¶èŠ¯ç‰‡çš„INTAè„šçŠ¶æ€
-* Input:         state:çŠ¶æ€(_BSPRX8025_INTAOUT)
-								 BSPRX8025_INTAOUT_HIZ:é«˜é˜»
-								 BSPRX8025_INTAOUT_LOW:è¾“å‡ºä½
-								 BSPRX8025_INTAOUT_2HZ:è¾“å‡º2Hz(50%)çš„è„‰å†²
-								 BSPRX8025_INTAOUT_1HZ:è¾“å‡º1Hz(50%)çš„è„‰å†²
-								 BSPRX8025_INTAOUT_SEC:æ¯ç§’çš„ç¬¬0ç§’ç¿»è½¬?è¿˜æ˜¯è„‰å†²?
-								 BSPRX8025_INTAOUT_MIN:æ¯åˆ†çš„ç¬¬0ç§’ç¿»è½¬?è¿˜æ˜¯è„‰å†²?
-								 BSPRX8025_INTAOUT_HOUR:æ¯æ—¶çš„ç¬¬0ç§’ç¿»è½¬?è¿˜æ˜¯è„‰å†²?
-								 BSPRX8025_INTAOUT_MONTH:æ¯æœˆçš„ç¬¬0ç§’ç¿»è½¬?è¿˜æ˜¯è„‰å†²?
+* Description:   ¿ØÖÆĞ¾Æ¬µÄINTA½Å×´Ì¬
+* Input:         state:×´Ì¬(_BSPRX8025_INTAOUT)
+								 BSPRX8025_INTAOUT_HIZ:¸ß×è
+								 BSPRX8025_INTAOUT_LOW:Êä³öµÍ
+								 BSPRX8025_INTAOUT_2HZ:Êä³ö2Hz(50%)µÄÂö³å
+								 BSPRX8025_INTAOUT_1HZ:Êä³ö1Hz(50%)µÄÂö³å
+								 BSPRX8025_INTAOUT_SEC:Ã¿ÃëµÄµÚ0Ãë·­×ª?»¹ÊÇÂö³å?
+								 BSPRX8025_INTAOUT_MIN:Ã¿·ÖµÄµÚ0Ãë·­×ª?»¹ÊÇÂö³å?
+								 BSPRX8025_INTAOUT_HOUR:Ã¿Ê±µÄµÚ0Ãë·­×ª?»¹ÊÇÂö³å?
+								 BSPRX8025_INTAOUT_MONTH:Ã¿ÔÂµÄµÚ0Ãë·­×ª?»¹ÊÇÂö³å?
 * Return:        None
 *
 * Author:                               
-* Date First Issued: èµµå¿—èˆœäº2018å¹´1æœˆ18æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* Date First Issued: ÕÔÖ¾Ë´ÓÚ2018Äê1ÔÂ18ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version:  V1.0
 *******************************************************************************/
 void BSP_RX8025ControlINTA(_BSPRX8025_INTAOUT state)
@@ -409,14 +409,14 @@ void BSP_RX8025ControlINTA(_BSPRX8025_INTAOUT state)
 	union RX8025_REG_CONTROL1	data={0};
 	
 	RX8025Read((RX8025_ADDR_CONTROL1&RX8025_READ_MODE),(INT8U *)(&data),1);
-	data.bits.CT = state;							// INTAè¾“å‡º1Hzæ–¹æ³¢
+	data.bits.CT = state;							// INTAÊä³ö1Hz·½²¨
 	RX8025Write((RX8025_ADDR_CONTROL1&RX8025_WRITE_MODE),(INT8U *)(&data),1);
 }
 #endif
 
 /*******************************************************************************
 * Function Name: void BSP_RX8025Init(void)                                
-* Description:   æ—¶é’ŸèŠ¯ç‰‡RX8025çš„åˆå§‹åŒ–
+* Description:   Ê±ÖÓĞ¾Æ¬RX8025µÄ³õÊ¼»¯
 * Input:         None
 * Return:        None
 *******************************************************************************/
@@ -429,7 +429,7 @@ void BSP_RX8025Init(void)
 	iic_init();
 	RX8025Read((RX8025_ADDR_SECONDS&RX8025_READ_MODE),buf,8);
 	buf[0] = 0x20;
-	RX8025Write((RX8025_ADDR_CONTROL1&RX8025_WRITE_MODE),buf,1);				//24å°æ—¶åˆ¶
+	RX8025Write((RX8025_ADDR_CONTROL1&RX8025_WRITE_MODE),buf,1);				//24Ğ¡Ê±ÖÆ
 	RX8025Read((RX8025_ADDR_SECONDS&RX8025_READ_MODE),buf,16);
 	iic_delay(50000);
 	
@@ -441,10 +441,10 @@ void BSP_RX8025Init(void)
 
 
 
-/*===========================================================ä»¥ä¸Šä¸ºRX8025åº•å±‚æ“ä½œå‡½æ•°===========================================================*/
+/*===========================================================ÒÔÉÏÎªRX8025µ×²ã²Ù×÷º¯Êı===========================================================*/
 
 
-/*===========================================================ä»¥ä¸‹ä¸ºRTCé€šç”¨APIæ¥å£å‡½æ•°===========================================================*/
+/*===========================================================ÒÔÏÂÎªRTCÍ¨ÓÃAPI½Ó¿Úº¯Êı===========================================================*/
 
 
 
@@ -453,8 +453,8 @@ void BSP_RX8025Init(void)
 
 /*******************************************************************************
 * Function Name: static void BSP_RTCWrite(const struct BSPRTC_TIME *pTime)                          
-* Description:   å‘RTCå†™å…¥ç»“æ„ä½“ä¸­çš„æ—¶é—´
-* Input:         pTime : ä¸»è°ƒæŒ‡å®šçš„ï¼ŒæŒ‡å‘RTCæ—¶é—´ç»“æ„ä½“çš„é¦–åœ°å€ {ç§’ï¼›åˆ†ï¼›æ—¶ï¼›å‘¨ï¼›æ—¥ï¼›æœˆï¼›å¹´}ï¼Œä¸€èˆ¬æ˜¯æ ¡å¯¹æ—¶é’Ÿæ—¶çš„æ ‡å‡†æ—¶é—´å‰¯æœ¬ã€‚
+* Description:   ÏòRTCĞ´Èë½á¹¹ÌåÖĞµÄÊ±¼ä
+* Input:         pTime : Ö÷µ÷Ö¸¶¨µÄ£¬Ö¸ÏòRTCÊ±¼ä½á¹¹ÌåµÄÊ×µØÖ· {Ãë£»·Ö£»Ê±£»ÖÜ£»ÈÕ£»ÔÂ£»Äê}£¬Ò»°ãÊÇĞ£¶ÔÊ±ÖÓÊ±µÄ±ê×¼Ê±¼ä¸±±¾¡£
 * Return:        None
 *******************************************************************************/ 
 static void BSP_RTCWrite(const struct BSPRTC_TIME *pTime)
@@ -465,12 +465,12 @@ static void BSP_RTCWrite(const struct BSPRTC_TIME *pTime)
 }
 
 /*******************************************************************************
-åç§°ï¼šstatic void BSP_RTCRead(struct BSPRTC_TIME *pTime)
-åŠŸèƒ½ï¼šè¯»å–RTCæ—¶é—´çš„APIã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šstruct BSPRTC_TIME *pTimeï¼ŒRTCæ—¶é—´ç»“æ„ä½“çš„é¦–åœ°å€ {ç§’ï¼›åˆ†ï¼›æ—¶ï¼›å‘¨ï¼›æ—¥ï¼›æœˆï¼›å¹´}ï¼Œå…¶ä¸­å¹´æ˜¯
-å‡å»2000çš„ï¼Œå¦‚0x19ï¼ˆ8421BCDï¼‰ä»£è¡¨2019å¹´
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºstatic void BSP_RTCRead(struct BSPRTC_TIME *pTime)
+¹¦ÄÜ£º¶ÁÈ¡RTCÊ±¼äµÄAPI¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºstruct BSPRTC_TIME *pTime£¬RTCÊ±¼ä½á¹¹ÌåµÄÊ×µØÖ· {Ãë£»·Ö£»Ê±£»ÖÜ£»ÈÕ£»ÔÂ£»Äê}£¬ÆäÖĞÄêÊÇ
+¼õÈ¥2000µÄ£¬Èç0x19£¨8421BCD£©´ú±í2019Äê
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 static void BSP_RTCRead(struct BSPRTC_TIME *pTime)
 {
@@ -481,191 +481,191 @@ static void BSP_RTCRead(struct BSPRTC_TIME *pTime)
 
 /*******************************************************************************
 * Function Name: INT8U RtcSetChinaStdTimeStruct(const struct BSPRTC_TIME *pTime)                           
-* Description:   å¯¹æ—¶é’ŸèŠ¯ç‰‡RX8025è®¾ç½®RTCæ—¶é—´ï¼ˆUTC +8 ä¸­å›½æ ‡å‡†æ—¶é—´ ï¼ˆCSTï¼‰ï¼‰ï¼Œæœ¬å‡½æ•°æ·»åŠ äº†å†™å…¥æ•°æ®åˆæ³•æ€§æ ¡éªŒè¿‡ç¨‹ï¼Œä»¥åŠå¤±è´¥å¤šå°è¯•å†™å…¥2æ¬¡çš„å¤„ç†ã€‚
-                 å†™å…¥ä¹‹åç«‹å³è¯»å–å‡ºæ¥ï¼Œæ£€éªŒåˆæ³•æ€§ï¼Œä»¥åŠå¯¹æ¯”æ¥å…¥å‰åçš„å†…å®¹æ˜¯å¦ä¸€è‡´ã€‚
-* Input:         pTime : CSTæ—¶é—´ç»“æ„ä½“çš„é¦–åœ°å€ {ç§’ï¼›åˆ†ï¼›æ—¶ï¼›å‘¨ï¼›æ—¥ï¼›æœˆï¼›å¹´}ï¼Œä¸€èˆ¬æ˜¯æ ¡å¯¹æ—¶é’Ÿæ—¶çš„æ ‡å‡†æ—¶é—´å‰¯æœ¬ã€‚
-* Return: 		 1ï¼šæˆåŠŸ   0ï¼šå¤±è´¥
+* Description:   ¶ÔÊ±ÖÓĞ¾Æ¬RX8025ÉèÖÃRTCÊ±¼ä£¨UTC +8 ÖĞ¹ú±ê×¼Ê±¼ä £¨CST£©£©£¬±¾º¯ÊıÌí¼ÓÁËĞ´ÈëÊı¾İºÏ·¨ĞÔĞ£Ñé¹ı³Ì£¬ÒÔ¼°Ê§°Ü¶à³¢ÊÔĞ´Èë2´ÎµÄ´¦Àí¡£
+                 Ğ´ÈëÖ®ºóÁ¢¼´¶ÁÈ¡³öÀ´£¬¼ìÑéºÏ·¨ĞÔ£¬ÒÔ¼°¶Ô±È½ÓÈëÇ°ºóµÄÄÚÈİÊÇ·ñÒ»ÖÂ¡£
+* Input:         pTime : CSTÊ±¼ä½á¹¹ÌåµÄÊ×µØÖ· {Ãë£»·Ö£»Ê±£»ÖÜ£»ÈÕ£»ÔÂ£»Äê}£¬Ò»°ãÊÇĞ£¶ÔÊ±ÖÓÊ±µÄ±ê×¼Ê±¼ä¸±±¾¡£
+* Return: 		 1£º³É¹¦   0£ºÊ§°Ü
 *******************************************************************************/
 INT8U RtcSetChinaStdTimeStruct(const struct BSPRTC_TIME *pTime)
 {   
 	INT8U i=3;
 	struct BSPRTC_TIME time={0};
 	
-	if(RtcCheckTimeStruct(pTime)==0) return 0;									//å†™å…¥å‰æ•°æ®åˆæ³•æ€§æŸ¥éªŒ
+	if(RtcCheckTimeStruct(pTime)==0) return 0;									//Ğ´ÈëÇ°Êı¾İºÏ·¨ĞÔ²éÑé
 	while(i--)
 	{
-		BSP_RTCWrite(pTime);    												//å°†æ—¶é—´å†™å…¥RTCèŠ¯ç‰‡
-		if(RtcGetChinaStdTimeStruct(&time)==1) return 1;  						//è¯»å›å¹¶æ ¡éªŒåˆæ³•æ€§ï¼Œè‹¥é€šè¿‡
-		BSP_RX8025Init();														//å¤±è´¥åˆ™é‡æ–°åˆå§‹åŒ–
+		BSP_RTCWrite(pTime);    												//½«Ê±¼äĞ´ÈëRTCĞ¾Æ¬
+		if(RtcGetChinaStdTimeStruct(&time)==1) return 1;  						//¶Á»Ø²¢Ğ£ÑéºÏ·¨ĞÔ£¬ÈôÍ¨¹ı
+		BSP_RX8025Init();														//Ê§°ÜÔòÖØĞÂ³õÊ¼»¯
 	}
 	return 0;
 }
 
 /*******************************************************************************
 * Function Name: INT8U RtcGetChinaStdTimeStruct(struct BSPRTC_TIME *pTime)                              
-* Description:   ä»æ—¶é’ŸèŠ¯ç‰‡RX8025å–å¾—RTCæ—¶é—´ï¼ˆUTC +8 ä¸­å›½æ ‡å‡†æ—¶é—´ ï¼ˆCSTï¼‰ï¼‰ï¼Œæœ¬å‡½æ•°æ·»åŠ äº†æ•°æ®åˆæ³•æ€§æ ¡éªŒè¿‡ç¨‹ï¼Œä»¥åŠå¤±è´¥å¤šå°è¯•è¯»å–2æ¬¡çš„å¤„ç†ã€‚
-* Input:         pTime : ä¸»è°ƒæŒ‡å®šçš„ï¼Œç”¨äºå­˜æ”¾ä»æ—¶é’ŸèŠ¯ç‰‡RX8025è¯»å–åˆ°çš„RTCæ—¶é—´çš„ï¼ŒRTCæ—¶é—´ç»“æ„ä½“çš„é¦–åœ°å€ {ç§’ï¼›åˆ†ï¼›æ—¶ï¼›å‘¨ï¼›æ—¥ï¼›æœˆï¼›å¹´}
-                         ä¸»è°ƒå‡†å¤‡å¥½è¿™ä¸ªç©ºé—´ã€‚
-* Return:       1ï¼šæ ‡è¯†å–å¾—åˆç†æ­£ç¡®çš„æ—¶é—´ï¼Œå…·ä½“å†…å®¹ç”±å½¢å‚pTimeæ¥æ”¶è¿”å›
-                0ï¼šè¯»å–RTCæ—¶é—´å¤±è´¥
+* Description:   ´ÓÊ±ÖÓĞ¾Æ¬RX8025È¡µÃRTCÊ±¼ä£¨UTC +8 ÖĞ¹ú±ê×¼Ê±¼ä £¨CST£©£©£¬±¾º¯ÊıÌí¼ÓÁËÊı¾İºÏ·¨ĞÔĞ£Ñé¹ı³Ì£¬ÒÔ¼°Ê§°Ü¶à³¢ÊÔ¶ÁÈ¡2´ÎµÄ´¦Àí¡£
+* Input:         pTime : Ö÷µ÷Ö¸¶¨µÄ£¬ÓÃÓÚ´æ·Å´ÓÊ±ÖÓĞ¾Æ¬RX8025¶ÁÈ¡µ½µÄRTCÊ±¼äµÄ£¬RTCÊ±¼ä½á¹¹ÌåµÄÊ×µØÖ· {Ãë£»·Ö£»Ê±£»ÖÜ£»ÈÕ£»ÔÂ£»Äê}
+                         Ö÷µ÷×¼±¸ºÃÕâ¸ö¿Õ¼ä¡£
+* Return:       1£º±êÊ¶È¡µÃºÏÀíÕıÈ·µÄÊ±¼ä£¬¾ßÌåÄÚÈİÓÉĞÎ²ÎpTime½ÓÊÕ·µ»Ø
+                0£º¶ÁÈ¡RTCÊ±¼äÊ§°Ü
 *******************************************************************************/
 INT8U RtcGetChinaStdTimeStruct(struct BSPRTC_TIME *pTime)
 {
 	INT8U 			i=3;
 	
-	while(i--)																	//æœ€å¤šé‡è¯•3æ¬¡
+	while(i--)																	//×î¶àÖØÊÔ3´Î
 	{
-		BSP_RTCRead(pTime);														//è°ƒç”¨è¯»å–RTCæ—¶é—´çš„API
-		if(RtcCheckTimeStruct(pTime)==1) return 1;								//æ•°æ®åˆæ³•
-		BSP_RX8025Init();														//å¤±è´¥åˆ™é‡æ–°åˆå§‹åŒ–
+		BSP_RTCRead(pTime);														//µ÷ÓÃ¶ÁÈ¡RTCÊ±¼äµÄAPI
+		if(RtcCheckTimeStruct(pTime)==1) return 1;								//Êı¾İºÏ·¨
+		BSP_RX8025Init();														//Ê§°ÜÔòÖØĞÂ³õÊ¼»¯
 	}
 	return 0;
 }
 
 /*******************************************************************************
 * Function Name:  INT8U RtcSetTimeSecond(INT32U time)                   
-* Description  :  ä¸–çºªç§’è½¬æ¢ï¼Œéœ€è¦è°ƒæ•´æ—¶åŒºã€‚å‘RTCå†™å…¥ä¸–çºªç§’ï¼ŒRTCèŠ¯ç‰‡APIæ¥å£å‡½æ•°ã€‚ä¼ å…¥ä¸–çºªç§’ï¼Œè½¬æ¢æˆä¸­å›½æ ‡å‡†æ—¶é—´ï¼ˆCSTï¼‰8421BCDåå†™å…¥RTCèŠ¯ç‰‡
-* Input        :  time : ä¸–çºªç§’
+* Description  :  ÊÀ¼ÍÃë×ª»»£¬ĞèÒªµ÷ÕûÊ±Çø¡£ÏòRTCĞ´ÈëÊÀ¼ÍÃë£¬RTCĞ¾Æ¬API½Ó¿Úº¯Êı¡£´«ÈëÊÀ¼ÍÃë£¬×ª»»³ÉÖĞ¹ú±ê×¼Ê±¼ä£¨CST£©8421BCDºóĞ´ÈëRTCĞ¾Æ¬
+* Input        :  time : ÊÀ¼ÍÃë
 *
-* Return       :  1 :æ ‡è¯†å†™RTCæˆåŠŸ      
+* Return       :  1 :±êÊ¶Ğ´RTC³É¹¦      
 *******************************************************************************/
 INT8U RtcSetTimeSecond(const INT32U time)
 {
-	struct tm 			*TTM = 0;												//ç¼–è¯‘å™¨ä¼šè‡ªåŠ¨è¯†åˆ«ä¸ºç©ºæŒ‡é’ˆ
+	struct tm 			*TTM = 0;												//±àÒëÆ÷»á×Ô¶¯Ê¶±ğÎª¿ÕÖ¸Õë
 	struct BSPRTC_TIME 	TM = {0}; 
-	INT32U time_e8 = time+8*3600;												//ä¸–çºªç§’æ˜¯0åŒºæ—¶é—´ï¼Œè½¬æ¢ä¸ºä¸œå…«åŒº ( UTC +8 )
+	INT32U time_e8 = time+8*3600;												//ÊÀ¼ÍÃëÊÇ0ÇøÊ±¼ä£¬×ª»»Îª¶«°ËÇø ( UTC +8 )
 	
-	TTM =localtime(&time_e8);													//ä¸–çºªç§’è½¬æ¢ä¸ºæœ¬åœ°æ—¶é—´ï¼ˆæ²¡æœ‰ç»è¿‡æ—¶åŒºå˜æ¢ï¼‰
-	TM.Year   = HexToBCD(TTM->tm_year-100);										//ä»1900 å¼€å§‹è®¡ç®—
-	TM.Month  = HexToBCD(TTM->tm_mon+1);										//æœˆä»½åŠ ä¸Š1(localtimeçš„è®¡ç®—ç»“æœç”±0å¼€å§‹)
+	TTM =localtime(&time_e8);													//ÊÀ¼ÍÃë×ª»»Îª±¾µØÊ±¼ä£¨Ã»ÓĞ¾­¹ıÊ±Çø±ä»»£©
+	TM.Year   = HexToBCD(TTM->tm_year-100);										//´Ó1900 ¿ªÊ¼¼ÆËã
+	TM.Month  = HexToBCD(TTM->tm_mon+1);										//ÔÂ·İ¼ÓÉÏ1(localtimeµÄ¼ÆËã½á¹ûÓÉ0¿ªÊ¼)
 	TM.Day    = HexToBCD(TTM->tm_mday);
 	TM.Hour   = HexToBCD(TTM->tm_hour);
 	TM.Minute = HexToBCD(TTM->tm_min);
 	TM.Second = HexToBCD(TTM->tm_sec);
-	TM.Week   =	HexToBCD(TTM->tm_wday);											//å‘¨
+	TM.Week   =	HexToBCD(TTM->tm_wday);											//ÖÜ
 	
-	return RtcSetChinaStdTimeStruct(&TM);										// 1ï¼šæˆåŠŸ   0ï¼šå¤±è´¥
+	return RtcSetChinaStdTimeStruct(&TM);										// 1£º³É¹¦   0£ºÊ§°Ü
 }
 
 /*******************************************************************************
-åç§°ï¼šINT32U RtcGetTimeSecond(void)
-åŠŸèƒ½ï¼šä»RTCè¯»å–ä¸­å›½æ ‡å‡†æ—¶é—´ï¼ˆCSTï¼‰è®°å½•çš„æ—¶é—´ï¼Œè½¬æ¢ä¸ºä»1970 1.1.0æ—¶å¼€å§‹è®¡ç®—çš„ç§’æ•°ï¼ˆä¸–çºªç§’ã€æ—¶é—´æˆ³ï¼‰è¿”å›ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šè¯»å–æˆåŠŸè¿”å›ä¸–çºªç§’ï¼Œè¯»å–å¤±è´¥è¿”å›0
+Ãû³Æ£ºINT32U RtcGetTimeSecond(void)
+¹¦ÄÜ£º´ÓRTC¶ÁÈ¡ÖĞ¹ú±ê×¼Ê±¼ä£¨CST£©¼ÇÂ¼µÄÊ±¼ä£¬×ª»»Îª´Ó1970 1.1.0Ê±¿ªÊ¼¼ÆËãµÄÃëÊı£¨ÊÀ¼ÍÃë¡¢Ê±¼ä´Á£©·µ»Ø¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£º¶ÁÈ¡³É¹¦·µ»ØÊÀ¼ÍÃë£¬¶ÁÈ¡Ê§°Ü·µ»Ø0
 *******************************************************************************/
 INT32U RtcGetTimeSecond(void)
 {
 	time_t time = 0;															//typedef unsigned int time_t;     /* date/time in unix secs past 1-Jan-70 */
 	struct tm TTM = {0};      								
 
-	RtcGetChinaStdTimeStruct(&gRtcTime);										//ä»æ—¶é’ŸèŠ¯ç‰‡RX8025å–å¾—RTCæ—¶é—´
-	TTM.tm_year = BcdToHex(gRtcTime.Year)+100;  								// å¹´
-	TTM.tm_mon  = BcdToHex(gRtcTime.Month)-1;   								// æœˆ
-	TTM.tm_mday = BcdToHex(gRtcTime.Day);       								// æ—¥
-	TTM.tm_hour = BcdToHex(gRtcTime.Hour);      								// æ—¶
-	TTM.tm_min  = BcdToHex(gRtcTime.Minute);    								// åˆ†
-	TTM.tm_sec  = BcdToHex(gRtcTime.Second);    								// ç§’
-	time = mktime(&TTM)-8*3600;                  								//ä¸œå…«åŒº ( UTC +8 )æ—¶é—´è½¬æ¢æˆä¸–çºªç§’
+	RtcGetChinaStdTimeStruct(&gRtcTime);										//´ÓÊ±ÖÓĞ¾Æ¬RX8025È¡µÃRTCÊ±¼ä
+	TTM.tm_year = BcdToHex(gRtcTime.Year)+100;  								// Äê
+	TTM.tm_mon  = BcdToHex(gRtcTime.Month)-1;   								// ÔÂ
+	TTM.tm_mday = BcdToHex(gRtcTime.Day);       								// ÈÕ
+	TTM.tm_hour = BcdToHex(gRtcTime.Hour);      								// Ê±
+	TTM.tm_min  = BcdToHex(gRtcTime.Minute);    								// ·Ö
+	TTM.tm_sec  = BcdToHex(gRtcTime.Second);    								// Ãë
+	time = mktime(&TTM)-8*3600;                  								//¶«°ËÇø ( UTC +8 )Ê±¼ä×ª»»³ÉÊÀ¼ÍÃë
 	
-	if (time==0xffffffff) return 0;												//å¼‚å¸¸
+	if (time==0xffffffff) return 0;												//Òì³£
 	return time;
 }
 
 /*******************************************************************************
 * Function Name: INT8U RtcCheckTimeStruct(struct BSPRTC_TIME *pTime)                         
-* Description:   æ£€æŸ¥æ•°æ®åˆç†æ€§
-* Input:         pTime : ä¸»è°ƒæŒ‡å®šçš„,æŒ‡å‘RTCæ—¶é—´ç»“æ„ä½“çš„é¦–åœ°å€ {ç§’ï¼›åˆ†ï¼›æ—¶ï¼›å‘¨ï¼›æ—¥ï¼›æœˆï¼›å¹´}
+* Description:   ¼ì²éÊı¾İºÏÀíĞÔ
+* Input:         pTime : Ö÷µ÷Ö¸¶¨µÄ,Ö¸ÏòRTCÊ±¼ä½á¹¹ÌåµÄÊ×µØÖ· {Ãë£»·Ö£»Ê±£»ÖÜ£»ÈÕ£»ÔÂ£»Äê}
                          
-* Return:        0: RTCæ—¶é—´æœ‰ä¸åˆç†çš„æ•°æ®    
-                 1ï¼šRTCæ—¶é—´åˆç†æ€§æŸ¥éªŒæ­£ç¡®è¿”å›
+* Return:        0: RTCÊ±¼äÓĞ²»ºÏÀíµÄÊı¾İ    
+                 1£ºRTCÊ±¼äºÏÀíĞÔ²éÑéÕıÈ··µ»Ø
 *******************************************************************************/
 INT8U RtcCheckTimeStruct(const struct BSPRTC_TIME *pTime)
 { 
-	if((pTime->Year > 0x99) || ((pTime->Year&0x0f) > 0x09))   					//è¶…è¿‡2099å¹´ æˆ– &0x0få‡ºç°å¤§äº9çš„æ•°ï¼Œåˆ™å¼‚å¸¸ï¼ˆ8421BCDä¸ä¼šå¤§äº9ï¼‰
+	if((pTime->Year > 0x99) || ((pTime->Year&0x0f) > 0x09))   					//³¬¹ı2099Äê »ò &0x0f³öÏÖ´óÓÚ9µÄÊı£¬ÔòÒì³££¨8421BCD²»»á´óÓÚ9£©
 		return 0;
 	
-	if(((pTime->Month) == 0) || ((pTime->Month) > 0x12) || ((pTime->Month&0x0f) > 0x09))	//æœˆä»½å¼‚å¸¸
+	if(((pTime->Month) == 0) || ((pTime->Month) > 0x12) || ((pTime->Month&0x0f) > 0x09))	//ÔÂ·İÒì³£
 		return 0;
 	
-	if((pTime->Day == 0) || (pTime->Day > 0x31) || ((pTime->Day&0x0f) > 0x09))	//æ—¥å¼‚å¸¸
+	if((pTime->Day == 0) || (pTime->Day > 0x31) || ((pTime->Day&0x0f) > 0x09))	//ÈÕÒì³£
 		return 0;
 	
-	if(pTime->Week>6) return 0;             									//å‘¨æ—¥~å‘¨å…­ï¼š0~6
+	if(pTime->Week>6) return 0;             									//ÖÜÈÕ~ÖÜÁù£º0~6
 		
-	if((pTime->Hour > 0x23) || ((pTime->Hour&0x0f) > 0x09))						//æ—¶å¼‚å¸¸
+	if((pTime->Hour > 0x23) || ((pTime->Hour&0x0f) > 0x09))						//Ê±Òì³£
 		return 0;
 	
-	if((pTime->Minute > 0x59) || ((pTime->Minute&0x0f) > 0x09))					//åˆ†å¼‚å¸¸
+	if((pTime->Minute > 0x59) || ((pTime->Minute&0x0f) > 0x09))					//·ÖÒì³£
 		return 0;
 	
-	if((pTime->Second > 0x59) || ((pTime->Second&0x0f) > 0x09))					//ç§’å¼‚å¸¸
+	if((pTime->Second > 0x59) || ((pTime->Second&0x0f) > 0x09))					//ÃëÒì³£
 		return 0;
 	
 	return 1;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U GetSysTime(INT8U *pOutBuff)
-åŠŸèƒ½ï¼šå–å¾—ç³»ç»Ÿæ—¶é—´:å–å¾—æ—¶é—´ä»¥å¹´æœˆæ—¥æ—¶åˆ†ç§’å‘¨çš„é¡ºå¯»å¡«å…¥ä¸€ä¸ªæ‰€éœ€çš„ç»“æ„ä½“ï¼Œåº•å±‚è¯»å‡ºçš„é¡ºåºä¸ºå¹´æœˆæ—¥å‘¨æ—¶åˆ†ç§’
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼špOutBuff : ç”¨æ¥æ¥æ”¶è¿”å›æ•°æ®çš„æŒ‡é’ˆ
-è¿”å›ï¼šå›ºå®šä¸º1
+Ãû³Æ£ºINT8U GetSysTime(INT8U *pOutBuff)
+¹¦ÄÜ£ºÈ¡µÃÏµÍ³Ê±¼ä:È¡µÃÊ±¼äÒÔÄêÔÂÈÕÊ±·ÖÃëÖÜµÄË³Ñ°ÌîÈëÒ»¸öËùĞèµÄ½á¹¹Ìå£¬µ×²ã¶Á³öµÄË³ĞòÎªÄêÔÂÈÕÖÜÊ±·ÖÃë
+Èë²Î£ºÎŞ
+³ö²Î£ºpOutBuff : ÓÃÀ´½ÓÊÕ·µ»ØÊı¾İµÄÖ¸Õë
+·µ»Ø£º¹Ì¶¨Îª1
 *******************************************************************************/
 INT8U GetSysTime(INT8U *pOutBuff)
 {
-	RtcGetChinaStdTimeStruct(&gRtcTime);										//ä»æ—¶é’ŸèŠ¯ç‰‡å–å¾—RTCæ—¶é—´
+	RtcGetChinaStdTimeStruct(&gRtcTime);										//´ÓÊ±ÖÓĞ¾Æ¬È¡µÃRTCÊ±¼ä
 	
-	pOutBuff[0] = gRtcTime.Year;												// å¹´
-	pOutBuff[1] = gRtcTime.Month;												// æœˆ
-	pOutBuff[2] = gRtcTime.Day;													// æ—¥
-	pOutBuff[3] = gRtcTime.Hour;												// æ—¶
-	pOutBuff[4] = gRtcTime.Minute;												// åˆ†
-	pOutBuff[5] = gRtcTime.Second;												// ç§’
-	pOutBuff[6] = gRtcTime.Week; 												// å‘¨	========æ³¨æ„å®ƒçš„ä½ç½®å˜äº†ï¼ŒåŸç»“æ„ä½“ä¸­æ—¶æ˜¯ç¬¬4å­—èŠ‚
+	pOutBuff[0] = gRtcTime.Year;												// Äê
+	pOutBuff[1] = gRtcTime.Month;												// ÔÂ
+	pOutBuff[2] = gRtcTime.Day;													// ÈÕ
+	pOutBuff[3] = gRtcTime.Hour;												// Ê±
+	pOutBuff[4] = gRtcTime.Minute;												// ·Ö
+	pOutBuff[5] = gRtcTime.Second;												// Ãë
+	pOutBuff[6] = gRtcTime.Week; 												// ÖÜ	========×¢ÒâËüµÄÎ»ÖÃ±äÁË£¬Ô­½á¹¹ÌåÖĞÊ±ÊÇµÚ4×Ö½Ú
 	
 	return 1;
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U BcdToHex(INT8U InData)
-åŠŸèƒ½ï¼šBCDç åˆ°Hexçš„è½¬æ¢
-å…¥å‚ï¼šINT8U InData,è¦è½¬æ¢çš„æ•°æ®(BCDæ ¼å¼ 1Byte)
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šè½¬æ¢åçš„æ•°æ®(Hexæ ¼å¼ 1Byte)
+Ãû³Æ£ºINT8U BcdToHex(INT8U InData)
+¹¦ÄÜ£ºBCDÂëµ½HexµÄ×ª»»
+Èë²Î£ºINT8U InData,Òª×ª»»µÄÊı¾İ(BCD¸ñÊ½ 1Byte)
+³ö²Î£ºÎŞ
+·µ»Ø£º×ª»»ºóµÄÊı¾İ(Hex¸ñÊ½ 1Byte)
 *******************************************************************************/
 INT8U BcdToHex(INT8U InData)
 {
 	INT8U Bits = 0;
-	Bits = InData&0x0F;															//å–BCDç ä¸ªä½ï¼ˆä½4ä½ï¼‰
-	InData = InData&0xF0;														//å–BCDç åä½ï¼ˆé«˜4ä½ï¼‰
-	InData >>= 4;        														//å°†åä½ç§»å…¥ä¸ªä½
-	InData *= 10;       														//è®¡ç®—å‡ºåä½çš„å€¼
-	InData += Bits;																//åŠ å›ä¸ªä½ï¼ˆ8421BCDç ï¼Œç›´æ¥åŠ å°±è¡Œäº†ï¼‰
+	Bits = InData&0x0F;															//È¡BCDÂë¸öÎ»£¨µÍ4Î»£©
+	InData = InData&0xF0;														//È¡BCDÂëÊ®Î»£¨¸ß4Î»£©
+	InData >>= 4;        														//½«Ê®Î»ÒÆÈë¸öÎ»
+	InData *= 10;       														//¼ÆËã³öÊ®Î»µÄÖµ
+	InData += Bits;																//¼Ó»Ø¸öÎ»£¨8421BCDÂë£¬Ö±½Ó¼Ó¾ÍĞĞÁË£©
 	return InData;
 }
 																				
 /*******************************************************************************
-åç§°ï¼šINT8U HexToBCD(INT8U InData)
-åŠŸèƒ½ï¼šHexåˆ°BCDç çš„è½¬æ¢
-å…¥å‚ï¼šInData: è¦è½¬æ¢çš„æ•°æ®(Hexæ ¼å¼ 1Byte)
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šè½¬æ¢åçš„æ•°æ®(BCDæ ¼å¼ 1Byte)ï¼Œè‹¥ä¼ å…¥è¶…è¿‡99åˆ™è¿”å›0xffï¼Œè¡¨ç¤ºé”™è¯¯
+Ãû³Æ£ºINT8U HexToBCD(INT8U InData)
+¹¦ÄÜ£ºHexµ½BCDÂëµÄ×ª»»
+Èë²Î£ºInData: Òª×ª»»µÄÊı¾İ(Hex¸ñÊ½ 1Byte)
+³ö²Î£ºÎŞ
+·µ»Ø£º×ª»»ºóµÄÊı¾İ(BCD¸ñÊ½ 1Byte)£¬Èô´«Èë³¬¹ı99Ôò·µ»Ø0xff£¬±íÊ¾´íÎó
 *******************************************************************************/
 INT8U HexToBCD(INT8U InData)
 {
 	INT8U Temp = 0;
-	if (InData>99) return 0xff;													//è¿”å›å¼‚å¸¸
-	Temp = InData%10;           												//ä¸ªä½
+	if (InData>99) return 0xff;													//·µ»ØÒì³£
+	Temp = InData%10;           												//¸öÎ»
 	InData = InData-Temp;
-	InData /= 10;             													//åä½
+	InData /= 10;             													//Ê®Î»
 	Temp += ((InData<<4)&0xf0);
 	return Temp;
 }
 
 /******************************************************************************* 
 * Function Name  : void RTC_LowPower(void)
-* Description    : RTCè¿›å…¥ä½åŠŸè€—ï¼Œå¹¶å¯¹ç›¸åº”IOå£ä½œä½åŠŸè€—å¤„ç†
+* Description    : RTC½øÈëµÍ¹¦ºÄ£¬²¢¶ÔÏàÓ¦IO¿Ú×÷µÍ¹¦ºÄ´¦Àí
 * Input          : None 
 * Output         : None 
 * Return         : None 
@@ -674,11 +674,11 @@ void RTC_LowPower(void)
 {
 	GPIO_InitTypeDef 	GPIO_InitStructure;
 	
-	GPIO_InitStructure.GPIO_Pin = SIIC_GPIO_SCL|SIIC_GPIO_SDA;					//PA0ã€PA1
+	GPIO_InitStructure.GPIO_Pin = SIIC_GPIO_SCL|SIIC_GPIO_SDA;					//PA0¡¢PA1
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;								//æ¨¡æ‹Ÿè¾“å…¥
-	GPIO_Init(SIIC_GPIO, &GPIO_InitStructure);									//PAå£
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;								//Ä£ÄâÊäÈë
+	GPIO_Init(SIIC_GPIO, &GPIO_InitStructure);									//PA¿Ú
 }
 
-/************************(C)COPYRIGHT 2018 æ–¹è¯šç”µåŠ›*****END OF FILE****************************/
+/************************(C)COPYRIGHT 2018 ·½³ÏµçÁ¦*****END OF FILE****************************/
 

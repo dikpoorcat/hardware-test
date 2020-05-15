@@ -2,7 +2,7 @@
 #define	__Bsp_fm_H
 /***********************************************************************************************************************                                    
 *
-*               (c) Copyright 2017-2030, æ­å·æ–¹è¯šç”µåŠ›æŠ€æœ¯æœ‰é™å…¬å¸(http://www.fcdl.com.cn)
+*               (c) Copyright 2017-2030, º¼Öİ·½³ÏµçÁ¦¼¼ÊõÓĞÏŞ¹«Ë¾(http://www.fcdl.com.cn)
 *                            All Rights Reserved
 *
 *---------- File Info ---------------------------------------------------------------
@@ -10,34 +10,34 @@
 *
 * Descriptions:  This file define all the function used to control FM25CL64
 *
-* Created By  :  èµµå¿—èˆœ(11207656@qq.com)
+* Created By  :  ÕÔÖ¾Ë´(11207656@qq.com)
 * Created date:  2018.1.23
 *
 *---------- History Info -------------------------------------------------------------
 * Version: 			Ver1.0
-* Descriptions: FM25CL64å’ŒW25Q256å…±ç”¨åŒä¸€ä¸ªSPIæ¥å£	
+* Descriptions: FM25CL64ºÍW25Q256¹²ÓÃÍ¬Ò»¸öSPI½Ó¿Ú	
 *
 *-------------------------------------------------------------------------------------
 ************************************************************************************************************************/
 
 #include "bsp_spi.h"
 
-/*ä»»åŠ¡å ç”¨æ ‡å¿—ä½ï¼ˆFMä¸WQ256ä½¿ç”¨ï¼‰*/
+/*ÈÎÎñÕ¼ÓÃ±êÖ¾Î»£¨FMÓëWQ256Ê¹ÓÃ£©*/
 #define	LTE_Num		0
 #define	RF_Num		1
 #define	LOC_Num		2
 #define	WDT_Num		3
-#define	FF_Num		4															//FatFsæ–‡ä»¶ç³»ç»Ÿä¸“ç”¨
-#define Fault_Num	5															//æ•…éšœä¿¡æ¯å­˜å‚¨ä¸“ç”¨
+#define	FF_Num		4															//FatFsÎÄ¼şÏµÍ³×¨ÓÃ
+#define Fault_Num	5															//¹ÊÕÏĞÅÏ¢´æ´¢×¨ÓÃ
 
 
 
 /* --------------------------------Private define---------------------------------------------*/
-/* Noteï¼šä½¿ç”¨è¯»å–æˆ–è€…å†™å…¥çš„æ—¶å€™ï¼Œè¦è¿›è¡Œ open å’Œ close çš„æ“ä½œ */
+/* Note£ºÊ¹ÓÃ¶ÁÈ¡»òÕßĞ´ÈëµÄÊ±ºò£¬Òª½øĞĞ open ºÍ close µÄ²Ù×÷ */
 #define MAX_FM_LEN 0x2000
 #define FM_WREN 0x06
 #define FM_WRDI 0x04
-#define FM_RDSR 0x05     // è¯»å–çŠ¶æ€å‘½ä»¤
+#define FM_RDSR 0x05     // ¶ÁÈ¡×´Ì¬ÃüÁî
 #define FM_WRSR 0x01
 #define FM_READ 0x03
 #define FM_WRITE 0x02
@@ -51,10 +51,10 @@
 #define MISO_FM_PIN    GPIO_Pin_5  // MISO
 #define MISO_FM_Port   GPIOA     
 
-#define NCS_FM_PIN    GPIO_Pin_4   // zzs note,é“ç”µç‰‡é€‰çº¿
+#define NCS_FM_PIN    GPIO_Pin_4   // zzs note,ÌúµçÆ¬Ñ¡Ïß
 #define NCS_FM_Port   GPIOA
 
-#define NWP_FM_PIN 	  GPIO_Pin_6   // zzs note,é“ç”µå†™ä¿æŠ¤çº¿
+#define NWP_FM_PIN 	  GPIO_Pin_6   // zzs note,ÌúµçĞ´±£»¤Ïß
 #define NWP_FM_Port   GPIOA
 
 /* ------------------------------Private macro------------------------------------------------*/
@@ -78,7 +78,7 @@
 
 
 
-/*å‡½æ•°å£°æ˜*/
+/*º¯ÊıÉùÃ÷*/
 void Fmdelay(INT16U US);
 INT8U FmReadState(void);
 void BSP_InitFm( INT8U Task_Num );

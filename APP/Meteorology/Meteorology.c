@@ -1,12 +1,12 @@
 /*****************************************Copyright(C)******************************************
-*******************************************æ–¹è¯šç”µåŠ›*********************************************
-*------------------------------------------æ–‡ä»¶ä¿¡æ¯---------------------------------------------
+*******************************************·½³ÏµçÁ¦*********************************************
+*------------------------------------------ÎÄ¼þÐÅÏ¢---------------------------------------------
 * FileName          : Meteorology.c
 * Author            : Z.E.
 * Date First Issued : 2018-08-30
 * Version           : V1.0
-* Description       : å¾®æ°”è±¡æ•°æ®å¤„ç† 
- *----------------------------------------åŽ†å²ç‰ˆæœ¬ä¿¡æ¯-------------------------------------------
+* Description       : Î¢ÆøÏóÊý¾Ý´¦Àí 
+ *----------------------------------------ÀúÊ·°æ±¾ÐÅÏ¢-------------------------------------------
 * History       :V1.0
 * Description   : 
 	               
@@ -14,34 +14,34 @@
 *******************************************************************************/
 #include "Meteorology.h"
 
-#define TEST	01									//æ‰“å°å¼€å…³
+#define TEST	01									//´òÓ¡¿ª¹Ø
 
-//å…¨å±€å˜é‡å®šä¹‰
-INT16U	WindSpeed=0;								//æœºæ¢°å¼ä¼ æ„Ÿå™¨é£Žé€Ÿ
-INT16U	WindDirection=0;							//æœºæ¢°å¼ä¼ æ„Ÿå™¨é£Žå‘
-BMP180_info	BP_info;								//ä¿å­˜å¤§æ°”åŽ‹ä¼ æ„Ÿå™¨æ•°æ®
-MET_Data_TypeDef	MET_Data;						//ä¿å­˜å¾®æ°”è±¡æ•°æ®
+//È«¾Ö±äÁ¿¶¨Òå
+INT16U	WindSpeed=0;								//»úÐµÊ½´«¸ÐÆ÷·çËÙ
+INT16U	WindDirection=0;							//»úÐµÊ½´«¸ÐÆ÷·çÏò
+BMP180_info	BP_info;								//±£´æ´óÆøÑ¹´«¸ÐÆ÷Êý¾Ý
+MET_Data_TypeDef	MET_Data;						//±£´æÎ¢ÆøÏóÊý¾Ý
 
 
 
 /***************************************************************************************
-åç§°ï¼švoid MET_Main(void *org)
-åŠŸèƒ½ï¼šå¾®æ°”è±¡ä»»åŠ¡ä¸»å‡½æ•°
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›žï¼šæ— 
+Ãû³Æ£ºvoid MET_Main(void *org)
+¹¦ÄÜ£ºÎ¢ÆøÏóÈÎÎñÖ÷º¯Êý
+Èë²Î£ºÎÞ
+³ö²Î£ºÎÞ
+·µ»Ø£ºÎÞ
 ****************************************************************************************/
 void MET_Main(void *org)
 {
-#if 0	/*ADCæ ‡å®š*/
+#if 0	/*ADC±ê¶¨*/
 	INT8U	T=100;
 	
 	while( T-- )
 	{
 		if( T==0)
 		{						
-			B485_init(4800);								//B485ä¸²å£åˆå§‹åŒ–ï¼ˆç»Ÿä¸€æˆä¸Žé£Žé€Ÿé£Žå‘ä¼ æ„Ÿå™¨é»˜è®¤å€¼ç›¸åŒï¼‰
-			PWDC485EN();									//DCDCéš”ç¦»485æ‰“å¼€	
+			B485_init(4800);								//B485´®¿Ú³õÊ¼»¯£¨Í³Ò»³ÉÓë·çËÙ·çÏò´«¸ÐÆ÷Ä¬ÈÏÖµÏàÍ¬£©
+			PWDC485EN();									//DCDC¸ôÀë485´ò¿ª	
 			OSTimeDly(2);			
 			T=100;
 		}
@@ -51,393 +51,393 @@ void MET_Main(void *org)
 	}
 #endif
 #if TEST
-	Test_Meteorology_Data(1);						//å¾®æ°”è±¡æ•°æ®é‡‡é›†ï¼Œå¤±è´¥é‡è¯•3æ¬¡ï¼ˆæ¸©æ¹¿åº¦ã€å¤§æ°”åŽ‹ã€é£Žé€Ÿé£Žå‘ï¼‰
-//	SetGPRSON();									//ResumeæŒ‚èµ·çš„GPRSä»»åŠ¡,GPRSON=1--------------------------------------------------------ç§»å€¼æ—¶è¿™é‡Œè¦å¤„ç†ï¼ï¼ï¼
+	Test_Meteorology_Data(1);						//Î¢ÆøÏóÊý¾Ý²É¼¯£¬Ê§°ÜÖØÊÔ3´Î£¨ÎÂÊª¶È¡¢´óÆøÑ¹¡¢·çËÙ·çÏò£©
+//	SetGPRSON();									//Resume¹ÒÆðµÄGPRSÈÎÎñ,GPRSON=1--------------------------------------------------------ÒÆÖµÊ±ÕâÀïÒª´¦Àí£¡£¡£¡
 #endif
 	while(1)
 	{				
-		WDTClear(0);								//å–‚ç‹—ï¼Ÿ
+		WDTClear(0);								//Î¹¹·£¿
 		OSTimeDly(20);
 #if TEST
-		if( gRtcTime.Minute == 0x49 || gRtcTime.Minute == 0x19 )				//æµ‹è¯•ä¸­ä¸€å°æ—¶ä¸¤æ¬¡
+		if( gRtcTime.Minute == 0x49 || gRtcTime.Minute == 0x19 )				//²âÊÔÖÐÒ»Ð¡Ê±Á½´Î
 #else
-		if( gRtcTime.Minute == 0x49 )				//æ¯å°æ—¶49åˆ†æ—¶å¼€å§‹é‡‡æ¸©æ¹¿åº¦ã€å¤§æ°”åŽ‹ã€é£Žé€Ÿé£Žå‘æ•°æ®ï¼ˆRTCä»»åŠ¡ä¸­0.9ç§’è¯»ä¸€æ¬¡æ—¶é—´ï¼‰
+		if( gRtcTime.Minute == 0x49 )				//Ã¿Ð¡Ê±49·ÖÊ±¿ªÊ¼²ÉÎÂÊª¶È¡¢´óÆøÑ¹¡¢·çËÙ·çÏòÊý¾Ý£¨RTCÈÎÎñÖÐ0.9Ãë¶ÁÒ»´ÎÊ±¼ä£©
 #endif
 		{
-			Get_Meteorology_Data(5);				//å¾®æ°”è±¡æ•°æ®é‡‡é›†ï¼Œå¤±è´¥é‡è¯•5æ¬¡ï¼ˆæ¸©æ¹¿åº¦ã€å¤§æ°”åŽ‹ã€é£Žé€Ÿé£Žå‘ï¼‰
-			//MET_SaveData(CurrentTime);			//ä¿å­˜å½“å‰æ—¶é—´ï¼Œæ¹¿åº¦ï¼Œæ¸©åº¦ï¼Œæ°”åŽ‹ï¼Œé£Žé€Ÿï¼Œé£Žå‘æ•°æ®		
+			Get_Meteorology_Data(5);				//Î¢ÆøÏóÊý¾Ý²É¼¯£¬Ê§°ÜÖØÊÔ5´Î£¨ÎÂÊª¶È¡¢´óÆøÑ¹¡¢·çËÙ·çÏò£©
+			//MET_SaveData(CurrentTime);			//±£´æµ±Ç°Ê±¼ä£¬Êª¶È£¬ÎÂ¶È£¬ÆøÑ¹£¬·çËÙ£¬·çÏòÊý¾Ý		
 
-			/*ç”µæ± ç”µåŽ‹æ£€æµ‹ï¼Œå†³å®šå‘å°„ä¸Žå¦*/
+			/*µç³ØµçÑ¹¼ì²â£¬¾ö¶¨·¢ÉäÓë·ñ*/
 		#if TEST
-			PWDC485EN();							//DCDCéš”ç¦»485æ‰“å¼€ï¼ˆæ­£å¼ç¨‹åºä¸æ‰“å°å¯åŽ»æŽ‰ï¼‰
+			PWDC485EN();							//DCDC¸ôÀë485´ò¿ª£¨ÕýÊ½³ÌÐò²»´òÓ¡¿ÉÈ¥µô£©
 		#endif
-			Get_Voltage_MCUtemp_Data(3);			//ç”µæ± ç”µåŽ‹ã€å•ç‰‡æœºæ¸©åº¦é‡‡é›†3æ¬¡å–å¹³å‡å€¼ï¼ˆåœ¨æ­¤æ‰“å°ä¿¡æ¯ï¼‰			
+			Get_Voltage_MCUtemp_Data(3);			//µç³ØµçÑ¹¡¢µ¥Æ¬»úÎÂ¶È²É¼¯3´ÎÈ¡Æ½¾ùÖµ£¨ÔÚ´Ë´òÓ¡ÐÅÏ¢£©			
 			if( Equipment_state.BAT_Volt>8.5 || Equipment_state.FALA_Volt>5 )
 			{
-//				SetGPRSON();						//ResumeæŒ‚èµ·çš„GPRSä»»åŠ¡,GPRSON=1--------------------------------------------------------ç§»å€¼æ—¶è¿™é‡Œè¦å¤„ç†ï¼ï¼ï¼
+//				SetGPRSON();						//Resume¹ÒÆðµÄGPRSÈÎÎñ,GPRSON=1--------------------------------------------------------ÒÆÖµÊ±ÕâÀïÒª´¦Àí£¡£¡£¡
 			}
 
-			OSTimeDly(60*20);						//å»¶æ—¶1minï¼Œé˜²æ­¢1åˆ†é’Ÿå†…é‡å…¥
+			OSTimeDly(60*20);						//ÑÓÊ±1min£¬·ÀÖ¹1·ÖÖÓÄÚÖØÈë
 		}
 	}
 }
 
 /***************************************************************************************
-åç§°ï¼šINT8U Get_Meteorology_Data( INT8U retry )
-åŠŸèƒ½ï¼š10minå¹³å‡é£Žé€Ÿé£Žå‘ã€æœ€å¤§ç½‘é€Ÿã€æ¸©æ¹¿åº¦ã€å¤§æ°”åŽ‹æ•°æ®é‡‡é›†ã€‚å…ˆé‡‡é›†é£Žé€Ÿ10minï¼Œæœ€åŽé‡‡é›†æ¸©åº¦ç­‰
-å…¥å‚ï¼šINT8U	retryï¼Œé‡‡é›†å¤±è´¥é‡è¯•æ¬¡æ•°
-å‡ºå‚ï¼šæ— 
-è¿”å›žï¼šbit1æ¸©æ¹¿åº¦é‡‡é›†é”™è¯¯ï¼Œbit2å¤§æ°”åŽ‹é‡‡é›†é”™è¯¯ï¼Œbit3é£Žé€Ÿä¼ æ„Ÿå™¨é”™è¯¯ï¼Œbit4é£Žå‘ä¼ æ„Ÿå™¨é”™è¯¯ï¼Œè¿”å›ž0é‡‡é›†æ­£ç¡®
+Ãû³Æ£ºINT8U Get_Meteorology_Data( INT8U retry )
+¹¦ÄÜ£º10minÆ½¾ù·çËÙ·çÏò¡¢×î´óÍøËÙ¡¢ÎÂÊª¶È¡¢´óÆøÑ¹Êý¾Ý²É¼¯¡£ÏÈ²É¼¯·çËÙ10min£¬×îºó²É¼¯ÎÂ¶ÈµÈ
+Èë²Î£ºINT8U	retry£¬²É¼¯Ê§°ÜÖØÊÔ´ÎÊý
+³ö²Î£ºÎÞ
+·µ»Ø£ºbit1ÎÂÊª¶È²É¼¯´íÎó£¬bit2´óÆøÑ¹²É¼¯´íÎó£¬bit3·çËÙ´«¸ÐÆ÷´íÎó£¬bit4·çÏò´«¸ÐÆ÷´íÎó£¬·µ»Ø0²É¼¯ÕýÈ·
 ****************************************************************************************/
 INT8U Get_Meteorology_Data( INT8U retry )
 {
 	INT8U 	i,rt,err=0;
-	INT8U 	MaxIndex=0;								//æœ€å¤§é£Žé€Ÿ
-	INT16U	WD_Max=0,WS_Sum=0;						//ç”¨äºŽè®¡ç®—å¹³å‡å€¼
-	INT16U	WindSpeed_arr[10]={0};					//10miné£Žé€Ÿ
-	INT16U	WindDirection_arr[10]={0};				//10miné£Žå‘
-	INT16S	Temp_16S=0;								//æœ‰ç¬¦å·æ•´åž‹ï¼Œç”¨äºŽæµ®ç‚¹è½¬æ¢
+	INT8U 	MaxIndex=0;								//×î´ó·çËÙ
+	INT16U	WD_Max=0,WS_Sum=0;						//ÓÃÓÚ¼ÆËãÆ½¾ùÖµ
+	INT16U	WindSpeed_arr[10]={0};					//10min·çËÙ
+	INT16U	WindDirection_arr[10]={0};				//10min·çÏò
+	INT16S	Temp_16S=0;								//ÓÐ·ûºÅÕûÐÍ£¬ÓÃÓÚ¸¡µã×ª»»
 	
-	Am2302_Init();									//Am2302ä¼ æ„Ÿå™¨åˆå§‹åŒ–
-	PowerMETPin_Init();								//æ¸©æ¹¿åº¦ç”µæºæŽ§åˆ¶ å¼•è„šé…ç½®
-	PowerWDSPPin_Init();							//é£Žé€Ÿé£Žå‘ç”µæºæŽ§åˆ¶ å¼•è„šé…ç½®
+	Am2302_Init();									//Am2302´«¸ÐÆ÷³õÊ¼»¯
+	PowerMETPin_Init();								//ÎÂÊª¶ÈµçÔ´¿ØÖÆ Òý½ÅÅäÖÃ
+	PowerWDSPPin_Init();							//·çËÙ·çÏòµçÔ´¿ØÖÆ Òý½ÅÅäÖÃ
 	
-	/*10minå¹³å‡é£Žé€Ÿé£Žå‘æ•°æ®é‡‡é›†ï¼ˆerrå¤„ç†æ–¹å¼è¦æ±‚å…ˆé‡‡é›†é£Žé€Ÿé£Žå‘ï¼‰*/
-	for(i=0;i<10;i++)								//è¿žç»­é‡‡é›†10miné£Žé€Ÿé£Žå‘
+	/*10minÆ½¾ù·çËÙ·çÏòÊý¾Ý²É¼¯£¨err´¦Àí·½Ê½ÒªÇóÏÈ²É¼¯·çËÙ·çÏò£©*/
+	for(i=0;i<10;i++)								//Á¬Ðø²É¼¯10min·çËÙ·çÏò
 	{
-		OSTimeDly( 57*20 );							//å»¶æ—¶1minï¼ˆä¸‹å¥å†…æœ‰3ç§’ï¼‰å†é‡‡é›†ï¼ˆ50åˆ†~59åˆ†ï¼‰
+		OSTimeDly( 57*20 );							//ÑÓÊ±1min£¨ÏÂ¾äÄÚÓÐ3Ãë£©ÔÙ²É¼¯£¨50·Ö~59·Ö£©
 		for( rt=retry; rt>0; rt-- )
 		{
-			err= Get_WDSP_Data( WindSpeed_arr+i, WindDirection_arr+i );	//é£Žé€Ÿé£Žå‘æ•°æ®é‡‡é›†ï¼Œå¹¶è®°å½•é”™è¯¯æ ‡å¿—ä½ï¼ˆä»¥æœ€åŽä¸€æ¬¡çš„æ ‡å¿—ä¸ºå‡†ï¼Œä¸å¯å†™æˆ|=ï¼Œå¦åˆ™æ— æ³•æ¸…æŽ‰ä»¥å‰çš„é”™è¯¯ï¼‰
-			if( err==0 ) break;						//é£Žé€Ÿé£Žå‘æ•°æ®é‡‡é›†æ­£ç¡®ï¼ˆè¿”å›ž0ï¼‰æ—¶è·³å‡ºï¼›é”™è¯¯æ—¶ç»§ç»­å¾ªçŽ¯
+			err= Get_WDSP_Data( WindSpeed_arr+i, WindDirection_arr+i );	//·çËÙ·çÏòÊý¾Ý²É¼¯£¬²¢¼ÇÂ¼´íÎó±êÖ¾Î»£¨ÒÔ×îºóÒ»´ÎµÄ±êÖ¾Îª×¼£¬²»¿ÉÐ´³É|=£¬·ñÔòÎÞ·¨ÇåµôÒÔÇ°µÄ´íÎó£©
+			if( err==0 ) break;						//·çËÙ·çÏòÊý¾Ý²É¼¯ÕýÈ·£¨·µ»Ø0£©Ê±Ìø³ö£»´íÎóÊ±¼ÌÐøÑ­»·
 		}
 		
-		if( WindSpeed_arr[i] > WD_Max )				//åˆ¤æ–­æœ€å¤§é£Žé€Ÿ
+		if( WindSpeed_arr[i] > WD_Max )				//ÅÐ¶Ï×î´ó·çËÙ
 		{
-			WD_Max= WindSpeed_arr[i];				//ä¿å­˜æœ€å¤§é£Žé€Ÿ
-			MaxIndex= i;							//ä¿å­˜æœ€å¤§é£Žé€Ÿç›¸å¯¹åœ°å€
+			WD_Max= WindSpeed_arr[i];				//±£´æ×î´ó·çËÙ
+			MaxIndex= i;							//±£´æ×î´ó·çËÙÏà¶ÔµØÖ·
 		}
 
-		WS_Sum += WindSpeed_arr[i];					//ç´¯åŠ è®¡ç®—æ€»é£Žé€Ÿ
+		WS_Sum += WindSpeed_arr[i];					//ÀÛ¼Ó¼ÆËã×Ü·çËÙ
 	}
-	MET_Data.Max_WindSpeed= ((float)WD_Max)/10;		//å°†æœ€å¤§é£Žé€Ÿè½¬æ¢ä¸ºæµ®ç‚¹ï¼ˆåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹ï¼‰ï¼Œè½¬å­˜åˆ°MET_Data
-	MET_Data.Ave_WindSpeed= ((float)WS_Sum)/100;	//è®¡ç®—10æ¬¡çš„å¹³å‡é£Žé€Ÿï¼Œå¹¶è½¬æ¢ä¸ºæµ®ç‚¹ï¼ˆåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹ï¼‰ï¼Œè½¬å­˜åˆ°MET_Dataï¼ˆ100è¡¨ç¤º10æ¬¡*10å€ï¼‰
-	MET_Data.Ave_WindDirection= WindDirection_arr[MaxIndex];				//è®°å½•å½“å‰é£Žå‘ï¼ˆ0~7æˆ–0~360åº¦ï¼Œå·²ä¸ºåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹ï¼‰
+	MET_Data.Max_WindSpeed= ((float)WD_Max)/10;		//½«×î´ó·çËÙ×ª»»Îª¸¡µã£¨ºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ£©£¬×ª´æµ½MET_Data
+	MET_Data.Ave_WindSpeed= ((float)WS_Sum)/100;	//¼ÆËã10´ÎµÄÆ½¾ù·çËÙ£¬²¢×ª»»Îª¸¡µã£¨ºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ£©£¬×ª´æµ½MET_Data£¨100±íÊ¾10´Î*10±¶£©
+	MET_Data.Ave_WindDirection= WindDirection_arr[MaxIndex];				//¼ÇÂ¼µ±Ç°·çÏò£¨0~7»ò0~360¶È£¬ÒÑÎªºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ£©
 	
 	
-	PWMETEN();										//æ‰“å¼€æ¸©æ¹¿åº¦ã€å¤§æ°”åŽ‹ç”µæº
-	OSTimeDly(40);									//AM2302ä¸Šç”µåŽè¦ç­‰å¾…2Sï¼Œä»¥è¶Šè¿‡ä¸ç¨³å®šçŠ¶æ€ï¼Œ
+	PWMETEN();										//´ò¿ªÎÂÊª¶È¡¢´óÆøÑ¹µçÔ´
+	OSTimeDly(40);									//AM2302ÉÏµçºóÒªµÈ´ý2S£¬ÒÔÔ½¹ý²»ÎÈ¶¨×´Ì¬£¬
 	
-	/*æ¸©æ¹¿åº¦æ•°æ®é‡‡é›†*/
+	/*ÎÂÊª¶ÈÊý¾Ý²É¼¯*/
 	for( rt=retry; rt>0; rt-- )
 	{
-		if( Read_Median_AM2302(&AM2302_Data,3) ) 	//é‡‡æ ·3æ¬¡ï¼Œå–ä¸­ä½æ•°æ¸©æ¹¿åº¦ï¼ˆè¡¥ç ï¼‰ï¼ˆæˆåŠŸè¿”å›ž1ï¼‰ï¼ˆè¯»å–å€¼ä¸ºå®žé™…æ¸©åº¦çš„10å€ï¼‰
+		if( Read_Median_AM2302(&AM2302_Data,3) ) 	//²ÉÑù3´Î£¬È¡ÖÐÎ»ÊýÎÂÊª¶È£¨²¹Âë£©£¨³É¹¦·µ»Ø1£©£¨¶ÁÈ¡ÖµÎªÊµ¼ÊÎÂ¶ÈµÄ10±¶£©
 		{
-			err &= ~0x01;							//æ ‡å¿—ä½bit1ï¼Œæ¸…é™¤æ¸©æ¹¿åº¦ä¼ æ„Ÿå™¨é”™è¯¯
+			err &= ~0x01;							//±êÖ¾Î»bit1£¬Çå³ýÎÂÊª¶È´«¸ÐÆ÷´íÎó
 			break;
 		}
-		else err |= 0x01;							//æ ‡å¿—ä½bit1ï¼Œè®°å½•æ¸©æ¹¿åº¦ä¼ æ„Ÿå™¨é”™è¯¯
+		else err |= 0x01;							//±êÖ¾Î»bit1£¬¼ÇÂ¼ÎÂÊª¶È´«¸ÐÆ÷´íÎó
 	}
-	Temp_16S= (AM2302_Data.temp_H<<8)+AM2302_Data.temp_L;					//å–å¾—å¸¦ç¬¦å·æ•´åž‹æ¸©åº¦ï¼ˆå·²ä¸ºè¡¥ç ï¼‰--------< è¦å…ˆè½¬æ¢æˆINT16S >
-	MET_Data.Air_Temperature= ( (float)Temp_16S ) / 10;						//è½¬æ¢ä¸ºæµ®ç‚¹ï¼ˆåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹ï¼‰ï¼Œè®¡ç®—çœŸå®žå€¼å¹¶è½¬å­˜åˆ°MET_Dataï¼ˆåŽŸä¸º10å€ï¼‰
-	MET_Data.Humidity= (AM2302_Data.humi_H<<8)+AM2302_Data.humi_L;			//æ¹¿åº¦æ•°æ®è½¬å­˜åˆ°MET_Dataï¼ˆæ­¤æ—¶ä¸º16è¿›åˆ¶æ•´æ•°ï¼Œ1000å€æ¹¿åº¦å€¼ï¼Œä¾‹652=65.2%ï¼Œç¬¦åˆåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹ï¼‰
+	Temp_16S= (AM2302_Data.temp_H<<8)+AM2302_Data.temp_L;					//È¡µÃ´ø·ûºÅÕûÐÍÎÂ¶È£¨ÒÑÎª²¹Âë£©--------< ÒªÏÈ×ª»»³ÉINT16S >
+	MET_Data.Air_Temperature= ( (float)Temp_16S ) / 10;						//×ª»»Îª¸¡µã£¨ºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ£©£¬¼ÆËãÕæÊµÖµ²¢×ª´æµ½MET_Data£¨Ô­Îª10±¶£©
+	MET_Data.Humidity= (AM2302_Data.humi_H<<8)+AM2302_Data.humi_L;			//Êª¶ÈÊý¾Ý×ª´æµ½MET_Data£¨´ËÊ±Îª16½øÖÆÕûÊý£¬1000±¶Êª¶ÈÖµ£¬Àý652=65.2%£¬·ûºÏºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ£©
 	
-	/*å¤§æ°”åŽ‹æ•°æ®é‡‡é›†*/
-	BMP180Init(&BP_info);							//å¤§æ°”åŽ‹æ¨¡å—åˆå§‹åŒ–
+	/*´óÆøÑ¹Êý¾Ý²É¼¯*/
+	BMP180Init(&BP_info);							//´óÆøÑ¹Ä£¿é³õÊ¼»¯
 	if( BP_info.ExistFlag==BMP180_EXISTENCE )
 	{
 		BMP180Convert(&BP_info);
 	}
 	else
 	{
-		err |= 0x02;								//æ ‡å¿—ä½bit2ï¼Œè®°å½•å¤§æ°”åŽ‹ä¼ æ„Ÿå™¨é”™è¯¯
+		err |= 0x02;								//±êÖ¾Î»bit2£¬¼ÇÂ¼´óÆøÑ¹´«¸ÐÆ÷´íÎó
 	}
-	MET_Data.Air_Pressure= ((float)BP_info.GasPress)/1000;   				//å¤§æ°”åŽ‹æ•°æ®è½¬æ¢ä¸ºæµ®ç‚¹ï¼ˆåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹ï¼‰ï¼Œå¹¶è½¬å­˜åˆ°MET_Data
+	MET_Data.Air_Pressure= ((float)BP_info.GasPress)/1000;   				//´óÆøÑ¹Êý¾Ý×ª»»Îª¸¡µã£¨ºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ£©£¬²¢×ª´æµ½MET_Data
 				
-	MET_LowPower();									//ä½ŽåŠŸè€—	å…³é—­æ¸©æ¹¿åº¦ã€å¤§æ°”åŽ‹ç”µæºï¼Œå¹¶é…ç½®IO
+	MET_LowPower();									//µÍ¹¦ºÄ	¹Ø±ÕÎÂÊª¶È¡¢´óÆøÑ¹µçÔ´£¬²¢ÅäÖÃIO
 #if TEST
-	Err_report( err );								//æ‰“å°é”™è¯¯ä¿¡æ¯ï¼ˆä¼šå…³485ç”µæºï¼‰
+	Err_report( err );								//´òÓ¡´íÎóÐÅÏ¢£¨»á¹Ø485µçÔ´£©
 #endif
 	
-	return err;										//æ­£ç¡®è¿”å›ž0
+	return err;										//ÕýÈ··µ»Ø0
 }
 
 /***************************************************************************************
-åç§°ï¼šINT8U MET_packet_content( INT8U *OutBuff )
-åŠŸèƒ½ï¼šå¾®æ°”è±¡å¸§ç»„å¸§
-å…¥å‚ï¼šINT8U *OutBuffï¼Œå­˜æ”¾åœ°å€
-å‡ºå‚ï¼šINT8U *OutBuffï¼Œå­˜æ”¾åœ°å€
-è¿”å›žï¼šå¸§é•¿åº¦
+Ãû³Æ£ºINT8U MET_packet_content( INT8U *OutBuff )
+¹¦ÄÜ£ºÎ¢ÆøÏóÖ¡×éÖ¡
+Èë²Î£ºINT8U *OutBuff£¬´æ·ÅµØÖ·
+³ö²Î£ºINT8U *OutBuff£¬´æ·ÅµØÖ·
+·µ»Ø£ºÖ¡³¤¶È
 ****************************************************************************************/
 INT8U MET_packet_content( INT8U *OutBuff )
 {
 	INT32U	T=0;
 	INT8U	MET_packet[69]={0};
 
-//å°ç«¯æ¨¡å¼ï¼Œä½Žå­—èŠ‚åœ¨ä½Žåœ°å€ï¼ˆä½Žåœ¨å‰ï¼‰
-	NB_ReadID(0x1000,MET_packet,(INT16U *)&T);			//6.Component_ID	è¢«ç›‘æµ‹è®¾å¤‡IDï¼ˆ17ä½ç¼–ç ï¼‰[0--16]ã€‚ä½¿ç”¨æœ¬æœºçš„IDåœ°å€
+//Ð¡¶ËÄ£Ê½£¬µÍ×Ö½ÚÔÚµÍµØÖ·£¨µÍÔÚÇ°£©
+	NB_ReadID(0x1000,MET_packet,(INT16U *)&T);			//6.Component_ID	±»¼à²âÉè±¸ID£¨17Î»±àÂë£©[0--16]¡£Ê¹ÓÃ±¾»úµÄIDµØÖ·
 	if( T!=17 ) return 0;
 
-	T=RTC_GetTime_Second();								//è¯»RTCæ—¶é—´
+	T=RTC_GetTime_Second();								//¶ÁRTCÊ±¼ä
 	if(T==0)return 0;
-	MET_packet[17]=T&0xff;								//7.Time_Stamp	é‡‡é›†æ—¶é—´
+	MET_packet[17]=T&0xff;								//7.Time_Stamp	²É¼¯Ê±¼ä
 	MET_packet[18]=(T>>8)&0xff;
 	MET_packet[19]=(T>>16)&0xff;
 	MET_packet[20]=(T>>24)&0xff;							
 
-	MET_packet[21]=0;									//8.Alerm_Flag	æŠ¥è­¦æ ‡è¯†
+	MET_packet[21]=0;									//8.Alerm_Flag	±¨¾¯±êÊ¶
 	MET_packet[22]=0; 
 
-	//memcpyæ“ä½œç»“æž„ä½“æ—¶æ³¨æ„å¯¹é½é—®é¢˜
-	memcpy(MET_packet+23,&MET_Data,46);					//å°†MET_Dataï¼ˆå¾®æ°”è±¡æ•°æ®ï¼‰å¡«å…¥MET_packetï¼ˆå¾®æ°”è±¡æŠ¥æ–‡å†…å®¹ï¼‰ã€‚MET_Dataæ•°æ®ç±»åž‹å·²åœ¨Get_Meteorology_Data()ä¸­è½¬æ¢ä¸ºåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹
-	return GDGuiYue(OutBuff,MET_packet,69,1,1);			//æŒ‰Q/GDW 242-2010å›½ç½‘è§„çº¦ç»„å¸§ï¼Œå…¶ä¸­æŠ¥æ–‡å†…å®¹æºè‡ª*P
+	//memcpy²Ù×÷½á¹¹ÌåÊ±×¢Òâ¶ÔÆëÎÊÌâ
+	memcpy(MET_packet+23,&MET_Data,46);					//½«MET_Data£¨Î¢ÆøÏóÊý¾Ý£©ÌîÈëMET_packet£¨Î¢ÆøÏó±¨ÎÄÄÚÈÝ£©¡£MET_DataÊý¾ÝÀàÐÍÒÑÔÚGet_Meteorology_Data()ÖÐ×ª»»ÎªºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ
+	return GDGuiYue(OutBuff,MET_packet,69,1,1);			//°´Q/GDW 242-2010¹úÍø¹æÔ¼×éÖ¡£¬ÆäÖÐ±¨ÎÄÄÚÈÝÔ´×Ô*P
 }
 
 /***************************************************************************************
-åç§°ï¼švoid Err_report( INT8U Err )
-åŠŸèƒ½ï¼šå¾®æ°”è±¡æ•°æ®é‡‡é›†é”™è¯¯æ—¶485æ‰“å°ç›¸åº”é”™è¯¯ä¿¡æ¯
-å…¥å‚ï¼šINT8U Errï¼Œé”™è¯¯ä»£ç 
-å‡ºå‚ï¼šæ— 
-è¿”å›žï¼šæ— 
+Ãû³Æ£ºvoid Err_report( INT8U Err )
+¹¦ÄÜ£ºÎ¢ÆøÏóÊý¾Ý²É¼¯´íÎóÊ±485´òÓ¡ÏàÓ¦´íÎóÐÅÏ¢
+Èë²Î£ºINT8U Err£¬´íÎó´úÂë
+³ö²Î£ºÎÞ
+·µ»Ø£ºÎÞ
 ****************************************************************************************/
 void Err_report( INT8U Err )
 {	
-	B485_init(4800);								//é‡æ–°åˆå§‹åŒ–ï¼Œé˜²æ­¢å…¶ä»–ä»»åŠ¡å…³ä¸²å£å¯¼è‡´å¤±æ•ˆã€‚ä¼ æ„Ÿå™¨é»˜è®¤æ³¢ç‰¹çŽ‡ä¸º4800
-	PWDC485EN();									//DCDCéš”ç¦»485æ‰“å¼€	
+	B485_init(4800);								//ÖØÐÂ³õÊ¼»¯£¬·ÀÖ¹ÆäËûÈÎÎñ¹Ø´®¿Úµ¼ÖÂÊ§Ð§¡£´«¸ÐÆ÷Ä¬ÈÏ²¨ÌØÂÊÎª4800
+	PWDC485EN();									//DCDC¸ôÀë485´ò¿ª	
 	OSTimeDly(1);
 	
 	if( Err==0 )
 	{
-		BSP_UART_Write(2,(INT8U *)("\r\nâ€”â€”â€”â€”â€”â€”â€”â€”â€”â€”å¾®æ°”è±¡ä¼ æ„Ÿå™¨æ­£å¸¸ï¼â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”\r\n"),18+44);
+		BSP_UART_Write(2,(INT8U *)("\r\n¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ªÎ¢ÆøÏó´«¸ÐÆ÷Õý³££¡¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª\r\n"),18+44);
 	}
 	if( Err&0x01 )
 	{
-		BSP_UART_Write(2,(INT8U *)("\r\nâ€”â€”â€”â€”â€”â€”â€”â€”â€”â€”æ¸©æ¹¿åº¦ä¼ æ„Ÿå™¨é”™è¯¯ï¼â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”\r\n"),18+44);
+		BSP_UART_Write(2,(INT8U *)("\r\n¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ªÎÂÊª¶È´«¸ÐÆ÷´íÎó£¡¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª\r\n"),18+44);
 	}
 	if( Err&0x02 )
 	{
-		BSP_UART_Write(2,(INT8U *)("\r\nâ€”â€”â€”â€”â€”â€”â€”â€”â€”â€”å¤§æ°”åŽ‹ä¼ æ„Ÿå™¨é”™è¯¯ï¼â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”\r\n"),18+44);
+		BSP_UART_Write(2,(INT8U *)("\r\n¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª´óÆøÑ¹´«¸ÐÆ÷´íÎó£¡¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª\r\n"),18+44);
 	}
 	if( Err&0x04 )
 	{
-		BSP_UART_Write(2,(INT8U *)("\r\nâ€”â€”â€”â€”â€”â€”â€”â€”â€”â€”é£Žé€Ÿä¼ æ„Ÿå™¨é”™è¯¯ï¼â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”\r\n"),16+44);
+		BSP_UART_Write(2,(INT8U *)("\r\n¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª·çËÙ´«¸ÐÆ÷´íÎó£¡¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª\r\n"),16+44);
 	}
 	if( Err&0x08 )
 	{
-		BSP_UART_Write(2,(INT8U *)("\r\nâ€”â€”â€”â€”â€”â€”â€”â€”â€”â€”é£Žå‘ä¼ æ„Ÿå™¨é”™è¯¯ï¼â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”\r\n"),16+44);
+		BSP_UART_Write(2,(INT8U *)("\r\n¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª·çÏò´«¸ÐÆ÷´íÎó£¡¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª\r\n"),16+44);
 	}
 
-	OSTimeDly(10);									//ç­‰å¾…485æ‰“å°å®Œæˆ
-	PWDC485DIS();									//å…³é—­485ç”µæº
+	OSTimeDly(10);									//µÈ´ý485´òÓ¡Íê³É
+	PWDC485DIS();									//¹Ø±Õ485µçÔ´
 }
 
 /***************************************************************************************
-åç§°ï¼šINT8U Test_Meteorology_Data( INT8U retry )
-åŠŸèƒ½ï¼šæµ‹è¯•é£Žé€Ÿé£Žå‘ï¼ˆ10æ¬¡ï¼‰ã€æœ€å¤§ç½‘é€Ÿã€æ¸©æ¹¿åº¦ã€å¤§æ°”åŽ‹æ•°æ®é‡‡é›†åŠŸèƒ½ã€‚
-å…¥å‚ï¼šINT8U	retryï¼Œé‡‡é›†å¤±è´¥é‡è¯•æ¬¡æ•°
-å‡ºå‚ï¼šæ— 
-è¿”å›žï¼šbit1æ¸©æ¹¿åº¦é‡‡é›†é”™è¯¯ï¼Œbit2å¤§æ°”åŽ‹é‡‡é›†é”™è¯¯ï¼Œbit3é£Žé€Ÿä¼ æ„Ÿå™¨é”™è¯¯ï¼Œbit4é£Žå‘ä¼ æ„Ÿå™¨é”™è¯¯ï¼Œè¿”å›ž0é‡‡é›†æ­£ç¡®
+Ãû³Æ£ºINT8U Test_Meteorology_Data( INT8U retry )
+¹¦ÄÜ£º²âÊÔ·çËÙ·çÏò£¨10´Î£©¡¢×î´óÍøËÙ¡¢ÎÂÊª¶È¡¢´óÆøÑ¹Êý¾Ý²É¼¯¹¦ÄÜ¡£
+Èë²Î£ºINT8U	retry£¬²É¼¯Ê§°ÜÖØÊÔ´ÎÊý
+³ö²Î£ºÎÞ
+·µ»Ø£ºbit1ÎÂÊª¶È²É¼¯´íÎó£¬bit2´óÆøÑ¹²É¼¯´íÎó£¬bit3·çËÙ´«¸ÐÆ÷´íÎó£¬bit4·çÏò´«¸ÐÆ÷´íÎó£¬·µ»Ø0²É¼¯ÕýÈ·
 ****************************************************************************************/
 INT8U Test_Meteorology_Data( INT8U retry )
 {
 	INT8U 	i,rt,err=0;
-	INT8U 	MaxIndex=0;								//æœ€å¤§é£Žé€Ÿ
-	INT16U	WD_Max=0,WS_Sum=0;						//ç”¨äºŽè®¡ç®—å¹³å‡å€¼
-	INT16U	WindSpeed_arr[10]={0};					//10miné£Žé€Ÿ
-	INT16U	WindDirection_arr[10]={0};				//10miné£Žå‘
-	INT16S	Temp_16S=0;								//æœ‰ç¬¦å·æ•´åž‹ï¼Œç”¨äºŽæµ®ç‚¹è½¬æ¢
-	INT8U	temp[7]={0};							//è½¬ASCIIï¼Œæ‰“å°ç”¨
+	INT8U 	MaxIndex=0;								//×î´ó·çËÙ
+	INT16U	WD_Max=0,WS_Sum=0;						//ÓÃÓÚ¼ÆËãÆ½¾ùÖµ
+	INT16U	WindSpeed_arr[10]={0};					//10min·çËÙ
+	INT16U	WindDirection_arr[10]={0};				//10min·çÏò
+	INT16S	Temp_16S=0;								//ÓÐ·ûºÅÕûÐÍ£¬ÓÃÓÚ¸¡µã×ª»»
+	INT8U	temp[7]={0};							//×ªASCII£¬´òÓ¡ÓÃ
 	
-	Am2302_Init();									//Am2302ä¼ æ„Ÿå™¨åˆå§‹åŒ–
-	PowerMETPin_Init();								//æ¸©æ¹¿åº¦ç”µæºæŽ§åˆ¶ å¼•è„šé…ç½®
-	PowerWDSPPin_Init();							//é£Žé€Ÿé£Žå‘ç”µæºæŽ§åˆ¶ å¼•è„šé…ç½®
+	Am2302_Init();									//Am2302´«¸ÐÆ÷³õÊ¼»¯
+	PowerMETPin_Init();								//ÎÂÊª¶ÈµçÔ´¿ØÖÆ Òý½ÅÅäÖÃ
+	PowerWDSPPin_Init();							//·çËÙ·çÏòµçÔ´¿ØÖÆ Òý½ÅÅäÖÃ
 	
-	/*é£Žé€Ÿé£Žå‘æ•°æ®é‡‡é›†ï¼ˆerrå¤„ç†æ–¹å¼è¦æ±‚å…ˆé‡‡é›†é£Žé€Ÿé£Žå‘ï¼‰*/
-	for(i=0;i<3;i++)								//è¿žç»­é‡‡é›†3æ¬¡é£Žé€Ÿé£Žå‘
+	/*·çËÙ·çÏòÊý¾Ý²É¼¯£¨err´¦Àí·½Ê½ÒªÇóÏÈ²É¼¯·çËÙ·çÏò£©*/
+	for(i=0;i<3;i++)								//Á¬Ðø²É¼¯3´Î·çËÙ·çÏò
 	{
-//		OSTimeDly( 57*20 );							//å»¶æ—¶1minï¼ˆä¸‹å¥å†…æœ‰3ç§’ï¼‰å†é‡‡é›†ï¼ˆ50åˆ†~59åˆ†ï¼‰
+//		OSTimeDly( 57*20 );							//ÑÓÊ±1min£¨ÏÂ¾äÄÚÓÐ3Ãë£©ÔÙ²É¼¯£¨50·Ö~59·Ö£©
 		for( rt=retry; rt>0; rt-- )
 		{
-			err= Get_WDSP_Data( WindSpeed_arr+i, WindDirection_arr+i );	//é£Žé€Ÿé£Žå‘æ•°æ®é‡‡é›†ï¼Œå¹¶è®°å½•é”™è¯¯æ ‡å¿—ä½ï¼ˆä»¥æœ€åŽä¸€æ¬¡çš„æ ‡å¿—ä¸ºå‡†ï¼Œä¸å¯å†™æˆ|=ï¼Œå¦åˆ™æ— æ³•æ¸…æŽ‰ä»¥å‰çš„é”™è¯¯ï¼‰
-			if( err==0 ) break;						//é£Žé€Ÿé£Žå‘æ•°æ®é‡‡é›†æ­£ç¡®ï¼ˆè¿”å›ž0ï¼‰æ—¶è·³å‡ºï¼›é”™è¯¯æ—¶ç»§ç»­å¾ªçŽ¯
+			err= Get_WDSP_Data( WindSpeed_arr+i, WindDirection_arr+i );	//·çËÙ·çÏòÊý¾Ý²É¼¯£¬²¢¼ÇÂ¼´íÎó±êÖ¾Î»£¨ÒÔ×îºóÒ»´ÎµÄ±êÖ¾Îª×¼£¬²»¿ÉÐ´³É|=£¬·ñÔòÎÞ·¨ÇåµôÒÔÇ°µÄ´íÎó£©
+			if( err==0 ) break;						//·çËÙ·çÏòÊý¾Ý²É¼¯ÕýÈ·£¨·µ»Ø0£©Ê±Ìø³ö£»´íÎóÊ±¼ÌÐøÑ­»·
 		}
 		
-		if( WindSpeed_arr[i] > WD_Max )				//åˆ¤æ–­æœ€å¤§é£Žé€Ÿ
+		if( WindSpeed_arr[i] > WD_Max )				//ÅÐ¶Ï×î´ó·çËÙ
 		{
-			WD_Max= WindSpeed_arr[i];				//ä¿å­˜æœ€å¤§é£Žé€Ÿ
-			MaxIndex= i;							//ä¿å­˜æœ€å¤§é£Žé€Ÿç›¸å¯¹åœ°å€
+			WD_Max= WindSpeed_arr[i];				//±£´æ×î´ó·çËÙ
+			MaxIndex= i;							//±£´æ×î´ó·çËÙÏà¶ÔµØÖ·
 		}
 
-		WS_Sum += WindSpeed_arr[i];					//ç´¯åŠ è®¡ç®—æ€»é£Žé€Ÿ
+		WS_Sum += WindSpeed_arr[i];					//ÀÛ¼Ó¼ÆËã×Ü·çËÙ
 	}
-	MET_Data.Max_WindSpeed= ((float)WD_Max)/10;		//å°†æœ€å¤§é£Žé€Ÿè½¬æ¢ä¸ºæµ®ç‚¹ï¼ˆåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹ï¼‰ï¼Œè½¬å­˜åˆ°MET_Data
-	MET_Data.Ave_WindSpeed= ((float)WS_Sum)/30;		//è®¡ç®—3æ¬¡çš„å¹³å‡é£Žé€Ÿï¼Œå¹¶è½¬æ¢ä¸ºæµ®ç‚¹ï¼ˆåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹ï¼‰ï¼Œè½¬å­˜åˆ°MET_Dataï¼ˆ30è¡¨ç¤º3æ¬¡*10å€ï¼‰
-	MET_Data.Ave_WindDirection= WindDirection_arr[MaxIndex];				//è®°å½•å½“å‰é£Žå‘ï¼ˆ0~7æˆ–0~360åº¦ï¼Œå·²ä¸ºåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹ï¼‰
+	MET_Data.Max_WindSpeed= ((float)WD_Max)/10;		//½«×î´ó·çËÙ×ª»»Îª¸¡µã£¨ºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ£©£¬×ª´æµ½MET_Data
+	MET_Data.Ave_WindSpeed= ((float)WS_Sum)/30;		//¼ÆËã3´ÎµÄÆ½¾ù·çËÙ£¬²¢×ª»»Îª¸¡µã£¨ºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ£©£¬×ª´æµ½MET_Data£¨30±íÊ¾3´Î*10±¶£©
+	MET_Data.Ave_WindDirection= WindDirection_arr[MaxIndex];				//¼ÇÂ¼µ±Ç°·çÏò£¨0~7»ò0~360¶È£¬ÒÑÎªºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ£©
 	
-	PWDC485EN();									//DCDCéš”ç¦»485æ‰“å¼€ï¼ˆGet_WDSP_Dataä¸­è¢«å…³é—­ï¼‰
-	WS_Sum *= 10;									//è®¡ç®—å¹³å‡é£Žé€Ÿï¼ˆ10å€ï¼Œæ•´åž‹ï¼‰
-	ADC_HEXtoASCII( WS_Sum, temp );					//è½¬æ¢ä¸ºå­—ç¬¦ä¸²
-	BSP_UART_Write(2,(INT8U *)("\r\né£Žé€Ÿï¼š"),8);
+	PWDC485EN();									//DCDC¸ôÀë485´ò¿ª£¨Get_WDSP_DataÖÐ±»¹Ø±Õ£©
+	WS_Sum *= 10;									//¼ÆËãÆ½¾ù·çËÙ£¨10±¶£¬ÕûÐÍ£©
+	ADC_HEXtoASCII( WS_Sum, temp );					//×ª»»Îª×Ö·û´®
+	BSP_UART_Write(2,(INT8U *)("\r\n·çËÙ£º"),8);
 	BSP_UART_Write( 2, temp, 7 );
-	BSP_UART_Write(2,(INT8U *)("é£Žå‘ï¼š"),6);
-	WS_Sum= MET_Data.Ave_WindDirection + 0x30;		//é£Žå‘è½¬ASCII
+	BSP_UART_Write(2,(INT8U *)("·çÏò£º"),6);
+	WS_Sum= MET_Data.Ave_WindDirection + 0x30;		//·çÏò×ªASCII
 	BSP_UART_Write(2,(INT8U *)&WS_Sum,2);
 	
 	
 	
-	PWMETEN();										//æ‰“å¼€æ¸©æ¹¿åº¦ã€å¤§æ°”åŽ‹ç”µæº
-	OSTimeDly(40);									//AM2302ä¸Šç”µåŽè¦ç­‰å¾…2Sï¼Œä»¥è¶Šè¿‡ä¸ç¨³å®šçŠ¶æ€ï¼Œ
+	PWMETEN();										//´ò¿ªÎÂÊª¶È¡¢´óÆøÑ¹µçÔ´
+	OSTimeDly(40);									//AM2302ÉÏµçºóÒªµÈ´ý2S£¬ÒÔÔ½¹ý²»ÎÈ¶¨×´Ì¬£¬
 	
-	/*æ¸©æ¹¿åº¦æ•°æ®é‡‡é›†*/
+	/*ÎÂÊª¶ÈÊý¾Ý²É¼¯*/
 	for( rt=retry; rt>0; rt-- )
 	{
-		if( Read_Median_AM2302(&AM2302_Data,3) ) 	//é‡‡æ ·3æ¬¡ï¼Œå–ä¸­ä½æ•°æ¸©æ¹¿åº¦ï¼ˆè¡¥ç ï¼‰ï¼ˆæˆåŠŸè¿”å›ž1ï¼‰ï¼ˆè¯»å–å€¼ä¸ºå®žé™…æ¸©åº¦çš„10å€ï¼‰
+		if( Read_Median_AM2302(&AM2302_Data,3) ) 	//²ÉÑù3´Î£¬È¡ÖÐÎ»ÊýÎÂÊª¶È£¨²¹Âë£©£¨³É¹¦·µ»Ø1£©£¨¶ÁÈ¡ÖµÎªÊµ¼ÊÎÂ¶ÈµÄ10±¶£©
 		{
-			err &= ~0x01;							//æ ‡å¿—ä½bit1ï¼Œæ¸…é™¤æ¸©æ¹¿åº¦ä¼ æ„Ÿå™¨é”™è¯¯
+			err &= ~0x01;							//±êÖ¾Î»bit1£¬Çå³ýÎÂÊª¶È´«¸ÐÆ÷´íÎó
 			break;
 		}
-		else err |= 0x01;							//æ ‡å¿—ä½bit1ï¼Œè®°å½•æ¸©æ¹¿åº¦ä¼ æ„Ÿå™¨é”™è¯¯
+		else err |= 0x01;							//±êÖ¾Î»bit1£¬¼ÇÂ¼ÎÂÊª¶È´«¸ÐÆ÷´íÎó
 	}
-	Temp_16S= (AM2302_Data.temp_H<<8)+AM2302_Data.temp_L;					//å–å¾—å¸¦ç¬¦å·æ•´åž‹æ¸©åº¦ï¼ˆå·²ä¸ºè¡¥ç ï¼‰--------< è¦å…ˆè½¬æ¢æˆINT16S >
-	MET_Data.Air_Temperature= ( (float)Temp_16S ) / 10;						//è½¬æ¢ä¸ºæµ®ç‚¹ï¼ˆåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹ï¼‰ï¼Œè®¡ç®—çœŸå®žå€¼å¹¶è½¬å­˜åˆ°MET_Dataï¼ˆåŽŸä¸º10å€ï¼‰
-	MET_Data.Humidity= (AM2302_Data.humi_H<<8)+AM2302_Data.humi_L;			//æ¹¿åº¦æ•°æ®è½¬å­˜åˆ°MET_Dataï¼ˆæ­¤æ—¶ä¸º16è¿›åˆ¶æ•´æ•°ï¼Œ1000å€æ¹¿åº¦å€¼ï¼Œä¾‹652=65.2%ï¼Œç¬¦åˆåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹ï¼‰
+	Temp_16S= (AM2302_Data.temp_H<<8)+AM2302_Data.temp_L;					//È¡µÃ´ø·ûºÅÕûÐÍÎÂ¶È£¨ÒÑÎª²¹Âë£©--------< ÒªÏÈ×ª»»³ÉINT16S >
+	MET_Data.Air_Temperature= ( (float)Temp_16S ) / 10;						//×ª»»Îª¸¡µã£¨ºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ£©£¬¼ÆËãÕæÊµÖµ²¢×ª´æµ½MET_Data£¨Ô­Îª10±¶£©
+	MET_Data.Humidity= (AM2302_Data.humi_H<<8)+AM2302_Data.humi_L;			//Êª¶ÈÊý¾Ý×ª´æµ½MET_Data£¨´ËÊ±Îª16½øÖÆÕûÊý£¬1000±¶Êª¶ÈÖµ£¬Àý652=65.2%£¬·ûºÏºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ£©
 	
-	Temp_16S *= 10;									//æ¸©åº¦
-	ADC_HEXtoASCII( Temp_16S, temp );				//è½¬æ¢ä¸ºå­—ç¬¦ä¸²ï¼ˆè´Ÿæ•°æ— æ³•å¤„ç†ï¼‰
-	BSP_UART_Write(2,(INT8U *)("\r\næ¸©åº¦ï¼š"),8);
+	Temp_16S *= 10;									//ÎÂ¶È
+	ADC_HEXtoASCII( Temp_16S, temp );				//×ª»»Îª×Ö·û´®£¨¸ºÊýÎÞ·¨´¦Àí£©
+	BSP_UART_Write(2,(INT8U *)("\r\nÎÂ¶È£º"),8);
 	BSP_UART_Write( 2, temp, 7 );
 	
-	Temp_16S= MET_Data.Humidity * 10;				//æ¹¿åº¦
-	ADC_HEXtoASCII( Temp_16S, temp );				//è½¬æ¢ä¸ºå­—ç¬¦ä¸²
-	BSP_UART_Write(2,(INT8U *)("æ¹¿åº¦ï¼š"),6);
+	Temp_16S= MET_Data.Humidity * 10;				//Êª¶È
+	ADC_HEXtoASCII( Temp_16S, temp );				//×ª»»Îª×Ö·û´®
+	BSP_UART_Write(2,(INT8U *)("Êª¶È£º"),6);
 	BSP_UART_Write( 2, temp, 7 );	
 	
-	/*å¤§æ°”åŽ‹æ•°æ®é‡‡é›†*/
-	BMP180Init(&BP_info);							//å¤§æ°”åŽ‹æ¨¡å—åˆå§‹åŒ–
+	/*´óÆøÑ¹Êý¾Ý²É¼¯*/
+	BMP180Init(&BP_info);							//´óÆøÑ¹Ä£¿é³õÊ¼»¯
 	if( BP_info.ExistFlag==BMP180_EXISTENCE )
 	{
 		BMP180Convert(&BP_info);
 	}
 	else
 	{
-		err |= 0x02;								//æ ‡å¿—ä½bit2ï¼Œè®°å½•å¤§æ°”åŽ‹ä¼ æ„Ÿå™¨é”™è¯¯
+		err |= 0x02;								//±êÖ¾Î»bit2£¬¼ÇÂ¼´óÆøÑ¹´«¸ÐÆ÷´íÎó
 	}
-	MET_Data.Air_Pressure= ((float)BP_info.GasPress)/1000;   				//å¤§æ°”åŽ‹æ•°æ®è½¬æ¢ä¸ºæµ®ç‚¹ï¼ˆåŽå°è¦æ±‚çš„æ•°æ®ç±»åž‹ï¼‰ï¼Œå¹¶è½¬å­˜åˆ°MET_Data
+	MET_Data.Air_Pressure= ((float)BP_info.GasPress)/1000;   				//´óÆøÑ¹Êý¾Ý×ª»»Îª¸¡µã£¨ºóÌ¨ÒªÇóµÄÊý¾ÝÀàÐÍ£©£¬²¢×ª´æµ½MET_Data
 	
-	for(i=0;i<7;i++)								//è½¬æ¢ä¸ºå­—ç¬¦ä¸²
+	for(i=0;i<7;i++)								//×ª»»Îª×Ö·û´®
 	{
-		if(i==2) continue ; 						//è·³è¿‡å°æ•°ç‚¹ä½temp[4]
+		if(i==2) continue ; 						//Ìø¹ýÐ¡ÊýµãÎ»temp[4]
 		temp[6-i]=BP_info.GasPress%10+0x30;
 		BP_info.GasPress/=10;
 	}
 	temp[4]='.';
 
-	BSP_UART_Write(2,(INT8U *)("æ°”åŽ‹ï¼š"),6);
+	BSP_UART_Write(2,(INT8U *)("ÆøÑ¹£º"),6);
 	BSP_UART_Write( 2, temp, 7 );
-	OSTimeDly(10);									//ç­‰å¾…485æ‰“å°å®Œæˆ
+	OSTimeDly(10);									//µÈ´ý485´òÓ¡Íê³É
 	
-	MET_LowPower();									//ä½ŽåŠŸè€—	å…³é—­æ¸©æ¹¿åº¦ã€å¤§æ°”åŽ‹ç”µæºï¼Œå¹¶é…ç½®IO
-	Err_report( err );								//æ‰“å°é”™è¯¯ä¿¡æ¯	
+	MET_LowPower();									//µÍ¹¦ºÄ	¹Ø±ÕÎÂÊª¶È¡¢´óÆøÑ¹µçÔ´£¬²¢ÅäÖÃIO
+	Err_report( err );								//´òÓ¡´íÎóÐÅÏ¢	
 
-	return err;										//æ­£ç¡®è¿”å›ž0
+	return err;										//ÕýÈ··µ»Ø0
 }
 
 
 #if 0
 /***************************************************************************
-å‡½æ•°: void MET_DataHandle(void)
-è¯´æ˜Ž: 
-å…¥å‚ï¼š
-å‡ºå‚ï¼š
+º¯Êý: void MET_DataHandle(void)
+ËµÃ÷: 
+Èë²Î£º
+³ö²Î£º
 *****************************************************************************/
 void MET_DataHandle(void)
 {
 	INT8U	WaitTime=3;
-	INT8U	CurrentTime[6];							//å­˜æ”¾å½“å‰æ—¶é—´
+	INT8U	CurrentTime[6];							//´æ·Åµ±Ç°Ê±¼ä
 	
-//	CRTime=0;										//è°ƒç”¨æ—¶æ¸…0		ä¸å¯æ¸…0ï¼Œä¼šé‡å…¥
-	GetSysTime(CurrentTime);						//èŽ·å–å½“å‰æ—¶é—´------------------------è¢«æ³¨é‡Šäº†ZE ä¸ºä»€ä¹ˆä¹Ÿèƒ½è¯»å‡ºï¼Ÿ
-	if( CurrentTime[4] == 0x05 )					//05åˆ†æ—¶é‡‡æ¸©æ¹¿åº¦ã€å¤§æ°”åŽ‹æ•°æ®
+//	CRTime=0;										//µ÷ÓÃÊ±Çå0		²»¿ÉÇå0£¬»áÖØÈë
+	GetSysTime(CurrentTime);						//»ñÈ¡µ±Ç°Ê±¼ä------------------------±»×¢ÊÍÁËZE ÎªÊ²Ã´Ò²ÄÜ¶Á³ö£¿
+	if( CurrentTime[4] == 0x05 )					//05·ÖÊ±²ÉÎÂÊª¶È¡¢´óÆøÑ¹Êý¾Ý
 	{
-		if(CRTime==CurrentTime[4])return;			//é˜²æ­¢åŒä¸€åˆ†é’Ÿå†…å†å…¥ï¼ˆCRTimeè¢«æ¸…åŽä¸å½±å“é¦–æ¬¡è¿›å…¥ï¼‰
-		CRTime=CurrentTime[4];						//è®°å½•å½“å‰åˆ†é’Ÿ
-		Get_Meteorology_Data();						//è¯»æ¸©æ¹¿åº¦ï¼Œå¤§æ°”åŽ‹æ•°æ®		
+		if(CRTime==CurrentTime[4])return;			//·ÀÖ¹Í¬Ò»·ÖÖÓÄÚÔÙÈë£¨CRTime±»Çåºó²»Ó°ÏìÊ×´Î½øÈë£©
+		CRTime=CurrentTime[4];						//¼ÇÂ¼µ±Ç°·ÖÖÓ
+		Get_Meteorology_Data();						//¶ÁÎÂÊª¶È£¬´óÆøÑ¹Êý¾Ý		
 	}
-	if(CurrentTime[4] ==0x10)						//10-5åˆ†é’ŸåŽè¯»å–é£Žé€Ÿé£Žå‘æ•°æ®
+	if(CurrentTime[4] ==0x10)						//10-5·ÖÖÓºó¶ÁÈ¡·çËÙ·çÏòÊý¾Ý
 	{
-		if(CRTime==CurrentTime[4])return;			//é˜²æ­¢åŒä¸€åˆ†é’Ÿå†…å†å…¥ï¼ˆCRTimeè¢«æ¸…åŽä¸å½±å“é¦–æ¬¡è¿›å…¥ï¼‰	
-		CRTime=CurrentTime[4];						//è®°å½•å½“å‰åˆ†é’Ÿ
-		Read_WDSP_Data();							//æ‰“å¼€485å¹¶åˆå§‹åŒ–-----------------------æœªè¯»æ•°ZE  å‡½æ•°æ²¡åšå®Œæ•´ï¼Œåˆ°æ—¶å€™æŠŠä¸‹é¢çš„è¯»æ•°æ®æ“ä½œæ”¾è¿›æ­¤å‡½æ•°
+		if(CRTime==CurrentTime[4])return;			//·ÀÖ¹Í¬Ò»·ÖÖÓÄÚÔÙÈë£¨CRTime±»Çåºó²»Ó°ÏìÊ×´Î½øÈë£©	
+		CRTime=CurrentTime[4];						//¼ÇÂ¼µ±Ç°·ÖÖÓ
+		Read_WDSP_Data();							//´ò¿ª485²¢³õÊ¼»¯-----------------------Î´¶ÁÊýZE  º¯ÊýÃ»×öÍêÕû£¬µ½Ê±ºò°ÑÏÂÃæµÄ¶ÁÊý¾Ý²Ù×÷·Å½ø´Ëº¯Êý
 
-		while(WaitTime--)							//ç­‰æ•°æ®ï¼Œæœ€å¤šWaitTimeæ¬¡
+		while(WaitTime--)							//µÈÊý¾Ý£¬×î¶àWaitTime´Î
 		{
-		/**************èŽ·å–é£Žé€Ÿå€¼*********************************/	
-			BSP_UART_Write(2,FS_CMD,8);				//å‘é€é£Žé€Ÿå‘½ä»¤
+		/**************»ñÈ¡·çËÙÖµ*********************************/	
+			BSP_UART_Write(2,FS_CMD,8);				//·¢ËÍ·çËÙÃüÁî
 
-			if(B485WaitData(1)==1)					//ç­‰é‚®ç®±1sï¼Œå¹¶å¯¹485æŽ¥æ”¶åˆ°çš„æ•°æ®è¿›è¡Œåˆ¤æ–­å¹¶å¤„ç†ï¼ŒæˆåŠŸè¿”å›ž1
+			if(B485WaitData(1)==1)					//µÈÓÊÏä1s£¬²¢¶Ô485½ÓÊÕµ½µÄÊý¾Ý½øÐÐÅÐ¶Ï²¢´¦Àí£¬³É¹¦·µ»Ø1
 			{
-				MET_Data.Ave_WindSpeed=WindSpeed;	//è®°å½•å½“å‰é£Žé€Ÿ
+				MET_Data.Ave_WindSpeed=WindSpeed;	//¼ÇÂ¼µ±Ç°·çËÙ
 				break;
 			}
 		}
-		/**************èŽ·å–é£Žå‘å€¼*********************************/				
-		WaitTime=3;									//é‡ç½®WaitTime
-		while(WaitTime--)							//ç­‰æ•°æ®ï¼Œæœ€å¤šWaitTimeæ¬¡
+		/**************»ñÈ¡·çÏòÖµ*********************************/				
+		WaitTime=3;									//ÖØÖÃWaitTime
+		while(WaitTime--)							//µÈÊý¾Ý£¬×î¶àWaitTime´Î
 		{
-			BSP_UART_Write(2,FX_CMD,8);				//å‘é€é£Žå‘å‘½ä»¤
-			if(B485WaitData(1)==1)					//ç­‰é‚®ç®±1sï¼Œå¹¶å¯¹485æŽ¥æ”¶åˆ°çš„æ•°æ®è¿›è¡Œåˆ¤æ–­å¹¶å¤„ç†ï¼ŒæˆåŠŸè¿”å›ž1
+			BSP_UART_Write(2,FX_CMD,8);				//·¢ËÍ·çÏòÃüÁî
+			if(B485WaitData(1)==1)					//µÈÓÊÏä1s£¬²¢¶Ô485½ÓÊÕµ½µÄÊý¾Ý½øÐÐÅÐ¶Ï²¢´¦Àí£¬³É¹¦·µ»Ø1
 			{
-				MET_Data.Ave_WindDirection=WindDirection;	//è®°å½•å½“å‰é£Žå‘
+				MET_Data.Ave_WindDirection=WindDirection;	//¼ÇÂ¼µ±Ç°·çÏò
 				break;
 			}
 		}	
-		/***********å…³ç”µæºï¼Œä¿å­˜æ•°æ®ï¼Œå¯åŠ¨GPRS***********************/
-		PWDC485DIS();								//å…³é—­485ç”µæº
-//		MET_SaveData(CurrentTime);					//ä¿å­˜å½“å‰æ—¶é—´ï¼Œæ¹¿åº¦ï¼Œæ¸©åº¦ï¼Œæ°”åŽ‹ï¼Œé£Žé€Ÿï¼Œé£Žå‘æ•°æ®
-		PWWDSPDIS();								//å…³é—­é£Žé€Ÿé£Žå‘ç”µæº
-//		SetGPRSON();								//ResumeæŒ‚èµ·çš„GPRSä»»åŠ¡,GPRSON=1--------------------------------------------------------ç§»å€¼æ—¶è¿™é‡Œè¦å¤„ç†ï¼ï¼ï¼
+		/***********¹ØµçÔ´£¬±£´æÊý¾Ý£¬Æô¶¯GPRS***********************/
+		PWDC485DIS();								//¹Ø±Õ485µçÔ´
+//		MET_SaveData(CurrentTime);					//±£´æµ±Ç°Ê±¼ä£¬Êª¶È£¬ÎÂ¶È£¬ÆøÑ¹£¬·çËÙ£¬·çÏòÊý¾Ý
+		PWWDSPDIS();								//¹Ø±Õ·çËÙ·çÏòµçÔ´
+//		SetGPRSON();								//Resume¹ÒÆðµÄGPRSÈÎÎñ,GPRSON=1--------------------------------------------------------ÒÆÖµÊ±ÕâÀïÒª´¦Àí£¡£¡£¡
 	}
 	
 	
-//	if((CurrentTime[4] ==0x29) &&(CurrentTime[3]==0x03))		//æ¯æ—¥3æ—¶29åˆ†  åˆ¤æ–­å¹¶æ“¦é™¤SPI FLASH
+//	if((CurrentTime[4] ==0x29) &&(CurrentTime[3]==0x03))		//Ã¿ÈÕ3Ê±29·Ö  ÅÐ¶Ï²¢²Á³ýSPI FLASH
 //	{
-//		/****************æ¯æœˆ30æ—¥æˆ–31æ—¥æ¸…ç©ºä¿å­˜çš„æ•°æ®**********************/
-//		if(CurrentTime[1]<8)//å‰7ä¸ªæœˆ
+//		/****************Ã¿ÔÂ30ÈÕ»ò31ÈÕÇå¿Õ±£´æµÄÊý¾Ý**********************/
+//		if(CurrentTime[1]<8)//Ç°7¸öÔÂ
 //		{
-//			if(CurrentTime[1]%2==0)//30å¤©
+//			if(CurrentTime[1]%2==0)//30Ìì
 //			{
-//				if(CurrentTime[3]==0x30)//æ—¥
+//				if(CurrentTime[3]==0x30)//ÈÕ
 //				{
-//					W25QXX_Erase_Chip();			//æ“¦é™¤ä¸€éä¿å­˜çš„æ•°æ®
+//					W25QXX_Erase_Chip();			//²Á³ýÒ»±é±£´æµÄÊý¾Ý
 //				}
 //			}
-//			else//31å¤©
+//			else//31Ìì
 //			{
-//				if(CurrentTime[3]==0x31)//æ—¥
+//				if(CurrentTime[3]==0x31)//ÈÕ
 //				{
-//					W25QXX_Erase_Chip();			//æ“¦é™¤ä¸€éä¿å­˜çš„æ•°æ®
+//					W25QXX_Erase_Chip();			//²Á³ýÒ»±é±£´æµÄÊý¾Ý
 //				}
 //			}
 //		}
-//		else//åŽ5ä¸ªæœˆ
+//		else//ºó5¸öÔÂ
 //		{
-//			if(CurrentTime[1]%2==0)//30å¤©
+//			if(CurrentTime[1]%2==0)//30Ìì
 //			{
-//				if(CurrentTime[3]==0x30)//æ—¥
+//				if(CurrentTime[3]==0x30)//ÈÕ
 //				{
-//					W25QXX_Erase_Chip();			//æ“¦é™¤ä¸€éä¿å­˜çš„æ•°æ®
+//					W25QXX_Erase_Chip();			//²Á³ýÒ»±é±£´æµÄÊý¾Ý
 //				}
 //			}
-//			else//31å¤©
+//			else//31Ìì
 //			{
-//				if(CurrentTime[3]==0x31)//æ—¥
+//				if(CurrentTime[3]==0x31)//ÈÕ
 //				{
-//					W25QXX_Erase_Chip();			//æ“¦é™¤ä¸€éä¿å­˜çš„æ•°æ®
+//					W25QXX_Erase_Chip();			//²Á³ýÒ»±é±£´æµÄÊý¾Ý
 //				}
 //			}
 //		}
 //		OSTimeDly(70);
-//		MCUSoftReset();								//ç³»ç»Ÿç¨‹åºé‡æ–°å¯åŠ¨
+//		MCUSoftReset();								//ÏµÍ³³ÌÐòÖØÐÂÆô¶¯
 //		OSTimeDly(60);
 //	}
 }

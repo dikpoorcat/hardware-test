@@ -1,13 +1,13 @@
 /******************************************************************************
-æ–‡ä»¶ï¼šBSP_BMP180.C  
-åŠŸèƒ½ï¼šå¤§æ°”å‹ä¼ æ„Ÿå™¨æ¥å£é€šè®¯
-ç¡¬ä»¶æ¥å£ï¼šIIC
-         BMP180æ”¯æŒæœ€é«˜3.4Mçš„ä¼ è¾“é€Ÿåº¦
+ÎÄ¼ş£ºBSP_BMP180.C  
+¹¦ÄÜ£º´óÆøÑ¹´«¸ĞÆ÷½Ó¿ÚÍ¨Ñ¶
+Ó²¼ş½Ó¿Ú£ºIIC
+         BMP180Ö§³Ö×î¸ß3.4MµÄ´«ÊäËÙ¶È
 ********************************************************************************/
 
 
 #include "Bsp_Bmp180.h"
-#include <math.h> //pow å‡½æ•° å¼•ç”¨
+#include <math.h> //pow º¯Êı ÒıÓÃ
 
 
 
@@ -16,8 +16,8 @@
 
 
 /******************************************************
-å‡½æ•°åï¼švoid BMP180Pin_CFG(void)
-è¯´æ˜ï¼š  BMP180 IICå¼•è„šåˆå§‹åŒ–
+º¯ÊıÃû£ºvoid BMP180Pin_CFG(void)
+ËµÃ÷£º  BMP180 IICÒı½Å³õÊ¼»¯
 ******************************************************/
 void BMP180Pin_CFG(void)
 {
@@ -36,12 +36,12 @@ void BMP180Pin_CFG(void)
 
 }
 /******************************************************
-å‡½æ•°åï¼švoid BMP180StartSignal(void)
-è¯´æ˜ï¼š  åˆå§‹åŒ–IICæ€»çº¿ï¼Œå‡†å¤‡è¯»å†™æ•°æ®
+º¯ÊıÃû£ºvoid BMP180StartSignal(void)
+ËµÃ÷£º  ³õÊ¼»¯IIC×ÜÏß£¬×¼±¸¶ÁĞ´Êı¾İ
 ******************************************************/
 static void BMP180StartSignal(void)
 {     
-	Bmp180_OUT();       //è¾“å‡ºæ¨¡å¼
+	Bmp180_OUT();       //Êä³öÄ£Ê½
 	
 	
 	Bmp180_SDA_H() ; 
@@ -51,15 +51,15 @@ static void BMP180StartSignal(void)
 	Bmp180_SDA_L();     //At start condition, SCL is high and SDA has a falling edge
 	delay_1us_32M(5);
 	
-	Bmp180_SCLK_L() ;   //æ§åˆ¶ä½æ€»çº¿
+	Bmp180_SCLK_L() ;   //¿ØÖÆ×¡×ÜÏß
 }
 /******************************************************
-å‡½æ•°åï¼švoid BMP180StopSignal(void)
-è¯´æ˜ï¼š  åœæ­¢IICæ€»çº¿
+º¯ÊıÃû£ºvoid BMP180StopSignal(void)
+ËµÃ÷£º  Í£Ö¹IIC×ÜÏß
 ******************************************************/
 static void BMP180StopSignal(void)
 {
-	Bmp180_OUT();       //è¾“å‡ºæ¨¡å¼
+	Bmp180_OUT();       //Êä³öÄ£Ê½
 	
 	Bmp180_SDA_L(); 
 	Bmp180_SCLK_L();
@@ -71,10 +71,10 @@ static void BMP180StopSignal(void)
 	Bmp180_SDA_H() ;    //At stop condition, SCL is also high, but SDA has a rising edge.
 }
 /******************************************************
-å‡½æ•°åï¼š INT8U  BMP180Acknowledge(void)
-è¯´æ˜ï¼šæ¯æ¬¡æƒ³å¯„å­˜å™¨å†™å®Œæ•°æ®åï¼Œç­‰å¾…å…¶åº”ç­”ã€‚
-å…¥å‚ï¼š
-å‡ºå‚ï¼šè¿”å›0ï¼Œè¡¨ç¤ºæ— åº”ç­”ã€‚è¿”å›1ï¼Œè¡¨ç¤ºæœ‰åº”ç­”ã€‚
+º¯ÊıÃû£º INT8U  BMP180Acknowledge(void)
+ËµÃ÷£ºÃ¿´ÎÏë¼Ä´æÆ÷Ğ´ÍêÊı¾İºó£¬µÈ´ıÆäÓ¦´ğ¡£
+Èë²Î£º
+³ö²Î£º·µ»Ø0£¬±íÊ¾ÎŞÓ¦´ğ¡£·µ»Ø1£¬±íÊ¾ÓĞÓ¦´ğ¡£
 ******************************************************/
 static INT8U  BMP180Acknowledge(void)
 {
@@ -86,7 +86,7 @@ static INT8U  BMP180Acknowledge(void)
 	
 		while(Bmp180_SDAIN)
 		{
-				i++;                      //è¿™é‡Œçš„250è¶³å¤Ÿå¤§äº†
+				i++;                      //ÕâÀïµÄ250×ã¹»´óÁË
 				if(i>250) return 0;
 		}
 		
@@ -95,15 +95,15 @@ static INT8U  BMP180Acknowledge(void)
 		return 1;        
 }
 /******************************************************
-å‡½æ•°åï¼švoid BMP180WriteByte(INT8U dataCode)
-è¯´æ˜ï¼šé€šè¿‡IICçº¿å‘å¯„å­˜å™¨å†™æ•°æ®ã€‚
-å…¥å‚ï¼šdataCodeï¼Œéœ€è¦å†™å…¥çš„æ•°æ®
-å‡ºå‚ï¼š
+º¯ÊıÃû£ºvoid BMP180WriteByte(INT8U dataCode)
+ËµÃ÷£ºÍ¨¹ıIICÏßÏò¼Ä´æÆ÷Ğ´Êı¾İ¡£
+Èë²Î£ºdataCode£¬ĞèÒªĞ´ÈëµÄÊı¾İ
+³ö²Î£º
 ******************************************************/
 static void BMP180WriteByte(INT8U dataCode)
 {
 	INT8U i ;
-	Bmp180_OUT();       //è¾“å‡ºæ¨¡å¼
+	Bmp180_OUT();       //Êä³öÄ£Ê½
 	
 	Bmp180_SCLK_L() ; 
 	delay_1us_32M(5);
@@ -112,9 +112,9 @@ static void BMP180WriteByte(INT8U dataCode)
 	{
 		
 		if(i&dataCode)
-		{Bmp180_SDA_H() ;}    //å†™1
+		{Bmp180_SDA_H() ;}    //Ğ´1
 		else          
-		{Bmp180_SDA_L() ;}    //å†™0    //BMP180_sda_bit = (bit)(temp & (0x80>>i)) ;
+		{Bmp180_SDA_L() ;}    //Ğ´0    //BMP180_sda_bit = (bit)(temp & (0x80>>i)) ;
 		
 		delay_1us_32M(5);
 		Bmp180_SCLK_H() ;    
@@ -125,10 +125,10 @@ static void BMP180WriteByte(INT8U dataCode)
 	}
 }
 /******************************************************
-å‡½æ•°åï¼š INT8U BMP180ReadByte(void)
-è¯´æ˜ï¼šé€šè¿‡IICçº¿ä»å¯„å­˜å™¨ä¸­è¯»å–æ•°æ®ã€‚
-å…¥å‚ï¼š
-å‡ºå‚ï¼šdataCodeï¼Œè¿”å›è¯»å–çš„æ•°æ®
+º¯ÊıÃû£º INT8U BMP180ReadByte(void)
+ËµÃ÷£ºÍ¨¹ıIICÏß´Ó¼Ä´æÆ÷ÖĞ¶ÁÈ¡Êı¾İ¡£
+Èë²Î£º
+³ö²Î£ºdataCode£¬·µ»Ø¶ÁÈ¡µÄÊı¾İ
 ******************************************************/
 static INT8U BMP180ReadByte(void)
 {
@@ -149,10 +149,10 @@ static INT8U BMP180ReadByte(void)
 		return dataCode ;
 }
 /********************************************************************************
-å‡½æ•°åï¼švoid BMP180AddressWrite(unsigned char addresss,unsigned char dataCode)
-è¯´æ˜ï¼šå‘åœ°å€ä¸­å†™å…¥æ•°æ®
-å…¥å‚ï¼šaddresssï¼Œéœ€è¦å†™å…¥æ•°æ®çš„ç›®çš„åœ°å€ã€‚dataCodeï¼Œéœ€è¦å†™å…¥çš„æ•°æ®
-å‡ºå‚ï¼š
+º¯ÊıÃû£ºvoid BMP180AddressWrite(unsigned char addresss,unsigned char dataCode)
+ËµÃ÷£ºÏòµØÖ·ÖĞĞ´ÈëÊı¾İ
+Èë²Î£ºaddresss£¬ĞèÒªĞ´ÈëÊı¾İµÄÄ¿µÄµØÖ·¡£dataCode£¬ĞèÒªĞ´ÈëµÄÊı¾İ
+³ö²Î£º
 ***********************************************************************************/
 void BMP180AddressWrite(unsigned char addresss,unsigned char dataCode)
 {
@@ -170,10 +170,10 @@ void BMP180AddressWrite(unsigned char addresss,unsigned char dataCode)
     BMP180StopSignal();                   
 }
 /********************************************************************************
-å‡½æ•°åï¼šINT8U ReadVersion()
-è¯´æ˜ï¼šè¯»å–BMP180çš„ç‰ˆæœ¬å·ï¼Œå¯æµ‹è¯•è¯»å–å‡½æ•°åŠæ—¶åºçš„æ­£ç¡®æ€§
-å…¥å‚ï¼š
-å‡ºå‚ï¼šè¿”å›è¯»åˆ°çš„ç‰ˆæœ¬å·
+º¯ÊıÃû£ºINT8U ReadVersion()
+ËµÃ÷£º¶ÁÈ¡BMP180µÄ°æ±¾ºÅ£¬¿É²âÊÔ¶ÁÈ¡º¯Êı¼°Ê±ĞòµÄÕıÈ·ĞÔ
+Èë²Î£º
+³ö²Î£º·µ»Ø¶Áµ½µÄ°æ±¾ºÅ
 ***********************************************************************************/
 
 INT8U ReadVersion()
@@ -181,19 +181,19 @@ INT8U ReadVersion()
 	  unsigned char aa=0;
      BMP180StartSignal();    
      BMP180WriteByte(BMP180_DEVICE_ADDRESS_BASE_VALUE);
-     if(0==BMP180Acknowledge())//å†™è®¾å¤‡åœ°å€ï¼Œç­‰å¾…åº”ç­”
+     if(0==BMP180Acknowledge())//Ğ´Éè±¸µØÖ·£¬µÈ´ıÓ¦´ğ
        return 0;
-     BMP180WriteByte(0xD0);//å†™å¯„å­˜å™¨åœ°å€ï¼Œç­‰å¾…åº”ç­”
+     BMP180WriteByte(0xD0);//Ğ´¼Ä´æÆ÷µØÖ·£¬µÈ´ıÓ¦´ğ
      if(0==BMP180Acknowledge())
         return 0;
       
-     BMP180StartSignal(); //é‡æ–°å¯åŠ¨
+     BMP180StartSignal(); //ÖØĞÂÆô¶¯
       
-     BMP180WriteByte(BMP180_DEVICE_ADDRESS_BASE_VALUE|1);//å†™è®¾å¤‡åœ°å€åŠ è¯»ä¿¡å·
-     if(0==BMP180Acknowledge())//ç­‰å¾…åº”ç­”
+     BMP180WriteByte(BMP180_DEVICE_ADDRESS_BASE_VALUE|1);//Ğ´Éè±¸µØÖ·¼Ó¶ÁĞÅºÅ
+     if(0==BMP180Acknowledge())//µÈ´ıÓ¦´ğ
         return 0;
      
-     aa= BMP180ReadByte(); //è¯»ä¸€ä¸ªå­—èŠ‚
+     aa= BMP180ReadByte(); //¶ÁÒ»¸ö×Ö½Ú
   
      BMP180StopSignal();
      return aa;    
@@ -202,10 +202,10 @@ INT8U ReadVersion()
 
 
 /********************************************************************
-å‡½æ•°åï¼šINT8U BMP180AddressReadByte(unsigned char address)
-è¯´æ˜ï¼šè¯»å–ç›®çš„åœ°å€ä¸­çš„æ•°æ®
-å…¥å‚ï¼šaddress éœ€è¦è¯»å–çš„ç›®çš„åœ°å€
-å‡ºå‚ï¼šè¿”å›è¯¥åœ°å€ä¸­çš„æ•°æ®
+º¯ÊıÃû£ºINT8U BMP180AddressReadByte(unsigned char address)
+ËµÃ÷£º¶ÁÈ¡Ä¿µÄµØÖ·ÖĞµÄÊı¾İ
+Èë²Î£ºaddress ĞèÒª¶ÁÈ¡µÄÄ¿µÄµØÖ·
+³ö²Î£º·µ»Ø¸ÃµØÖ·ÖĞµÄÊı¾İ
 ************************************************************************/
 INT8U BMP180AddressReadByte(INT8U address)
 {  
@@ -233,10 +233,10 @@ INT8U BMP180AddressReadByte(INT8U address)
 }
 
 /******************************************************
-å‡½æ•°å:BMP180AddressRead2Byte
-è¯´æ˜ï¼š è¯»å‡ºç›®çš„åœ°å€ä¸­çš„ä¸¤ä¸ªå­—èŠ‚
-å…¥å‚:  ç›®çš„åœ°å€
-å‡ºå‚:	 ä»è¿ç»­åœ°å€è¯»å–æ•°æ®ï¼Œå¹¶"ç»„è£…"ä¸ºlongå‹æ•°æ®
+º¯ÊıÃû:BMP180AddressRead2Byte
+ËµÃ÷£º ¶Á³öÄ¿µÄµØÖ·ÖĞµÄÁ½¸ö×Ö½Ú
+Èë²Î:  Ä¿µÄµØÖ·
+³ö²Î:	 ´ÓÁ¬ĞøµØÖ·¶ÁÈ¡Êı¾İ£¬²¢"×é×°"ÎªlongĞÍÊı¾İ
 
 ******************************************************/
 static unsigned int BMP180AddressRead2Byte(unsigned char address)
@@ -252,23 +252,23 @@ static unsigned int BMP180AddressRead2Byte(unsigned char address)
 
 
 /******************************************************
-å‡½æ•°å	: unsigned int BMP180ReadUnsetTemperature(void)
-è¯´æ˜		:è¯»å–æœªæ ¡æ­£çš„æ¸©åº¦å€¼
-å…¥å‚		:N/A
-å‡ºå‚ ï¼šè¿”å›ä¸ºæ ¡æ­£çš„æ¸©åº¦å€¼
+º¯ÊıÃû	: unsigned int BMP180ReadUnsetTemperature(void)
+ËµÃ÷		:¶ÁÈ¡Î´Ğ£ÕıµÄÎÂ¶ÈÖµ
+Èë²Î		:N/A
+³ö²Î £º·µ»ØÎªĞ£ÕıµÄÎÂ¶ÈÖµ
 ******************************************************/
 static unsigned int BMP180ReadUnsetTemperature(void)
 {
 	  BMP180AddressWrite(0xf4,0x2e) ;
-	  delay_SYSus(5000);                  //å»¶è¿Ÿ5msï¼Œè½¬åŒ–éœ€è¦4.5ms
+	  delay_SYSus(5000);                  //ÑÓ³Ù5ms£¬×ª»¯ĞèÒª4.5ms
 	  return (BMP180AddressRead2Byte(0xf6));
 }
 
 /******************************************************
-å‡½æ•°å	:unsigned long BMP180ReadUnsetPressure(void)
-è¯´æ˜		:è¯»å–æœªæ ¡æ­£çš„æ°”å‹å€¼
-å…¥å‚		:N/A
-å‡ºå‚ ï¼šè¿”å›ä¸ºæ ¡æ­£çš„æ°”å‹å€¼
+º¯ÊıÃû	:unsigned long BMP180ReadUnsetPressure(void)
+ËµÃ÷		:¶ÁÈ¡Î´Ğ£ÕıµÄÆøÑ¹Öµ
+Èë²Î		:N/A
+³ö²Î £º·µ»ØÎªĞ£ÕıµÄÆøÑ¹Öµ
 ******************************************************/
 static unsigned long BMP180ReadUnsetPressure(void)
 {
@@ -302,7 +302,7 @@ Function	:BMP180ReadCalibrateParam
 Input		:BMP180_info type point
 Output		:AC1,AC3,AC3,AC4,AC5,AC6,B1,B2,MB,MC,MD
 Return		:N/A
-Description	:è¯»å–æ ¡æ­£å‚æ•°
+Description	:¶ÁÈ¡Ğ£Õı²ÎÊı
 Note		:N/A
 ******************************************************/
 static void BMP180ReadCalibrateParam(BMP180_info *p)
@@ -326,7 +326,7 @@ Function	:Init_BMP180
 Input		:AC1,AC2,AC3,AC4,AC5,AC6,B1,B2,MB,MC,MD
 Output		:AC1,AC2,AC3,AC4,AC5,AC6,B1,B2,MB,MC,MD
 Return		:N/A
-Description	:åˆå§‹åŒ–
+Description	:³õÊ¼»¯
 Note		:N/A
 ******************************************************/
 void BMP180Init(BMP180_info *p)
@@ -335,7 +335,7 @@ void BMP180Init(BMP180_info *p)
 	BMP180Pin_CFG();
 	
 		if(BMP180AddressReadByte(BMP180_ID_REGISTER_ADDRESS)== BMP180_ID_FIXED_VALUE)
-		{//å­˜åœ¨
+		{//´æÔÚ
 				p->ExistFlag = BMP180_EXISTENCE ;
 			
 //			
@@ -352,15 +352,15 @@ void BMP180Init(BMP180_info *p)
 				p->Version = BMP180AddressReadByte(BMP180_VERSION_REGISTER_ADDRESS);
 		}
 		else
-		{//ä¸å­˜åœ¨
+		{//²»´æÔÚ
 				p->ExistFlag = BMP180_NOT_EXISTENCE ;
 		}
 }
 /******************************************************
-å‡½æ•°åï¼švoid BMP180Convert(BMP180_info *temp)
-è¯´æ˜ï¼šæ ¹æ®æ ¡æ­£å‚æ•°ï¼Œæ ¡æ­£æ¸©åº¦ä¸æ°”å‹çš„å€¼
-å…¥å‚ï¼štemp ä¿å­˜å‚æ•°
-å‡ºå‚ï¼š
+º¯ÊıÃû£ºvoid BMP180Convert(BMP180_info *temp)
+ËµÃ÷£º¸ù¾İĞ£Õı²ÎÊı£¬Ğ£ÕıÎÂ¶ÈÓëÆøÑ¹µÄÖµ
+Èë²Î£ºtemp ±£´æ²ÎÊı
+³ö²Î£º
 ******************************************************/
 void BMP180Convert(BMP180_info *temp)
 {	
@@ -368,26 +368,26 @@ void BMP180Convert(BMP180_info *temp)
 		long x2;
 		unsigned long b4, b7;
 		double  BP,BP1;
-		//æœªæ ¡æ­£çš„æ¸©åº¦å€¼
+		//Î´Ğ£ÕıµÄÎÂ¶ÈÖµ
 		temp->UnsetTemperature = BMP180ReadUnsetTemperature();
-		//æœªæ ¡æ­£çš„æ°”å‹å€¼
+		//Î´Ğ£ÕıµÄÆøÑ¹Öµ
 		temp->UnsetGasPress = BMP180ReadUnsetPressure();
 
-		//æ¸©åº¦æ ¡æ­£
+		//ÎÂ¶ÈĞ£Õı
 		//x1 = ((temp->UnsetTemperature) - temp->cal_param.AC6) * (temp->cal_param.AC5) >> 15;
 		x1=temp->UnsetTemperature - temp->cal_param.AC6;
 		x1 = x1 * temp->cal_param.AC5;
 		x1 = x1>>15;
 		//x2 = ((long)(temp->cal_param.MC) << 11) / (x1 + temp->cal_param.MD);
 		x3 = x1+ temp->cal_param.MD;
-		x2 = (long)temp->cal_param.MC<<11;//æ­¤ç®—æ³•æœ‰è¯¯
+		x2 = (long)temp->cal_param.MC<<11;//´ËËã·¨ÓĞÎó
 		x2 = x2 /x3;
 
 
 		B5 = x1 + x2;
 		temp->Temperature= (B5 + 8) >> 4;
 
-		//æ°”å‹æ ¡æ­£
+		//ÆøÑ¹Ğ£Õı
 		B6 = B5- 4000;
 		//x1 = ((long)(temp->cal_param.B2) * (B6 * B6 >> 12)) >> 11;
 		x1=B6 * B6;
@@ -434,7 +434,7 @@ void BMP180Convert(BMP180_info *temp)
 		b7=(unsigned long)(temp->UnsetGasPress) -B3;
 		x1=50000 >> OSS;
 		b7 =b7*x1;
-		if (b4==0)return ;//0é™¤ä¿æŠ¤
+		if (b4==0)return ;//0³ı±£»¤
 		if( b7 < 0x80000000)
 		{
 			//p = (b7 * 2) / b4 ;
@@ -463,7 +463,7 @@ void BMP180Convert(BMP180_info *temp)
 		x1 = x1+x2+3791;
 		x1 = x1 >> 4;
 		temp->GasPress =x1+p;
-		//æµ·æ‹”è®¡ç®—
+		//º£°Î¼ÆËã
 		//temp->Altitude =(44330.0 * (1.0-pow((float)(temp->GasPress) / 101325.0, 1.0/5.255)) );
 #if 1
         BP = (double)(temp->GasPress);

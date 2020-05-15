@@ -180,7 +180,7 @@ void WWDG_IRQHandler(void)
 //	}
 //	else
 //	{
-//		// å†…éƒ¨çœ‹é—¨ç‹—ç›‘è§†ä¸­æ–­ã€ä¸´ç•ŒåŒºã€‚çº¿ç¨‹ç›‘è§†ç”±å¤–éƒ¨çœ‹é—¨ç‹—è¿›è¡Œã€‚
+//		// ÄÚ²¿¿´ÃÅ¹·¼àÊÓÖĞ¶Ï¡¢ÁÙ½çÇø¡£Ïß³Ì¼àÊÓÓÉÍâ²¿¿´ÃÅ¹·½øĞĞ¡£
 //		WWDG_SetCounter(0x7F);
 //	}
 
@@ -267,11 +267,11 @@ void EXTI0_IRQHandler(void)
 //    OSIntNesting++;
 //   	OS_EXIT_CRITICAL();
 //
-//	// NPFO åˆ¤æ–­ä¸­æ–­çº¿(é€šé“)0æ˜¯å¦æœ‰ä¸­æ–­
+//	// NPFO ÅĞ¶ÏÖĞ¶ÏÏß(Í¨µÀ)0ÊÇ·ñÓĞÖĞ¶Ï
 //	if(EXTI_GetITStatus(EXTI_Line0) == SET)
-//	{	// è¯¥é€šé“ç”¨äºç”µæºæ£€æµ‹
-//		EXTI_ClearITPendingBit(EXTI_Line0);		    // æ¸…é™¤ä¸­æ–­
-//		BSP_BATTACControl(BSPBATT_CTRL_FORCE_OPEN);	// å¼€ç”µæ± 
+//	{	// ¸ÃÍ¨µÀÓÃÓÚµçÔ´¼ì²â
+//		EXTI_ClearITPendingBit(EXTI_Line0);		    // Çå³ıÖĞ¶Ï
+//		BSP_BATTACControl(BSPBATT_CTRL_FORCE_OPEN);	// ¿ªµç³Ø
 //	}
 //
 //	/* Tell uC/OS-II that we are leaving the ISR  */
@@ -544,8 +544,8 @@ void TIM3_IRQHandler(void)
 //    if(TIM_GetITStatus(TIM3,TIM_IT_Update) == SET)
 //	{
 //		TIM_ClearITPendingBit(TIM3,TIM_IT_Update);
-//		BSP_KEYScan();							// æŒ‰é”®æ‰«æ
-//		BSP_MPLSScan();							// è„‰å†²,é¥ä¿¡æ‰«æ
+//		BSP_KEYScan();							// °´¼üÉ¨Ãè
+//		BSP_MPLSScan();							// Âö³å,Ò£ĞÅÉ¨Ãè
 //	}
 //
 //	/* Tell uC/OS-II that we are leaving the ISR  */
@@ -639,7 +639,7 @@ void SPI2_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
 	OS_ENTER_CRITICAL(); /* Tell uC/OS-II that we are starting an ISR  */
-	OSIntNesting++;	   //ä¸­æ–­æ‰§è¡Œç¦æ­¢è°ƒåº¦
+	OSIntNesting++;	   //ÖĞ¶ÏÖ´ĞĞ½ûÖ¹µ÷¶È
 	OS_EXIT_CRITICAL();
 
 	SYS_UART_ISR(1);
@@ -652,7 +652,7 @@ void USART1_IRQHandler(void)
 /*******************************************************************************
 * Function Name  : USART2_IRQHandler
 * Description    : This function handles USART2 global interrupt request.
-*                  åˆšé…ç½®å®Œåä¼šæœ‰ä¸€æ¬¡å‘é€ä¸­æ–­,çœŸç›¸å¾…æŸ¥ã€‚
+*                  ¸ÕÅäÖÃÍêºó»áÓĞÒ»´Î·¢ËÍÖĞ¶Ï,ÕæÏà´ı²é¡£
 * Input          : None
 * Output         : None
 * Return         : None
@@ -660,7 +660,7 @@ void USART1_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
 	OS_ENTER_CRITICAL(); /* Tell uC/OS-II that we are starting an ISR  */
-	OSIntNesting++;	   //ä¸­æ–­æ‰§è¡Œç¦æ­¢è°ƒåº¦
+	OSIntNesting++;	   //ÖĞ¶ÏÖ´ĞĞ½ûÖ¹µ÷¶È
 	OS_EXIT_CRITICAL();
 
 	SYS_UART_ISR(2);   //
@@ -680,7 +680,7 @@ void USART2_IRQHandler(void)
 void USART3_IRQHandler(void)
 {
 	OS_ENTER_CRITICAL(); /* Tell uC/OS-II that we are starting an ISR  */
-	OSIntNesting++;	   //ä¸­æ–­æ‰§è¡Œç¦æ­¢è°ƒåº¦
+	OSIntNesting++;	   //ÖĞ¶ÏÖ´ĞĞ½ûÖ¹µ÷¶È
 	OS_EXIT_CRITICAL();
 
 	SYS_UART_ISR(3);   //
@@ -714,18 +714,18 @@ void RTCAlarm_IRQHandler(void)
 {
 	
 	BSP_WDGFeedDog();
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);		//ä½¿èƒ½PWRå’ŒBKPå¤–è®¾æ—¶é’Ÿ   	   				RTCå¯„å­˜å™¨ä½äºåå¤‡åŒºåŸŸ							
-	PWR_BackupAccessCmd(ENABLE);													//ä½¿èƒ½åå¤‡å¯„å­˜å™¨è®¿é—®	
-	RTC_WaitForSynchro();															//ç­‰å¾…RTCå¯„å­˜å™¨åŒæ­¥ 
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);		//Ê¹ÄÜPWRºÍBKPÍâÉèÊ±ÖÓ   	   				RTC¼Ä´æÆ÷Î»ÓÚºó±¸ÇøÓò							
+	PWR_BackupAccessCmd(ENABLE);													//Ê¹ÄÜºó±¸¼Ä´æÆ÷·ÃÎÊ	
+	RTC_WaitForSynchro();															//µÈ´ıRTC¼Ä´æÆ÷Í¬²½ 
 	RTC_WaitForLastTask();	
 	if(RTC_GetFlagStatus(RTC_IT_ALR))
 	{
 		
-		EXTI_ClearITPendingBit(EXTI_Line17);									    //æ¸…é™¤é—¹é’Ÿæ ‡å¿—ä¸ºå’Œé€šé“EXTI17æ ‡å¿—ä½
+		EXTI_ClearITPendingBit(EXTI_Line17);									    //Çå³ıÄÖÖÓ±êÖ¾ÎªºÍÍ¨µÀEXTI17±êÖ¾Î»
 		
 		if(PWR_GetFlagStatus(PWR_FLAG_WU) != RESET)      
 		{	
-			PWR_ClearFlag(PWR_FLAG_WU);//ä¸€èˆ¬æ²¡ç”¨
+			PWR_ClearFlag(PWR_FLAG_WU);//Ò»°ãÃ»ÓÃ
 		}						
 		RTC_ClearITPendingBit(RTC_IT_ALR);
 		RTC_WaitForLastTask();	
@@ -856,7 +856,7 @@ extern void RF_Receive_Interrput(void);
 void UART4_IRQHandler(void)
 {
 	OS_ENTER_CRITICAL(); /* Tell uC/OS-II that we are starting an ISR  */
-	OSIntNesting++;	     //ä¸­æ–­æ‰§è¡Œç¦æ­¢è°ƒåº¦
+	OSIntNesting++;	     //ÖĞ¶ÏÖ´ĞĞ½ûÖ¹µ÷¶È
 	OS_EXIT_CRITICAL();
 	//RF_Receive_Interrput();
 	//  SYS_UART_ISR(4);//
@@ -876,7 +876,7 @@ void UART4_IRQHandler(void)
 void UART5_IRQHandler(void)
 {
       OS_ENTER_CRITICAL(); /* Tell uC/OS-II that we are starting an ISR  */
-      OSIntNesting++;	   //ä¸­æ–­æ‰§è¡Œç¦æ­¢è°ƒåº¦
+      OSIntNesting++;	   //ÖĞ¶ÏÖ´ĞĞ½ûÖ¹µ÷¶È
    	  OS_EXIT_CRITICAL();
 
 //	  SYS_UART_ISR(5);//

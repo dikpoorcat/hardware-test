@@ -1,16 +1,16 @@
 /*****************************************Copyright(C)******************************************
  
-**-----------------------------------------æ–‡ä»¶ä¿¡æ¯---------------------------------------------
-**æ–‡    ä»¶    å: bsp_WDG.c
-**åˆ›    å»º    äºº: DGW
-**åˆ›  å»º  æ—¥  æœŸ: 150518
-**æœ€  æ–°  ç‰ˆ  æœ¬: V0.1
-**æ          è¿°: çœ‹é—¨ç‹—é©±åŠ¨
-**---------------------------------------åŽ†å²ç‰ˆæœ¬ä¿¡æ¯-------------------------------------------
-**ä¿®    æ”¹    äºº: 
-**æ—¥          æœŸ: 
-**ç‰ˆ          æœ¬: 
-**æ          è¿°:
+**-----------------------------------------ÎÄ¼þÐÅÏ¢---------------------------------------------
+**ÎÄ    ¼þ    Ãû: bsp_WDG.c
+**´´    ½¨    ÈË: DGW
+**´´  ½¨  ÈÕ  ÆÚ: 150518
+**×î  ÐÂ  °æ  ±¾: V0.1
+**Ãè          Êö: ¿´ÃÅ¹·Çý¶¯
+**---------------------------------------ÀúÊ·°æ±¾ÐÅÏ¢-------------------------------------------
+**ÐÞ    ¸Ä    ÈË: 
+**ÈÕ          ÆÚ: 
+**°æ          ±¾: 
+**Ãè          Êö:
 **----------------------------------------------------------------------------------------------
 ***********************************************************************************************/
 /* Includes-----------------------------------------------------------------------------------*/
@@ -18,17 +18,17 @@
  
 #include	"bsp_WDG.h"
 /* Private define-----------------------------------------------------------------------------*/
-// å¼•è„šå®šä¹‰
+// Òý½Å¶¨Òå
 #if  BANPCB2 == 0x10
-	#define	WDG_GPIO_CTLR			  GPIOB		// æŽ§åˆ¶è„š
-	#define WDG_GPIO_CTLR_WDI		GPIO_Pin_2 			// å–‚ç‹—
-	#define WDG_GPIO_CK   			RCC_APB2Periph_GPIOC    // zzs note,æ²¡ä»€ä¹ˆé¸Ÿç”¨å•Šï¼Œå®šä¹‰åœ¨è¿™é‡Œå¹²å˜›ï¼Ÿï¼Ÿï¼Ÿ
+	#define	WDG_GPIO_CTLR			  GPIOB		// ¿ØÖÆ½Å
+	#define WDG_GPIO_CTLR_WDI		GPIO_Pin_2 			// Î¹¹·
+	#define WDG_GPIO_CK   			RCC_APB2Periph_GPIOC    // zzs note,Ã»Ê²Ã´ÄñÓÃ°¡£¬¶¨ÒåÔÚÕâÀï¸ÉÂï£¿£¿£¿
 #endif
 
 #if  BANPCB2 == 0x21
-	#define	WDG_GPIO_CTLR			  GPIOB		// æŽ§åˆ¶è„š
-	#define WDG_GPIO_CTLR_WDI		GPIO_Pin_2 			// å–‚ç‹—
-	#define WDG_GPIO_CK   			RCC_APB2Periph_GPIOB   // zzs note,æ²¡ä»€ä¹ˆé¸Ÿç”¨å•Šï¼Œå®šä¹‰åœ¨è¿™é‡Œå¹²å˜›ï¼Ÿï¼Ÿï¼Ÿ
+	#define	WDG_GPIO_CTLR			  GPIOB		// ¿ØÖÆ½Å
+	#define WDG_GPIO_CTLR_WDI		GPIO_Pin_2 			// Î¹¹·
+	#define WDG_GPIO_CK   			RCC_APB2Periph_GPIOB   // zzs note,Ã»Ê²Ã´ÄñÓÃ°¡£¬¶¨ÒåÔÚÕâÀï¸ÉÂï£¿£¿£¿
 #endif
 
 /* Private typedef----------------------------------------------------------------------------*/
@@ -41,10 +41,10 @@
 /* --------------------Private functions------------------------------------------------------*/
 /***********************************************************************************************
 * Function		: BSP_WDGFeedDog
-* Description	: å–‚ç‹—ç¨‹åº,è¿™é‡Œå¯¹å–‚ç‹—è„šè¾“å‡ºåå‘
+* Description	: Î¹¹·³ÌÐò,ÕâÀï¶ÔÎ¹¹·½ÅÊä³ö·´Ïò
 * Input			: 
 * Output		: 
-* Note(s)		: å¤–éƒ¨MAX706çœ‹é—¨ç‹—,1.6så–‚ç‹—æ—¶é—´,ä¸Šå‡æ²¿æˆ–è€…ä¸‹é™æ²¿éƒ½å¯ä»¥.
+* Note(s)		: Íâ²¿MAX706¿´ÃÅ¹·,1.6sÎ¹¹·Ê±¼ä,ÉÏÉýÑØ»òÕßÏÂ½µÑØ¶¼¿ÉÒÔ.
 * Contributor	: 090318	andydriver
 ***********************************************************************************************/
 void BSP_WDGFeedDog(void)
@@ -58,12 +58,12 @@ void BSP_WDGFeedDog(void)
 	}
 	else
 	{
-		GPIO_WriteBit(WDG_GPIO_CTLR,WDG_GPIO_CTLR_WDI,Bit_SET);      //æ­¤ç¼–å†™ä¼šæ¼æŽ‰ 1ä¸ª 
+		GPIO_WriteBit(WDG_GPIO_CTLR,WDG_GPIO_CTLR_WDI,Bit_SET);      //´Ë±àÐ´»áÂ©µô 1¸ö 
 	}
 }
 /***********************************************************************************************
 * Function		: BSP_WDGInit
-* Description	: å¤–éƒ¨ç¡¬ä»¶çœ‹é—¨ç‹—åˆå§‹åŒ–ï¼ˆå…¶å®žæ˜¯åˆå§‹åŒ–å–‚ç‹—å¼•è„šï¼‰
+* Description	: Íâ²¿Ó²¼þ¿´ÃÅ¹·³õÊ¼»¯£¨ÆäÊµÊÇ³õÊ¼»¯Î¹¹·Òý½Å£©
 * Input			: 
 * Output		: GPIO_WriteBit(GPIOB,GPIO_Pin_9,Bit_RESET);
 * Note(s)		: 
@@ -78,4 +78,4 @@ void BSP_WDGInit(void)
 	GPIO_InitStructure.GPIO_Pin =WDG_GPIO_CTLR_WDI;
 	GPIO_Init(WDG_GPIO_CTLR, &GPIO_InitStructure);
 }
-/************************(C)COPYRIGHT 2008 åƒèƒ½ç”µåŠ›*****END OF FILE****************************/
+/************************(C)COPYRIGHT 2008 Ç§ÄÜµçÁ¦*****END OF FILE****************************/

@@ -1,6 +1,6 @@
 /***********************************************************************************************************************                                    
 *
-*               (c) Copyright 2017-2030, æ­å·æ–¹è¯šç”µåŠ›æŠ€æœ¯æœ‰é™å…¬å¸(http://www.fcdl.com.cn)
+*               (c) Copyright 2017-2030, º¼Öİ·½³ÏµçÁ¦¼¼ÊõÓĞÏŞ¹«Ë¾(http://www.fcdl.com.cn)
 *                            All Rights Reserved
 *
 *---------- File Info ---------------------------------------------------------------
@@ -13,14 +13,14 @@
 *
 *---------- History Info -------------------------------------------------------------
 * Version: 			Ver1.0
-* Descriptions: FM25CL64å’ŒW25Q256å…±ç”¨åŒä¸€ä¸ªSPIæ¥å£	
+* Descriptions: FM25CL64ºÍW25Q256¹²ÓÃÍ¬Ò»¸öSPI½Ó¿Ú	
 *
 *-------------------------------------------------------------------------------------
 ************************************************************************************************************************/
  #include "Bsp_fm.h"
  
-INT8U FM_Flag=0;				//bit	7	6 	5 	4 	3 	2 	1 	0		å„ä»»åŠ¡å ç”¨æ ‡å¿—ä½
-								//ä»»åŠ¡	X	X	X	X	WDT	GY	RF	GPRS	
+INT8U FM_Flag=0;				//bit	7	6 	5 	4 	3 	2 	1 	0		¸÷ÈÎÎñÕ¼ÓÃ±êÖ¾Î»
+								//ÈÎÎñ	X	X	X	X	WDT	GY	RF	GPRS	
 
 
 
@@ -33,8 +33,8 @@ INT8U FM_Flag=0;				//bit	7	6 	5 	4 	3 	2 	1 	0		å„ä»»åŠ¡å ç”¨æ ‡å¿—ä½
 /* --------------------Private functions------------------------------------------------------*/
 /************************************************************************************************************************
 * Function Name : void Fmdelay(INT16U US)
-* Description   : å»¶æ—¶å‡½æ•°
-* Input         : US : ç­‰å¾…USä¸ªæ—¶é’Ÿå‘¨æœŸ
+* Description   : ÑÓÊ±º¯Êı
+* Input         : US : µÈ´ıUS¸öÊ±ÖÓÖÜÆÚ
 * Return        : None
 *************************************************************************************************************************/
 void Fmdelay(INT16U US)
@@ -44,16 +44,16 @@ void Fmdelay(INT16U US)
 
 /************************************************************************************************************************
 * Function Name : INT8U FmbitReadState(void)
-* Description   : è¯»å–çŠ¶æ€å­—
+* Description   : ¶ÁÈ¡×´Ì¬×Ö
 * Input         : None
-* Return        : status : FM25CL64ä»SPIå£è¿”å›çš„çŠ¶æ€å­—èŠ‚
+* Return        : status : FM25CL64´ÓSPI¿Ú·µ»ØµÄ×´Ì¬×Ö½Ú
 *************************************************************************************************************************/
 INT8U FmReadState(void)
 {
 	INT8U status = 0;
 
 	FMCS_H();
-	Fmdelay(400);																// ç­‰å¾…ç¨³å®š
+	Fmdelay(400);																// µÈ´ıÎÈ¶¨
 	FMCS_L();
 	
 	BSP_SoftSpiSend(FM_RDSR);
@@ -65,19 +65,19 @@ INT8U FmReadState(void)
 
 /************************************************************************************************************************
 * Function Name : void BSP_InitFm(void)
-* Description   : é“ç”µå­˜å‚¨å™¨FM25CL64 ï¼Œç›¸å…³é©±åŠ¨ç¡¬ä»¶çš„åˆå§‹åŒ–
+* Description   : Ìúµç´æ´¢Æ÷FM25CL64 £¬Ïà¹ØÇı¶¯Ó²¼şµÄ³õÊ¼»¯
 * Input         : None
 *
 * Return        : None
 *************************************************************************************************************************/
-void BSP_InitFm( INT8U Task_Num )												//7~0	ä»»åŠ¡	X	X	X	X	Wdt	GY	RF	GPRS	
+void BSP_InitFm( INT8U Task_Num )												//7~0	ÈÎÎñ	X	X	X	X	Wdt	GY	RF	GPRS	
 {
 	GPIO_InitTypeDef 	GPIO_InitStructure;
 		
 	FM_Flag|=(1<<Task_Num);
-	if( FM_Flag&~(1<<Task_Num) ) return;										//è‹¥å…¶ä»–ä»»åŠ¡å·²åˆå§‹åŒ–ï¼ŒFM_Flagé0ï¼Œç›´æ¥è¿”å›	
+	if( FM_Flag&~(1<<Task_Num) ) return;										//ÈôÆäËûÈÎÎñÒÑ³õÊ¼»¯£¬FM_Flag·Ç0£¬Ö±½Ó·µ»Ø	
 	
-	__disable_irq();															// ç¦æ­¢æ€»ä¸­æ–­     // zzs Modified it 2018.06.11
+	__disable_irq();															// ½ûÖ¹×ÜÖĞ¶Ï     // zzs Modified it 2018.06.11
 	
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOC,ENABLE);
 	FMCS_L(); 
@@ -95,7 +95,7 @@ void BSP_InitFm( INT8U Task_Num )												//7~0	ä»»åŠ¡	X	X	X	X	Wdt	GY	RF	GPRS
 	SPI_1_Init();
 
 	FMCS_H(); 
-	Fmdelay(10);																//ç­‰å¾…ç¨³å®š
+	Fmdelay(10);																//µÈ´ıÎÈ¶¨
 	FMCS_L(); 
 	BSP_SoftSpiSend(FM_WREN);
 	FMCS_H();
@@ -108,35 +108,35 @@ void BSP_InitFm( INT8U Task_Num )												//7~0	ä»»åŠ¡	X	X	X	X	Wdt	GY	RF	GPRS
 
 	FMCS_H(); 
 
-	Fmdelay(20);																//ç­‰å¾…ç¨³å®š
+	Fmdelay(20);																//µÈ´ıÎÈ¶¨
 	
-	__enable_irq();																// å¼€æ€»ä¸­æ–­	  // zzs Modified it 2018.06.11
+	__enable_irq();																// ¿ª×ÜÖĞ¶Ï	  // zzs Modified it 2018.06.11
 }
 
 /************************************************************************************************************************
 * Function Name : INT8U BSP_WriteDataToFm(INT16U FlashAddr,INT8U *DataAddr,INT32U Len)
-* Description   : å°†æ•°æ®å†™å…¥åˆ°é“ç”µä¸­å»(Write Data To Fm25CL64)
-* Input         : FlashAddr : æŒ‡ç¤ºé“ç”µå­˜å‚¨å™¨çš„åœ°å€ èŒƒå›´ï¼š0~ MAX_FM_LEN
-*                 pDataAddr : è¦å†™å…¥æ•°æ®çš„å­˜æ”¾åœ°å€
-*                 Len       : å†™å…¥çš„æ•°æ®é•¿åº¦
+* Description   : ½«Êı¾İĞ´Èëµ½ÌúµçÖĞÈ¥(Write Data To Fm25CL64)
+* Input         : FlashAddr : Ö¸Ê¾Ìúµç´æ´¢Æ÷µÄµØÖ· ·¶Î§£º0~ MAX_FM_LEN
+*                 pDataAddr : ÒªĞ´ÈëÊı¾İµÄ´æ·ÅµØÖ·
+*                 Len       : Ğ´ÈëµÄÊı¾İ³¤¶È
 *
-* Return        : æ˜¾å¼è¿”å›ï¼š è¿”å›å˜é‡ SPI_statu æ°¸è¿œæ’ç­‰äº 1äº†ã€‚æ°¸è¿œè¿”å› çœŸ
+* Return        : ÏÔÊ½·µ»Ø£º ·µ»Ø±äÁ¿ SPI_statu ÓÀÔ¶ºãµÈÓÚ 1ÁË¡£ÓÀÔ¶·µ»Ø Õæ
 *************************************************************************************************************************/
 INT8U BSP_WriteDataToFm(INT16U FlashAddr,INT8U *pDataAddr,INT32U Len)
 {
 	INT8U SPI_statu = 1;
 
-	if((FlashAddr >= MAX_FM_LEN) || ((FlashAddr + Len) > MAX_FM_LEN) || (pDataAddr == 0))  //zzs note,å¦‚æœç”¨å…¶ä»–ç¼–è¯‘å™¨,åˆ™(pDataAddr == NULL)
+	if((FlashAddr >= MAX_FM_LEN) || ((FlashAddr + Len) > MAX_FM_LEN) || (pDataAddr == 0))  //zzs note,Èç¹ûÓÃÆäËû±àÒëÆ÷,Ôò(pDataAddr == NULL)
 	{
 		return 0;
 	}
 
-	__disable_irq();															// ç¦æ­¢æ€»ä¸­æ–­     // zzs Modified it 2018.06.11
+	__disable_irq();															// ½ûÖ¹×ÜÖĞ¶Ï     // zzs Modified it 2018.06.11
 
 	FMCS_H();
 	FMWP_H();
 	FMSCK_L();
-	Fmdelay(10);																// ç­‰å¾…ç¨³å®š
+	Fmdelay(10);																// µÈ´ıÎÈ¶¨
 	FMCS_L(); 
 	BSP_SoftSpiSend(FM_WREN);
 
@@ -146,48 +146,48 @@ INT8U BSP_WriteDataToFm(INT16U FlashAddr,INT8U *pDataAddr,INT32U Len)
 	BSP_SoftSpiSend(FM_WRITE);
 	BSP_SoftSpiSend(FlashAddr>>8);
 	BSP_SoftSpiSend(FlashAddr);
-	SPI_statu = SPI_BufferSend(pDataAddr,Len);									// zzs note, è¿™ä¸ªSPI_statu æ°¸è¿œ = 1ï¼Œä¸ºæ’çœŸäº†
+	SPI_statu = SPI_BufferSend(pDataAddr,Len);									// zzs note, Õâ¸öSPI_statu ÓÀÔ¶ = 1£¬ÎªºãÕæÁË
 
 	FMCS_H();
 	FMWP_L();
 
-	__enable_irq();																// å¼€æ€»ä¸­æ–­	  // zzs Modified it 2018.06.11
+	__enable_irq();																// ¿ª×ÜÖĞ¶Ï	  // zzs Modified it 2018.06.11
 
 	return SPI_statu;
 }
 
 /************************************************************************************************************************
 * Function Name : INT8U BSP_ReadDataFromFm(INT16U FlashAddr,INT8U *pDataAddr,INT32U Len)
-* Description   : ä»é“ç”µä¸­è¯»å‡ºæ•°æ®(Read Data From Fm25CL64)
-* Input         : FlashAddr : æŒ‡ç¤ºé“ç”µå­˜å‚¨å™¨çš„åœ°å€ èŒƒå›´ï¼š0~ MAX_FM_LEN
-*                 pDataAddr : è¯»å–å‡ºæ¥çš„å­˜æ”¾åœ°å€
-*                 Len       : è¯»å–çš„æ•°æ®é•¿åº¦
+* Description   : ´ÓÌúµçÖĞ¶Á³öÊı¾İ(Read Data From Fm25CL64)
+* Input         : FlashAddr : Ö¸Ê¾Ìúµç´æ´¢Æ÷µÄµØÖ· ·¶Î§£º0~ MAX_FM_LEN
+*                 pDataAddr : ¶ÁÈ¡³öÀ´µÄ´æ·ÅµØÖ·
+*                 Len       : ¶ÁÈ¡µÄÊı¾İ³¤¶È
 *
-* Return        : éšå¼è¿”å›ï¼š é€šè¿‡å½¢å‚pDataAddrè¿”å›è¯»å–çš„æ•°æ®
-*                 æ˜¾å¼è¿”å›ï¼š è¿”å›å˜é‡ SPI_statu æ°¸è¿œæ’ç­‰äº 1äº†ã€‚æ°¸è¿œè¿”å› çœŸ
+* Return        : ÒşÊ½·µ»Ø£º Í¨¹ıĞÎ²ÎpDataAddr·µ»Ø¶ÁÈ¡µÄÊı¾İ
+*                 ÏÔÊ½·µ»Ø£º ·µ»Ø±äÁ¿ SPI_statu ÓÀÔ¶ºãµÈÓÚ 1ÁË¡£ÓÀÔ¶·µ»Ø Õæ
 *************************************************************************************************************************/
 INT8U BSP_ReadDataFromFm(INT16U FlashAddr,INT8U *pDataAddr,INT32U Len)
 {
 	u8 SPI_statu = 1;
 
-	if((FlashAddr >= MAX_FM_LEN) || ((FlashAddr + Len) > MAX_FM_LEN) || (pDataAddr == 0))   //zzs note,å¦‚æœç”¨å…¶ä»–ç¼–è¯‘å™¨,åˆ™(pDataAddr == NULL)
+	if((FlashAddr >= MAX_FM_LEN) || ((FlashAddr + Len) > MAX_FM_LEN) || (pDataAddr == 0))   //zzs note,Èç¹ûÓÃÆäËû±àÒëÆ÷,Ôò(pDataAddr == NULL)
 	{
 	 return 0;
 	}
 
-	__disable_irq();															// ç¦æ­¢æ€»ä¸­æ–­     // zzs Modified it 2018.06.11
+	__disable_irq();															// ½ûÖ¹×ÜÖĞ¶Ï     // zzs Modified it 2018.06.11
 
 	FMCS_H();
 	FMSCK_L();
-	Fmdelay(10);																//ç­‰å¾…ç¨³å®š
+	Fmdelay(10);																//µÈ´ıÎÈ¶¨
 	FMCS_L();
 	BSP_SoftSpiSend(FM_READ);
 	BSP_SoftSpiSend(FlashAddr>>8);
 	BSP_SoftSpiSend(FlashAddr);
-	SPI_statu = SPI_BufferReceive(pDataAddr,Len);								// zzs note, è¿™ä¸ªSPI_statu æ°¸è¿œ = 1ï¼Œä¸ºæ’çœŸäº†
+	SPI_statu = SPI_BufferReceive(pDataAddr,Len);								// zzs note, Õâ¸öSPI_statu ÓÀÔ¶ = 1£¬ÎªºãÕæÁË
 	FMCS_H();
 
-	__enable_irq();																// å¼€æ€»ä¸­æ–­	  // zzs Modified it 2018.06.11
+	__enable_irq();																// ¿ª×ÜÖĞ¶Ï	  // zzs Modified it 2018.06.11
 
 	return SPI_statu;
  }
@@ -195,20 +195,20 @@ INT8U BSP_ReadDataFromFm(INT16U FlashAddr,INT8U *pDataAddr,INT32U Len)
 #if 0	//INT8U FM_test(void)
 /************************************************************************************************************************
 * Function Name : INT8U FM_test(void)
-* Description   : æµ‹è¯•é“ç”µå­˜å‚¨å™¨ã€‚1ã€æ‰§è¡Œä¸€ä¸‹ç›¸å…³é©±åŠ¨I/Oå£çš„åˆå§‹åŒ–ï¼›
-*                                2ã€è¯»å–é“ç”µå­˜å‚¨å™¨çš„çŠ¶æ€ï¼›
-*                                3ã€å‡†å¤‡å¥½ä¸€ä¸ªæµ‹è¯•æ•°ç»„ï¼Œå¡«å……æµ‹è¯•æ•°æ®åï¼Œç„¶åå°†å…¶å†™å…¥åˆ°é“ç”µä¸­å»ï¼›
-*                                4ã€å†ä»é“ç”µä¸­è¯»å‡ºåˆšæ‰å†™å…¥çš„æµ‹è¯•æ•°æ®ã€‚
-*                                5ã€å¯¹æ¯”æ£€æŸ¥è¯»å‡ºçš„æ•°æ®æ˜¯å¦ä¸å†™å…¥çš„ç›¸åŒï¼Œè‹¥ç›¸åŒï¼Œåˆ¤ä¸ºæµ‹è¯•æˆåŠŸï¼Œè¿”å›1ï¼Œè‹¥æœ‰ä¸åŒï¼Œåˆ¤ä¸ºæµ‹è¯•å¤±ï¼Œè´¥è¿”å›0
+* Description   : ²âÊÔÌúµç´æ´¢Æ÷¡£1¡¢Ö´ĞĞÒ»ÏÂÏà¹ØÇı¶¯I/O¿ÚµÄ³õÊ¼»¯£»
+*                                2¡¢¶ÁÈ¡Ìúµç´æ´¢Æ÷µÄ×´Ì¬£»
+*                                3¡¢×¼±¸ºÃÒ»¸ö²âÊÔÊı×é£¬Ìî³ä²âÊÔÊı¾İºó£¬È»ºó½«ÆäĞ´Èëµ½ÌúµçÖĞÈ¥£»
+*                                4¡¢ÔÙ´ÓÌúµçÖĞ¶Á³ö¸Õ²ÅĞ´ÈëµÄ²âÊÔÊı¾İ¡£
+*                                5¡¢¶Ô±È¼ì²é¶Á³öµÄÊı¾İÊÇ·ñÓëĞ´ÈëµÄÏàÍ¬£¬ÈôÏàÍ¬£¬ÅĞÎª²âÊÔ³É¹¦£¬·µ»Ø1£¬ÈôÓĞ²»Í¬£¬ÅĞÎª²âÊÔÊ§£¬°Ü·µ»Ø0
 * Input         : None        
-* Return        : 0: æµ‹è¯•å¤±è´¥
-*                 1ï¼šæµ‹è¯•æˆåŠŸ                   
+* Return        : 0: ²âÊÔÊ§°Ü
+*                 1£º²âÊÔ³É¹¦                   
 *************************************************************************************************************************/
 extern INT8U FMTESTBUFF[];  // zzs add this
 INT16U ValueCnt = 0; 
 INT8U FM_test(void)
 {
-	//INT8U FMTESTBUFF[256];   // zzs noteé‡å¤å®šä¹‰çš„å†…éƒ¨æ•°ç»„ï¼Œå› ä¸ºå·²ç»æœ‰ä¸€ä¸ªå®Œå…¨ä¸€æ ·çš„å¤–éƒ¨å…¨å±€æ•°ç»„äº†
+	//INT8U FMTESTBUFF[256];   // zzs noteÖØ¸´¶¨ÒåµÄÄÚ²¿Êı×é£¬ÒòÎªÒÑ¾­ÓĞÒ»¸öÍêÈ«Ò»ÑùµÄÍâ²¿È«¾ÖÊı×éÁË
 	INT16U i = 0;
 	INT8U j = 0;
 	
@@ -226,7 +226,7 @@ INT8U FM_test(void)
 	for(i = 0;i < 256; i++)
 	{
 		if (FMTESTBUFF[i]!=i)
-			return 0;//FMæµ‹è¯•å¤±è´¥
+			return 0;//FM²âÊÔÊ§°Ü
 	}
 	#else
 	for(j=0;j<32;j++)
@@ -250,89 +250,89 @@ INT8U FM_test(void)
 	
 	#endif
 
-	return 1;//FM æµ‹è¯•æˆåŠŸ
+	return 1;//FM ²âÊÔ³É¹¦
 }
 #endif
 
 /******************************************************************************* 
 * Function Name  : void FM_LowPower(void)
-* Description    : FMè¿›å…¥ä½åŠŸè€—ï¼Œå¹¶å¯¹ç›¸åº”IOå£ä½œä½åŠŸè€—å¤„ç†
+* Description    : FM½øÈëµÍ¹¦ºÄ£¬²¢¶ÔÏàÓ¦IO¿Ú×÷µÍ¹¦ºÄ´¦Àí
 * Input          : None 
 * Output         : None 
 * Return         : None 
 *******************************************************************************/
-void FM_LowPower( INT8U Task_Num )												//7~0	ä»»åŠ¡	X	X	X	X	Wdt	GY	RF	GPRS	
+void FM_LowPower( INT8U Task_Num )												//7~0	ÈÎÎñ	X	X	X	X	Wdt	GY	RF	GPRS	
 {
 	GPIO_InitTypeDef 	GPIO_InitStructure;
 	
-	FM_Flag&=~(1<<Task_Num);													//æ¸…å½“å‰ä»»åŠ¡bit	
-	if(FM_Flag) return;															//è‹¥å…¶ä»–ä»»åŠ¡å ç”¨ï¼ŒFM_Flagé0ï¼Œç›´æ¥è¿”å›   
+	FM_Flag&=~(1<<Task_Num);													//Çåµ±Ç°ÈÎÎñbit	
+	if(FM_Flag) return;															//ÈôÆäËûÈÎÎñÕ¼ÓÃ£¬FM_Flag·Ç0£¬Ö±½Ó·µ»Ø   
 	
-	/*ç‰‡é€‰å£ã€å†™ä¿æŠ¤å£æ¨¡æ‹Ÿè¾“å…¥*/
+	/*Æ¬Ñ¡¿Ú¡¢Ğ´±£»¤¿ÚÄ£ÄâÊäÈë*/
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;								//æ¨¡æ‹Ÿè¾“å…¥
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;								//Ä£ÄâÊäÈë
 	
-	GPIO_InitStructure.GPIO_Pin = NCS_FM_PIN;									//ç‰‡é€‰å£
+	GPIO_InitStructure.GPIO_Pin = NCS_FM_PIN;									//Æ¬Ñ¡¿Ú
 	GPIO_Init(NCS_FM_Port, &GPIO_InitStructure);								//
 	
-	GPIO_InitStructure.GPIO_Pin = NWP_FM_PIN;									//å†™ä¿æŠ¤å£
+	GPIO_InitStructure.GPIO_Pin = NWP_FM_PIN;									//Ğ´±£»¤¿Ú
 	GPIO_Init(NWP_FM_Port, &GPIO_InitStructure);								//	
 
 	
-	/*SPIä¸‰ä¸ªå¼•è„šæ¨æŒ½æ‹‰ä½*/
+	/*SPIÈı¸öÒı½ÅÍÆÍìÀ­µÍ*/
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;							//æ¨æŒ½è¾“å‡º
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;							//ÍÆÍìÊä³ö
 	
 	GPIO_InitStructure.GPIO_Pin = MOSI_FM_PIN;									//MOSI
-	GPIO_ResetBits(MOSI_FM_Port, MOSI_FM_PIN);									//æ‹‰ä½
+	GPIO_ResetBits(MOSI_FM_Port, MOSI_FM_PIN);									//À­µÍ
 	GPIO_Init(MOSI_FM_Port, &GPIO_InitStructure);								//
 	
 	GPIO_InitStructure.GPIO_Pin = MISO_FM_PIN;									//MISO
-	GPIO_ResetBits(MISO_FM_Port, MISO_FM_PIN);									//æ‹‰ä½
+	GPIO_ResetBits(MISO_FM_Port, MISO_FM_PIN);									//À­µÍ
 	GPIO_Init(MISO_FM_Port, &GPIO_InitStructure);								//
 	
 	GPIO_InitStructure.GPIO_Pin = SCK_FM_PIN;									//SCK
-	GPIO_ResetBits(SCK_FM_Port, SCK_FM_PIN);									//æ‹‰ä½
+	GPIO_ResetBits(SCK_FM_Port, SCK_FM_PIN);									//À­µÍ
 	GPIO_Init(SCK_FM_Port, &GPIO_InitStructure);								//
 }
 
 /************************************************************************************************************************
 * Function Name : INT8U BSP_FM_Erase(INT16U FlashAddr,INT32U Len)
-* Description   : ä»é“ç”µæŸèµ·å§‹åœ°å€å¼€å§‹å‘åæ“¦é™¤Lené•¿åº¦ç©ºé—´ï¼ˆå¡«0ï¼‰
-* Input         : FlashAddr : æŒ‡ç¤ºé“ç”µå­˜å‚¨å™¨çš„åœ°å€ èŒƒå›´ï¼š0~ MAX_FM_LEN
-*                 Len       : éœ€è¦æ“¦é™¤çš„é•¿åº¦
-* Return        : 1ï¼šæˆåŠŸ	0ï¼šå¤±è´¥
+* Description   : ´ÓÌúµçÄ³ÆğÊ¼µØÖ·¿ªÊ¼Ïòºó²Á³ıLen³¤¶È¿Õ¼ä£¨Ìî0£©
+* Input         : FlashAddr : Ö¸Ê¾Ìúµç´æ´¢Æ÷µÄµØÖ· ·¶Î§£º0~ MAX_FM_LEN
+*                 Len       : ĞèÒª²Á³ıµÄ³¤¶È
+* Return        : 1£º³É¹¦	0£ºÊ§°Ü
 *************************************************************************************************************************/
 INT8U BSP_FM_Erase(INT16U FlashAddr,INT32U Len)
 {
 	INT32U Num=0; 
 	
-	if((FlashAddr >= MAX_FM_LEN) || ((FlashAddr + Len) > MAX_FM_LEN)) return 0; //zzs note,å¦‚æœç”¨å…¶ä»–ç¼–è¯‘å™¨,åˆ™(pDataAddr == NULL)
+	if((FlashAddr >= MAX_FM_LEN) || ((FlashAddr + Len) > MAX_FM_LEN)) return 0; //zzs note,Èç¹ûÓÃÆäËû±àÒëÆ÷,Ôò(pDataAddr == NULL)
 
-	__disable_irq(); 															// ç¦æ­¢æ€»ä¸­æ–­     // zzs Modified it 2018.06.11
+	__disable_irq(); 															// ½ûÖ¹×ÜÖĞ¶Ï     // zzs Modified it 2018.06.11
 
 	FMCS_H();
 	FMWP_H();
 	FMSCK_L();
-	Fmdelay(10);  																// ç­‰å¾…ç¨³å®š
+	Fmdelay(10);  																// µÈ´ıÎÈ¶¨
 	FMCS_L(); 
 	BSP_SoftSpiSend(FM_WREN);
 
 	FMCS_H(); 
 	FMCS_L();
 	
-	/*å†™å…¥å¾…æ“¦é™¤èµ·å§‹åœ°å€*/
+	/*Ğ´Èë´ı²Á³ıÆğÊ¼µØÖ·*/
 	BSP_SoftSpiSend(FM_WRITE);
 	BSP_SoftSpiSend(FlashAddr>>8);
 	BSP_SoftSpiSend(FlashAddr);
 
-	/*å¼€å§‹æŒ‰å­—èŠ‚æ“¦é™¤*/
+	/*¿ªÊ¼°´×Ö½Ú²Á³ı*/
 	while(Len)
 	{	
 		Feed_Dog();
-		Num = Len/1024 ? 1024:Len%1024;											//æ¯1Kå°±å–‚ä¸€æ¬¡ç‹—ï¼Œé˜²æ­¢çœ‹é—¨ç‹—å¤ä½
+		Num = Len/1024 ? 1024:Len%1024;											//Ã¿1K¾ÍÎ¹Ò»´Î¹·£¬·ÀÖ¹¿´ÃÅ¹·¸´Î»
 		Len -= Num;		
-		while(Num--)															//å†™Numä¸ª0
+		while(Num--)															//Ğ´Num¸ö0
 		{
 			BSP_SoftSpiSend(0);
 		}
@@ -340,7 +340,7 @@ INT8U BSP_FM_Erase(INT16U FlashAddr,INT32U Len)
 	FMCS_H();
 	FMWP_L();
 	
-	__enable_irq();																// å¼€æ€»ä¸­æ–­	  // zzs Modified it 2018.06.11
+	__enable_irq();																// ¿ª×ÜÖĞ¶Ï	  // zzs Modified it 2018.06.11
 	
 	return 1;
 }

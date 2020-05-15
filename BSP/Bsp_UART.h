@@ -3,24 +3,24 @@
 #include "main.h"
 
 
-#define BSP_MSGID_RFDataIn	0x08    											// RF串口接收完成消息ID 
-#define BSP_MSGID_RS485DataIn 0x09    											// 485串口收到数据消息ID
-#define BSP_MSGID_UART_RXOVER 0x0a    											// GPRS串口接收完成消息ID
-#define UART_DEFAULT_MODE	0x00     											// 普通UART口使用    
-#define UART_HALFDUP_MODE	0x01	   											// 半双工模式, (IRDA), 扩展串口有20MS的转换延时 
-#define UART_RS485_MODE		0x33	   											// 半双工模式, RS485, 扩展串口有20MS的转换延时  
+#define BSP_MSGID_RFDataIn	0x08    											// RF���ڽ��������ϢID 
+#define BSP_MSGID_RS485DataIn 0x09    											// 485�����յ�������ϢID
+#define BSP_MSGID_UART_RXOVER 0x0a    											// GPRS���ڽ��������ϢID
+#define UART_DEFAULT_MODE	0x00     											// ��ͨUART��ʹ��    
+#define UART_HALFDUP_MODE	0x01	   											// ��˫��ģʽ, (IRDA), ��չ������20MS��ת����ʱ 
+#define UART_RS485_MODE		0x33	   											// ��˫��ģʽ, RS485, ��չ������20MS��ת����ʱ  
 
 																				
-//-----------------------------------485电源控制引脚定义------------------------------------------
+//-----------------------------------485��Դ�������Ŷ���------------------------------------------
 #define PWDC485_PIN      	GPIO_Pin_14
-#define PWDC485_Port     	GPIOB		            //485电源隔离电源 输出5V/200ma
+#define PWDC485_Port     	GPIOB		            //485��Դ�����Դ ���5V/200ma
 #define PWDC485EN()      	GPIO_SetBits(PWDC485_Port,PWDC485_PIN)
 #define PWDC485DIS()     	GPIO_ResetBits(PWDC485_Port,PWDC485_PIN)
 #define PWDC485_Port_CK  	RCC_APB2Periph_GPIOB
 
-//-----------------------------------485控制引脚定义------------------------------------------
+//-----------------------------------485�������Ŷ���------------------------------------------
 #define EN485_PIN			GPIO_Pin_15
-#define EN485_Port			GPIOB		            //485电源隔离电源 输出5V/200ma
+#define EN485_Port			GPIOB		            //485��Դ�����Դ ���5V/200ma
 #define EN485_EN()      	GPIO_SetBits(EN485_Port,EN485_PIN)
 #define EN485_DIS()     	GPIO_ResetBits(EN485_Port,EN485_PIN)
 #define EN485_Port_CK  		RCC_APB2Periph_GPIOB
@@ -31,84 +31,84 @@
 
 /* --------------------------------Private typedef--------------------------------------------*/
 struct Str_Msg{
-	unsigned char	DivNum;														// 设备号,  // zzs note,用于指明消息是从哪里来的。
-	unsigned char	MsgID;														// 系统的ID
-	unsigned int	DataLen;													// 数据长度
-	unsigned char	*pData;														// 数据存放的缓冲区指针
+	unsigned char	DivNum;														// �豸��,  // zzs note,����ָ����Ϣ�Ǵ��������ġ�
+	unsigned char	MsgID;														// ϵͳ��ID
+	unsigned int	DataLen;													// ���ݳ���
+	unsigned char	*pData;														// ���ݴ�ŵĻ�����ָ��
 };
 
 typedef struct UARTx_Setting_Str{
-	INT32U BaudRate;															/* 波特率 300 ~ 57600 */
-	INT8U  DataBits;															/* 串口1..5支持7 - 8数据位，串口6,7支持5 - 8数据位       */
+	INT32U BaudRate;															/* ������ 300 ~ 57600 */
+	INT8U  DataBits;															/* ����1..5֧��7 - 8����λ������6,7֧��5 - 8����λ       */
 	INT8U  Parity;	    														/* 0: No parity, 1: Odd parity, 2: Even parity           */
 	INT8U  StopBits;															/* 1 - 2                                                 */
-	INT8U  *RxBuf;																/* 接收缓冲区                                            */
-	INT16U RxBufLen;															/* 接收缓冲区长度                                        */
-	INT8U  *TxBuf;																/* 发送缓冲区                                            */
-	INT16U TxBufLen; 															/* 发送缓冲区长度                                        */
+	INT8U  *RxBuf;																/* ���ջ�����                                            */
+	INT16U RxBufLen;															/* ���ջ���������                                        */
+	INT8U  *TxBuf;																/* ���ͻ�����                                            */
+	INT16U TxBufLen; 															/* ���ͻ���������                                        */
 	INT8U  Mode;																/* UART_DEFAULT_MODE, UART_HALFDUP_MODE, UART_RS485_MODE */
-																				/* 串口1..5不支持7位、无校验模式                         */
+																				/* ����1..5��֧��7λ����У��ģʽ                         */
 }UARTx_Setting_Struct;
 
-// 串口初始化参数
-// 串口设置,不要修改以下定义
+// ���ڳ�ʼ������
+// ��������,��Ҫ�޸����¶���
 typedef enum
 {
-	BSPUART_PARITY_NO   = 0x00,													// 无校验(默认)
-	BSPUART_PARITY_ODD  = 0x01,													// 奇校验
-	BSPUART_PARITY_EVEN = 0x02,													// 偶校验
+	BSPUART_PARITY_NO   = 0x00,													// ��У��(Ĭ��)
+	BSPUART_PARITY_ODD  = 0x01,													// ��У��
+	BSPUART_PARITY_EVEN = 0x02,													// żУ��
 }_BSPUART_PARITY;
 
-// 停止位
+// ֹͣλ
 typedef enum
 {
-    // BSPUART_STOPBITS_0_5=0x05,												// 0.5个停止位
-	BSPUART_STOPBITS_1  =0x01,													// 1个停止位(默认)
-    // BSPUART_STOPBITS_1_5=0x15,												// 1.5个停止位
-	BSPUART_STOPBITS_2  =0x02,													// 2个停止位
+    // BSPUART_STOPBITS_0_5=0x05,												// 0.5��ֹͣλ
+	BSPUART_STOPBITS_1  =0x01,													// 1��ֹͣλ(Ĭ��)
+    // BSPUART_STOPBITS_1_5=0x15,												// 1.5��ֹͣλ
+	BSPUART_STOPBITS_2  =0x02,													// 2��ֹͣλ
 }_BSPUART_STOPBITS;
 
-//数据长度
+//���ݳ���
 typedef enum
 {
-	BSPUART_WORDLENGTH_5 = 0x05,												// 5位数据+校验位
-	BSPUART_WORDLENGTH_6 = 0x06,												// 6位数据
-	BSPUART_WORDLENGTH_7 = 0x07,												// 7位数据+唤醒位?
-	BSPUART_WORDLENGTH_8 = 0x08,												// 8位数据+校验位(默认)
+	BSPUART_WORDLENGTH_5 = 0x05,												// 5λ����+У��λ
+	BSPUART_WORDLENGTH_6 = 0x06,												// 6λ����
+	BSPUART_WORDLENGTH_7 = 0x07,												// 7λ����+����λ?
+	BSPUART_WORDLENGTH_8 = 0x08,												// 8λ����+У��λ(Ĭ��)
 }_BSPUART_WORDLENGTH;
 
 
-//*	   串口收发管理器
+//*	   �����շ�������
 typedef struct STRUCT_BSP_UARTX{
 	volatile      INT16U     RxNum;
 	
-	volatile      INT16U     TxBusy;             								// 串口发送忙碌情况统计器，在发送完所有发送请求后，清除归 0。
-	volatile      INT16U     TxCompletedCnt;     								// 串口发送完成字节数计数器
+	volatile      INT16U     TxBusy;             								// ���ڷ���æµ���ͳ�������ڷ��������з������������� 0��
+	volatile      INT16U     TxCompletedCnt;     								// ���ڷ�������ֽ���������
 		
-	volatile      INT8U      *pSendBuf;          								// 指向发送缓冲
-	volatile      INT8U      *pRecvBuf;          								// 指向接收缓冲 
+	volatile      INT8U      *pSendBuf;          								// ָ���ͻ���
+	volatile      INT8U      *pRecvBuf;          								// ָ����ջ��� 
 
 	INT16U        MaxTxBufLen;    
 	INT16U        MaxRxBufLen;
 		
-	INT16U        RxOffset;         											// 下一帧起始地址,移动速度总是滞后于RxPointer,
-	INT16U        RxPointer;        											// 总是这个先向前推进的。
+	INT16U        RxOffset;         											// ��һ֡��ʼ��ַ,�ƶ��ٶ������ͺ���RxPointer,
+	INT16U        RxPointer;        											// �����������ǰ�ƽ��ġ�
 
 	INT16U        FrameRxIntv;
-	INT16U        RxFrameIntvSet;   											// 原始命名：FrameIntv // zzs modified it to “RxFrameIntvSet” ，设置指定Rx的帧间隔，这个值有可能是以系统Tick为单位的时间间隔，和以字节数为单位的字节数目
-	                                											// 由本变量的Bit15决定，0：用时间来设置间隔  1：用字节数来设置间隔 。
-	                                											// Bit14,暂时闲置无用， 用Bit15选定了间隔设置方式后，间隔值是多少，则由Bit13~Bit0指定。
+	INT16U        RxFrameIntvSet;   											// ԭʼ������FrameIntv // zzs modified it to ��RxFrameIntvSet�� ������ָ��Rx��֡��������ֵ�п�������ϵͳTickΪ��λ��ʱ�����������ֽ���Ϊ��λ���ֽ���Ŀ
+	                                											// �ɱ�������Bit15������0����ʱ�������ü��  1�����ֽ��������ü�� ��
+	                                											// Bit14,��ʱ�������ã� ��Bit15ѡ���˼�����÷�ʽ�󣬼��ֵ�Ƕ��٣�����Bit13~Bit0ָ����
 	INT16U        TxIntv;
-	INT16U        TxIntvSet;        											// 原始命名：TISet   // zzs modified it to “TxIntvSet” ，  
+	INT16U        TxIntvSet;        											// ԭʼ������TISet   // zzs modified it to ��TxIntvSet�� ��  
 		
-	UARTx_Setting_Struct   Setting; 											// 串口的配置
-	OS_EVENT      *MailOrQueue;     											// 配备个邮箱
-	struct Str_Msg		  BspMsg[2];											// 循环缓存 Z.E.注
-}UARTx_Ctrl_Struct;                 											// 串口操作控制结构体
+	UARTx_Setting_Struct   Setting; 											// ���ڵ�����
+	OS_EVENT      *MailOrQueue;     											// �䱸������
+	struct Str_Msg		  BspMsg[2];											// ѭ������ Z.E.ע
+}UARTx_Ctrl_Struct;                 											// ���ڲ������ƽṹ��
 
 
 
-/*全局变量*/
+/*ȫ�ֱ���*/
 
 
 

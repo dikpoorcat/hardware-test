@@ -7,10 +7,10 @@
 #include "ucos_ii.h"
 
 
-#define	Time_test		0			//æµ‹è¯•æ—¶é€‰1
+#define	Time_test		0			//²âÊÔÊ±Ñ¡1
 
 
-//27ä¸ªæœºå™¨å‘¨æœŸ
+//27¸ö»úÆ÷ÖÜÆÚ
 #define MachineCycle_27 \
 {\
 	__nop();__nop();__nop();__nop();__nop();\
@@ -21,7 +21,7 @@
 	__nop();__nop();\
 }
 
-//25ä¸ªæœºå™¨å‘¨æœŸ
+//25¸ö»úÆ÷ÖÜÆÚ
 #define MachineCycle_25 \
 {\
 	__nop();__nop();__nop();__nop();__nop();\
@@ -31,19 +31,19 @@
 	__nop();__nop();__nop();__nop();__nop();\
 }
 
-//3ä¸ªæœºå™¨å‘¨æœŸ
+//3¸ö»úÆ÷ÖÜÆÚ
 #define MachineCycle_3 \
 {\
 	__nop();__nop();__nop();\
 }
 
-//2ä¸ªæœºå™¨å‘¨æœŸ
+//2¸ö»úÆ÷ÖÜÆÚ
 #define MachineCycle_2 \
 {\
 	__nop();__nop();\
 }
 
-//å®Œæ•´çš„32ä¸ªæœºå™¨å‘¨æœŸï¼Œ32Mæ—¶é’Ÿé¢‘çŽ‡ä¸‹å…±1us
+//ÍêÕûµÄ32¸ö»úÆ÷ÖÜÆÚ£¬32MÊ±ÖÓÆµÂÊÏÂ¹²1us
 #define DELAY1US_32M \
 {\
 	__nop();__nop();__nop();__nop();__nop();__nop();__nop();__nop();__nop();__nop();\
@@ -52,15 +52,15 @@
 	__nop();__nop();\
 }
 
-//å®Œæ•´çš„4ä¸ªæœºå™¨å‘¨æœŸï¼Œ4Mæ—¶é’Ÿé¢‘çŽ‡ä¸‹å…±1usï¼ˆå®žæµ‹éžå¸¸å‡†ç¡®ï¼‰
+//ÍêÕûµÄ4¸ö»úÆ÷ÖÜÆÚ£¬4MÊ±ÖÓÆµÂÊÏÂ¹²1us£¨Êµ²â·Ç³£×¼È·£©
 #define DELAY1US_4M \
 {\
 	__nop();__nop();__nop();__nop();\
 }
-//	__NOP;	è¿™æ¡è¯­å¥ä¼šè¢«ç¼–è¯‘å™¨ä¼˜åŒ–æŽ‰
+//	__NOP;	ÕâÌõÓï¾ä»á±»±àÒëÆ÷ÓÅ»¯µô
 
 
-//å‡½æ•°å£°æ˜Ž
+//º¯ÊýÉùÃ÷
 
 #if	Time_test
 void WS2812_init(void);

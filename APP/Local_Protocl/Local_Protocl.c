@@ -1,22 +1,22 @@
-/***************************** (C) COPYRIGHT 2019 æ–¹è¯šç”µåŠ› *****************************
+/***************************** (C) COPYRIGHT 2019 ·½³ÏµçÁ¦ *****************************
 * File Name          : Local_Protocl.c
-* Author             : ç ”å‘éƒ¨
-* Version            : è§å†å²ç‰ˆæœ¬ä¿¡æ¯
+* Author             : ÑĞ·¢²¿
+* Version            : ¼ûÀúÊ·°æ±¾ĞÅÏ¢
 * Date               : 2019/03/12
-* Description        : æœ¬åœ°åè®®ï¼Œç”¨äºåŸºç«™è®¾å¤‡ä¸ä¸Šä½æœºè¿›è¡Œ485é€šä¿¡ï¼Œè®¾ç½®å‚æ•°ä¸è°ƒè¯•ã€‚
-************************************  å†å²ç‰ˆæœ¬ä¿¡æ¯  ************************************
+* Description        : ±¾µØĞ­Òé£¬ÓÃÓÚ»ùÕ¾Éè±¸ÓëÉÏÎ»»ú½øĞĞ485Í¨ĞÅ£¬ÉèÖÃ²ÎÊıÓëµ÷ÊÔ¡£
+************************************  ÀúÊ·°æ±¾ĞÅÏ¢  ************************************
 * 2019/03/28    : V4.1.0
-* Description   : å—ç½‘æµ‹æ¸©é¡¹ç›®åˆç‰ˆã€‚åŸºç¡€åŠŸèƒ½å®Œæˆï¼Œè°ƒè¯•ä¸­ã€‚
+* Description   : ÄÏÍø²âÎÂÏîÄ¿³õ°æ¡£»ù´¡¹¦ÄÜÍê³É£¬µ÷ÊÔÖĞ¡£
 *******************************************************************************/
 #include "Local_Protocl.h"
 
-/*å…¨å±€å˜é‡*/
-INT8U					B485BUF[Buff485_LEN] = { 0 };   						//ç”¨äºB485é€šä¿¡
-INT8U  					Reset_Flag = COLDRST;    								//å†·å¤ä½ï¼ˆé»˜è®¤å€¼ï¼‰ã€çƒ­å¤ä½ã€å‘é€ä¸­å¤ä½
-INT8U					Reset_Count = 0;          								//å†·å¯åŠ¨è®¡æ•°æ ‡è¯†
+/*È«¾Ö±äÁ¿*/
+INT8U					B485BUF[Buff485_LEN] = { 0 };   						//ÓÃÓÚB485Í¨ĞÅ
+INT8U  					Reset_Flag = COLDRST;    								//Àä¸´Î»£¨Ä¬ÈÏÖµ£©¡¢ÈÈ¸´Î»¡¢·¢ËÍÖĞ¸´Î»
+INT8U					Reset_Count = 0;          								//ÀäÆô¶¯¼ÆÊı±êÊ¶
 struct Str_Msg 			GgdataBox; 
 struct Str_Msg 			*GyMess = (struct Str_Msg *)0;      
-struct LOCAL_PROTOCAL	Local_Protocal;      									//ç”¨äºæœ¬åœ°åè®®é€šä¿¡
+struct LOCAL_PROTOCAL	Local_Protocal;      									//ÓÃÓÚ±¾µØĞ­ÒéÍ¨ĞÅ
 OS_EVENT  				*GyBOX = (OS_EVENT *)0;
 
 BYTE					work[FF_MAX_SS];										/* Work area (larger is better for processing time) */   //FF_MAX_SS
@@ -26,82 +26,82 @@ FATFS					*fs0;
 
 																														
 /*******************************************************************************
-åç§°ï¼švoid Task_Local_main(void *arg)
-åŠŸèƒ½ï¼šæœ¬åœ°åè®®å¤„ç†ä»»åŠ¡ä¸»å‡½æ•°ï¼Œç”¨äºä¸ä¸Šä½æœºé€šä¿¡å¹¶è¿›è¡Œå‚æ•°é…ç½®ç­‰ã€‚ï¼ˆè£…ç½®è‡ªæ£€åº”è¯¥ä¹Ÿå¯ä»¥åšåˆ°è¿™é‡ŒZEï¼‰
+Ãû³Æ£ºvoid Task_Local_main(void *arg)
+¹¦ÄÜ£º±¾µØĞ­Òé´¦ÀíÈÎÎñÖ÷º¯Êı£¬ÓÃÓÚÓëÉÏÎ»»úÍ¨ĞÅ²¢½øĞĞ²ÎÊıÅäÖÃµÈ¡££¨×°ÖÃ×Ô¼ìÓ¦¸ÃÒ²¿ÉÒÔ×öµ½ÕâÀïZE£©
 ************************************************************************************************************************/
 void Task_Local_main(void *arg)
 {
-    INT8U WaitTime = 6;															//ä¸Šç”µæœŸé—´æ‰“å¼€485ï¼Œç”¨äºè®¾ç½®å‚æ•° WaitTime*10ç§’
+    INT8U WaitTime = 6;															//ÉÏµçÆÚ¼ä´ò¿ª485£¬ÓÃÓÚÉèÖÃ²ÎÊı WaitTime*10Ãë
 	INT8U state=0;
 
-/*ç¡¬ä»¶åˆå§‹åŒ–*/
-	BSP_InitFm(LOC_Num);														//åˆå§‹åŒ–é“ç”µå­˜å‚¨
-    B485_init(38400);															//485åˆå§‹åŒ–æ³¢ç‰¹ç‡38400ï¼ˆå½“LOCALä»»åŠ¡å­˜åœ¨æ—¶ä¼šå¼ºåˆ¶æ‰§è¡Œï¼Œå¦åˆ™æ ¹æ®B485DISå®å®šä¹‰åˆ¤æ–­æ˜¯å¦æ‰§è¡Œï¼‰
-	DrawSysLogo();																//SYS0ï¼šæ‰“å°BTC	logo	SYS1ï¼šæ‰“å°SYS1
+/*Ó²¼ş³õÊ¼»¯*/
+	BSP_InitFm(LOC_Num);														//³õÊ¼»¯Ìúµç´æ´¢
+    B485_init(38400);															//485³õÊ¼»¯²¨ÌØÂÊ38400£¨µ±LOCALÈÎÎñ´æÔÚÊ±»áÇ¿ÖÆÖ´ĞĞ£¬·ñÔò¸ù¾İB485DISºê¶¨ÒåÅĞ¶ÏÊÇ·ñÖ´ĞĞ£©
+	DrawSysLogo();																//SYS0£º´òÓ¡BTC	logo	SYS1£º´òÓ¡SYS1
 
-/*è®¾å¤‡è‡ªæ£€*/
-	WaitTime = Check_Reset_Mod(WaitTime);										//åˆ¤æ–­å¯åŠ¨æ–¹å¼ï¼Œå¹¶ç›¸åº”å¤„ç†ã€‚æœ‰é“ç”µæ“ä½œã€‚è¿”å›WaitTimeç”¨äºè·³è¿‡ä¸Šä½æœºé€šä¿¡
-	FM_Space_Usage();															//é“ç”µç©ºé—´å ç”¨ä¿¡æ¯
-	Check_Getfree();															//æ£€æŸ¥æ˜¯å¦è¦æ ¼å¼åŒ–ï¼ˆåŒ…å«æ–°è®¾å¤‡å†™å…¥å‡ºå‚é»˜è®¤å‚æ•°ï¼‰
+/*Éè±¸×Ô¼ì*/
+	WaitTime = Check_Reset_Mod(WaitTime);										//ÅĞ¶ÏÆô¶¯·½Ê½£¬²¢ÏàÓ¦´¦Àí¡£ÓĞÌúµç²Ù×÷¡£·µ»ØWaitTimeÓÃÓÚÌø¹ıÉÏÎ»»úÍ¨ĞÅ
+	FM_Space_Usage();															//Ìúµç¿Õ¼äÕ¼ÓÃĞÅÏ¢
+	Check_Getfree();															//¼ì²éÊÇ·ñÒª¸ñÊ½»¯£¨°üº¬ĞÂÉè±¸Ğ´Èë³ö³§Ä¬ÈÏ²ÎÊı£©
 
-/*é“ç”µå‚æ•°è¯»å–ï¼ˆéœ€æ”¾åœ¨æ ¼å¼åŒ–ä¹‹åï¼‰*/
-	Read_TT_From_FM();															//è¯»å–æ¢å¤´ä¿¡æ¯
-	LTE_Get_Config();   														//è¯»å–LTEå‚æ•°
-	Print_Config(true);															//æ‰“å°å½“å‰å‚æ•°
-	Get_NW_Info();																//è¯»å–Fault_Infoæ•…éšœä¿¡æ¯ç»“æ„ä½“æ•°ç»„ã€æœªä¸ŠæŠ¥æ•°æ®ç´¢å¼•è¡¨ç­‰
-	GetUpgradeTime();															//è¯»å–ç³»ç»Ÿ2å‡çº§æ—¶é—´
+/*Ìúµç²ÎÊı¶ÁÈ¡£¨Ğè·ÅÔÚ¸ñÊ½»¯Ö®ºó£©*/
+	Read_TT_From_FM();															//¶ÁÈ¡Ì½Í·ĞÅÏ¢
+	LTE_Get_Config();   														//¶ÁÈ¡LTE²ÎÊı
+	Print_Config(true);															//´òÓ¡µ±Ç°²ÎÊı
+	Get_NW_Info();																//¶ÁÈ¡Fault_Info¹ÊÕÏĞÅÏ¢½á¹¹ÌåÊı×é¡¢Î´ÉÏ±¨Êı¾İË÷Òı±íµÈ
+	GetUpgradeTime();															//¶ÁÈ¡ÏµÍ³2Éı¼¶Ê±¼ä
 	
-/*ç­‰å¾…ä¸Šä½æœºé€šä¿¡åŠå¤„ç†*/
-	BspUartWrite(2,SIZE_OF("---------->>ç­‰å¾…ä¸Šä½æœºé€šä¿¡<<----------\r\n"));
-    while(WaitTime--)															//ä¸Šç”µæœŸé—´æ‰“å¼€485ï¼Œç”¨äºè®¾ç½®å‚æ•° WaitTime*10ç§’
+/*µÈ´ıÉÏÎ»»úÍ¨ĞÅ¼°´¦Àí*/
+	BspUartWrite(2,SIZE_OF("---------->>µÈ´ıÉÏÎ»»úÍ¨ĞÅ<<----------\r\n"));
+    while(WaitTime--)															//ÉÏµçÆÚ¼ä´ò¿ª485£¬ÓÃÓÚÉèÖÃ²ÎÊı WaitTime*10Ãë
     {
-		state = Wait_Local_Comm(10);											//æœ€å¤šç­‰å¾…10s	
-        if(state==1) WaitTime = 6;   											//ä¸€æ—¦å‘ç°æœ‰äººåœ¨é€šè¿‡PCå·¥å…·æ“ä½œåŸºç«™çš„è¯ï¼Œç«‹å³é‡ç½®æœ€é•¿ç­‰å¾…æ—¶é—´ä¸º1åˆ†é’Ÿã€‚ 				
-		else if(state==0xFF) break;												//æ¥æ”¶åˆ°è·³è¿‡ç­‰å¾…å‘½ä»¤	68 ff ff ff ff ff 02 00 00 00 65 16
+		state = Wait_Local_Comm(10);											//×î¶àµÈ´ı10s	
+        if(state==1) WaitTime = 6;   											//Ò»µ©·¢ÏÖÓĞÈËÔÚÍ¨¹ıPC¹¤¾ß²Ù×÷»ùÕ¾µÄ»°£¬Á¢¼´ÖØÖÃ×î³¤µÈ´ıÊ±¼äÎª1·ÖÖÓ¡£ 				
+		else if(state==0xFF) break;												//½ÓÊÕµ½Ìø¹ıµÈ´ıÃüÁî	68 ff ff ff ff ff 02 00 00 00 65 16
     }
-	/*é…ç½®å‚æ•°è¯»å–,å¯èƒ½åœ¨æœ¬åœ°è®¾ç½®ä¸­è¢«æ”¹å˜ï¼Œå¹²è„†é‡æ–°è¯»ä¸€æ¬¡*/
-	Read_TT_From_FM();															//è¯»å–æ¢å¤´ä¿¡æ¯			
-	LTE_Get_Config();   														//è¯»å–LTEå‚æ•°
-	BspUartWrite(2,SIZE_OF("---------->>ä¸Šä½æœºé€šä¿¡ç»“æŸ<<----------\r\n"));
+	/*ÅäÖÃ²ÎÊı¶ÁÈ¡,¿ÉÄÜÔÚ±¾µØÉèÖÃÖĞ±»¸Ä±ä£¬¸É´àÖØĞÂ¶ÁÒ»´Î*/
+	Read_TT_From_FM();															//¶ÁÈ¡Ì½Í·ĞÅÏ¢			
+	LTE_Get_Config();   														//¶ÁÈ¡LTE²ÎÊı
+	BspUartWrite(2,SIZE_OF("---------->>ÉÏÎ»»úÍ¨ĞÅ½áÊø<<----------\r\n"));
 	
-/*FATFSç›®å½•ç»´æŠ¤ç­‰*/
-	Dir_Maintenance();															//FATFSç›®å½•ç»´æŠ¤ï¼Œæ”¾åœ¨ä¸Šä½æœºé€šä¿¡ä¹‹åï¼Œä¾¿äºç”Ÿäº§
-//	Dir_Test();																	//ç›®å½•æµ‹è¯•
-//	File_Test();																//æ–‡ä»¶æ“ä½œæµ‹è¯•
+/*FATFSÄ¿Â¼Î¬»¤µÈ*/
+	Dir_Maintenance();															//FATFSÄ¿Â¼Î¬»¤£¬·ÅÔÚÉÏÎ»»úÍ¨ĞÅÖ®ºó£¬±ãÓÚÉú²ú
+//	Dir_Test();																	//Ä¿Â¼²âÊÔ
+//	File_Test();																//ÎÄ¼ş²Ù×÷²âÊÔ
 
-/*ä½åŠŸè€—å¤„ç†*/
-	BSP_UART_Close(2); 															//é™ä½ä¸²å£çš„æ¶ˆè€—ï¼ˆè°ƒç”¨äº†B485_LowPowerï¼‰
-	FM_LowPower(LOC_Num);														//é“ç”µå­˜å‚¨ä½åŠŸè€—	  
+/*µÍ¹¦ºÄ´¦Àí*/
+	BSP_UART_Close(2); 															//½µµÍ´®¿ÚµÄÏûºÄ£¨µ÷ÓÃÁËB485_LowPower£©
+	FM_LowPower(LOC_Num);														//Ìúµç´æ´¢µÍ¹¦ºÄ	  
 
-/*æ¢å¤RFä»»åŠ¡*/
-	OSTaskResume(RF_Task_Prio);													//æ¢å¤RFä»»åŠ¡
+/*»Ö¸´RFÈÎÎñ*/
+	OSTaskResume(RF_Task_Prio);													//»Ö¸´RFÈÎÎñ
 	
-/*ç­‰å¾…ç”µå‹æ­£å¸¸ï¼Œæ¢å¤LTEä»»åŠ¡*/
-	while(1)																	//ç°åœ¨è¿™ä¸ªwhileä¸åšä¹Ÿè¡Œï¼ŒLTEä»»åŠ¡é‡Œä¹Ÿæœ‰èŠ‚èƒ½å·¥ä½œæ¨¡å¼åˆ¤æ–­äº†
+/*µÈ´ıµçÑ¹Õı³££¬»Ö¸´LTEÈÎÎñ*/
+	while(1)																	//ÏÖÔÚÕâ¸öwhile²»×öÒ²ĞĞ£¬LTEÈÎÎñÀïÒ²ÓĞ½ÚÄÜ¹¤×÷Ä£Ê½ÅĞ¶ÏÁË
 	{
-		if(Equipment_state.BAT_Volt>BAT_UP || Equipment_state.FALA_Volt>FALA_UP)//BAT>9.5Vï¼Œæˆ–FALA>5.5V
+		if(Equipment_state.BAT_Volt>BAT_UP || Equipment_state.FALA_Volt>FALA_UP)//BAT>9.5V£¬»òFALA>5.5V
 		{
-			OSTaskResume(LTE_Task_Prio);										//æ¢å¤LTEä»»åŠ¡
+			OSTaskResume(LTE_Task_Prio);										//»Ö¸´LTEÈÎÎñ
 			break;
 		}
-		BspUartWrite(2,SIZE_OF("ç”µæºæ¬ å‹ï¼Œè¯·å……ç”µï¼\r\n"));
-		OSTimeDly(3*60*20);														//ç­‰å¾…å……ç”µ3min	
-		Get_Voltage_MCUtemp_Data( 3 );											//è·å–ç”µæ± ç”µå‹æ•°æ®å’Œå•ç‰‡æœºæ¸©åº¦
-		OSTimeDly(10);															//ç­‰å¾…ç”µå‹æ‰“å°å®Œæˆ
+		BspUartWrite(2,SIZE_OF("µçÔ´Ç·Ñ¹£¬Çë³äµç£¡\r\n"));
+		OSTimeDly(3*60*20);														//µÈ´ı³äµç3min	
+		Get_Voltage_MCUtemp_Data( 3 );											//»ñÈ¡µç³ØµçÑ¹Êı¾İºÍµ¥Æ¬»úÎÂ¶È
+		OSTimeDly(10);															//µÈ´ıµçÑ¹´òÓ¡Íê³É
 		WDTClear(Local_Task_Prio);
 	}
 	#ifdef B485DIS
-	BspUartWrite(2,SIZE_OF("---------->>B485æ‰“å°å·²å…³é—­<<----------\r\n"));
+	BspUartWrite(2,SIZE_OF("---------->>B485´òÓ¡ÒÑ¹Ø±Õ<<----------\r\n"));
 	#endif
-//	OSTimeDly(10);																//ç­‰å¾…æ‰“å°å®Œæˆ
+//	OSTimeDly(10);																//µÈ´ı´òÓ¡Íê³É
 	
-/*åˆ é™¤è‡ªèº«ä»»åŠ¡*/
+/*É¾³ı×ÔÉíÈÎÎñ*/
     while(1)
     {	
 		WDTClear(Local_Task_Prio);
-		TaskActive &= Local_INACT;												//è‹¥åˆ é™¤æˆåŠŸï¼Œä¸å†è½®å·¡è¯¥ä»»åŠ¡çš„ä»»åŠ¡çœ‹é—¨ç‹—
-		OSTaskDel(OS_PRIO_SELF);												//åˆ é™¤æœ¬ä»»åŠ¡ï¼Œåˆ é™¤æˆåŠŸä¹‹åä¸‹é¢çš„éƒ½ä¸ä¼šè·‘äº†		
-		TaskActive |= Local_ACT;												//ç¨‹åºå¾€ä¸‹èµ°äº†è¯´æ˜æ²¡åˆ é™¤æˆåŠŸï¼Œåˆ™ç»§ç»­è½®å·¡æ¸…é™¤è¯¥ä»»åŠ¡çš„ä»»åŠ¡çœ‹é—¨ç‹—
+		TaskActive &= Local_INACT;												//ÈôÉ¾³ı³É¹¦£¬²»ÔÙÂÖÑ²¸ÃÈÎÎñµÄÈÎÎñ¿´ÃÅ¹·
+		OSTaskDel(OS_PRIO_SELF);												//É¾³ı±¾ÈÎÎñ£¬É¾³ı³É¹¦Ö®ºóÏÂÃæµÄ¶¼²»»áÅÜÁË		
+		TaskActive |= Local_ACT;												//³ÌĞòÍùÏÂ×ßÁËËµÃ÷Ã»É¾³ı³É¹¦£¬Ôò¼ÌĞøÂÖÑ²Çå³ı¸ÃÈÎÎñµÄÈÎÎñ¿´ÃÅ¹·
 		OSTimeDly(60*20);														//60s
     }
 }
@@ -113,63 +113,63 @@ void Task_Local_main(void *arg)
 
 
 /*******************************************************************************
-åç§°ï¼šINT8U Check_Reset_Mod(u8 waittime)
-åŠŸèƒ½ï¼šåˆ¤æ–­å¯åŠ¨æ–¹å¼ï¼Œå¹¶ç›¸åº”å¤„ç†ã€‚æœ‰é“ç”µæ“ä½œã€‚éœ€è¦å¤–éƒ¨å…ˆå¯¹485åˆå§‹åŒ–ã€‚æ³¨ï¼šHot_Reset_Flagåœ¨æ•´ä¸ªå·¥ç¨‹
-ä¸­ï¼Œè¯»å–åéƒ½ä¸åº”å†å¯¹å…¶èµ‹å€¼ï¼Œè¿™æ ·å¯ä»¥åœ¨ä»»ä½•åœ°æ–¹ä½¿ç”¨æ­¤å…¨å±€å˜é‡ã€‚
-å…¥å‚ï¼šu8 waittimeï¼Œä¸Šç”µæœŸé—´æ‰“å¼€485ï¼Œç”¨äºè®¾ç½®å‚æ•° waittime*10ç§’
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šçƒ­å¯åŠ¨æ—¶ä¼šè¿”å›0ï¼Œå¦åˆ™è¿”å›ä¼ å…¥å€¼ã€‚è¿”å›å€¼ç”¨äºèµ‹å€¼ç»™WaitTimeï¼Œçƒ­å¯åŠ¨æ—¶ä¸ç­‰å¾…485æ“ä½œã€‚
+Ãû³Æ£ºINT8U Check_Reset_Mod(u8 waittime)
+¹¦ÄÜ£ºÅĞ¶ÏÆô¶¯·½Ê½£¬²¢ÏàÓ¦´¦Àí¡£ÓĞÌúµç²Ù×÷¡£ĞèÒªÍâ²¿ÏÈ¶Ô485³õÊ¼»¯¡£×¢£ºHot_Reset_FlagÔÚÕû¸ö¹¤³Ì
+ÖĞ£¬¶ÁÈ¡ºó¶¼²»Ó¦ÔÙ¶ÔÆä¸³Öµ£¬ÕâÑù¿ÉÒÔÔÚÈÎºÎµØ·½Ê¹ÓÃ´ËÈ«¾Ö±äÁ¿¡£
+Èë²Î£ºu8 waittime£¬ÉÏµçÆÚ¼ä´ò¿ª485£¬ÓÃÓÚÉèÖÃ²ÎÊı waittime*10Ãë
+³ö²Î£ºÎŞ
+·µ»Ø£ºÈÈÆô¶¯Ê±»á·µ»Ø0£¬·ñÔò·µ»Ø´«ÈëÖµ¡£·µ»ØÖµÓÃÓÚ¸³Öµ¸øWaitTime£¬ÈÈÆô¶¯Ê±²»µÈ´ı485²Ù×÷¡£
 *******************************************************************************/
 INT8U Check_Reset_Mod(u8 waittime)
 {
 	INT8U	LTE_Sending_Flag = DONE;
 	
-	/*ä¸²å£è°ƒè¯•æ‰“å°*/
+	/*´®¿Úµ÷ÊÔ´òÓ¡*/
     BspUartWrite(2,SIZE_OF("\r\n485 is OK!\r\n")); 									
 	
-	/*è¯»å–é“ç”µä¸­çš„æ ‡å¿—ä½*/
-	BSP_ReadDataFromFm(Reset_Flag_Addr,&Reset_Flag,1);							//è¯»å–å¤ä½æ ‡å¿—
-	BSP_ReadDataFromFm(Reset_Count_Addr,&Reset_Count,1);						//è¯»å–å¤ä½è®¡æ•°
-	BSP_ReadDataFromFm(LTE_Sending_Flag_Addr,&LTE_Sending_Flag,1);   			//å‘é€è¿‡ç¨‹æ ‡è¯†è¯»å–å‡ºæ¥
+	/*¶ÁÈ¡ÌúµçÖĞµÄ±êÖ¾Î»*/
+	BSP_ReadDataFromFm(Reset_Flag_Addr,&Reset_Flag,1);							//¶ÁÈ¡¸´Î»±êÖ¾
+	BSP_ReadDataFromFm(Reset_Count_Addr,&Reset_Count,1);						//¶ÁÈ¡¸´Î»¼ÆÊı
+	BSP_ReadDataFromFm(LTE_Sending_Flag_Addr,&LTE_Sending_Flag,1);   			//·¢ËÍ¹ı³Ì±êÊ¶¶ÁÈ¡³öÀ´
 	
-	/*åˆ¤æ–­å¯åŠ¨æ–¹å¼å¹¶ç›¸åº”å¤„ç†*/
-	if(LTE_Sending_Flag == UNDONE) Reset_Flag = FAULTRST;						//è‹¥UNDONEï¼Œè¡¨æ˜åœ¨å‘é€ä¸­é‡å¯äº†ï¼Œå†™ä¸ºFaultå¯åŠ¨													
+	/*ÅĞ¶ÏÆô¶¯·½Ê½²¢ÏàÓ¦´¦Àí*/
+	if(LTE_Sending_Flag == UNDONE) Reset_Flag = FAULTRST;						//ÈôUNDONE£¬±íÃ÷ÔÚ·¢ËÍÖĞÖØÆôÁË£¬Ğ´ÎªFaultÆô¶¯													
 	switch(Reset_Flag)
 	{
-		case COLDRST:															//å†·å¤ä½
+		case COLDRST:															//Àä¸´Î»
 				BspUartWrite(2,SIZE_OF("==============================Cold Reset!==============================\r\n"));
-				Reset_Count++;													//ç³»ç»Ÿè¿ç»­å¤ä½2æ¬¡åï¼ŒLTEå‘é€å‰å¼ºåˆ¶æ‰“å¼€ç”µæ± ï¼Œå‘é€å®Œåå…³é—­å¹¶æ¸…è®¡æ•°							
-				BSP_WriteDataToFm(Reset_Count_Addr,&Reset_Count,1);				//å†™å…¥é“ç”µ
+				Reset_Count++;													//ÏµÍ³Á¬Ğø¸´Î»2´Îºó£¬LTE·¢ËÍÇ°Ç¿ÖÆ´ò¿ªµç³Ø£¬·¢ËÍÍêºó¹Ø±Õ²¢Çå¼ÆÊı							
+				BSP_WriteDataToFm(Reset_Count_Addr,&Reset_Count,1);				//Ğ´ÈëÌúµç
 				break;
 		
-		case FAULTRST:															//å‘é€ä¸­å¤ä½
+		case FAULTRST:															//·¢ËÍÖĞ¸´Î»
 				BspUartWrite(2,SIZE_OF("------------------------------Fault Reset!------------------------------\r\n"));
-				/*çœ‹çœ‹è¦ä¸è¦æ–­ç‚¹ç»­ä¼ */
+				/*¿´¿´Òª²»Òª¶ÏµãĞø´«*/
 				break;
 		
-		case HOTRST:															//çƒ­å¯åŠ¨æ—¶ï¼Œå°†çƒ­å¯åŠ¨æ ‡å¿—æŠ¹æ‰
+		case HOTRST:															//ÈÈÆô¶¯Ê±£¬½«ÈÈÆô¶¯±êÖ¾Ä¨µô
 				BspUartWrite(2,SIZE_OF("Hot Reset!\r\n")); 
 				waittime = 0;
 				break;
 		
-		default:																//è‹¥éƒ½ä¸æ˜¯ï¼Œåˆ™å­˜å‚¨é”™ä¹±
+		default:																//Èô¶¼²»ÊÇ£¬Ôò´æ´¢´íÂÒ
 				break;
 	}
 	Reset_Flag = COLDRST;
-	BSP_WriteDataToFm(Reset_Flag_Addr,&Reset_Flag,1); 							//å†™ä¸ºå†·å¯åŠ¨æ ‡è¯†ï¼ˆé‡ç½®åˆå§‹å€¼ï¼‰
+	BSP_WriteDataToFm(Reset_Flag_Addr,&Reset_Flag,1); 							//Ğ´ÎªÀäÆô¶¯±êÊ¶£¨ÖØÖÃ³õÊ¼Öµ£©
 	OSTimeDly(2);
 
-	/*çƒ­å¯åŠ¨æ—¶ä¼šè¿”å›0ï¼Œå¦åˆ™è¿”å›ä¼ å…¥å€¼*/
-	return waittime;															//è¿”å›WaitTimeç”¨äºè·³è¿‡ä¸Šä½æœºé€šä¿¡
+	/*ÈÈÆô¶¯Ê±»á·µ»Ø0£¬·ñÔò·µ»Ø´«ÈëÖµ*/
+	return waittime;															//·µ»ØWaitTimeÓÃÓÚÌø¹ıÉÏÎ»»úÍ¨ĞÅ
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Wait_Local_Comm(INT8U WaitTime)
-åŠŸèƒ½ï¼šé€šè¿‡485ç­‰å¾…æœ¬åœ°é€šä¿¡ï¼Œå¹¶æ‰§è¡Œä¸å‘½ä»¤ç›¸åº”çš„åŠŸèƒ½ã€‚ï¼ˆ485ä¸€èˆ¬ç”¨äºæ‰“å°è¾“å‡ºï¼Œæ¥æ”¶çš„è¯ä¸€èˆ¬åª
-æœ‰ä¸Šä½æœºä¸‹å‘çš„é…ç½®æŒ‡ä»¤ï¼Œå› æ­¤è°ƒç”¨Local_Protocol_Processå‡½æ•°ï¼‰
-å…¥å‚ï¼šINT8U WaitTimeï¼Œä¸²å£ç­‰å¾…è¶…æ—¶æ—¶é•¿ï¼Œå•ä½ï¼šç§’
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼š1ï¼šæˆåŠŸæ¥æ”¶å¹¶å¤„ç†   0ï¼šå¤±è´¥		0xFFï¼šæ”¶åˆ°è·³è¿‡ç­‰å¾…æŒ‡ä»¤
+Ãû³Æ£ºINT8U Wait_Local_Comm(INT8U WaitTime)
+¹¦ÄÜ£ºÍ¨¹ı485µÈ´ı±¾µØÍ¨ĞÅ£¬²¢Ö´ĞĞÓëÃüÁîÏàÓ¦µÄ¹¦ÄÜ¡££¨485Ò»°ãÓÃÓÚ´òÓ¡Êä³ö£¬½ÓÊÕµÄ»°Ò»°ãÖ»
+ÓĞÉÏÎ»»úÏÂ·¢µÄÅäÖÃÖ¸Áî£¬Òò´Ëµ÷ÓÃLocal_Protocol_Processº¯Êı£©
+Èë²Î£ºINT8U WaitTime£¬´®¿ÚµÈ´ı³¬Ê±Ê±³¤£¬µ¥Î»£ºÃë
+³ö²Î£ºÎŞ
+·µ»Ø£º1£º³É¹¦½ÓÊÕ²¢´¦Àí   0£ºÊ§°Ü		0xFF£ºÊÕµ½Ìø¹ıµÈ´ıÖ¸Áî
 *******************************************************************************/
 INT8U Wait_Local_Comm(INT8U WaitTime)
 {
@@ -178,62 +178,62 @@ INT8U Wait_Local_Comm(INT8U WaitTime)
     while(WaitTime--)
     {
 		StopModeLock++;
-        GyMess = (struct Str_Msg *)OSMboxPend(GyBOX,20,&Err);   				//ç­‰å¾…ä¸²å£æ¶ˆæ¯1s
-		if(StopModeLock) StopModeLock--;										//æ‰“å¼€åœæœºé”
+        GyMess = (struct Str_Msg *)OSMboxPend(GyBOX,20,&Err);   				//µÈ´ı´®¿ÚÏûÏ¢1s
+		if(StopModeLock) StopModeLock--;										//´ò¿ªÍ£»úËø
         if (Err == OS_NO_ERR)
     	{
-            if( GyMess->MsgID == BSP_MSGID_RS485DataIn)							//æ£€æŸ¥IDï¼Œæ˜¯ä¸æ˜¯485ä¸²å£å‘æ¥çš„
+            if( GyMess->MsgID == BSP_MSGID_RS485DataIn)							//¼ì²éID£¬ÊÇ²»ÊÇ485´®¿Ú·¢À´µÄ
     		{
-				if(GyMess->DataLen > Buff485_LEN)								//é•¿åº¦è¶…å‡ºï¼Œå¼‚å¸¸
+				if(GyMess->DataLen > Buff485_LEN)								//³¤¶È³¬³ö£¬Òì³£
 				{
 					BSP_UART_RxClear(GyMess->DivNum);	
 					return 0;
 				}
 				
-			/*å…¬å¸å†…éƒ¨åè®®è§£æå¹¶å¤„ç†*/
+			/*¹«Ë¾ÄÚ²¿Ğ­Òé½âÎö²¢´¦Àí*/
 				state = Local_Protocol_Process(GyMess->pData,GyMess->DataLen,B485BUF);
-				BSP_UART_RxClear(GyMess->DivNum);								//è§£æå®Œæˆåï¼Œä¸²å£æ¥æ”¶ç¼“å†²åŒºæ¸…ç©º
-				if(state==0) continue;											//ä¸ç¬¦åˆæœ¬å…¬å¸åè®®æ—¶ç»§ç»­ç­‰å¾…ï¼Œé¿å…è¯¯åŠ¨ä½œ
+				BSP_UART_RxClear(GyMess->DivNum);								//½âÎöÍê³Éºó£¬´®¿Ú½ÓÊÕ»º³åÇøÇå¿Õ
+				if(state==0) continue;											//²»·ûºÏ±¾¹«Ë¾Ğ­ÒéÊ±¼ÌĞøµÈ´ı£¬±ÜÃâÎó¶¯×÷
 				else return state;
     		}
     	}
     }
-    return 0;  																	//æ— æ•°æ®è¿›å…¥
+    return 0;  																	//ÎŞÊı¾İ½øÈë
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Local_Protocol_Process(INT8U *In,INT16U inLen,INT8U *pUseBuff)
-åŠŸèƒ½ï¼šæœ¬å…¬å¸çš„å†…éƒ¨åè®®è§£æå¹¶å¤„ç†ã€‚
-å…¥å‚ï¼šINT8U *In,å¾…è§£é‡Šå†…å®¹æŒ‡é’ˆï¼›INT16U inLen,å¾…è§£é‡Šå†…å®¹é•¿åº¦ï¼›INT8U *pUseBuffï¼Œç”¨äº485å‘é€ä½¿ç”¨çš„ç¼“å­˜ã€‚
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼š1ï¼šæˆåŠŸè§£æå¹¶å¤„ç†   0ï¼šå¤±è´¥		0xFFï¼šæ”¶åˆ°è·³è¿‡ç­‰å¾…æŒ‡ä»¤
+Ãû³Æ£ºINT8U Local_Protocol_Process(INT8U *In,INT16U inLen,INT8U *pUseBuff)
+¹¦ÄÜ£º±¾¹«Ë¾µÄÄÚ²¿Ğ­Òé½âÎö²¢´¦Àí¡£
+Èë²Î£ºINT8U *In,´ı½âÊÍÄÚÈİÖ¸Õë£»INT16U inLen,´ı½âÊÍÄÚÈİ³¤¶È£»INT8U *pUseBuff£¬ÓÃÓÚ485·¢ËÍÊ¹ÓÃµÄ»º´æ¡£
+³ö²Î£ºÎŞ
+·µ»Ø£º1£º³É¹¦½âÎö²¢´¦Àí   0£ºÊ§°Ü		0xFF£ºÊÕµ½Ìø¹ıµÈ´ıÖ¸Áî
 *******************************************************************************/
 INT8U Local_Protocol_Process(INT8U *In,INT16U inLen,INT8U *pUseBuff)
 {
 	INT8U *pRet = NULL;
 	INT8U Err = 0;
-	INT16U Rlen = 0;  															//ä¸€å¸§æœ‰æ•ˆé•¿åº¦
+	INT16U Rlen = 0;  															//Ò»Ö¡ÓĞĞ§³¤¶È
 
-	pRet = Judge_Local_Framing(In,inLen,&Rlen);									//åˆ¤æ–­æ˜¯å¦ç¬¦åˆæœ¬åœ°åè®®ï¼Œå¹¶å­˜å…¥Local_Protocalç»“æ„ä½“
-	if(pRet)  																	//æ‰¾åˆ°ä¸€å¸§æœ‰æ•ˆçš„æ•°æ®
+	pRet = Judge_Local_Framing(In,inLen,&Rlen);									//ÅĞ¶ÏÊÇ·ñ·ûºÏ±¾µØĞ­Òé£¬²¢´æÈëLocal_Protocal½á¹¹Ìå
+	if(pRet)  																	//ÕÒµ½Ò»Ö¡ÓĞĞ§µÄÊı¾İ
 	{
 		switch(Local_Protocal.DoType)
     	{
-            case 0: // è®¾ç½®å‚æ•°
-					Err = Set_Local_Para(Local_Protocal.CMD,Local_Protocal.Pointer,Local_Protocal.CMDlen);			//æœ¬åœ°å‚æ•°é…ç½®
-					Local_Protocol_Reply(Err,Local_Protocal.CMD,pUseBuff);   										//ç»„å¸§å¹¶å›å¤
+            case 0: // ÉèÖÃ²ÎÊı
+					Err = Set_Local_Para(Local_Protocal.CMD,Local_Protocal.Pointer,Local_Protocal.CMDlen);			//±¾µØ²ÎÊıÅäÖÃ
+					Local_Protocol_Reply(Err,Local_Protocal.CMD,pUseBuff);   										//×éÖ¡²¢»Ø¸´
 					break;
     		
-            case 1: // è¯»å–å‚æ•°
-                    Err = Get_Local_Para(Local_Protocal.CMD,pUseBuff+10,&Rlen);										//è¯»å–å‚æ•°ï¼Œå­˜å…¥pUseBuff+10
-                    if(Err) Local_Protocol_Reply(Err,Local_Protocal.CMD,pUseBuff);									//é”™è¯¯ä¸ŠæŠ¥
-                    else Local_Protocol_Reply_Para(pUseBuff+10,Rlen,Local_Protocal.CMD,pUseBuff);					//å‚æ•°ä¸ŠæŠ¥
+            case 1: // ¶ÁÈ¡²ÎÊı
+                    Err = Get_Local_Para(Local_Protocal.CMD,pUseBuff+10,&Rlen);										//¶ÁÈ¡²ÎÊı£¬´æÈëpUseBuff+10
+                    if(Err) Local_Protocol_Reply(Err,Local_Protocal.CMD,pUseBuff);									//´íÎóÉÏ±¨
+                    else Local_Protocol_Reply_Para(pUseBuff+10,Rlen,Local_Protocal.CMD,pUseBuff);					//²ÎÊıÉÏ±¨
             		break;
     		
-			case 0xFF: //è·³è¿‡485ç­‰å¾…
-					return 0xFF;												//è¡¨ç¤ºæ”¶åˆ°è·³è¿‡ç­‰å¾…æŒ‡ä»¤
+			case 0xFF: //Ìø¹ı485µÈ´ı
+					return 0xFF;												//±íÊ¾ÊÕµ½Ìø¹ıµÈ´ıÖ¸Áî
 			
-            case 0x0f: // æ–‡ä»¶ä¼ è¾“												//å¯ç¦ç”¨æ­¤åŠŸèƒ½ï¼ŒæŠŠå‡çº§åŠŸèƒ½ä»…ä»…æ”¾åœ¨BOOTç¨‹åºï¼ˆå®é™…ä¸Šç°åœ¨ä¹Ÿæ˜¯è¿™æ ·çš„ï¼‰
+            case 0x0f: // ÎÄ¼ş´«Êä												//¿É½ûÓÃ´Ë¹¦ÄÜ£¬°ÑÉı¼¶¹¦ÄÜ½ö½ö·ÅÔÚBOOT³ÌĞò£¨Êµ¼ÊÉÏÏÖÔÚÒ²ÊÇÕâÑùµÄ£©
             		break;
 		}
 		return 1;
@@ -243,14 +243,14 @@ INT8U Local_Protocol_Process(INT8U *In,INT16U inLen,INT8U *pUseBuff)
 
 /*******************************************************************************
 * Function Name : INT8U *Judge_Local_Framing(INT8U *pInBuff,INT16U Len,INT16U *pOutLen)
-* Description   : åˆ¤æ–­æ˜¯å¦ç¬¦åˆæœ¬å…¬å¸å†…éƒ¨è§„çº¦åè®®
-* Input         : pInBuff : è¾“å…¥æ•°æ®åŒ…å¤´æŒ‡é’ˆ
-*                 Len     : è¾“å…¥æ•°æ®åŒ…çš„é•¿åº¦
-*                 pOutLen ï¼šä¸»è°ƒæä¾›çš„ï¼Œç”¨äºå­˜å‚¨è¿”å›æœ‰æ•ˆåŒ…é•¿åº¦çš„ç©ºé—´çš„æŒ‡é’ˆ
+* Description   : ÅĞ¶ÏÊÇ·ñ·ûºÏ±¾¹«Ë¾ÄÚ²¿¹æÔ¼Ğ­Òé
+* Input         : pInBuff : ÊäÈëÊı¾İ°üÍ·Ö¸Õë
+*                 Len     : ÊäÈëÊı¾İ°üµÄ³¤¶È
+*                 pOutLen £ºÖ÷µ÷Ìá¹©µÄ£¬ÓÃÓÚ´æ´¢·µ»ØÓĞĞ§°ü³¤¶ÈµÄ¿Õ¼äµÄÖ¸Õë
 *
-* Return        : æ˜¾å¼è¿”å› pRet    : æœ‰æ•ˆåè®®åŒ…å¤´æŒ‡é’ˆï¼ŒæŒ‡å‘CMDå‚æ•°çš„é¦–åœ°å€
-*               : å½¢å‚è¿”å› pOutLen : æœ‰æ•ˆåè®®åŒ…çš„é•¿åº¦
-*               ï¼šéšå¼è¿”å› Local_Protocal     ï¼šè¿˜å°†è¿™ä¸ªå…¨å±€æœºæ„ä½“å˜é‡å¡«å……äº†ã€‚
+* Return        : ÏÔÊ½·µ»Ø pRet    : ÓĞĞ§Ğ­Òé°üÍ·Ö¸Õë£¬Ö¸ÏòCMD²ÎÊıµÄÊ×µØÖ·
+*               : ĞÎ²Î·µ»Ø pOutLen : ÓĞĞ§Ğ­Òé°üµÄ³¤¶È
+*               £ºÒşÊ½·µ»Ø Local_Protocal     £º»¹½«Õâ¸öÈ«¾Ö»ú¹¹Ìå±äÁ¿Ìî³äÁË¡£
 *******************************************************************************/
 INT8U *Judge_Local_Framing(INT8U *pInBuff,INT16U Len,INT16U *pOutLen)
 {
@@ -258,155 +258,155 @@ INT8U *Judge_Local_Framing(INT8U *pInBuff,INT16U Len,INT16U *pOutLen)
 	INT16U Packet_Length = 0;
 	INT8U *pRet = NULL;
 
-/*åè®®åŸºæœ¬æ ¡éªŒ*/
-	if (Len < 8) return 0;  													//åè®®åŸºæœ¬é•¿åº¦ä¸èƒ½å°äº8
+/*Ğ­Òé»ù±¾Ğ£Ñé*/
+	if (Len < 8) return 0;  													//Ğ­Òé»ù±¾³¤¶È²»ÄÜĞ¡ÓÚ8
 	for(i = 0; i<7; i++)
 	{
 		if(pInBuff[i] == 0x68)
 		{
-			pRet = &pInBuff[i]; 												//è®°å½•åŒ…é¦–ä½ç½®
-			Len -= i;           												//ä¿®æ­£é•¿åº¦
+			pRet = &pInBuff[i]; 												//¼ÇÂ¼°üÊ×Î»ÖÃ
+			Len -= i;           												//ĞŞÕı³¤¶È
 			break;
 		}
 	}
-	if(i >= 7) return 0;  														//å‰8å­—èŠ‚å†…æœªæ‰¾åˆ°åŒ…å¤´ï¼Œå½“ä½œå¤±è´¥
-	if(Len < 8) return 0;														//åè®®åŸºæœ¬é•¿åº¦ï¼Œä¸èƒ½å°äº8ï¼ˆé•¿åº¦ä¿®æ­£åå†æ¬¡åˆ¤æ–­ï¼‰
-	Packet_Length = pRet[7];													//æŠ¥æ–‡å†…å®¹é•¿åº¦ï¼Œé«˜å­—èŠ‚
+	if(i >= 7) return 0;  														//Ç°8×Ö½ÚÄÚÎ´ÕÒµ½°üÍ·£¬µ±×÷Ê§°Ü
+	if(Len < 8) return 0;														//Ğ­Òé»ù±¾³¤¶È£¬²»ÄÜĞ¡ÓÚ8£¨³¤¶ÈĞŞÕıºóÔÙ´ÎÅĞ¶Ï£©
+	Packet_Length = pRet[7];													//±¨ÎÄÄÚÈİ³¤¶È£¬¸ß×Ö½Ú
 	Packet_Length <<= 8;
-	Packet_Length += pRet[6];													//æŠ¥æ–‡å†…å®¹æ€»é•¿åº¦
-	Packet_Length += 10;														//æ•´ä½“é•¿åº¦
-	if (Len < Packet_Length) return 0;  										//åè®®é•¿åº¦é”™è¯¯
-	if (0 == Judge_Device_Addr(pRet+1)) return 0;								//åˆ¤æ–­æ˜¯å¦ä¸ºæœ‰æ•ˆçš„åœ°å€ï¼ˆé€šä¿¡åœ°å€ï¼Œå¯é€‰æ‹©åŒä¸€æ¡æ€»çº¿ä¸Šçš„ä¸åŒè®¾å¤‡ï¼‰
-	i = RTU_CS(pRet,Packet_Length-2);											//è®¡ç®—ç´¯åŠ å’Œ
-	if (i != pRet[Packet_Length-2]) return 0;									//æ ¡éªŒç´¯åŠ å’Œ
-	if (0x16 != pRet[Packet_Length-1]) return 0;								//æ ¡éªŒåŒ…å°¾
+	Packet_Length += pRet[6];													//±¨ÎÄÄÚÈİ×Ü³¤¶È
+	Packet_Length += 10;														//ÕûÌå³¤¶È
+	if (Len < Packet_Length) return 0;  										//Ğ­Òé³¤¶È´íÎó
+	if (0 == Judge_Device_Addr(pRet+1)) return 0;								//ÅĞ¶ÏÊÇ·ñÎªÓĞĞ§µÄµØÖ·£¨Í¨ĞÅµØÖ·£¬¿ÉÑ¡ÔñÍ¬Ò»Ìõ×ÜÏßÉÏµÄ²»Í¬Éè±¸£©
+	i = RTU_CS(pRet,Packet_Length-2);											//¼ÆËãÀÛ¼ÓºÍ
+	if (i != pRet[Packet_Length-2]) return 0;									//Ğ£ÑéÀÛ¼ÓºÍ
+	if (0x16 != pRet[Packet_Length-1]) return 0;								//Ğ£Ñé°üÎ²
 
-/*å°†æ¥æ”¶çš„æ•°æ®æ•´ç†è¿›Local_Protocalç»“æ„ä½“*/
+/*½«½ÓÊÕµÄÊı¾İÕûÀí½øLocal_Protocal½á¹¹Ìå*/
 	Local_Protocal.DoType = pRet[5];
 	switch(Local_Protocal.DoType)
 	{
-		case 0:	//å†™
-//				if(!memcmp(&Local_Protocal.Password,pRet+8,3)) return 0;		//å¯†ç æ ¡éªŒï¼ˆä¸Šä½æœºå¯†ç åŠŸèƒ½å¥½åƒæ²¡åšå§ï¼‰
+		case 0:	//Ğ´
+//				if(!memcmp(&Local_Protocal.Password,pRet+8,3)) return 0;		//ÃÜÂëĞ£Ñé£¨ÉÏÎ»»úÃÜÂë¹¦ÄÜºÃÏñÃ»×ö°É£©
 				Local_Protocal.CMD = (pRet[12]<<8) + pRet[11];					//CMD u16
-				Local_Protocal.CMDlen = Packet_Length - 15; 					//CMDå¯¹åº”å‚æ•°çš„é•¿åº¦
-				Local_Protocal.Pointer = &pRet[13];								//æŒ‡å‘CMDå‚æ•°çš„é¦–åœ°å€
+				Local_Protocal.CMDlen = Packet_Length - 15; 					//CMD¶ÔÓ¦²ÎÊıµÄ³¤¶È
+				Local_Protocal.Pointer = &pRet[13];								//Ö¸ÏòCMD²ÎÊıµÄÊ×µØÖ·
 				break;
 
-		case 1:	//è¯»
+		case 1:	//¶Á
 				Local_Protocal.CMD = (pRet[9]<<8) + pRet[8];					//CMD u16
 				Local_Protocal.CMDlen = 0;				 									
 				Local_Protocal.Pointer = 0;
 				break;
 
-		case 0xff:																//æŒ‡ä»¤	68 ff ff ff ff ff 02 00 00 00 65 16
-				break;															//è·³è¿‡ç­‰å¾…
+		case 0xff:																//Ö¸Áî	68 ff ff ff ff ff 02 00 00 00 65 16
+				break;															//Ìø¹ıµÈ´ı
 		
-		case 0x0f:	//å‡çº§ç¨‹åº
-		case 0x31:	//ä»è£…ç½®ä¸­è¯»å–å†å²æ•°æ®
-				Local_Protocal.Pointer = &pRet[11];								//æŒ‡å‘CMDå‚æ•°çš„é¦–åœ°å€
-				Local_Protocal.CMDlen = Packet_Length-14; 						//IDçš„é•¿åº¦
+		case 0x0f:	//Éı¼¶³ÌĞò
+		case 0x31:	//´Ó×°ÖÃÖĞ¶ÁÈ¡ÀúÊ·Êı¾İ
+				Local_Protocal.Pointer = &pRet[11];								//Ö¸ÏòCMD²ÎÊıµÄÊ×µØÖ·
+				Local_Protocal.CMDlen = Packet_Length-14; 						//IDµÄ³¤¶È
 				break;
 		
 		default:
 				break;
 	}
-	if(pOutLen) *pOutLen = Packet_Length;										//ä¼ å‡ºä¸€åŒ…æ­£ç¡®çš„æ•°æ®é•¿åº¦Packet_Length
-	return pRet;																//è¿”å›æœ‰æ•ˆåè®®é¦–åœ°å€
+	if(pOutLen) *pOutLen = Packet_Length;										//´«³öÒ»°üÕıÈ·µÄÊı¾İ³¤¶ÈPacket_Length
+	return pRet;																//·µ»ØÓĞĞ§Ğ­ÒéÊ×µØÖ·
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U Set_Local_Para(INT16U CMD,INT8U *pInBuff,INT8U Len)
-åŠŸèƒ½ï¼šé€šè¿‡æœ¬åœ°åè®®è¿›è¡Œå‚æ•°é…ç½®ï¼Œå¦‚æ—¶é—´ã€IPã€ç«¯å£å·ã€ä¸»ç«™å¡å·ã€æ¢å¤´IDç­‰ã€‚
-å…¥å‚ï¼šINT16U CMD,é…ç½®å‘½ä»¤ï¼›INT8U *pInBuff,è¾“å…¥å†…å®¹çš„æŒ‡é’ˆï¼›INT8U Lenï¼Œä¼ å…¥å†…å®¹çš„é•¿åº¦ã€‚
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæœ¬åœ°åè®®é”™è¯¯ä»£ç 
+Ãû³Æ£ºINT8U Set_Local_Para(INT16U CMD,INT8U *pInBuff,INT8U Len)
+¹¦ÄÜ£ºÍ¨¹ı±¾µØĞ­Òé½øĞĞ²ÎÊıÅäÖÃ£¬ÈçÊ±¼ä¡¢IP¡¢¶Ë¿ÚºÅ¡¢Ö÷Õ¾¿¨ºÅ¡¢Ì½Í·IDµÈ¡£
+Èë²Î£ºINT16U CMD,ÅäÖÃÃüÁî£»INT8U *pInBuff,ÊäÈëÄÚÈİµÄÖ¸Õë£»INT8U Len£¬´«ÈëÄÚÈİµÄ³¤¶È¡£
+³ö²Î£ºÎŞ
+·µ»Ø£º±¾µØĞ­Òé´íÎó´úÂë
 *******************************************************************************/
 INT8U Set_Local_Para(INT16U CMD,INT8U *pInBuff,INT8U Len)
 {
 	INT8U				Temp = 0;
-	static INT32U		buff[512] = {0};										//å ç”¨ç©ºé—´å¤ªå¤§ï¼Œå°å¿ƒæ­»æœº
+	static INT32U		buff[512] = {0};										//Õ¼ÓÃ¿Õ¼äÌ«´ó£¬Ğ¡ĞÄËÀ»ú
 	
 	switch(CMD)
 	{
-		case 0xffff:	/*æœ¬åœ°åŠŸèƒ½*/ 
-				if(!Local_Function(pInBuff)) return Other_Err;                 	//æœ¬åœ°åŠŸèƒ½ï¼Œå¤ä½ç­‰
+		case 0xffff:	/*±¾µØ¹¦ÄÜ*/ 
+				if(!Local_Function(pInBuff)) return Other_Err;                 	//±¾µØ¹¦ÄÜ£¬¸´Î»µÈ
 				break;
 		
-		case 0x0001:	/*ç³»ç»Ÿæ—¶é—´*/
+		case 0x0001:	/*ÏµÍ³Ê±¼ä*/
 				if(!System_Time_Fun(pInBuff,WRITETYPE))
 				{
-					Time_Proofread = UNDONE;									//æ ‡è®°ä¸ºæ ¡æ—¶æœªå®Œæˆ
-					return Other_Err; 	    									//ç³»ç»Ÿæ—¶é—´æ“ä½œ					
+					Time_Proofread = UNDONE;									//±ê¼ÇÎªĞ£Ê±Î´Íê³É
+					return Other_Err; 	    									//ÏµÍ³Ê±¼ä²Ù×÷					
 				}
 				else
 				{
-					Time_Proofread = DONE;										//æ ‡è®°ä¸ºæ ¡æ—¶å·²å®Œæˆ
+					Time_Proofread = DONE;										//±ê¼ÇÎªĞ£Ê±ÒÑÍê³É
 				}
 				break;
 		
-		case 0x0004:	/*IPåœ°å€+ç«¯å£å·+APN*/
-				Temp = pInBuff[5];												//ç«¯å£å·ï¼šç”±äºæœ¬åœ°é‡‡ç”¨çš„æ˜¯å°ç«¯å†™å…¥ï¼Œè€Œå—ç½‘é‡‡ç”¨å¤§ç«¯æ¨¡å¼ï¼Œè¿™é‡ŒåŒå­—èŠ‚çš„å‚æ•°éœ€è¦é¢ å€’ä¸€ä¸‹
+		case 0x0004:	/*IPµØÖ·+¶Ë¿ÚºÅ+APN*/
+				Temp = pInBuff[5];												//¶Ë¿ÚºÅ£ºÓÉÓÚ±¾µØ²ÉÓÃµÄÊÇĞ¡¶ËĞ´Èë£¬¶øÄÏÍø²ÉÓÃ´ó¶ËÄ£Ê½£¬ÕâÀïË«×Ö½ÚµÄ²ÎÊıĞèÒªµßµ¹Ò»ÏÂ
 				pInBuff[5] = pInBuff[6];
 				pInBuff[6] = Temp;
 		
-				/*ä½¿èƒ½å­—èŠ‚ 1ä¸ªå­—èŠ‚ï¼Œ0x50è¡¨ç¤º æ­¤é€šé“ç”¨äºä¸ŠæŠ¥æ•°æ®ï¼Œå¿ƒè·³ï¼Œç­‰å¾…å‘½ä»¤	è¿™ä¸ªå¯¹å—ç½‘æ²¡ç”¨ï¼Œä¸ç®¡å®ƒ*/
-				/*IPä¸ç«¯å£*/
-				if(!BSP_WriteDataToFm(IP_Config_Addr,pInBuff+1,4)) return Other_Err;						//å†™å…¥ IP_addr_1&2
+				/*Ê¹ÄÜ×Ö½Ú 1¸ö×Ö½Ú£¬0x50±íÊ¾ ´ËÍ¨µÀÓÃÓÚÉÏ±¨Êı¾İ£¬ĞÄÌø£¬µÈ´ıÃüÁî	Õâ¸ö¶ÔÄÏÍøÃ»ÓÃ£¬²»¹ÜËü*/
+				/*IPÓë¶Ë¿Ú*/
+				if(!BSP_WriteDataToFm(IP_Config_Addr,pInBuff+1,4)) return Other_Err;						//Ğ´Èë IP_addr_1&2
 				if(!BSP_WriteDataToFm(IP_Config_Addr+6,pInBuff+1,4)) return Other_Err;
-				if(!BSP_WriteDataToFm(IP_Config_Addr+4,pInBuff+5,2)) return Other_Err;						//å†™å…¥ PortNum_1&2 ç«¯å£å·
+				if(!BSP_WriteDataToFm(IP_Config_Addr+4,pInBuff+5,2)) return Other_Err;						//Ğ´Èë PortNum_1&2 ¶Ë¿ÚºÅ
 				if(!BSP_WriteDataToFm(IP_Config_Addr+10,pInBuff+5,2)) return Other_Err;
 				/*APN*/
-				Temp = pInBuff[7];												//ä¸Šä½æœºä¸‹å‘APNç¬¬ä¸€ä¸ªå­—èŠ‚ä¸ºé•¿åº¦ï¼Œç›®å‰æœ€å¤šä¸‹å‘1+32å­—èŠ‚
-				pInBuff[8+Temp] = '\0';											//ä¸Šä½æœºä¸‹å‘APNæ— ç»“æŸç¬¦ï¼Œè¡¥ä¸Š
-				if(!BSP_WriteDataToFm(APN_Addr,pInBuff+8,APN_Len)) return Other_Err;						//å†™å…¥ APN	
+				Temp = pInBuff[7];												//ÉÏÎ»»úÏÂ·¢APNµÚÒ»¸ö×Ö½ÚÎª³¤¶È£¬Ä¿Ç°×î¶àÏÂ·¢1+32×Ö½Ú
+				pInBuff[8+Temp] = '\0';											//ÉÏÎ»»úÏÂ·¢APNÎŞ½áÊø·û£¬²¹ÉÏ
+				if(!BSP_WriteDataToFm(APN_Addr,pInBuff+8,APN_Len)) return Other_Err;						//Ğ´Èë APN	
 				break;
 
-		case 0x1000:	/*å†™è£…ç½®ç¼–å·*/
-				/*å†™å…¥å†…éƒ¨FLASH*/
-				Read_NFlash(0x08006000-0x800, buff, 512);						//è¯»å–å†™æœ‰æ»šç çš„é¡µ	æ³¨æ„ï¼šæ»šç æ˜¯16è¿›åˆ¶ï¼ŒDevice_Numberæ˜¯BCD
-				buff[448] = pInBuff[5]-0x30;									//ä¸‹å‘çš„asciiè½¬hexï¼Œå¹¶å†™å…¥æ»šç å¯¹åº”ä½ç½®ï¼ˆçœŸå®å€¼ï¼Œå³å°ç«¯æ¨¡å¼å†™å…¥ï¼‰
+		case 0x1000:	/*Ğ´×°ÖÃ±àºÅ*/
+				/*Ğ´ÈëÄÚ²¿FLASH*/
+				Read_NFlash(0x08006000-0x800, buff, 512);						//¶ÁÈ¡Ğ´ÓĞ¹öÂëµÄÒ³	×¢Òâ£º¹öÂëÊÇ16½øÖÆ£¬Device_NumberÊÇBCD
+				buff[448] = pInBuff[5]-0x30;									//ÏÂ·¢µÄascii×ªhex£¬²¢Ğ´Èë¹öÂë¶ÔÓ¦Î»ÖÃ£¨ÕæÊµÖµ£¬¼´Ğ¡¶ËÄ£Ê½Ğ´Èë£©
 				buff[448] += (pInBuff[4]-0x30)*10;
 				buff[448] += (pInBuff[3]-0x30)*100;
 				buff[448] += (pInBuff[2]-0x30)*1000;
-				Wrtie_NFlash(0x08006000-0x800, buff, 512);						//å¸¦æ“¦é™¤ã€‚æŠŠä¿®æ”¹å¥½çš„è¿™ä¸€é¡µå†™å›å»
+				Wrtie_NFlash(0x08006000-0x800, buff, 512);						//´ø²Á³ı¡£°ÑĞŞ¸ÄºÃµÄÕâÒ»Ò³Ğ´»ØÈ¥
 
-				/*å†™å…¥é“ç”µ*/
-				if(!BSP_WriteDataToFm(Device_Number_Addr,pInBuff,Device_Number_Len)) return Other_Err;		//é•¿åº¦å¿…é¡»æ˜¯å›ºå®šçš„6ä½ï¼ŒPCå‘è¿‡æ¥çš„ä¼šæ˜¯17ä½ï¼Œç…§6ä½å†™æ‰ä¸ä¼šå½±å“å…¶ä»–å­˜å‚¨	
+				/*Ğ´ÈëÌúµç*/
+				if(!BSP_WriteDataToFm(Device_Number_Addr,pInBuff,Device_Number_Len)) return Other_Err;		//³¤¶È±ØĞëÊÇ¹Ì¶¨µÄ6Î»£¬PC·¢¹ıÀ´µÄ»áÊÇ17Î»£¬ÕÕ6Î»Ğ´²Å²»»áÓ°ÏìÆäËû´æ´¢	
 				break;
 		
-//		case ????:	/*ä¸»ç«™å¡å·*/
-//				if(!BSP_WriteDataToFm(IP_Config_Addr+12,pInBuff,Len)) return Other_Err;						//å†™å…¥ CardNum_1&2 ä¸»ç«™å¡å·
+//		case ????:	/*Ö÷Õ¾¿¨ºÅ*/
+//				if(!BSP_WriteDataToFm(IP_Config_Addr+12,pInBuff,Len)) return Other_Err;						//Ğ´Èë CardNum_1&2 Ö÷Õ¾¿¨ºÅ
 //				if(!BSP_WriteDataToFm(IP_Config_Addr+18,pInBuff,Len)) return Other_Err;
 //				break;
 					 
-		case 0x11FF:	/*æ¢å¤´ID*/
-				switch(pInBuff[0])												//æ ¹æ®æŒ‡ä»¤é€‰æ‹©ç›¸åº”æ“ä½œ
+		case 0x11FF:	/*Ì½Í·ID*/
+				switch(pInBuff[0])												//¸ù¾İÖ¸ÁîÑ¡ÔñÏàÓ¦²Ù×÷
 				{
 					case 0: 
-						if(! Add_TT_ID(pInBuff+1))return Other_Err;				//å¢åŠ ä¸€ä¸ªæµ‹é‡ç‚¹
+						if(! Add_TT_ID(pInBuff+1))return Other_Err;				//Ôö¼ÓÒ»¸ö²âÁ¿µã
 						break;
 					case 1:
-						if(! Delete_TT_ID(pInBuff+1))return Other_Err; 			//åˆ é™¤ä¸€ä¸ªæµ‹é‡ç‚¹		
+						if(! Delete_TT_ID(pInBuff+1))return Other_Err; 			//É¾³ıÒ»¸ö²âÁ¿µã		
 						break;
 					case 2:	
-						if(! Delete_All_TT_ID())return Other_Err;	 			//åˆ é™¤å…¨éƒ¨æµ‹é‡ç‚¹
+						if(! Delete_All_TT_ID())return Other_Err;	 			//É¾³ıÈ«²¿²âÁ¿µã
 						break;
 				}
 				break;
 	}
-	return No_Err;																//æ­£å¸¸ï¼Œè¿”å›æ— é”™è¯¯
+	return No_Err;																//Õı³££¬·µ»ØÎŞ´íÎó
 }
 
 /*******************************************************************************
 * Function Name : INT8U Get_Local_Para(INT16U CMD,INT8U *pOutBuff,INT16U *pOutLen)
-* Description   : è¯»å–æŒ‡å®šCMDé¡¹å‡ºæ¥åˆ°pOutBuffæŒ‡å®šçš„ç©ºé—´ä¸­å»ï¼Œè¯»å–åˆ°çš„é•¿åº¦â€œè½¬æ‰‹è¿”å›â€ç»™è¡Œå‚pOutLenæŒ‡å®šçš„ç©ºé—´ä¸­å»ã€‚
-* Input         : CMD      : è§åè®®é™„ä»¶Aã€é™„ä»¶B
-*                 pOutBuff : æ‹·è´çš„ç›®çš„åœ°å€
-*                 pOutLen  : CMDå¯¹åº”çš„é•¿åº¦, åœ¨ç»“æ„ ID_STRæˆ–Tn_STR ç»“æ„ä½“ä¸­ï¼ŒIDçš„é•¿åº¦éƒ½å¢åŠ äº†1ï¼Œç”¨äºä¿å­˜æ ¡éªŒå­—èŠ‚    
+* Description   : ¶ÁÈ¡Ö¸¶¨CMDÏî³öÀ´µ½pOutBuffÖ¸¶¨µÄ¿Õ¼äÖĞÈ¥£¬¶ÁÈ¡µ½µÄ³¤¶È¡°×ªÊÖ·µ»Ø¡±¸øĞĞ²ÎpOutLenÖ¸¶¨µÄ¿Õ¼äÖĞÈ¥¡£
+* Input         : CMD      : ¼ûĞ­Òé¸½¼şA¡¢¸½¼şB
+*                 pOutBuff : ¿½±´µÄÄ¿µÄµØÖ·
+*                 pOutLen  : CMD¶ÔÓ¦µÄ³¤¶È, ÔÚ½á¹¹ ID_STR»òTn_STR ½á¹¹ÌåÖĞ£¬IDµÄ³¤¶È¶¼Ôö¼ÓÁË1£¬ÓÃÓÚ±£´æĞ£Ñé×Ö½Ú    
 
 *
-* Return        : å…¶ä»–	  ï¼šé”™è¯¯ä»£ç 
-*                 No_Err  ï¼šæ­£ç¡®
+* Return        : ÆäËû	  £º´íÎó´úÂë
+*                 No_Err  £ºÕıÈ·
 *******************************************************************************/
 INT8U Get_Local_Para(INT16U CMD,INT8U *pOutBuff,INT16U *pOutLen)
 {
@@ -414,7 +414,7 @@ INT8U Get_Local_Para(INT16U CMD,INT8U *pOutBuff,INT16U *pOutLen)
 	
 	switch(CMD)
 	{
-		case 0x0000:	/*è¯»ç‰ˆæœ¬å·*/
+		case 0x0000:	/*¶Á°æ±¾ºÅ*/
 				pOutBuff[0]=(VERSION>>24) & 0xFF;
 				pOutBuff[1]=(VERSION>>16) & 0xFF;
 				pOutBuff[2]=(VERSION>>8) & 0xFF;
@@ -422,37 +422,37 @@ INT8U Get_Local_Para(INT16U CMD,INT8U *pOutBuff,INT16U *pOutLen)
 				*pOutLen = 4;
 				return No_Err;
 		
-		case 0x0001:	/*è®¾å¤‡æ—¶é—´*/
-				 System_Time_Fun(pOutBuff,READTYPE);        					// è¯»ç³»ç»Ÿæ—¶é—´
+		case 0x0001:	/*Éè±¸Ê±¼ä*/
+				 System_Time_Fun(pOutBuff,READTYPE);        					// ¶ÁÏµÍ³Ê±¼ä
 				 *pOutLen = 7;	
 				 return No_Err;	
 	
-		case 0x0004:	/*IPåœ°å€+ç«¯å£å·+APN*/									//pOutBuff+7æ˜¯APNï¼Œå—ç½‘æ²¡ç”¨åˆ°ï¼Œä¸ç®¡
-				pOutBuff[0] = 0x50;												//ä½¿èƒ½å­—èŠ‚ 1ä¸ªå­—èŠ‚ï¼Œ0x50è¡¨ç¤º æ­¤é€šé“ç”¨äºä¸ŠæŠ¥æ•°æ®ï¼Œå¿ƒè·³ï¼Œç­‰å¾…å‘½ä»¤
-				state = BSP_ReadDataFromFm(IP_Config_Addr,pOutBuff+1,4);		//è¯»å‡º IP_addr_1&2
+		case 0x0004:	/*IPµØÖ·+¶Ë¿ÚºÅ+APN*/									//pOutBuff+7ÊÇAPN£¬ÄÏÍøÃ»ÓÃµ½£¬²»¹Ü
+				pOutBuff[0] = 0x50;												//Ê¹ÄÜ×Ö½Ú 1¸ö×Ö½Ú£¬0x50±íÊ¾ ´ËÍ¨µÀÓÃÓÚÉÏ±¨Êı¾İ£¬ĞÄÌø£¬µÈ´ıÃüÁî
+				state = BSP_ReadDataFromFm(IP_Config_Addr,pOutBuff+1,4);		//¶Á³ö IP_addr_1&2
 				if(!state) break;
 
-				state = BSP_ReadDataFromFm(IP_Config_Addr+4,pOutBuff+5,2);		//è¯»å‡º PortNum_1&2 ç«¯å£å·
+				state = BSP_ReadDataFromFm(IP_Config_Addr+4,pOutBuff+5,2);		//¶Á³ö PortNum_1&2 ¶Ë¿ÚºÅ
 				if(!state) break;
 		
-				state = BSP_ReadDataFromFm(APN_Addr,pOutBuff+8,APN_Len);		//è¯»APN pOutBuff+7æ˜¯APNé•¿åº¦ï¼Œç›®å‰æœ€å¤§32
+				state = BSP_ReadDataFromFm(APN_Addr,pOutBuff+8,APN_Len);		//¶ÁAPN pOutBuff+7ÊÇAPN³¤¶È£¬Ä¿Ç°×î´ó32
 				if(!state) break;
 		
-				Temp = pOutBuff[5];												//ç”±äºæœ¬åœ°é‡‡ç”¨çš„æ˜¯å°ç«¯å†™å…¥ï¼Œè€Œå—ç½‘é‡‡ç”¨å¤§ç«¯æ¨¡å¼ï¼Œè¿™é‡ŒåŒå­—èŠ‚çš„å‚æ•°éœ€è¦é¢ å€’ä¸€ä¸‹
+				Temp = pOutBuff[5];												//ÓÉÓÚ±¾µØ²ÉÓÃµÄÊÇĞ¡¶ËĞ´Èë£¬¶øÄÏÍø²ÉÓÃ´ó¶ËÄ£Ê½£¬ÕâÀïË«×Ö½ÚµÄ²ÎÊıĞèÒªµßµ¹Ò»ÏÂ
 				pOutBuff[5] = pOutBuff[6];
 				pOutBuff[6] = Temp;
-				pOutBuff[7] = strlen((TCHAR*)APN);								//APNé•¿åº¦
+				pOutBuff[7] = strlen((TCHAR*)APN);								//APN³¤¶È
 				*pOutLen = 8+32;
 				return No_Err;
 
-		case 0x1000:															//è¯»å–è£…ç½®ç¼–ç 
+		case 0x1000:															//¶ÁÈ¡×°ÖÃ±àÂë
 				if(BSP_ReadDataFromFm(Device_Number_Addr,pOutBuff,Device_Number_Len)){
 					*pOutLen = Device_Number_Len;
 					return No_Err;}
 				break;
 				
-//		case ????: 	/*ä¸çŸ¥é“å—ç½‘çš„ä¸»ç«™å¡å·æ˜¯ä»€ä¹ˆæ„æ€ï¼Œæœ¬åœ°åè®®æš‚æ—¶æ²¡æœ‰ç›¸åº”çš„CMD*/
-//				if(BSP_ReadDataFromFm(IP_Config_Addr+12,pOutBuff,6))			//è¯»å‡º CardNum_1&2 ä¸»ç«™å¡å·
+//		case ????: 	/*²»ÖªµÀÄÏÍøµÄÖ÷Õ¾¿¨ºÅÊÇÊ²Ã´ÒâË¼£¬±¾µØĞ­ÒéÔİÊ±Ã»ÓĞÏàÓ¦µÄCMD*/
+//				if(BSP_ReadDataFromFm(IP_Config_Addr+12,pOutBuff,6))			//¶Á³ö CardNum_1&2 Ö÷Õ¾¿¨ºÅ
 //				{
 //					*pOutLen =6;
 //					return No_Err;
@@ -461,8 +461,8 @@ INT8U Get_Local_Para(INT16U CMD,INT8U *pOutBuff,INT16U *pOutLen)
 						
 		default: break;
 	}
-/*æµ‹é‡ç‚¹æŸ¥è¯¢*/
-	if((CMD >= 0x1100)&&(CMD <= 0x1137))  										//æµ‹é‡ç‚¹æŸ¥è¯¢ï¼ŒæŒ‰æœ€å¤š55ä¸ªåšçš„
+/*²âÁ¿µã²éÑ¯*/
+	if((CMD >= 0x1100)&&(CMD <= 0x1137))  										//²âÁ¿µã²éÑ¯£¬°´×î¶à55¸ö×öµÄ
 	{	
 		*pOutLen = Read_TT_Num_Or_ID(CMD,pOutBuff);
 		return No_Err;
@@ -472,18 +472,18 @@ INT8U Get_Local_Para(INT16U CMD,INT8U *pOutBuff,INT16U *pOutLen)
 
 /*******************************************************************************
 * Function Name: INT8U System_Time_Fun(INT8U *pInOutBuff,INT8U Type)             
-* Description:   è®¾ç½®æˆ–è€…è¯»å–ç³»ç»Ÿæ—¶é—´ 
-* Input:         pInOutBuff   : æŒ‡å‘å®æ—¶æ—¶é’Ÿæ—¶é—´ä¸²çš„æŒ‡é’ˆï¼Œè¿™é‡Œéœ€è¦çš„é¡ºåºæ˜¯ï¼šå¹´ã€æœˆã€æ—¥ã€æ—¶ã€åˆ†ã€ç§’ã€å‘¨
-*                Type         ï¼šWRITETYPEï¼šè®¾ç½®ç³»ç»Ÿæ—¶é—´
-*                               READTYPE : è¯»å–ç³»ç»Ÿæ—¶é—´
+* Description:   ÉèÖÃ»òÕß¶ÁÈ¡ÏµÍ³Ê±¼ä 
+* Input:         pInOutBuff   : Ö¸ÏòÊµÊ±Ê±ÖÓÊ±¼ä´®µÄÖ¸Õë£¬ÕâÀïĞèÒªµÄË³ĞòÊÇ£ºÄê¡¢ÔÂ¡¢ÈÕ¡¢Ê±¡¢·Ö¡¢Ãë¡¢ÖÜ
+*                Type         £ºWRITETYPE£ºÉèÖÃÏµÍ³Ê±¼ä
+*                               READTYPE : ¶ÁÈ¡ÏµÍ³Ê±¼ä
 *
-* Return:        1ï¼šæˆåŠŸ   0ï¼šå¤±è´¥
+* Return:        1£º³É¹¦   0£ºÊ§°Ü
 *******************************************************************************/
 INT8U System_Time_Fun(INT8U *pInOutBuff,INT8U Type)
 {
 	if (Type == WRITETYPE) 											
 	{
-		//PCå‘æ¥çš„æ•°ç»„é¡ºåºæ˜¯å¹´æœˆæ—¥æ—¶åˆ†ç§’å‘¨çš„BCDç ï¼ï¼ï¼ï¼Œè€ŒBSPRTC_TIMEçš„é¡ºåºæ˜¯ç§’åˆ†æ—¶å‘¨æ—¥æœˆå¹´çš„BCDç ï¼ï¼ï¼éœ€è¦è½¬æ¢ä¸€ä¸‹
+		//PC·¢À´µÄÊı×éË³ĞòÊÇÄêÔÂÈÕÊ±·ÖÃëÖÜµÄBCDÂë£¡£¡£¡£¬¶øBSPRTC_TIMEµÄË³ĞòÊÇÃë·ÖÊ±ÖÜÈÕÔÂÄêµÄBCDÂë£¡£¡£¡ĞèÒª×ª»»Ò»ÏÂ
 		gSetTime.Year=pInOutBuff[0];
 		gSetTime.Month=pInOutBuff[1];
 		gSetTime.Day=pInOutBuff[2];
@@ -491,49 +491,49 @@ INT8U System_Time_Fun(INT8U *pInOutBuff,INT8U Type)
 		gSetTime.Minute=pInOutBuff[4];
 		gSetTime.Second=pInOutBuff[5];
 		gSetTime.Week=pInOutBuff[6];
-		return RtcSetChinaStdTimeStruct(&gSetTime);								//å†™ç³»ç»Ÿæ—¶é—´
+		return RtcSetChinaStdTimeStruct(&gSetTime);								//Ğ´ÏµÍ³Ê±¼ä
 	}
 	else
 	{
-		return GetSysTime(pInOutBuff);											//è¯»å–ç³»ç»Ÿæ—¶é—´ 
+		return GetSysTime(pInOutBuff);											//¶ÁÈ¡ÏµÍ³Ê±¼ä 
 	}
 }
 																				
 /*******************************************************************************
 * Function Name : INT8U Judge_Device_Addr(INT8U *pAddr)
-* Description   : åˆ¤æ–­æ˜¯å¦ä¸ºæœ‰æ•ˆçš„è£…ç½®åœ°å€
-* Input         : pAddr : æŒ‡å‘åè®®ä¸­è£…ç½®åœ°å€å­—èŠ‚çš„æŒ‡é’ˆ
+* Description   : ÅĞ¶ÏÊÇ·ñÎªÓĞĞ§µÄ×°ÖÃµØÖ·
+* Input         : pAddr : Ö¸ÏòĞ­ÒéÖĞ×°ÖÃµØÖ·×Ö½ÚµÄÖ¸Õë
 *
-* Return        : 0 : æ— æ•ˆåœ°å€
-*               : 1 ï¼šæœ‰æ•ˆåœ°å€
+* Return        : 0 : ÎŞĞ§µØÖ·
+*               : 1 £ºÓĞĞ§µØÖ·
 *******************************************************************************/
 INT8U Judge_Device_Addr(INT8U *pAddr)
 {
 	INT16U len = 0;
 
-	if((pAddr[0]==0xff)&&(pAddr[1]==0xff)&&(pAddr[2]==0xff)&&(pAddr[3]==0xff)) 	//4ä¸ª0xffè¡¨ç¤ºå¹¿æ’­åœ°å€ï¼Œæœ‰æ•ˆ
+	if((pAddr[0]==0xff)&&(pAddr[1]==0xff)&&(pAddr[2]==0xff)&&(pAddr[3]==0xff)) 	//4¸ö0xff±íÊ¾¹ã²¥µØÖ·£¬ÓĞĞ§
 		return 1;   														
-	Get_Local_Para(0x0002,Local_Protocal.Addr,&len);							//è·å–è£…ç½®åœ°å€
+	Get_Local_Para(0x0002,Local_Protocal.Addr,&len);							//»ñÈ¡×°ÖÃµØÖ·
 	if(0==memcmp(pAddr,&Local_Protocal.Addr,4)) return 1;
 	return 0;
 }
 
 /*******************************************************************************
 * Function Name : INT8U Local_Function(INT8U *pInBuff)                                                               
-* Description   : CMD FFFF å¯¹åº”çš„å¤„ç†å‡½æ•°ï¼Œ
-* Input         : pInBuffï¼š
+* Description   : CMD FFFF ¶ÔÓ¦µÄ´¦Àíº¯Êı£¬
+* Input         : pInBuff£º
 *                 
-* Return        : 1ï¼šæˆåŠŸ	0ï¼šå¤±è´¥ï¼ˆç»Ÿä¸€æ ‡å‡†ZEï¼‰
+* Return        : 1£º³É¹¦	0£ºÊ§°Ü£¨Í³Ò»±ê×¼ZE£©
 *******************************************************************************/
 INT8U Local_Function(INT8U *InBuff)
 {
 	switch(*InBuff)
 	{
-		case 0xff: // ç³»ç»Ÿå¤ä½
-				McuSoftReset();													//æ‰‹åŠ¨ç³»ç»Ÿå¤ä½ï¼Œæ‰‹åŠ¨ç‚¹å‡»â€œæ–¹è¯šç”µåŠ›äº§å“å‚æ•°ç®¡ç†V1.3â€-->åŸºæœ¬å‚æ•°-->ç³»ç»Ÿå¤ä½ æŒ‰é’®åå°±ä¼šè¿›å…¥åˆ°è¿™ä¸ªcaseæ¥
+		case 0xff: // ÏµÍ³¸´Î»
+				McuSoftReset();													//ÊÖ¶¯ÏµÍ³¸´Î»£¬ÊÖ¶¯µã»÷¡°·½³ÏµçÁ¦²úÆ·²ÎÊı¹ÜÀíV1.3¡±-->»ù±¾²ÎÊı-->ÏµÍ³¸´Î» °´Å¥ºó¾Í»á½øÈëµ½Õâ¸öcaseÀ´
 				break;
 					
-		/*å…¶ä»–åŠŸèƒ½éƒ½å¯ä»¥åœ¨è¿™é‡Œæ·»åŠ */
+		/*ÆäËû¹¦ÄÜ¶¼¿ÉÒÔÔÚÕâÀïÌí¼Ó*/
 		default: 
 				break;
 	}
@@ -541,51 +541,51 @@ INT8U Local_Function(INT8U *InBuff)
 }
 
 /*******************************************************************************
-åç§°ï¼švoid Local_Protocol_Reply(INT8U Err,INT16U CMD,INT8U *pUseBuff)
-åŠŸèƒ½ï¼šæŒ‰æœ¬åœ°åè®®ï¼Œé€šè¿‡485è¿›è¡Œå›å¤é€šä¿¡ã€‚
-å…¥å‚ï¼šINT8U Err,é”™è¯¯ä»£ç ï¼›INT8U DOType,0xC0æŒ‡æ˜æ˜¯æœ‰é”™è¯¯è¿”å›ï¼Œ0x80æ— é”™è¯¯è¿”å›ï¼›INT16U CMD,INT8U *pUseBuff
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid Local_Protocol_Reply(INT8U Err,INT16U CMD,INT8U *pUseBuff)
+¹¦ÄÜ£º°´±¾µØĞ­Òé£¬Í¨¹ı485½øĞĞ»Ø¸´Í¨ĞÅ¡£
+Èë²Î£ºINT8U Err,´íÎó´úÂë£»INT8U DOType,0xC0Ö¸Ã÷ÊÇÓĞ´íÎó·µ»Ø£¬0x80ÎŞ´íÎó·µ»Ø£»INT16U CMD,INT8U *pUseBuff
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void Local_Protocol_Reply(INT8U Err,INT16U CMD,INT8U *pUseBuff)
 {
 	INT8U DOType;
-    pUseBuff[0] = 0x68;                            								//åè®®åŒ…å¤´
-    memcpy(&pUseBuff[1],Local_Protocal.Addr,4);             					//é€šä¿¡æºåœ°å€
-	if(Err) DOType = 0xC0;   													//0xC0 æ ‡è¯†æœ‰é”™è¯¯è¿”å›
-	else DOType = 0x80;      													//0x80 æ ‡è¯†æ— é”™è¯¯è¿”å›	
-    pUseBuff[5] = DOType;                          								//æ“ä½œç±»å‹
-    pUseBuff[6] = 3;                               								//æ•°æ®åŸŸé•¿åº¦ï¼Œå°ç«¯æ¨¡å¼
-    pUseBuff[7] = 0;															//å›ºå®š3å­—èŠ‚
-    pUseBuff[8] = CMD&0xff;                         							//CMDä½å­—èŠ‚
-    pUseBuff[9] = (CMD>>8)&0xff;                    							//CMDé«˜å­—èŠ‚
-    pUseBuff[10] = Err;                            								//é”™è¯¯ä»£ç 
-    pUseBuff[11] = RTU_CS(pUseBuff,11);            								//ç´¯åŠ å’Œæ ¡éªŒ
-    pUseBuff[12] = 0x16;                           								//åè®®åŒ…å°¾
+    pUseBuff[0] = 0x68;                            								//Ğ­Òé°üÍ·
+    memcpy(&pUseBuff[1],Local_Protocal.Addr,4);             					//Í¨ĞÅÔ´µØÖ·
+	if(Err) DOType = 0xC0;   													//0xC0 ±êÊ¶ÓĞ´íÎó·µ»Ø
+	else DOType = 0x80;      													//0x80 ±êÊ¶ÎŞ´íÎó·µ»Ø	
+    pUseBuff[5] = DOType;                          								//²Ù×÷ÀàĞÍ
+    pUseBuff[6] = 3;                               								//Êı¾İÓò³¤¶È£¬Ğ¡¶ËÄ£Ê½
+    pUseBuff[7] = 0;															//¹Ì¶¨3×Ö½Ú
+    pUseBuff[8] = CMD&0xff;                         							//CMDµÍ×Ö½Ú
+    pUseBuff[9] = (CMD>>8)&0xff;                    							//CMD¸ß×Ö½Ú
+    pUseBuff[10] = Err;                            								//´íÎó´úÂë
+    pUseBuff[11] = RTU_CS(pUseBuff,11);            								//ÀÛ¼ÓºÍĞ£Ñé
+    pUseBuff[12] = 0x16;                           								//Ğ­Òé°üÎ²
 
-	BspUartWrite(2,pUseBuff,13);												//å‘é€ç»™PC
+	BspUartWrite(2,pUseBuff,13);												//·¢ËÍ¸øPC
 }
 
 /*******************************************************************************
-åç§°ï¼švoid Local_Protocol_Reply_Para(INT8U *In,INT16U len,INT16U CMD,INT8U *pUseBuff)
-åŠŸèƒ½ï¼šæŒ‰æœ¬åœ°åè®®ï¼Œé€šè¿‡485è¿›è¡Œå›å¤é€šä¿¡ï¼Œä¸ŠæŠ¥è¯»å–çš„å‚æ•°ã€‚
-å…¥å‚ï¼šINT8U *In,INT16U len,INT16U CMD,INT8U *pUseBuff å¤ªå‘çˆ¹äº†ï¼Œæ‡’å¾—æ”¹äº†ï¼Œè‡ªå·±çœ‹å§
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid Local_Protocol_Reply_Para(INT8U *In,INT16U len,INT16U CMD,INT8U *pUseBuff)
+¹¦ÄÜ£º°´±¾µØĞ­Òé£¬Í¨¹ı485½øĞĞ»Ø¸´Í¨ĞÅ£¬ÉÏ±¨¶ÁÈ¡µÄ²ÎÊı¡£
+Èë²Î£ºINT8U *In,INT16U len,INT16U CMD,INT8U *pUseBuff Ì«¿ÓµùÁË£¬ÀÁµÃ¸ÄÁË£¬×Ô¼º¿´°É
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void Local_Protocol_Reply_Para(INT8U *In,INT16U len,INT16U CMD,INT8U *pUseBuff)
 {
 	INT16U	i = 0;
-	INT8U	DOType = 0x81;														//0x81ï¼Œè¡¨ç¤ºä»è£…ç½®è¯»å–CMDå‚æ•°
+	INT8U	DOType = 0x81;														//0x81£¬±íÊ¾´Ó×°ÖÃ¶ÁÈ¡CMD²ÎÊı
 	
-    pUseBuff[0] = 0x68;                           								//åè®®åŒ…å¤´
-    memcpy(pUseBuff+1,Local_Protocal.Addr,4);            						//é€šä¿¡æºåœ°å€
-    pUseBuff[5] = DOType;                          								//æ“ä½œç±»å‹
+    pUseBuff[0] = 0x68;                           								//Ğ­Òé°üÍ·
+    memcpy(pUseBuff+1,Local_Protocal.Addr,4);            						//Í¨ĞÅÔ´µØÖ·
+    pUseBuff[5] = DOType;                          								//²Ù×÷ÀàĞÍ
     pUseBuff[6] = (len+2) &0xff;
     pUseBuff[7] = ((len+2)>>8) &0xff;
     pUseBuff[8] = CMD&0xff;
     pUseBuff[9] = (CMD>>8)&0xff;
-    if(In != pUseBuff+10)														//è¿™ä¹ˆç¥å¥‡çš„æ“ä½œå¤´ä¸€æ¬¡è§  ä¸è¿‡è¿˜èƒ½ç”¨
+    if(In != pUseBuff+10)														//ÕâÃ´ÉñÆæµÄ²Ù×÷Í·Ò»´Î¼û  ²»¹ı»¹ÄÜÓÃ
     {
         for(i=0;i<len;i++)
     	{
@@ -595,46 +595,46 @@ void Local_Protocol_Reply_Para(INT8U *In,INT16U len,INT16U CMD,INT8U *pUseBuff)
     pUseBuff[10+len] = RTU_CS(pUseBuff,10+len);
     pUseBuff[11+len] = 0x16;
 
-	BspUartWrite(2,pUseBuff,12+len);											//ç»™PCå·¥å…·è½¯ä»¶å›å¤
+	BspUartWrite(2,pUseBuff,12+len);											//¸øPC¹¤¾ßÈí¼ş»Ø¸´
 }
 
-#if 1 /*============================================================æ¢å¤´å½•å…¥ä¸è¯»å–å‡½æ•°============================================================*/
+#if 1 /*============================================================Ì½Í·Â¼ÈëÓë¶ÁÈ¡º¯Êı============================================================*/
 /*******************************************************************************
 * Function Name : INT8U Add_TT_ID(INT8U *pInBuff)
-* Description   : å¢åŠ ä¸€ä¸ªID,å¦‚æœè¦å¢åŠ çš„IDå·å·²ç»å­˜åœ¨ï¼Œåˆ™ç›´æ¥è¿”å›ã€‚
+* Description   : Ôö¼ÓÒ»¸öID,Èç¹ûÒªÔö¼ÓµÄIDºÅÒÑ¾­´æÔÚ£¬ÔòÖ±½Ó·µ»Ø¡£
 *
-* Input         : pInBuff: æŒ‡å‘IDå·å­—èŠ‚ä¸²çš„æŒ‡é’ˆã€‚	è¿™é‡Œçš„pInBuffä¸º FF FF +ä¸¤å­—èŠ‚çš„TT_ID
+* Input         : pInBuff: Ö¸ÏòIDºÅ×Ö½Ú´®µÄÖ¸Õë¡£	ÕâÀïµÄpInBuffÎª FF FF +Á½×Ö½ÚµÄTT_ID
 *
-* Return        : 1 :æ ‡è¯†æ‰§è¡ŒæˆåŠŸ
+* Return        : 1 :±êÊ¶Ö´ĞĞ³É¹¦
 *******************************************************************************/
 INT8U Add_TT_ID(INT8U *pInBuff)	
 {
 	INT8U INDEX=0;
 	INT8U i=0;
 	
-	INDEX=CMP_TT_ID(pInBuff+2);													//åœ¨ç´¢å¼•è¡¨ä¸­æŸ¥æ‰¾ï¼Œå¹¶è¿”å›ç´¢å¼•
-	if(INDEX==0xFF)																//æœªæ‰¾åˆ°åŒ¹é…çš„IDï¼Œè¯´æ˜æœªå½•å…¥
+	INDEX=CMP_TT_ID(pInBuff+2);													//ÔÚË÷Òı±íÖĞ²éÕÒ£¬²¢·µ»ØË÷Òı
+	if(INDEX==0xFF)																//Î´ÕÒµ½Æ¥ÅäµÄID£¬ËµÃ÷Î´Â¼Èë
 	{
-		for(i=0;i<55;i++)														//å¯»æ‰¾ç¬¬ä¸€ä¸ªç©ºä½
+		for(i=0;i<55;i++)														//Ñ°ÕÒµÚÒ»¸ö¿ÕÎ»
 		{
 			if(TT_Info.TT_ID[i][0]!=0) continue;
-			if(TT_Info.TT_ID[i][1]!=0) continue;								//å·²è¢«å é¢†
+			if(TT_Info.TT_ID[i][1]!=0) continue;								//ÒÑ±»Õ¼Áì
 			
-			memcpy(TT_Info.TT_ID[i],pInBuff+2,2);								//ç©ºä½ç½®ï¼Œå°†IDå¡«å…¥
-			TT_Info.TT_Count+=1;												//å½•å…¥è®¡æ•°åŠ 1
-			return BSP_WriteDataToFm(TT_Count_Addr,&TT_Info.TT_Count,sizeof(TT_Info));		//å†™å…¥é“ç”µ
+			memcpy(TT_Info.TT_ID[i],pInBuff+2,2);								//¿ÕÎ»ÖÃ£¬½«IDÌîÈë
+			TT_Info.TT_Count+=1;												//Â¼Èë¼ÆÊı¼Ó1
+			return BSP_WriteDataToFm(TT_Count_Addr,&TT_Info.TT_Count,sizeof(TT_Info));		//Ğ´ÈëÌúµç
 		}
 	}	
-	return 1;																	//åœ¨å·²å½•å…¥åˆ—è¡¨ä¸­èƒ½æ‰¾åˆ°ï¼Œæ— éœ€é‡å¤å½•å…¥							
+	return 1;																	//ÔÚÒÑÂ¼ÈëÁĞ±íÖĞÄÜÕÒµ½£¬ÎŞĞèÖØ¸´Â¼Èë							
 }
 
 /*******************************************************************************
 * Function Name : INT8U Delete_TT_ID(INT8U *pInBuff)	
-* Description   : å¯»æ‰¾ä¸€ä¸ªå·²å½•å…¥çš„æ¢å¤´IDï¼Œè‹¥æœ‰åˆ é™¤ä¹‹
+* Description   : Ñ°ÕÒÒ»¸öÒÑÂ¼ÈëµÄÌ½Í·ID£¬ÈôÓĞÉ¾³ıÖ®
 *
-* Input         : pInBuff: æŒ‡å‘IDå·å­—èŠ‚ä¸²çš„æŒ‡é’ˆã€‚	è¿™é‡Œçš„pInBuffä¸º FF FF +ä¸¤å­—èŠ‚çš„TT_ID
+* Input         : pInBuff: Ö¸ÏòIDºÅ×Ö½Ú´®µÄÖ¸Õë¡£	ÕâÀïµÄpInBuffÎª FF FF +Á½×Ö½ÚµÄTT_ID
 *
-* Return        : 1 :æ ‡è¯†æ‰§è¡ŒæˆåŠŸ
+* Return        : 1 :±êÊ¶Ö´ĞĞ³É¹¦
 *******************************************************************************/
 INT8U Delete_TT_ID(INT8U *pInBuff)	
 {
@@ -642,154 +642,154 @@ INT8U Delete_TT_ID(INT8U *pInBuff)
 	INT16U	TT_Data_Addr=0;
 	
 	INDEX=CMP_TT_ID(&pInBuff[2]);
-	if(INDEX==0xFF)		return 1;												//æœªæ‰¾åˆ°åŒ¹é…çš„IDï¼Œè¯´æ˜æœªå½•å…¥ï¼Œæ— éœ€åˆ é™¤ï¼Œç›´æ¥è¿”å›æˆåŠŸ
+	if(INDEX==0xFF)		return 1;												//Î´ÕÒµ½Æ¥ÅäµÄID£¬ËµÃ÷Î´Â¼Èë£¬ÎŞĞèÉ¾³ı£¬Ö±½Ó·µ»Ø³É¹¦
 	else{		
-		memset(TT_Info.TT_ID[INDEX],0,2);										//åˆ é™¤å¯¹åº”çš„æ¢å¤´ID
-		TT_Info.TT_Count-=1;													//èƒ½æ‰¾åˆ°ç´¢å¼•åˆ™Countä¸€å®šå¤§äº0
-		TT_Data_Addr=Sample_Data_Addr+One_TT_Sample_Data_Len*INDEX;				//å¯¹åº”æ¢å¤´åœ¨é“ç”µä¸­å­˜å‚¨é‡‡é›†æ•°æ®çš„èµ·å§‹ä½ç½®
-		BSP_FM_Erase(TT_Data_Addr,One_TT_Sample_Data_Len);						//åŒæ—¶åˆ é™¤å¯¹åº”æ¢å¤´åŸé‡‡é›†æ•°æ®ï¼Œé¿å…å†å½•å…¥æ–°çš„æ¢å¤´å ç”¨äº†è¯¥ä½ç½®è€Œé€ æˆæ··ä¹±
-		return BSP_WriteDataToFm(TT_Count_Addr,&TT_Info.TT_Count,sizeof(TT_Info));			//å†™å…¥é“ç”µ
+		memset(TT_Info.TT_ID[INDEX],0,2);										//É¾³ı¶ÔÓ¦µÄÌ½Í·ID
+		TT_Info.TT_Count-=1;													//ÄÜÕÒµ½Ë÷ÒıÔòCountÒ»¶¨´óÓÚ0
+		TT_Data_Addr=Sample_Data_Addr+One_TT_Sample_Data_Len*INDEX;				//¶ÔÓ¦Ì½Í·ÔÚÌúµçÖĞ´æ´¢²É¼¯Êı¾İµÄÆğÊ¼Î»ÖÃ
+		BSP_FM_Erase(TT_Data_Addr,One_TT_Sample_Data_Len);						//Í¬Ê±É¾³ı¶ÔÓ¦Ì½Í·Ô­²É¼¯Êı¾İ£¬±ÜÃâÔÙÂ¼ÈëĞÂµÄÌ½Í·Õ¼ÓÃÁË¸ÃÎ»ÖÃ¶øÔì³É»ìÂÒ
+		return BSP_WriteDataToFm(TT_Count_Addr,&TT_Info.TT_Count,sizeof(TT_Info));			//Ğ´ÈëÌúµç
 	}																									
 }
 
 /*******************************************************************************
 * Function Name : INT8U Delete_All_TT_ID(void)		
-* Description   : åˆ é™¤æ‰€æœ‰å·²å½•å…¥çš„æ¢å¤´
+* Description   : É¾³ıËùÓĞÒÑÂ¼ÈëµÄÌ½Í·
 *
-* Input         : æ— 
-* Return        : 1 :æ ‡è¯†æ‰§è¡ŒæˆåŠŸ
+* Input         : ÎŞ
+* Return        : 1 :±êÊ¶Ö´ĞĞ³É¹¦
 *******************************************************************************/
 INT8U Delete_All_TT_ID(void)	
 {
-	memset(&TT_Info.TT_Count,0,sizeof(TT_Info));								//æ¸…ç©ºæ¢å¤´ä¿¡æ¯ç»“æ„ä½“												
-	BSP_FM_Erase(Sample_Manage_Addr,Sample_Manage_Len);							//åŒæ—¶æ¸…é™¤é‡‡æ ·ç®¡ç†ç»“æ„ä½“ï¼ˆæ¢å¤´éƒ½æ¸…ç©ºäº†ï¼Œä¿å­˜çš„æ•°æ®ä¸æ–°çš„æ¢å¤´ä¹Ÿæ— æ³•å¯¹åº”ä¸Šï¼Œåº”ä¸¢å¼ƒåŸæ¥çš„æ•°æ®ï¼‰
-	return BSP_WriteDataToFm(TT_Count_Addr,&TT_Info.TT_Count,sizeof(TT_Info));	//å†™å…¥é“ç”µ																							
+	memset(&TT_Info.TT_Count,0,sizeof(TT_Info));								//Çå¿ÕÌ½Í·ĞÅÏ¢½á¹¹Ìå												
+	BSP_FM_Erase(Sample_Manage_Addr,Sample_Manage_Len);							//Í¬Ê±Çå³ı²ÉÑù¹ÜÀí½á¹¹Ìå£¨Ì½Í·¶¼Çå¿ÕÁË£¬±£´æµÄÊı¾İÓëĞÂµÄÌ½Í·Ò²ÎŞ·¨¶ÔÓ¦ÉÏ£¬Ó¦¶ªÆúÔ­À´µÄÊı¾İ£©
+	return BSP_WriteDataToFm(TT_Count_Addr,&TT_Info.TT_Count,sizeof(TT_Info));	//Ğ´ÈëÌúµç																							
 }
 
 /*******************************************************************************
 * Function Name : INT8U Read_TT_Num_Or_ID(INT16U ID,INT8U *pOutBuff)		
-* Description   : è¯»å–æŒ‡å®šæ¢å¤´ID
+* Description   : ¶ÁÈ¡Ö¸¶¨Ì½Í·ID
 *
-* Input         : IDï¼šPCä¸²å£å‘ä¸‹æ¥çš„è¯»å–æ¢å¤´ä¸ªæ•°æˆ–IDçš„ä»£å·		pOutBuff:ä¼ å‡ºæ¢å¤´IDçš„ä½ç½®->ç”¨äºç»„å¸§å›å¤
-* Return        : pOutBuffæ•°æ®é•¿åº¦
+* Input         : ID£ºPC´®¿Ú·¢ÏÂÀ´µÄ¶ÁÈ¡Ì½Í·¸öÊı»òIDµÄ´úºÅ		pOutBuff:´«³öÌ½Í·IDµÄÎ»ÖÃ->ÓÃÓÚ×éÖ¡»Ø¸´
+* Return        : pOutBuffÊı¾İ³¤¶È
 *******************************************************************************/
 INT8U Read_TT_Num_Or_ID(INT16U ID,INT8U *pOutBuff)	
 {	
 	INT8U INDEX=0;
-	if(ID==0x1100)																//è¯»å–æ¢å¤´ä¸ªæ•°
+	if(ID==0x1100)																//¶ÁÈ¡Ì½Í·¸öÊı
 	{
 		pOutBuff[0]=TT_Info.TT_Count;	
 		return 1;
 	}
 		
-	INDEX=ID-0x1101;															//IDèŒƒå›´0x1101~0x1137å¯¹åº”çš„æ˜¯ç´¢å¼•ä½ç½®æ˜¯0~54	
-	pOutBuff[0]=0xFF;															//ä¸ŠæŠ¥ä¸²å£çš„IDå‰ä¸¤ä½éœ€æ·»åŠ FF
+	INDEX=ID-0x1101;															//ID·¶Î§0x1101~0x1137¶ÔÓ¦µÄÊÇË÷ÒıÎ»ÖÃÊÇ0~54	
+	pOutBuff[0]=0xFF;															//ÉÏ±¨´®¿ÚµÄIDÇ°Á½Î»ĞèÌí¼ÓFF
 	pOutBuff[1]=0xFF;
-	memcpy(pOutBuff+2,&TT_Info.TT_ID[INDEX],2);									//æŒ‰ç…§ç´¢å¼•è£…å¡«å¯¹åº”çš„æ¢å¤´ID
-	return 4;																	//IDä¸º4ä¸ªå­—èŠ‚		
+	memcpy(pOutBuff+2,&TT_Info.TT_ID[INDEX],2);									//°´ÕÕË÷Òı×°Ìî¶ÔÓ¦µÄÌ½Í·ID
+	return 4;																	//IDÎª4¸ö×Ö½Ú		
 }
 #endif
 
 /*******************************************************************************
-åç§°ï¼švoid FM_Space_Usage(void)
-åŠŸèƒ½ï¼šè¾“å‡ºé“ç”µç©ºé—´å ç”¨ä¿¡æ¯ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid FM_Space_Usage(void)
+¹¦ÄÜ£ºÊä³öÌúµç¿Õ¼äÕ¼ÓÃĞÅÏ¢¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void FM_Space_Usage(void)
 {
 	TCHAR   chars[256]={0};
 	
-	sprintf(chars, "ç³»ç»Ÿå‚æ•°é…ç½®åŒºK0å·²ä½¿ç”¨%då­—èŠ‚ï¼ˆ%d%%USEDï¼‰\r\n",FM_K0_End_Addr,100*FM_K0_End_Addr/0x400);
+	sprintf(chars, "ÏµÍ³²ÎÊıÅäÖÃÇøK0ÒÑÊ¹ÓÃ%d×Ö½Ú£¨%d%%USED£©\r\n",FM_K0_End_Addr,100*FM_K0_End_Addr/0x400);
 	BspUartWrite(2,(INT8U*)chars,strlen(chars));OSTimeDly(1);
 
-	sprintf(chars, "æ¸©åº¦é‡‡æ ·æ•°æ®åŒºK1-K7å·²ä½¿ç”¨%då­—èŠ‚ï¼ˆ%d%%USEDï¼‰\r\n",FM_K1_K7_End_Addr-0x400,100*(FM_K1_K7_End_Addr-0x400)/0x1C00);
+	sprintf(chars, "ÎÂ¶È²ÉÑùÊı¾İÇøK1-K7ÒÑÊ¹ÓÃ%d×Ö½Ú£¨%d%%USED£©\r\n",FM_K1_K7_End_Addr-0x400,100*(FM_K1_K7_End_Addr-0x400)/0x1C00);
 	BspUartWrite(2,(INT8U*)chars,strlen(chars));OSTimeDly(1);
 	
-	sprintf(chars, "ç»Ÿè®¡ï¼šé“ç”µå·²ä½¿ç”¨%då­—èŠ‚ï¼ˆ%d%%USEDï¼‰\r\n",FM_K1_K7_End_Addr-0x400+FM_K0_End_Addr,100*(FM_K1_K7_End_Addr-0x400+FM_K0_End_Addr)/0x2000);
+	sprintf(chars, "Í³¼Æ£ºÌúµçÒÑÊ¹ÓÃ%d×Ö½Ú£¨%d%%USED£©\r\n",FM_K1_K7_End_Addr-0x400+FM_K0_End_Addr,100*(FM_K1_K7_End_Addr-0x400+FM_K0_End_Addr)/0x2000);
 	BspUartWrite(2,(INT8U*)chars,strlen(chars));OSTimeDly(1);
 }
 
 /*******************************************************************************
-åç§°ï¼švoid Print_Config(INT8U cmd)
-åŠŸèƒ½ï¼šä»485æ‰“å°LTEå‚æ•°ï¼šå‚æ•°é…ç½®ç»“æ„ä½“&ä¸»ç«™IPåœ°å€ã€ç«¯å£å·å’Œå¡å·é…ç½®ç»“æ„ä½“
-å…¥å‚ï¼šINT8U cmdï¼Œ0ï¼šå…³é—­æ‰“å°ï¼›1ï¼šå¼€å¯æ‰“å°
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid Print_Config(INT8U cmd)
+¹¦ÄÜ£º´Ó485´òÓ¡LTE²ÎÊı£º²ÎÊıÅäÖÃ½á¹¹Ìå&Ö÷Õ¾IPµØÖ·¡¢¶Ë¿ÚºÅºÍ¿¨ºÅÅäÖÃ½á¹¹Ìå
+Èë²Î£ºINT8U cmd£¬0£º¹Ø±Õ´òÓ¡£»1£º¿ªÆô´òÓ¡
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/	
 void Print_Config(INT8U cmd)
 {
 	TCHAR	temp[200]={0},version[4]={0};
 	
-	if(!cmd) return;															//è‹¥æ‰“å°å…³é—­ï¼Œè¿”å›
+	if(!cmd) return;															//Èô´òÓ¡¹Ø±Õ£¬·µ»Ø
 	
 	version[3] = VERSION & 0xFF;
 	version[2] = (VERSION>>8) & 0xFF;
 	version[1] = (VERSION>>16) & 0xFF;
-	version[0] = (VERSION>>24) & 0xFF;											//ç‰ˆæœ¬å·å®å®šä¹‰ï¼Œç‚¹é­”æœ¯æ£’		
-	sprintf(temp, "\r\n---------->>æ‰“å°è®¾å¤‡ä¿¡æ¯<<----------\r\n");
-	sprintf(temp+strlen(temp), "ç³»ç»Ÿç‰ˆæœ¬ï¼š%c%c.%c.%c\r\n\r\n",version[0],version[1],version[2],version[3]);
+	version[0] = (VERSION>>24) & 0xFF;											//°æ±¾ºÅºê¶¨Òå£¬µãÄ§Êõ°ô		
+	sprintf(temp, "\r\n---------->>´òÓ¡Éè±¸ĞÅÏ¢<<----------\r\n");
+	sprintf(temp+strlen(temp), "ÏµÍ³°æ±¾£º%c%c.%c.%c\r\n\r\n",version[0],version[1],version[2],version[3]);
 	
-	/*æ‰“å°æœ¬åœ°æ—¶é—´*/
-	RtcGetChinaStdTimeStruct(&gRtcTime);										//ä»æ—¶é’ŸèŠ¯ç‰‡å–å¾—RTCæ—¶é—´
-	sprintf(temp+strlen(temp), "æœ¬åœ°æ—¶é—´ï¼š20%Xå¹´%Xæœˆ%Xæ—¥ %02X:%02X:%02X\r\n",gRtcTime.Year,gRtcTime.Month,gRtcTime.Day,gRtcTime.Hour,gRtcTime.Minute,gRtcTime.Second);
+	/*´òÓ¡±¾µØÊ±¼ä*/
+	RtcGetChinaStdTimeStruct(&gRtcTime);										//´ÓÊ±ÖÓĞ¾Æ¬È¡µÃRTCÊ±¼ä
+	sprintf(temp+strlen(temp), "±¾µØÊ±¼ä£º20%XÄê%XÔÂ%XÈÕ %02X:%02X:%02X\r\n",gRtcTime.Year,gRtcTime.Month,gRtcTime.Day,gRtcTime.Hour,gRtcTime.Minute,gRtcTime.Second);
 	BspUartWrite(2,(INT8U*)temp,strlen(temp));
 
-	/*æ‰“å°è£…ç½®å·ç Device_Number*/
+	/*´òÓ¡×°ÖÃºÅÂëDevice_Number*/
 	sprintf(temp, "\r\n");
-	sprintf(temp+strlen(temp), "è£…ç½®å·ç ï¼š%c%c%c%c%c%c\r\n",Device_Number[0],Device_Number[1],Device_Number[2],Device_Number[3],Device_Number[4],Device_Number[5]);
+	sprintf(temp+strlen(temp), "×°ÖÃºÅÂë£º%c%c%c%c%c%c\r\n",Device_Number[0],Device_Number[1],Device_Number[2],Device_Number[3],Device_Number[4],Device_Number[5]);
 	BspUartWrite(2,(INT8U*)temp,strlen(temp));
 
-	/*æ‰“å°ä¸»ç«™IPåœ°å€ã€ç«¯å£å·å’Œå¡å·é…ç½®ç»“æ„ä½“IP_Config*/
+	/*´òÓ¡Ö÷Õ¾IPµØÖ·¡¢¶Ë¿ÚºÅºÍ¿¨ºÅÅäÖÃ½á¹¹ÌåIP_Config*/
 	sprintf(temp, "\r\n");
-	sprintf(temp+strlen(temp), "ä¸»ç«™IPï¼š%d.%d.%d.%d	",IP_Config.IP_addr_1[0],IP_Config.IP_addr_1[1],IP_Config.IP_addr_1[2],IP_Config.IP_addr_1[3]);
-	sprintf(temp+strlen(temp), "ç«¯å£å·ï¼š%d	",(IP_Config.PortNum_1[0]<<8)+IP_Config.PortNum_1[1]);
-	sprintf(temp+strlen(temp), "APNï¼š%s\r\n", APN);
-	sprintf(temp+strlen(temp), "ä¸»ç«™å¡å·ï¼š%X%X%X%X%X%X\r\n",IP_Config.CardNum_1[0],IP_Config.CardNum_1[1],IP_Config.CardNum_1[2],IP_Config.CardNum_1[3],IP_Config.CardNum_1[4],IP_Config.CardNum_1[5]);
+	sprintf(temp+strlen(temp), "Ö÷Õ¾IP£º%d.%d.%d.%d	",IP_Config.IP_addr_1[0],IP_Config.IP_addr_1[1],IP_Config.IP_addr_1[2],IP_Config.IP_addr_1[3]);
+	sprintf(temp+strlen(temp), "¶Ë¿ÚºÅ£º%d	",(IP_Config.PortNum_1[0]<<8)+IP_Config.PortNum_1[1]);
+	sprintf(temp+strlen(temp), "APN£º%s\r\n", APN);
+	sprintf(temp+strlen(temp), "Ö÷Õ¾¿¨ºÅ£º%X%X%X%X%X%X\r\n",IP_Config.CardNum_1[0],IP_Config.CardNum_1[1],IP_Config.CardNum_1[2],IP_Config.CardNum_1[3],IP_Config.CardNum_1[4],IP_Config.CardNum_1[5]);
 	BspUartWrite(2,(INT8U*)temp,strlen(temp));	
 	
-	/*æ‰“å°å‚æ•°é…ç½®ç»“æ„ä½“Config*/
+	/*´òÓ¡²ÎÊıÅäÖÃ½á¹¹ÌåConfig*/
 	sprintf(temp, "\r\n");
-	sprintf(temp+strlen(temp), "è£…ç½®å¯†ç ï¼š%c%c%c%c\r\n",Config.Password[0],Config.Password[1],Config.Password[2],Config.Password[3]);
-	sprintf(temp+strlen(temp), "å¿ƒè·³é—´éš”ï¼š%dåˆ†é’Ÿ\r\n",Config.BeatTime[0]);
-	sprintf(temp+strlen(temp), "é‡‡é›†é—´éš”ï¼š%dåˆ†é’Ÿ\r\n",(Config.ScanInterval[0]<<8)+Config.ScanInterval[1]);
-	sprintf(temp+strlen(temp), "ä¼‘çœ æ—¶é•¿ï¼š%dåˆ†é’Ÿ\r\n",(Config.SleepTime[0]<<8)+Config.SleepTime[1]);
-	sprintf(temp+strlen(temp), "åœ¨çº¿æ—¶é•¿ï¼š%dåˆ†é’Ÿ\r\n",(Config.OnlineTime[0]<<8)+Config.OnlineTime[1]);
-	sprintf(temp+strlen(temp), "é‡å¯æ—¶é—´ï¼š%dæ—¥%dæ—¶%dåˆ†(0æ—¥è¡¨ç¤ºæ¯å¤©)\r\n",Config.ResetTime[0],Config.ResetTime[1],Config.ResetTime[2]);
-	sprintf(temp+strlen(temp), "å¯†æ–‡éªŒè¯ï¼š%c%c%c%c\r\n",Config.SecurityCode[0],Config.SecurityCode[1],Config.SecurityCode[2],Config.SecurityCode[3]);
+	sprintf(temp+strlen(temp), "×°ÖÃÃÜÂë£º%c%c%c%c\r\n",Config.Password[0],Config.Password[1],Config.Password[2],Config.Password[3]);
+	sprintf(temp+strlen(temp), "ĞÄÌø¼ä¸ô£º%d·ÖÖÓ\r\n",Config.BeatTime[0]);
+	sprintf(temp+strlen(temp), "²É¼¯¼ä¸ô£º%d·ÖÖÓ\r\n",(Config.ScanInterval[0]<<8)+Config.ScanInterval[1]);
+	sprintf(temp+strlen(temp), "ĞİÃßÊ±³¤£º%d·ÖÖÓ\r\n",(Config.SleepTime[0]<<8)+Config.SleepTime[1]);
+	sprintf(temp+strlen(temp), "ÔÚÏßÊ±³¤£º%d·ÖÖÓ\r\n",(Config.OnlineTime[0]<<8)+Config.OnlineTime[1]);
+	sprintf(temp+strlen(temp), "ÖØÆôÊ±¼ä£º%dÈÕ%dÊ±%d·Ö(0ÈÕ±íÊ¾Ã¿Ìì)\r\n",Config.ResetTime[0],Config.ResetTime[1],Config.ResetTime[2]);
+	sprintf(temp+strlen(temp), "ÃÜÎÄÑéÖ¤£º%c%c%c%c\r\n",Config.SecurityCode[0],Config.SecurityCode[1],Config.SecurityCode[2],Config.SecurityCode[3]);
 	BspUartWrite(2,(INT8U*)temp,strlen(temp));
 	
-	/*æ‰“å°åŠŸèƒ½é…ç½®å‚æ•°FUN_Config*/
+	/*´òÓ¡¹¦ÄÜÅäÖÃ²ÎÊıFUN_Config*/
 	sprintf(temp, "\r\n");
-	sprintf(temp+strlen(temp), "å¯ç”¨åŠŸèƒ½ï¼š%XH,%XH",FUN_Config[0],FUN_Config[1]);
+	sprintf(temp+strlen(temp), "ÆôÓÃ¹¦ÄÜ£º%XH,%XH",FUN_Config[0],FUN_Config[1]);
 	BspUartWrite(2,(INT8U*)temp,strlen(temp));
 	
-	/*æ‰“å°æµé‡ç»Ÿè®¡ä¿¡æ¯Local_FLow_Data*/
+	/*´òÓ¡Á÷Á¿Í³¼ÆĞÅÏ¢Local_FLow_Data*/
 	sprintf(temp, "\r\n\r\n");
-	sprintf(temp+strlen(temp), "æ¯æœˆå¥—é¤æµé‡ï¼š%d KB\r\n",MONTHLY_FLOW<<10);
-	sprintf(temp+strlen(temp), "ä»Šæ—¥å·²ç”¨æµé‡ï¼š%d KB\r\n",Local_FLow_Data.Flow_Day_Used_B/1024);
-	sprintf(temp+strlen(temp), "æœ¬æœˆå·²ç”¨æµé‡ï¼š%d KB\r\n",Local_FLow_Data.Flow_Month_Used_B/1024);
-	sprintf(temp+strlen(temp), "æœ¬æœˆå‰©ä½™æµé‡ï¼š%d KB\r\n\r\n",(MONTHLY_FLOW<<10)-Local_FLow_Data.Flow_Month_Used_B/1024);
+	sprintf(temp+strlen(temp), "Ã¿ÔÂÌ×²ÍÁ÷Á¿£º%d KB\r\n",MONTHLY_FLOW<<10);
+	sprintf(temp+strlen(temp), "½ñÈÕÒÑÓÃÁ÷Á¿£º%d KB\r\n",Local_FLow_Data.Flow_Day_Used_B/1024);
+	sprintf(temp+strlen(temp), "±¾ÔÂÒÑÓÃÁ÷Á¿£º%d KB\r\n",Local_FLow_Data.Flow_Month_Used_B/1024);
+	sprintf(temp+strlen(temp), "±¾ÔÂÊ£ÓàÁ÷Á¿£º%d KB\r\n\r\n",(MONTHLY_FLOW<<10)-Local_FLow_Data.Flow_Month_Used_B/1024);
 	BspUartWrite(2,(INT8U*)temp,strlen(temp));
 	
-	/*æ‰“å°ç”µå‹ä¿¡æ¯*/
-	Get_Voltage_MCUtemp_Data( 3 );											//è·å–ç”µæ± ç”µå‹æ•°æ®å’Œå•ç‰‡æœºæ¸©åº¦
+	/*´òÓ¡µçÑ¹ĞÅÏ¢*/
+	Get_Voltage_MCUtemp_Data( 3 );											//»ñÈ¡µç³ØµçÑ¹Êı¾İºÍµ¥Æ¬»úÎÂ¶È
 	OSTimeDly(1);
 }
 
 /*******************************************************************************
-åç§°ï¼švoid DrawSysLogo(void)
-åŠŸèƒ½ï¼šä»485æ‰“å° BTC logo
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid DrawSysLogo(void)
+¹¦ÄÜ£º´Ó485´òÓ¡ BTC logo
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void DrawSysLogo(void)
 {
 	TCHAR	temp[500]={0};
 	
-	if(SYS==0)	/*æ ¹æ®å®å®šä¹‰SYSåˆ¤æ–­*/
+	if(SYS==0)	/*¸ù¾İºê¶¨ÒåSYSÅĞ¶Ï*/
 	{
 		sprintf(temp, 			   "                   / .]]]OOOOOO]]].\r\n");                     
 		sprintf(temp+strlen(temp), "                ]OOOOOOOOOOOOOOOOOOOOOO]\r\n");
@@ -822,7 +822,7 @@ void DrawSysLogo(void)
 		sprintf(temp+strlen(temp), "           \\OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO[\r\n");            
 		sprintf(temp+strlen(temp), "              [OOOOOOOOOOOOOOOOOOOOOOOOOO[\r\n");               
 		sprintf(temp+strlen(temp), "                  ,[OOOOOOOOOOOOOOOO[`\r\n");     
-		BspUartWrite(2,(INT8U*)temp,strlen(temp));OSTimeDly(10);					//å»¶æ—¶è¦å¤Ÿï¼Œå¦åˆ™ä¼šå¼‚å¸¸
+		BspUartWrite(2,(INT8U*)temp,strlen(temp));OSTimeDly(10);					//ÑÓÊ±Òª¹»£¬·ñÔò»áÒì³£
 	}
 	else if(SYS==1)
 	{	
@@ -845,20 +845,20 @@ void DrawSysLogo(void)
 		sprintf(temp+strlen(temp), "S::::::SSSSSS:::::S    YYYY:::::YYYY    S::::::SSSSSS:::::S1::::::::::1\r\n");
 		sprintf(temp+strlen(temp), "S:::::::::::::::SS     Y:::::::::::Y    S:::::::::::::::SS 1::::::::::1\r\n");
 		sprintf(temp+strlen(temp), " SSSSSSSSSSSSSSS       YYYYYYYYYYYYY     SSSSSSSSSSSSSSS   111111111111\r\n");
-		BspUartWrite(2,(INT8U*)temp,strlen(temp));OSTimeDly(10);					//å»¶æ—¶è¦å¤Ÿï¼Œå¦åˆ™ä¼šå¼‚å¸¸
+		BspUartWrite(2,(INT8U*)temp,strlen(temp));OSTimeDly(10);					//ÑÓÊ±Òª¹»£¬·ñÔò»áÒì³£
 	}
 	
-	sprintf(temp,"\r\nç¼–è¯‘æ—¶é—´ï¼š%s %s\r\n",__DATE__,__TIME__);
+	sprintf(temp,"\r\n±àÒëÊ±¼ä£º%s %s\r\n",__DATE__,__TIME__);
 	BspUartWrite(2,(INT8U*)temp,strlen(temp));OSTimeDly(1);						
 }
 
-#if 1 /*============================================================FATFSåº”ç”¨å‡½æ•°============================================================*/
+#if 1 /*============================================================FATFSÓ¦ÓÃº¯Êı============================================================*/
 /*******************************************************************************
-åç§°ï¼šFRESULT scan_files (char* path)
-åŠŸèƒ½ï¼šæ‰«ææ–‡ä»¶å¤¹ï¼Œæ‰“å°æ‰€æœ‰æ–‡ä»¶å¤¹ã€å­æ–‡ä»¶å¤¹ã€æ–‡ä»¶åã€‚
-å…¥å‚ï¼šchar* pathï¼Œè¦æ‰«æçš„è·¯å¾„
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šFRESULT
+Ãû³Æ£ºFRESULT scan_files (char* path)
+¹¦ÄÜ£ºÉ¨ÃèÎÄ¼ş¼Ğ£¬´òÓ¡ËùÓĞÎÄ¼ş¼Ğ¡¢×ÓÎÄ¼ş¼Ğ¡¢ÎÄ¼şÃû¡£
+Èë²Î£ºchar* path£¬ÒªÉ¨ÃèµÄÂ·¾¶
+³ö²Î£ºÎŞ
+·µ»Ø£ºFRESULT
 *******************************************************************************/
 FRESULT scan_files (
     char* path        /* Start node to be scanned (***also used as work area***) */
@@ -878,7 +878,7 @@ FRESULT scan_files (
             if (fno.fattrib & AM_DIR) {                    						/* It is a directory */
                 i = strlen(path);
                 sprintf(&path[i], "/%s", fno.fname);
-				/*æ‰“å°ç›®å½•å*/
+				/*´òÓ¡Ä¿Â¼Ãû*/
 				BspUartWrite(2,(INT8U*)path,strlen(path));
 //				BspUartWrite(2,(INT8U*)fno.fname,strlen(fno.fname));
 				BspUartWrite(2,SIZE_OF("\r\n"));
@@ -886,7 +886,7 @@ FRESULT scan_files (
                 if (res != FR_OK) break;
                 path[i] = 0;
             } else {                                       						/* It is a file. */
-				/*æ‰“å°æ–‡ä»¶å*/
+				/*´òÓ¡ÎÄ¼şÃû*/
 //				printf("%s/%s\n", path, fno.fname);
 				BspUartWrite(2,(INT8U*)path,strlen(path));
 				BspUartWrite(2,SIZE_OF("/"));
@@ -902,11 +902,11 @@ FRESULT scan_files (
 }
 
 /*******************************************************************************
-åç§°ï¼šFRESULT Dir_Maintenance (void)
-åŠŸèƒ½ï¼šç›®å½•ç»´æŠ¤ã€‚å›ºå®šç”ŸæˆSUB1~SUB31å…±31ä¸ªæ–‡ä»¶å¤¹ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šFRESULT
+Ãû³Æ£ºFRESULT Dir_Maintenance (void)
+¹¦ÄÜ£ºÄ¿Â¼Î¬»¤¡£¹Ì¶¨Éú³ÉSUB1~SUB31¹²31¸öÎÄ¼ş¼Ğ¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£ºFRESULT
 *******************************************************************************/
 FRESULT Dir_Maintenance (void)
 {
@@ -916,79 +916,79 @@ FRESULT Dir_Maintenance (void)
 	DIR dir;
 	char path[256];
 	
-	BspUartWrite(2,SIZE_OF("\r\n->å¼€å§‹ç›®å½•ç»´æŠ¤<-\r\n"));OSTimeDly(1);
+	BspUartWrite(2,SIZE_OF("\r\n->¿ªÊ¼Ä¿Â¼Î¬»¤<-\r\n"));OSTimeDly(1);
 	res = f_mount(&fs, "", 1);	/* Mode option 0:Do not mount (delayed mount), 1:Mount immediately */
-	if (res == FR_OK) res = f_opendir(&dir, "/");                       		//è¿›å…¥æ ¹ç›®å½•
-	else if(!Fault_Manage.F_STORAGE)											//æŒ‚è½½å¤±è´¥
+	if (res == FR_OK) res = f_opendir(&dir, "/");                       		//½øÈë¸ùÄ¿Â¼
+	else if(!Fault_Manage.F_STORAGE)											//¹ÒÔØÊ§°Ü
 	{
-		NW_Fault_Manage(STORAGE_F, FAULT_STA);									//å­˜å‚¨æ•…éšœå‘ç”Ÿæ—¶å¤„ç†æµç¨‹
-		BspUartWrite(2,SIZE_OF("æŒ‚è½½å¤±è´¥ï¼<-\r\n"));OSTimeDly(1);
+		NW_Fault_Manage(STORAGE_F, FAULT_STA);									//´æ´¢¹ÊÕÏ·¢ÉúÊ±´¦ÀíÁ÷³Ì
+		BspUartWrite(2,SIZE_OF("¹ÒÔØÊ§°Ü£¡<-\r\n"));OSTimeDly(1);
 		return res;
 	}
-	if(Fault_Manage.F_STORAGE) NW_Fault_Manage(STORAGE_F, NOFAULT_STA);			//å‘ç”Ÿè¿‡å­˜å‚¨æ•…éšœï¼Œä¸ŠæŠ¥æ•…éšœæ¢å¤
+	if(Fault_Manage.F_STORAGE) NW_Fault_Manage(STORAGE_F, NOFAULT_STA);			//·¢Éú¹ı´æ´¢¹ÊÕÏ£¬ÉÏ±¨¹ÊÕÏ»Ö¸´
     if (res == FR_OK) 
 	{
-	/*ç›®å½•ç»´æŠ¤*/
-		for(i=1;i<32;i++)														//éå†31ä¸ªç›®å½•
+	/*Ä¿Â¼Î¬»¤*/
+		for(i=1;i<32;i++)														//±éÀú31¸öÄ¿Â¼
 		{	
-		/*ç”Ÿæˆç›®å½•å*/
-			sprintf(path, "/SUB%d", i);											//åˆ›å»ºç›®å½•ååˆ°*path
-			fnlen = strlen(path)-1;												//ç›®å½•åçš„é•¿åº¦ï¼Œ-1æŒ‡â€œ/â€
+		/*Éú³ÉÄ¿Â¼Ãû*/
+			sprintf(path, "/SUB%d", i);											//´´½¨Ä¿Â¼Ãûµ½*path
+			fnlen = strlen(path)-1;												//Ä¿Â¼ÃûµÄ³¤¶È£¬-1Ö¸¡°/¡±
 			
-		/*åˆ¤æ–­ç›®å½•æ˜¯å¦å­˜åœ¨*/
+		/*ÅĞ¶ÏÄ¿Â¼ÊÇ·ñ´æÔÚ*/
 			res = f_readdir(&dir, &fno);                   						/* Read a directory item */
 			if (res != FR_OK ) 				  									/* Break on error */
 			{
-				BspUartWrite(2,SIZE_OF("f_readdir()è¯»å–ç›®å½•å¤±è´¥ï¼Œç»´æŠ¤ä¸­æ­¢\r\n"));OSTimeDly(1);
+				BspUartWrite(2,SIZE_OF("f_readdir()¶ÁÈ¡Ä¿Â¼Ê§°Ü£¬Î¬»¤ÖĞÖ¹\r\n"));OSTimeDly(1);
 				return res;
 			}
 			else if (fno.fname[0] == 0) 				  						/* End of dir */
 			{
-			/*ç›®å½•ä¸å­˜åœ¨ï¼Œåˆ›å»ºæ–°ç›®å½•*/
-				res = f_mkdir(path);											//åˆ›å»ºç›®å½•
-				BspUartWrite(2,SIZE_OF("åˆ›å»ºå­ç›®å½•ï¼š"));
-				BspUartWrite(2,(INT8U*)path+1,fnlen);							/*æ‰“å°ç›®å½•å*/				
-				if (res != FR_OK) BspUartWrite(2,SIZE_OF("å¤±è´¥\r\n"));
-				else BspUartWrite(2,SIZE_OF("æˆåŠŸ\r\n"));
+			/*Ä¿Â¼²»´æÔÚ£¬´´½¨ĞÂÄ¿Â¼*/
+				res = f_mkdir(path);											//´´½¨Ä¿Â¼
+				BspUartWrite(2,SIZE_OF("´´½¨×ÓÄ¿Â¼£º"));
+				BspUartWrite(2,(INT8U*)path+1,fnlen);							/*´òÓ¡Ä¿Â¼Ãû*/				
+				if (res != FR_OK) BspUartWrite(2,SIZE_OF("Ê§°Ü\r\n"));
+				else BspUartWrite(2,SIZE_OF("³É¹¦\r\n"));
 				OSTimeDly(1);
 			}
 			else if (fno.fattrib & AM_DIR)                   					/* It is a directory */
 			{  
-			/*æ‰¾åˆ°ä¸€ä¸ªç›®å½•ï¼Œåˆ¤æ–­ç›®å½•æ˜¯å¦ä¸ºæ‰€éœ€å¹¶å¤„ç†*/
-				if(memcmp(&fno.fname,path+1,fnlen)) 							//è‹¥ç›®å½•ä¸ä¸ºSUBi
+			/*ÕÒµ½Ò»¸öÄ¿Â¼£¬ÅĞ¶ÏÄ¿Â¼ÊÇ·ñÎªËùĞè²¢´¦Àí*/
+				if(memcmp(&fno.fname,path+1,fnlen)) 							//ÈôÄ¿Â¼²»ÎªSUBi
 				{
-				/*ç›®å½•ä¸å¯¹ï¼Œåˆ æ‰å¹¶æ–°å»ºç›®å½•*/
-					f_unlink(fno.fname);										//ç§»é™¤å½“å‰ç›®å½•
-					BspUartWrite(2,SIZE_OF("åˆ›å»ºå­ç›®å½•ï¼š"));
-					BspUartWrite(2,(INT8U*)path+1,fnlen);						/*æ‰“å°ç›®å½•å*/				
-					res = f_mkdir(path);										//åˆ›å»ºç›®å½•
-					if(res==FR_EXIST) BspUartWrite(2,SIZE_OF("å·²å­˜åœ¨ï¼ˆè¢«å…¶ä»–ç›®å½•æ’é˜Ÿäº†ï¼‰\r\n"));
-					else if(res != FR_OK) BspUartWrite(2,SIZE_OF("å¤±è´¥\r\n"));
-					else  BspUartWrite(2,SIZE_OF("æˆåŠŸ\r\n"));
+				/*Ä¿Â¼²»¶Ô£¬É¾µô²¢ĞÂ½¨Ä¿Â¼*/
+					f_unlink(fno.fname);										//ÒÆ³ıµ±Ç°Ä¿Â¼
+					BspUartWrite(2,SIZE_OF("´´½¨×ÓÄ¿Â¼£º"));
+					BspUartWrite(2,(INT8U*)path+1,fnlen);						/*´òÓ¡Ä¿Â¼Ãû*/				
+					res = f_mkdir(path);										//´´½¨Ä¿Â¼
+					if(res==FR_EXIST) BspUartWrite(2,SIZE_OF("ÒÑ´æÔÚ£¨±»ÆäËûÄ¿Â¼²å¶ÓÁË£©\r\n"));
+					else if(res != FR_OK) BspUartWrite(2,SIZE_OF("Ê§°Ü\r\n"));
+					else  BspUartWrite(2,SIZE_OF("³É¹¦\r\n"));
 				} else 															
 				{	
-				/*ç›®å½•å·²å­˜åœ¨*/
-					BspUartWrite(2,SIZE_OF("å­ç›®å½•ï¼š"));
-					BspUartWrite(2,(INT8U*)fno.fname,strlen(fno.fname));		/*æ‰“å°ç›®å½•å*/
-					BspUartWrite(2,SIZE_OF("å·²å­˜åœ¨\r\n"));
+				/*Ä¿Â¼ÒÑ´æÔÚ*/
+					BspUartWrite(2,SIZE_OF("×ÓÄ¿Â¼£º"));
+					BspUartWrite(2,(INT8U*)fno.fname,strlen(fno.fname));		/*´òÓ¡Ä¿Â¼Ãû*/
+					BspUartWrite(2,SIZE_OF("ÒÑ´æÔÚ\r\n"));
 				}
 				OSTimeDly(1);
-			} else i--;															//æ˜¯æ–‡ä»¶åˆ™è·³è¿‡
+			} else i--;															//ÊÇÎÄ¼şÔòÌø¹ı
 		}
 		f_closedir(&dir);
 	}
 	/* Unregister work area */
     f_mount(0, "", 0);
-	BspUartWrite(2,SIZE_OF("->ç›®å½•ç»´æŠ¤ç»“æŸ<-\r\n\r\n"));OSTimeDly(1);
+	BspUartWrite(2,SIZE_OF("->Ä¿Â¼Î¬»¤½áÊø<-\r\n\r\n"));OSTimeDly(1);
 	return res;
 }
 
 /*******************************************************************************
-åç§°ï¼švoid Dir_Test(void)
-åŠŸèƒ½ï¼šç›®å½•æµ‹è¯•ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid Dir_Test(void)
+¹¦ÄÜ£ºÄ¿Â¼²âÊÔ¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void Dir_Test(void)
 {
@@ -997,22 +997,22 @@ void Dir_Test(void)
 	
     res = f_mount(&fs, "", 1);	/* Mode option 0:Do not mount (delayed mount), 1:Mount immediately */
 //    if (res == FR_OK) {
-//		/*åˆ›å»ºç›®å½•*/
+//		/*´´½¨Ä¿Â¼*/
 //		res = f_mkdir("sub1");
-//		if (res) {BspUartWrite(2,SIZE_OF("åˆ›å»ºsub1å­ç›®å½•å¤±è´¥\r\n"));OSTimeDly(1);}
+//		if (res) {BspUartWrite(2,SIZE_OF("´´½¨sub1×ÓÄ¿Â¼Ê§°Ü\r\n"));OSTimeDly(1);}
 //		res = f_mkdir("sub1/sub2");
-//		if (res) {BspUartWrite(2,SIZE_OF("åˆ›å»ºsub1/sub2å­ç›®å½•å¤±è´¥\r\n"));OSTimeDly(1);}
+//		if (res) {BspUartWrite(2,SIZE_OF("´´½¨sub1/sub2×ÓÄ¿Â¼Ê§°Ü\r\n"));OSTimeDly(1);}
 //		res = f_mkdir("sub1/sub2/sub3");
-//		if (res) {BspUartWrite(2,SIZE_OF("åˆ›å»ºsub1/sub2/sub3å­ç›®å½•å¤±è´¥\r\n"));OSTimeDly(1);}
+//		if (res) {BspUartWrite(2,SIZE_OF("´´½¨sub1/sub2/sub3×ÓÄ¿Â¼Ê§°Ü\r\n"));OSTimeDly(1);}
 //		if (res == FR_OK) {
-//			/*åœ¨"/sub1/sub2/sub3"ç›®å½•ä¸‹æŸ¥æ‰¾æ–‡ä»¶*/
+//			/*ÔÚ"/sub1/sub2/sub3"Ä¿Â¼ÏÂ²éÕÒÎÄ¼ş*/
 //			strcpy(chars, "/sub1/sub2/sub3");
 //			res = scan_files(chars);
 //		 }
 //	 }
 
     if (res == FR_OK) {		
-		/*åœ¨"/"ç›®å½•ä¸‹æŸ¥æ‰¾æ–‡ä»¶*/
+		/*ÔÚ"/"Ä¿Â¼ÏÂ²éÕÒÎÄ¼ş*/
         strcpy(chars, "");
         res = scan_files(chars);
     }
@@ -1020,16 +1020,16 @@ void Dir_Test(void)
 	/* Unregister work area */
     f_mount(0, "", 0);
 	
-	BspUartWrite(2,SIZE_OF("Dir_Test()æµ‹è¯•ç»“æŸ\r\n"));OSTimeDly(1);
+	BspUartWrite(2,SIZE_OF("Dir_Test()²âÊÔ½áÊø\r\n"));OSTimeDly(1);
 }
 
 /*******************************************************************************
-åç§°ï¼švoid Check_Getfree(void)
-åŠŸèƒ½ï¼šæ£€æŸ¥æ˜¯å¦éœ€è¦æ ¼å¼åŒ–å¹¶æ‰§è¡Œã€‚åŒ…å«æ–°è®¾å¤‡å†™å…¥Configã€Unreport_Indexå‡ºå‚é»˜è®¤å‚æ•°ã€‚
-å°†å¤–éƒ¨FLASHæœªæ ¼å¼åŒ–çš„è®¾å¤‡è®¤å®šä¸ºæ–°è®¾å¤‡ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid Check_Getfree(void)
+¹¦ÄÜ£º¼ì²éÊÇ·ñĞèÒª¸ñÊ½»¯²¢Ö´ĞĞ¡£°üº¬ĞÂÉè±¸Ğ´ÈëConfig¡¢Unreport_Index³ö³§Ä¬ÈÏ²ÎÊı¡£
+½«Íâ²¿FLASHÎ´¸ñÊ½»¯µÄÉè±¸ÈÏ¶¨ÎªĞÂÉè±¸¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void Check_Getfree(void)
 {
@@ -1040,40 +1040,40 @@ void Check_Getfree(void)
 	
     /* Register work area */
     res = f_mount(&fs, "", 0);
-	if (res) BspUartWrite(2,SIZE_OF("f_open() æŒ‚è½½å¤±è´¥ï¼\r\n"));
+	if (res) BspUartWrite(2,SIZE_OF("f_open() ¹ÒÔØÊ§°Ü£¡\r\n"));
 	
     /* Get volume information and free clusters of drive 1 */
     res = f_getfree("", &fre_clust, &fs0);
 
     if (res)	//res
 	{
-		BspUartWrite(2,SIZE_OF("f_getfree() é”™è¯¯ï¼Œæ­£åœ¨æ ¼å¼åŒ–å¤–éƒ¨FLASHâ€¦â€¦\r\n"));
+		BspUartWrite(2,SIZE_OF("f_getfree() ´íÎó£¬ÕıÔÚ¸ñÊ½»¯Íâ²¿FLASH¡­¡­\r\n"));
 		/* Create FAT volume */
 		res = f_mkfs(	"", 													// If it has no drive number in it, it means the default drive.
 						FM_FAT|FM_SFD, 											// Specifies the format option in combination of FM_FAT, FM_FAT32, FM_EXFAT and bitwise-or of these three, FM_ANY. If two or more types are specified, one out of them will be selected depends on the volume size and au.
 						4096, 													// The valid value is n times the sector size.
 						work, 													// Pointer to the working buffer used for the format process
 						sizeof work);											// It needs to be the sector size of the corresponding physical drive at least.
-		if (res) BspUartWrite(2,SIZE_OF("f_mkfs() æ ¼å¼åŒ–é”™è¯¯ï¼\r\n"));
-		else BspUartWrite(2,SIZE_OF("f_mkfs() æ ¼å¼åŒ–æˆåŠŸï¼\r\n"));
+		if (res) BspUartWrite(2,SIZE_OF("f_mkfs() ¸ñÊ½»¯´íÎó£¡\r\n"));
+		else BspUartWrite(2,SIZE_OF("f_mkfs() ¸ñÊ½»¯³É¹¦£¡\r\n"));
 		
-//		/*æ“¦é™¤åŸæœ‰ç³»ç»Ÿå‚æ•°é…ç½®â€”â€”é“ç”µä¸èƒ½æ“¦é™¤ï¼ä¹Ÿæ— éœ€æ“¦é™¤ï¼*/
-//		BSP_FM_Erase(FM_Start_Addr,0x400*8);									//æ“¦é™¤æ•´ä¸ªé“ç”µå‚¨å­˜
-//		BspUartWrite(2,SIZE_OF("é“ç”µæ“¦é™¤æˆåŠŸï¼\r\n"));
+//		/*²Á³ıÔ­ÓĞÏµÍ³²ÎÊıÅäÖÃ¡ª¡ªÌúµç²»ÄÜ²Á³ı£¡Ò²ÎŞĞè²Á³ı£¡*/
+//		BSP_FM_Erase(FM_Start_Addr,0x400*8);									//²Á³ıÕû¸öÌúµç´¢´æ
+//		BspUartWrite(2,SIZE_OF("Ìúµç²Á³ı³É¹¦£¡\r\n"));
 		
-		/*è¯»å–æ»šç ä½œä¸ºè£…ç½®å·ç */
-		Read_NFlash(Device_Number_Flash_Addr, &id, 1);							//è¯»å–æ»šç ï¼Œä½œä¸ºåˆå§‹è£…ç½®å·ç 
-		NW_DeviceNumberToAscii(id, &Device_Number[2]);							//æŠŠ16è¿›åˆ¶è½¬ä¸ºASCIIï¼Œå­˜å…¥Device_Number[2]
-		BSP_WriteDataToFm(Device_Number_Addr,Device_Number,Device_Number_Len);	//è£…ç½®å·ç å†™å…¥é“ç”µ
+		/*¶ÁÈ¡¹öÂë×÷Îª×°ÖÃºÅÂë*/
+		Read_NFlash(Device_Number_Flash_Addr, &id, 1);							//¶ÁÈ¡¹öÂë£¬×÷Îª³õÊ¼×°ÖÃºÅÂë
+		NW_DeviceNumberToAscii(id, &Device_Number[2]);							//°Ñ16½øÖÆ×ªÎªASCII£¬´æÈëDevice_Number[2]
+		BSP_WriteDataToFm(Device_Number_Addr,Device_Number,Device_Number_Len);	//×°ÖÃºÅÂëĞ´ÈëÌúµç
 		
-		/*æ–°è®¾å¤‡å†™å…¥Configã€Unreport_Indexå‡ºå‚é»˜è®¤å‚æ•°*/
-		BSP_WriteDataToFm(Config_Addr,(u8*)&Config,Config_Len);					//å†™ä¸€æ¬¡é»˜è®¤è®¾ç½®ï¼Œåç»­ä¸Šä½æœºè”æœºä¿®æ”¹å†™å…¥é“ç”µä¹‹åï¼Œæ¯æ¬¡ä¸Šç”µè¯»å‡ºæ¥çš„æ‰æ˜¯æ­£ç¡®çš„ï¼Œä¸ç„¶é¦–æ¬¡è¯»å°†å…¨æ˜¯0
-		BSP_WriteDataToFm(IP_Config_Addr,(u8*)&IP_Config,IP_Config_Len);		//å†™ä¸€æ¬¡è‡ªå®šä¹‰çš„IPé»˜è®¤è®¾ç½®
-		BSP_WriteDataToFm(APN_Addr, APN, APN_Len);								//å†™ä¸€æ¬¡è‡ªå®šä¹‰çš„APNé»˜è®¤è®¾ç½®
-		BSP_WriteDataToFm(FUN_Config_Addr,FUN_Config,FUN_Config_Len);			//å†™é»˜è®¤åŠŸèƒ½é…ç½®å‚æ•°
-		memset(Unreport_Index,0xFF,Unreport_Index_Len);							//å†™FF
-		BSP_WriteDataToFm(Unreport_Index_Addr,(u8*)Unreport_Index,Unreport_Index_Len);	//æœªä¸ŠæŠ¥æ•°æ®ç´¢å¼•è¡¨å…¨å†™æˆå·²ä¸ŠæŠ¥ï¼ˆæ‰€æœ‰ä½å†™1ï¼‰
-		BspUartWrite(2,SIZE_OF("é“ç”µå†™å‡ºå‚é…ç½®æˆåŠŸï¼\r\n"));
+		/*ĞÂÉè±¸Ğ´ÈëConfig¡¢Unreport_Index³ö³§Ä¬ÈÏ²ÎÊı*/
+		BSP_WriteDataToFm(Config_Addr,(u8*)&Config,Config_Len);					//Ğ´Ò»´ÎÄ¬ÈÏÉèÖÃ£¬ºóĞøÉÏÎ»»úÁª»úĞŞ¸ÄĞ´ÈëÌúµçÖ®ºó£¬Ã¿´ÎÉÏµç¶Á³öÀ´µÄ²ÅÊÇÕıÈ·µÄ£¬²»È»Ê×´Î¶Á½«È«ÊÇ0
+		BSP_WriteDataToFm(IP_Config_Addr,(u8*)&IP_Config,IP_Config_Len);		//Ğ´Ò»´Î×Ô¶¨ÒåµÄIPÄ¬ÈÏÉèÖÃ
+		BSP_WriteDataToFm(APN_Addr, APN, APN_Len);								//Ğ´Ò»´Î×Ô¶¨ÒåµÄAPNÄ¬ÈÏÉèÖÃ
+		BSP_WriteDataToFm(FUN_Config_Addr,FUN_Config,FUN_Config_Len);			//Ğ´Ä¬ÈÏ¹¦ÄÜÅäÖÃ²ÎÊı
+		memset(Unreport_Index,0xFF,Unreport_Index_Len);							//Ğ´FF
+		BSP_WriteDataToFm(Unreport_Index_Addr,(u8*)Unreport_Index,Unreport_Index_Len);	//Î´ÉÏ±¨Êı¾İË÷Òı±íÈ«Ğ´³ÉÒÑÉÏ±¨£¨ËùÓĞÎ»Ğ´1£©
+		BspUartWrite(2,SIZE_OF("ÌúµçĞ´³ö³§ÅäÖÃ³É¹¦£¡\r\n"));
 	}
 	
 	/* Get total sectors and free sectors */
@@ -1081,19 +1081,19 @@ void Check_Getfree(void)
 	fre_sect = fre_clust * fs0->csize;
 	
 	/* Print the free space (assuming 4K bytes/sector) */
-    sprintf(chars,"å¤–éƒ¨FLASHï¼š%10lu KiB total drive space.\n%10lu KiB available.  ï¼ˆ%d%%USEDï¼‰\r\n", tot_sect*4, fre_sect*4, 100*(tot_sect-fre_sect)/tot_sect);	
-	BspUartWrite(2,(INT8U*)chars,strlen(chars));								//æ‰“å°
+    sprintf(chars,"Íâ²¿FLASH£º%10lu KiB total drive space.\n%10lu KiB available.  £¨%d%%USED£©\r\n", tot_sect*4, fre_sect*4, 100*(tot_sect-fre_sect)/tot_sect);	
+	BspUartWrite(2,(INT8U*)chars,strlen(chars));								//´òÓ¡
 	
 	/* Unregister work area */
     f_mount(0, "", 0);
 }
 
 /*******************************************************************************
-åç§°ï¼švoid Dir_Test(void)
-åŠŸèƒ½ï¼šæ‰“å¼€å…³é—­æ–‡ä»¶ã€è¯»å†™æ–‡ä»¶æµ‹è¯•ã€‚
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid Dir_Test(void)
+¹¦ÄÜ£º´ò¿ª¹Ø±ÕÎÄ¼ş¡¢¶ÁĞ´ÎÄ¼ş²âÊÔ¡£
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void File_Test(void)
 {
@@ -1105,18 +1105,18 @@ void File_Test(void)
 	
     /* Create a file as new */
     res = f_open(&fil, "hello.txt", FA_OPEN_ALWAYS | FA_READ | FA_WRITE );
-    if (res) BspUartWrite(2,SIZE_OF("f_open() æ‰“å¼€æ–‡ä»¶é”™è¯¯ï¼\r\n"));
+    if (res) BspUartWrite(2,SIZE_OF("f_open() ´ò¿ªÎÄ¼ş´íÎó£¡\r\n"));
 	
     /* Write a message */
     f_write(&fil, "Hello, World!\r\n", 15, &bw);
-    if (bw != 15) BspUartWrite(2,SIZE_OF("f_write() å†™æ–‡ä»¶é”™è¯¯ï¼\r\n"));
+    if (bw != 15) BspUartWrite(2,SIZE_OF("f_write() Ğ´ÎÄ¼ş´íÎó£¡\r\n"));
 	
 	/* File read/write pointer */
 	res = f_lseek(&fil, 0);
 	
     /* Read a message */
     f_read(&fil, read_buff, 100, &bw);
-    if (bw != 15) BspUartWrite(2,SIZE_OF("f_read() è¯»æ–‡ä»¶é”™è¯¯ï¼\r\n"));	
+    if (bw != 15) BspUartWrite(2,SIZE_OF("f_read() ¶ÁÎÄ¼ş´íÎó£¡\r\n"));	
 
     /* Close the file */
     f_close(&fil);
@@ -1124,8 +1124,8 @@ void File_Test(void)
     /* Unregister work area */
     f_mount(0, "", 0);
 	
-	BspUartWrite(2,SIZE_OF("File_Test()æµ‹è¯•ç»“æŸ\r\n"));OSTimeDly(1);
+	BspUartWrite(2,SIZE_OF("File_Test()²âÊÔ½áÊø\r\n"));OSTimeDly(1);
 }
 
 #endif
-/*============================================================FATFSåº”ç”¨å‡½æ•° end============================================================*/
+/*============================================================FATFSÓ¦ÓÃº¯Êı end============================================================*/

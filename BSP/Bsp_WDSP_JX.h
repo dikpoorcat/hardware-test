@@ -4,22 +4,22 @@
 #include "Meteorology.h"
 #include "Bsp_UART.h"
 
-//-----------------------------------é£é€Ÿé£å‘ç”µæºæ§åˆ¶å¼•è„š----------------------------------------
+//-----------------------------------·çËÙ·çÏòµçÔ´¿ØÖÆÒı½Å----------------------------------------
 //OK	ZE
-#define PWWDSP_PIN		GPIO_Pin_12									//é£é€Ÿé£å‘ç”µæºä½¿èƒ½å¼•è„š
+#define PWWDSP_PIN		GPIO_Pin_12									//·çËÙ·çÏòµçÔ´Ê¹ÄÜÒı½Å
 #define PWWDSP_Port		GPIOA
-#define PWWDSPEN()		GPIO_SetBits(PWWDSP_Port,PWWDSP_PIN)		//å¼€å¯ç”µæº
-#define PWWDSPDIS()		GPIO_ResetBits(PWWDSP_Port,PWWDSP_PIN)		//å…³é—­ç”µæº
+#define PWWDSPEN()		GPIO_SetBits(PWWDSP_Port,PWWDSP_PIN)		//¿ªÆôµçÔ´
+#define PWWDSPDIS()		GPIO_ResetBits(PWWDSP_Port,PWWDSP_PIN)		//¹Ø±ÕµçÔ´
 #define PWWDSP_Port_CK	RCC_APB2Periph_GPIOA
 
 
 
-//æ— å¤´æ–‡ä»¶çš„å¤–éƒ¨å‡½æ•°å£°æ˜
+//ÎŞÍ·ÎÄ¼şµÄÍâ²¿º¯ÊıÉùÃ÷
 extern void B485_init(unsigned int rate);
 extern INT8U B485WaitData(INT8U WaitTime);
 
 
-//å‡½æ•°å£°æ˜
+//º¯ÊıÉùÃ÷
 void WDSP_LowPower(void);
 void PowerWDSPPin_Init(void);
 INT8U Get_WDSP_Data( INT16U *OutBuff_WindSpeed, INT16U *OutBuff_WindDirection );

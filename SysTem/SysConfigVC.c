@@ -21,9 +21,9 @@ void RCC_Configuration(void)
 		RCC_DeInit();
 		RCC_HSICmd(RCC_HSE_ON);   
     FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
-	/*000b Zero wait state, if 0 < SYSCLKâ‰¤ 24 MHz
-      001b One wait state, if 24 MHz < SYSCLK â‰¤ 48 MHz
-      010b Two wait states, if 48 MHz < SYSCLK â‰¤ 72 MHz*/
+	/*000b Zero wait state, if 0 < SYSCLK¡Ü 24 MHz
+      001b One wait state, if 24 MHz < SYSCLK ¡Ü 48 MHz
+      010b Two wait states, if 48 MHz < SYSCLK ¡Ü 72 MHz*/
     /* Flash 1 wait state */
     FLASH_SetLatency(FLASH_Latency_1);
  	
@@ -42,7 +42,7 @@ void RCC_Configuration(void)
     RCC_SYSCLKConfig(RCC_SYSCLKSource_HSI);
 
     /* Wait till PLL is used as system clock source */
-    while(RCC_GetSYSCLKSource() != 0x00)//ç›´æŽ¥ä½¿ç”¨HSI 8M
+    while(RCC_GetSYSCLKSource() != 0x00)//Ö±½ÓÊ¹ÓÃHSI 8M
     {
     }
  }
@@ -71,16 +71,16 @@ void RCC_Configuration(void)
   {
  LSEON:
  	  HSEStartUpStatus=ERROR; 	  
-	  RCC_HSEConfig(RCC_HSE_OFF);//å…³é—­
-	  RCC_LSEConfig(RCC_LSE_ON);//æ‰“å¼€ å†…éƒ¨RC 
+	  RCC_HSEConfig(RCC_HSE_OFF);//¹Ø±Õ
+	  RCC_LSEConfig(RCC_LSE_ON);//´ò¿ª ÄÚ²¿RC 
 	  for(i=0;i<100;i++);
   }
      /* Enable Prefetch Buffer */
     FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
 
-	/*000b Zero wait state, if 0 < SYSCLKâ‰¤ 24 MHz
-      001b One wait state, if 24 MHz < SYSCLK â‰¤ 48 MHz
-      010b Two wait states, if 48 MHz < SYSCLK â‰¤ 72 MHz*/
+	/*000b Zero wait state, if 0 < SYSCLK¡Ü 24 MHz
+      001b One wait state, if 24 MHz < SYSCLK ¡Ü 48 MHz
+      010b Two wait states, if 48 MHz < SYSCLK ¡Ü 72 MHz*/
     /* Flash 1 wait state */
     FLASH_SetLatency(FLASH_Latency_1);
  	
@@ -98,10 +98,10 @@ void RCC_Configuration(void)
 
     /* HSE oscillator clock selected as PLL input clock */
     /* PLLCLK = 4MHz * 9 = 36 MHz */
-	if(HSEStartUpStatus==ERROR)//ä½¿ç”¨å†…éƒ¨ 
+	if(HSEStartUpStatus==ERROR)//Ê¹ÓÃÄÚ²¿ 
     	RCC_PLLConfig(RCC_PLLSource_HSI_Div2, RCC_PLLMul_2);
 	else
-		  RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_2);//ä½¿ç”¨å¤–éƒ¨
+		  RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_2);//Ê¹ÓÃÍâ²¿
 
     /* Enable PLL */ 
     RCC_PLLCmd(ENABLE);
@@ -126,12 +126,12 @@ void RCC_Configuration(void)
  
  
  /***************************************************************************************
-** å‡½æ•°åç§°: Tmr_TickInit
-** åŠŸèƒ½æè¿°: OS tick åˆå§‹åŒ–å‡½æ•°
-** å‚    æ•°: None
-** è¿” å›ž å€¼: None       
-** ä½œã€€  è€…: ç½—è¾‰è”
-** æ—¥  ã€€æœŸ: 2007å¹´11æœˆ28æ—¥
+** º¯ÊýÃû³Æ: Tmr_TickInit
+** ¹¦ÄÜÃèÊö: OS tick ³õÊ¼»¯º¯Êý
+** ²Î    Êý: None
+** ·µ »Ø Öµ: None       
+** ×÷¡¡  Õß: ÂÞ»ÔÁª
+** ÈÕ  ¡¡ÆÚ: 2007Äê11ÔÂ28ÈÕ
 ****************************************************************************************/
 void Tmr_TickInit (unsigned int fhz)
 {
@@ -149,7 +149,7 @@ void Tmr_TickInit (unsigned int fhz)
 
 /*******************************************************************************
 * Function Name  : void RCC_Configuration4M(void)
-* Description    : é…ç½®ç³»ç»Ÿæ—¶é’Ÿä¸º4M
+* Description    : ÅäÖÃÏµÍ³Ê±ÖÓÎª4M
 * Input          : None		  
 * Output         : None
 * Contributor: 
@@ -172,11 +172,11 @@ void RCC_Configuration4M(void)
   {
  
 			HSEStartUpStatus=ERROR; 	  
-			RCC_HSEConfig(RCC_HSE_OFF);//å…³é—­
-//			RCC_LSEConfig(RCC_LSE_ON);//æ‰“å¼€ å†…éƒ¨RC              //ï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼ŸLSE??	  
-			RCC_HSICmd(ENABLE);									//æ›¿æ¢æˆHSI   	
+			RCC_HSEConfig(RCC_HSE_OFF);//¹Ø±Õ
+//			RCC_LSEConfig(RCC_LSE_ON);//´ò¿ª ÄÚ²¿RC              //£¿£¿£¿£¿£¿£¿£¿£¿LSE??	  
+			RCC_HSICmd(ENABLE);									//Ìæ»»³ÉHSI   	
 			for(i=0;i<100;i++);
-			RCC_SYSCLKConfig(RCC_SYSCLKSource_HSI);				//ä½¿ç”¨HSI 8M
+			RCC_SYSCLKConfig(RCC_SYSCLKSource_HSI);				//Ê¹ÓÃHSI 8M
 			while(RCC_GetSYSCLKSource() != 0x00)
 			{
 			}
@@ -202,9 +202,9 @@ void RCC_Configuration4M(void)
 	/* ADCCLK = PCLK2 / 4 */
 	RCC_ADCCLKConfig(RCC_PCLK2_Div4);
 	
-	RCC_LSICmd(ENABLE);   //ä½¿èƒ½å†…éƒ¨ä½Žé€Ÿæ—¶é’Ÿ   å¤§çº¦40KHz            //LSIå¯ç”¨ï¼Œåœ¨ç‹¬ç«‹çœ‹é—¨ç‹—å’Œå†…éƒ¨RTCæ—¶å¯ç”¨
+	RCC_LSICmd(ENABLE);   //Ê¹ÄÜÄÚ²¿µÍËÙÊ±ÖÓ   ´óÔ¼40KHz            //LSIÆôÓÃ£¬ÔÚ¶ÀÁ¢¿´ÃÅ¹·ºÍÄÚ²¿RTCÊ±¿ÉÓÃ
 	temp=0;
-	while (RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET&&temp<1000)	//æ£€æŸ¥æŒ‡å®šçš„RCCæ ‡å¿—ä½è®¾ç½®ä¸Žå¦,ç­‰å¾…ä½Žé€Ÿæ™¶æŒ¯å°±ç»ª
+	while (RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET&&temp<1000)	//¼ì²éÖ¸¶¨µÄRCC±êÖ¾Î»ÉèÖÃÓë·ñ,µÈ´ýµÍËÙ¾§Õñ¾ÍÐ÷
 		{
 		temp++;			
 		}
@@ -215,7 +215,7 @@ void RCC_Configuration4M(void)
  
 /*******************************************************************************
 * Function Name  : void RCC_Configuration32M(void)
-* Description    : é…ç½®ç³»ç»Ÿæ—¶é’Ÿä¸º32M
+* Description    : ÅäÖÃÏµÍ³Ê±ÖÓÎª32M
 * Input          : None		  
 * Output         : None
 * Contributor: 
@@ -237,37 +237,37 @@ void RCC_Configuration32M(void)
   {
  LSEON:
  	  HSEStartUpStatus=ERROR; 	  
-	  RCC_HSEConfig(RCC_HSE_OFF);//å…³é—­
-	  RCC_LSEConfig(RCC_LSE_ON);//æ‰“å¼€ å†…éƒ¨RC 
+	  RCC_HSEConfig(RCC_HSE_OFF);//¹Ø±Õ
+	  RCC_LSEConfig(RCC_LSE_ON);//´ò¿ª ÄÚ²¿RC 
 	  for(i=0;i<100;i++);
   }
      /* Enable Prefetch Buffer */
     FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
 
-	  /*000b Zero wait state, if 0 < SYSCLKâ‰¤ 24 MHz
-      001b One wait state, if 24 MHz < SYSCLK â‰¤ 48 MHz
-      010b Two wait states, if 48 MHz < SYSCLK â‰¤ 72 MHz*/
+	  /*000b Zero wait state, if 0 < SYSCLK¡Ü 24 MHz
+      001b One wait state, if 24 MHz < SYSCLK ¡Ü 48 MHz
+      010b Two wait states, if 48 MHz < SYSCLK ¡Ü 72 MHz*/
     /* Flash 1 wait state */
     FLASH_SetLatency(FLASH_Latency_1);
  	
     /* HCLK = SYSCLK */
     RCC_HCLKConfig(RCC_SYSCLK_Div1); 
   
-    /* PCLK2 = HCLK / 2 */         // zzs note,æœ¬è¡Œæ³¨é‡Šæ˜¯é”™çš„
-    RCC_PCLK2Config(RCC_HCLK_Div1);   // zzs note, å®žé™…ç”¨RCC_HCLK_Div1ï¼Œè¯´æ˜Žå°±æ²¡æœ‰é™¤2ï¼Œè€Œæ˜¯PCLK2 = HCLK
+    /* PCLK2 = HCLK / 2 */         // zzs note,±¾ÐÐ×¢ÊÍÊÇ´íµÄ
+    RCC_PCLK2Config(RCC_HCLK_Div1);   // zzs note, Êµ¼ÊÓÃRCC_HCLK_Div1£¬ËµÃ÷¾ÍÃ»ÓÐ³ý2£¬¶øÊÇPCLK2 = HCLK
 
-    /* PCLK1 = HCLK / 8 */        // zzs nott,æœ¬è¡Œæ³¨é‡Šæ˜¯é”™çš„
-    RCC_PCLK1Config(RCC_HCLK_Div2);   // zzs note, å®žé™…ç”¨RCC_HCLK_Div2ï¼Œè¯´æ˜Žä¸æ˜¯é™¤2ï¼Œè€Œæ˜¯PCLK2 = HCLK/2
+    /* PCLK1 = HCLK / 8 */        // zzs nott,±¾ÐÐ×¢ÊÍÊÇ´íµÄ
+    RCC_PCLK1Config(RCC_HCLK_Div2);   // zzs note, Êµ¼ÊÓÃRCC_HCLK_Div2£¬ËµÃ÷²»ÊÇ³ý2£¬¶øÊÇPCLK2 = HCLK/2
 
 	/* ADCCLK = PCLK2 / 4 */
 	RCC_ADCCLKConfig(RCC_PCLK2_Div4); 
 
     /* HSE oscillator clock selected as PLL input clock */
     /* PLLCLK = 4MHz * 8 = 32 MHz */
-	if(HSEStartUpStatus==ERROR)//ä½¿ç”¨å†…éƒ¨ 
+	if(HSEStartUpStatus==ERROR)//Ê¹ÓÃÄÚ²¿ 
     	RCC_PLLConfig(RCC_PLLSource_HSI_Div2, RCC_PLLMul_8);
 	else
-		  RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_8);//zzs note ,ä½¿ç”¨å¤–éƒ¨çš„4Mçš„æ™¶æŒ¯ï¼Œç„¶åŽåœ¨è¿™å„¿å°†PLLå€é¢‘å› å­è®¾ä¸º8ï¼Œæœ€åŽå¾—åˆ°HCLK=SYSCLK=4M*8=32M
+		  RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_8);//zzs note ,Ê¹ÓÃÍâ²¿µÄ4MµÄ¾§Õñ£¬È»ºóÔÚÕâ¶ù½«PLL±¶ÆµÒò×ÓÉèÎª8£¬×îºóµÃµ½HCLK=SYSCLK=4M*8=32M
 
     /* Enable PLL */ 
     RCC_PLLCmd(ENABLE);
@@ -317,7 +317,7 @@ void NVIC_Configuration(void)
 	/* one bit for sub priority                    */
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_3);
 
-	/* Enable the WWDG Interruptï¼Œlowest priority */
+	/* Enable the WWDG Interrupt£¬lowest priority */
 //	NVIC_InitStructure.NVIC_IRQChannel = WWDG_IRQChannel;           // zzs open this IRQChannel
 //	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 7;
 //	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
@@ -345,7 +345,7 @@ void NVIC_Configuration(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 	
-	RTC_EXTI_INITIAL(ENABLE);										//RCTä¸­æ–­é…ç½®ï¼Œé…ç½®äº†å†…éƒ¨	äº‹ä»¶é€šé“ï¼ŒALARMä¸­æ–­	
+	RTC_EXTI_INITIAL(ENABLE);										//RCTÖÐ¶ÏÅäÖÃ£¬ÅäÖÃÁËÄÚ²¿	ÊÂ¼þÍ¨µÀ£¬ALARMÖÐ¶Ï	
 	
 	/* Enable the UART4 Interrupt */
 //	NVIC_InitStructure.NVIC_IRQChannel = UART4_IRQChannel;
@@ -356,13 +356,13 @@ void NVIC_Configuration(void)
 
 	/* Enable the UART5 Interrupt */
 //	NVIC_InitStructure.NVIC_IRQChannel = UART5_IRQChannel;
-//	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 4;  /* 485æŽ¥å£æœ‰å»¶æ—¶ï¼Œé™ä½Žä¼˜å…ˆçº§ */
+//	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 4;  /* 485½Ó¿ÚÓÐÑÓÊ±£¬½µµÍÓÅÏÈ¼¶ */
 //	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 //	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 //	NVIC_Init(&NVIC_InitStructure);
 
 	/* Enable the TIM3 Interrupt */
-//	// å®šæ—¶å™¨3ä¸­æ–­,ç”¨äºŽæŒ‰é”®æ‰«æ
+//	// ¶¨Ê±Æ÷3ÖÐ¶Ï,ÓÃÓÚ°´¼üÉ¨Ãè
 //	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQChannel;
 //	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 7;
 //	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
@@ -376,7 +376,7 @@ void NVIC_Configuration(void)
 //	 NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 //	 NVIC_Init(&NVIC_InitStructure); 
 
-// //  DMA1_Channel2_IRQChannel å¯¹å­˜å‚¨å™¨è¯»å–DMAæ“ä½œ 
+// //  DMA1_Channel2_IRQChannel ¶Ô´æ´¢Æ÷¶ÁÈ¡DMA²Ù×÷ 
 //	  NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel2_IRQChannel;
 //	  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 4;
 //	  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
@@ -389,15 +389,15 @@ void NVIC_Configuration(void)
 //	  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 //	  NVIC_Init(&NVIC_InitStructure);
 		
-//		NVIC_InitStructure.NVIC_IRQChannel= RTCAlarm_IRQChannel ;        // zzs commented this 2018.01.19  ,å¯¹é¡¹ç›®æ²¡ç”¨çš„å•°å—¦ä¸œè¥¿ï¼Œè¿˜é…ç½®æˆä¸ºä¼˜å…ˆçº§æœ€é«˜çš„ä¸­æ–­ã€‚
+//		NVIC_InitStructure.NVIC_IRQChannel= RTCAlarm_IRQChannel ;        // zzs commented this 2018.01.19  ,¶ÔÏîÄ¿Ã»ÓÃµÄ†ªàÂ¶«Î÷£¬»¹ÅäÖÃ³ÉÎªÓÅÏÈ¼¶×î¸ßµÄÖÐ¶Ï¡£
 //		NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority= 0;    
 //		NVIC_InitStructure.NVIC_IRQChannelSubPriority= 0;
 //		NVIC_InitStructure.NVIC_IRQChannelCmd= ENABLE;
 //		NVIC_Init(&NVIC_InitStructure); 
 		
 				
-		//ä½¿èƒ½RFæŽ¥æ”¶ä¸­æ–­ï¼ŒGDO0ä¸‹é™æ²¿ä¸­æ–­
-//		NVIC_InitStructure.NVIC_IRQChannel= EXTI15_10_IRQChannel ;   // zzs??? è¿™ä¸ªå’Œä¸Šé¢çš„é…ç½®æ˜¯ä¸æ˜¯é‡å¤äº†ï¼Ÿï¼Ÿï¼Ÿ
+		//Ê¹ÄÜRF½ÓÊÕÖÐ¶Ï£¬GDO0ÏÂ½µÑØÖÐ¶Ï
+//		NVIC_InitStructure.NVIC_IRQChannel= EXTI15_10_IRQChannel ;   // zzs??? Õâ¸öºÍÉÏÃæµÄÅäÖÃÊÇ²»ÊÇÖØ¸´ÁË£¿£¿£¿
 //		NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0;
 //		NVIC_InitStructure.NVIC_IRQChannelSubPriority= 1;
 //		NVIC_InitStructure.NVIC_IRQChannelCmd= ENABLE;
@@ -409,21 +409,21 @@ void NVIC_Configuration(void)
 		/* Enable WDG clocks */
 		RCC_APB1PeriphClockCmd(RCC_APB1Periph_WWDG, ENABLE);
 
-		// /* PCLK1: 5MHZ */    // zzs???,æ²¡æœ‰ä»»ä½•ä¸€ä»½æ–‡æ¡£è¯´æ˜Žè¿™ä¸ª5MHZæ€Žä¹ˆæ¥çš„ï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿ
+		// /* PCLK1: 5MHZ */    // zzs???,Ã»ÓÐÈÎºÎÒ»·ÝÎÄµµËµÃ÷Õâ¸ö5MHZÔõÃ´À´µÄ£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿
 	
-	  // zzs note,çœŸç›¸æŸ¥æ˜Žï¼š PLCK1=16M
-	  // WWDG clock counter = (PCLK1/4096)/8 =  (~6.5 ms)  */   //zzs note, é”™è¯¯çš„æ³¨é‡Š
-		/*å› æ­¤ï¼šzzs note, WWDG clock counter = (PCLK1/4096)/8 = ~488.28 Hz (~2.048 ms)  */
+	  // zzs note,ÕæÏà²éÃ÷£º PLCK1=16M
+	  // WWDG clock counter = (PCLK1/4096)/8 =  (~6.5 ms)  */   //zzs note, ´íÎóµÄ×¢ÊÍ
+		/*Òò´Ë£ºzzs note, WWDG clock counter = (PCLK1/4096)/8 = ~488.28 Hz (~2.048 ms)  */
 		WWDG_SetPrescaler(WWDG_Prescaler_8);
 
 		/* Set Window value to 0x44 */
 		WWDG_SetWindowValue(0x44);      
-    //WWDG_SetWindowValue(0x4F);   // zzs note, çª—å£å€¼xçš„å–å€¼èŒƒå›´   0x40 <= x <= 0x7F  
+    //WWDG_SetWindowValue(0x4F);   // zzs note, ´°¿ÚÖµxµÄÈ¡Öµ·¶Î§   0x40 <= x <= 0x7F  
 	
-		// /* Enable WWDG and set counter value to 0x7F, WWDG timeout = ~6.5 ms * (0x7F - 0x3F) = ~419 ms */   //zzs note, é”™è¯¯çš„æ³¨é‡Š
+		// /* Enable WWDG and set counter value to 0x7F, WWDG timeout = ~6.5 ms * (0x7F - 0x3F) = ~419 ms */   //zzs note, ´íÎóµÄ×¢ÊÍ
 	  /*zzs note, Enable WWDG and set counter value to 0x7F, WWDG timeout = ~2.048 ms * (0x7F - 0x3F) = ~131.072 ms */
-		WWDG_Enable(0x7F); // zzs note,è¿™ä¸ªæ˜¯WWDGçš„è®¡æ•°åˆå€¼ï¼Œæˆ‘ä»¬çŽ°åœ¨çš„ä½¿ç”¨å°±æ˜¯è®©å…¶ä»Ž0x7Fè®¡æ•°åˆ°0x40åŽï¼Œä»»ç”±å…¶å˜åˆ°0x3Fè€Œä¸ç®¡ï¼Œä¸»è¦å°±ç”¨å®ƒä»Ž40å˜3Fäº§ç”Ÿçš„å¤ä½ä¿¡å·äº†ã€‚
-	                       // è¯´ç™½äº†ï¼Œè¿˜åªæ˜¯æŠŠè¿™ä¸ªçª—å£çœ‹é—¨ç‹—å½“åšä¸€ä¸ªæ™®é€šçœ‹é—¨ç‹—æ¥ä½¿ç”¨äº†ä¸€ä¸‹ã€‚  
+		WWDG_Enable(0x7F); // zzs note,Õâ¸öÊÇWWDGµÄ¼ÆÊý³õÖµ£¬ÎÒÃÇÏÖÔÚµÄÊ¹ÓÃ¾ÍÊÇÈÃÆä´Ó0x7F¼ÆÊýµ½0x40ºó£¬ÈÎÓÉÆä±äµ½0x3F¶ø²»¹Ü£¬Ö÷Òª¾ÍÓÃËü´Ó40±ä3F²úÉúµÄ¸´Î»ÐÅºÅÁË¡£
+	                       // Ëµ°×ÁË£¬»¹Ö»ÊÇ°ÑÕâ¸ö´°¿Ú¿´ÃÅ¹·µ±×öÒ»¸öÆÕÍ¨¿´ÃÅ¹·À´Ê¹ÓÃÁËÒ»ÏÂ¡£  
 
 		/* Clear EWI flag */
 		WWDG_ClearFlag();
@@ -437,16 +437,16 @@ void McuSoftReset(void)
 	INT8U  	Flag_temp = HOTRST;
 	
 	BSP_InitFm(WDT_Num);
-	BSP_WriteDataToFm(Reset_Flag_Addr,&Flag_temp,1); 							//æ ‡è®°ä¸ºçƒ­å¯åŠ¨ï¼Œå†™å…¥é“ç”µ
+	BSP_WriteDataToFm(Reset_Flag_Addr,&Flag_temp,1); 							//±ê¼ÇÎªÈÈÆô¶¯£¬Ð´ÈëÌúµç
 	FM_LowPower(7);
 	
-    NVIC_SETFAULTMASK();														//å¤ä½å‰åœæ­¢ä¸­æ–­å“åº”
-	NVIC_GenerateSystemReset();													//ç³»ç»Ÿè½¯ä»¶å¤ä½ï¼ˆç«‹å³å¤ä½ï¼‰
+    NVIC_SETFAULTMASK();														//¸´Î»Ç°Í£Ö¹ÖÐ¶ÏÏìÓ¦
+	NVIC_GenerateSystemReset();													//ÏµÍ³Èí¼þ¸´Î»£¨Á¢¼´¸´Î»£©
 }
 
 /*******************************************************************************
 * Function Name  : void IWDG_Init(void)
-* Description    : å†…éƒ¨çœ‹é—¨ç‹—å¯åŠ¨ï¼Œè¦æ±‚LSI å†…éƒ¨æ—¶é’Ÿå·²ç»å¯åŠ¨
+* Description    : ÄÚ²¿¿´ÃÅ¹·Æô¶¯£¬ÒªÇóLSI ÄÚ²¿Ê±ÖÓÒÑ¾­Æô¶¯
 * Input          : None
 * Output         : None
 * Return         : None
@@ -454,17 +454,17 @@ void McuSoftReset(void)
 void IWDG_Init(void)
 {
 	#ifndef	IWDGDIS
-	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);								//è®¿é—®å†…éƒ¨å‚æ•°
-	IWDG_SetPrescaler(IWDG_Prescaler_64);										//6.5Så¤ä½
+	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);								//·ÃÎÊÄÚ²¿²ÎÊý
+	IWDG_SetPrescaler(IWDG_Prescaler_64);										//6.5S¸´Î»
 	IWDG_SetReload(0XFFF);
-	IWDG_ReloadCounter();														//å¤ä½IWDGï¼Œä»ŽFFFå¼€å§‹é‡æ–°
-	IWDG_Enable();																//å¼€å§‹è®¡æ—¶
+	IWDG_ReloadCounter();														//¸´Î»IWDG£¬´ÓFFF¿ªÊ¼ÖØÐÂ
+	IWDG_Enable();																//¿ªÊ¼¼ÆÊ±
 	#endif
 }
 
 /*******************************************************************************
 * Function Name  : void IWDG_Reset(void)
-* Description    : å†…éƒ¨çœ‹é—¨ç‹—å¤ä½
+* Description    : ÄÚ²¿¿´ÃÅ¹·¸´Î»
 * Input          : None
 * Output         : None
 * Return         : None

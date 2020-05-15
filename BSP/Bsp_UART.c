@@ -1,12 +1,12 @@
 #include "Bsp_UART.h"
  
 /*
-   ä¸²å£ä½¿ç”¨è¯´æ˜
-   1--> ç”µæºæ¿æ§åˆ¶
-   2--> 485 /232 æ‰“å° ä¸‰è€…åªèƒ½ç”¨å…¶ä¸€
-   3--> è¯»å¤´ 	  
-   4--> 3G ç­‰æ— çº¿é€šè®¯æ¨¡å—
-   5--> å¤‡ç”¨ 
+   ´®¿ÚÊ¹ÓÃËµÃ÷
+   1--> µçÔ´°å¿ØÖÆ
+   2--> 485 /232 ´òÓ¡ ÈıÕßÖ»ÄÜÓÃÆäÒ»
+   3--> ¶ÁÍ· 	  
+   4--> 3G µÈÎŞÏßÍ¨Ñ¶Ä£¿é
+   5--> ±¸ÓÃ 
 */
 
 UARTx_Ctrl_Struct   UARTx_Ctrl_Array[5];
@@ -14,8 +14,8 @@ UARTx_Ctrl_Struct   UARTx_Ctrl_Array[5];
 /* --------------------Private functions------------------------------------------------------*/
 /************************************************************************************************************************
 * Function Name : void B485_init(unsigned int rate)
-* Description   : B485ä¸²å£åˆå§‹åŒ–ï¼ˆæ ¹æ®B485DISå®å®šä¹‰è‡ªåŠ¨åˆ¤æ–­ï¼‰ã€‚
-* Input         : rate : æ³¢ç‰¹ç‡
+* Description   : B485´®¿Ú³õÊ¼»¯£¨¸ù¾İB485DISºê¶¨Òå×Ô¶¯ÅĞ¶Ï£©¡£
+* Input         : rate : ²¨ÌØÂÊ
 *
 * Return        : None
 *************************************************************************************************************************/
@@ -23,11 +23,11 @@ void B485_init(unsigned int rate)
 {
     UARTx_Setting_Struct UARTInit = {0};	
     
-#ifdef B485DIS 		/*æ³¨æ„ï¼Œæ²¡åˆå§‹åŒ–485æ—¶ä¸‡ä¸‡ä¸å¯å‘é€485æ•°æ®ï¼Œå¦åˆ™TxBusyéç©ºä¼šå¯¼è‡´æ— æ³•è¿›å…¥STOPæ¨¡å¼*/
-	if(!(TaskActive & Local_ACT)) return;										//LOCALå·²ç»ç»“æŸ
+#ifdef B485DIS 		/*×¢Òâ£¬Ã»³õÊ¼»¯485Ê±ÍòÍò²»¿É·¢ËÍ485Êı¾İ£¬·ñÔòTxBusy·Ç¿Õ»áµ¼ÖÂÎŞ·¨½øÈëSTOPÄ£Ê½*/
+	if(!(TaskActive & Local_ACT)) return;										//LOCALÒÑ¾­½áÊø
 #endif	
     if(GyBOX == NULL) GyBOX = OSMboxCreate(0);	
-	else GyBOX->OSEventPtr= (void *)0;											//æ¸…æ¶ˆæ¯é‚®ç®±ï¼Œä¸æ¸…ä¼šå¯¼è‡´è¯¯åˆ¤ ZE
+	else GyBOX->OSEventPtr= (void *)0;											//ÇåÏûÏ¢ÓÊÏä£¬²»Çå»áµ¼ÖÂÎóÅĞ ZE
 	
     UARTInit.BaudRate = rate;
     UARTInit.Parity   = BSPUART_PARITY_NO;
@@ -41,43 +41,43 @@ void B485_init(unsigned int rate)
     BSP_UART_Init(2,&UARTInit,GyBOX);
 	
 	Power485Pin_Init();
-	PWDC485EN();       															//æ‰“å¼€485éš”ç¦»ç”µæº
-	OSTimeDly(2);																//ç­‰å¾…ç”µæºç¨³å®š
+	PWDC485EN();       															//´ò¿ª485¸ôÀëµçÔ´
+	OSTimeDly(2);																//µÈ´ıµçÔ´ÎÈ¶¨
 }
 
 /******************************************************************************* 
 * Function Name  : void B485_LowPower(void)
-* Description    : 485è¿›å…¥ä½åŠŸè€—ï¼Œå¹¶å¯¹ç›¸åº”IOå£ä½œä½åŠŸè€—å¤„ç†ã€‚å…³é—­U2æ—¶é’ŸåŠå¤ç”¨æ—¶é’Ÿã€‚
-					ä¸­æ–­åœ¨å¤–é¢å·²å…³é—­ï¼Œå…³é—­å¯æœ‰æ•ˆé™ä½åŠŸè€—
+* Description    : 485½øÈëµÍ¹¦ºÄ£¬²¢¶ÔÏàÓ¦IO¿Ú×÷µÍ¹¦ºÄ´¦Àí¡£¹Ø±ÕU2Ê±ÖÓ¼°¸´ÓÃÊ±ÖÓ¡£
+					ÖĞ¶ÏÔÚÍâÃæÒÑ¹Ø±Õ£¬¹Ø±Õ¿ÉÓĞĞ§½µµÍ¹¦ºÄ
 * Input          : None 
 * Output         : None 
 * Return         : None 
 *******************************************************************************/
-void B485_LowPower(void)													//åœ¨å…³é—­ä¸²å£ä¹‹å‰ä¸€å®šè¦ä¿è¯485è¾“å‡ºå®Œæˆï¼Œæ¸…é™¤busyæ ‡å¿—ä½ï¼Œå¦åˆ™å°†å¯¼è‡´ä¸å†è¿›å…¥STOPæ¨¡å¼ï¼Œç›´åˆ°ä¸‹æ¬¡åˆå§‹åŒ–æ¸…ç©ºã€‚
+void B485_LowPower(void)													//ÔÚ¹Ø±Õ´®¿ÚÖ®Ç°Ò»¶¨Òª±£Ö¤485Êä³öÍê³É£¬Çå³ıbusy±êÖ¾Î»£¬·ñÔò½«µ¼ÖÂ²»ÔÙ½øÈëSTOPÄ£Ê½£¬Ö±µ½ÏÂ´Î³õÊ¼»¯Çå¿Õ¡£
 {
-	INT8U WaitTime = 100; 													//485ç­‰å¾…è¶…æ—¶æ—¶é—´5ç§’
+	INT8U WaitTime = 100; 													//485µÈ´ı³¬Ê±Ê±¼ä5Ãë
 	GPIO_InitTypeDef 	GPIO_InitStructure;
 	
-	/*ç­‰å¾…485å‘é€å®Œæˆ*/	
-	while( BSP_UART_TxState(2) && (WaitTime--) ) OSTimeDly(1);				//å‘æ•°æ®æ•°æ®çš„è¿‡ç¨‹çš„å»¶æ—¶ç­‰å¾…ï¼Œæœ€å¤š5ç§’
+	/*µÈ´ı485·¢ËÍÍê³É*/	
+	while( BSP_UART_TxState(2) && (WaitTime--) ) OSTimeDly(1);				//·¢Êı¾İÊı¾İµÄ¹ı³ÌµÄÑÓÊ±µÈ´ı£¬×î¶à5Ãë
 	if(WaitTime==0xff)
 	{
-		B485_init(38400);													//é‡æ–°åˆå§‹åŒ–ä»¥æ¸…TxBusyï¼Œé˜²æ­¢æ— æ³•è¿›å…¥STOPæ¨¡å¼
-		PWDC485EN();														// DCDCéš”ç¦»485æ‰“å¼€				
+		B485_init(38400);													//ÖØĞÂ³õÊ¼»¯ÒÔÇåTxBusy£¬·ÀÖ¹ÎŞ·¨½øÈëSTOPÄ£Ê½
+		PWDC485EN();														// DCDC¸ôÀë485´ò¿ª				
 		OSTimeDly(10);
-		BspUartWrite(2,SIZE_OF("è­¦å‘Šï¼šB485_LowPowerç­‰å¾…è¶…æ—¶ï¼----------------------------------\r\n"));
+		BspUartWrite(2,SIZE_OF("¾¯¸æ£ºB485_LowPowerµÈ´ı³¬Ê±£¡----------------------------------\r\n"));
 		OSTimeDly(10);
 	}
 	
-//	RCC_APB2PeriphClockCmd( RCC_APB2Periph_AFIO, DISABLE );					//ä¸å…³å¤ç”¨æ—¶é’Ÿ|RCC_APB2Periph_AFIOï¼ˆå„ä¸²å£å’ŒADéƒ½ç”¨åˆ°è¿™ä¸ªï¼‰
-	RCC_APB1PeriphClockCmd( RCC_APB1Periph_USART2, DISABLE );				//å…³é—­U2æ—¶é’Ÿ
+//	RCC_APB2PeriphClockCmd( RCC_APB2Periph_AFIO, DISABLE );					//²»¹Ø¸´ÓÃÊ±ÖÓ|RCC_APB2Periph_AFIO£¨¸÷´®¿ÚºÍAD¶¼ÓÃµ½Õâ¸ö£©
+	RCC_APB1PeriphClockCmd( RCC_APB1Periph_USART2, DISABLE );				//¹Ø±ÕU2Ê±ÖÓ
 	
 	
-	/*485ENã€TXã€RXæ¨¡æ‹Ÿè¾“å…¥*/
+	/*485EN¡¢TX¡¢RXÄ£ÄâÊäÈë*/
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;							//æ¨¡æ‹Ÿè¾“å…¥
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;							//Ä£ÄâÊäÈë
 	
-	GPIO_InitStructure.GPIO_Pin = EN485_PIN;								//485ENï¼ˆPB15ï¼‰
+	GPIO_InitStructure.GPIO_Pin = EN485_PIN;								//485EN£¨PB15£©
 	GPIO_Init(EN485_Port, &GPIO_InitStructure);								//
 	
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;								//USART2 Tx (PA2)
@@ -87,14 +87,14 @@ void B485_LowPower(void)													//åœ¨å…³é—­ä¸²å£ä¹‹å‰ä¸€å®šè¦ä¿è¯485è¾
 	GPIO_Init(GPIOA, &GPIO_InitStructure);									//
 	
 	
-	/*485ç”µæºä½¿èƒ½æ¨æŒ½è¾“å‡º*/
+	/*485µçÔ´Ê¹ÄÜÍÆÍìÊä³ö*/
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;						//æ¨æŒ½è¾“å‡º
-	PWDC485DIS();															//å…³ç”µæº
-	GPIO_InitStructure.GPIO_Pin = PWDC485_PIN;								//485ç”µæºä½¿èƒ½å£
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;						//ÍÆÍìÊä³ö
+	PWDC485DIS();															//¹ØµçÔ´
+	GPIO_InitStructure.GPIO_Pin = PWDC485_PIN;								//485µçÔ´Ê¹ÄÜ¿Ú
 	GPIO_Init(PWDC485_Port, &GPIO_InitStructure);							//
 	
-	/*å…³ä¸­æ–­*/
+	/*¹ØÖĞ¶Ï*/
 	USART_ITConfig( USART2, USART_IT_TC, DISABLE);
 	USART_ITConfig( USART2, USART_IT_RXNE, DISABLE);
 	USART_Cmd( USART2,DISABLE);	
@@ -102,7 +102,7 @@ void B485_LowPower(void)													//åœ¨å…³é—­ä¸²å£ä¹‹å‰ä¸€å®šè¦ä¿è¯485è¾
 
 /************************************************************************************************************************
 * Function Name : void UART1_PIN_CFG()  
-* Description   : UART1çš„Txã€ Rx pinè„šé…ç½®ï¼Œä½¿èƒ½æ€»çº¿ï¼Œé…ç½®ç®¡è„šå·¥ä½œæ¨¡å¼ï¼Œé€Ÿç‡ç­‰å‚æ•°ã€‚
+* Description   : UART1µÄTx¡¢ Rx pin½ÅÅäÖÃ£¬Ê¹ÄÜ×ÜÏß£¬ÅäÖÃ¹Ü½Å¹¤×÷Ä£Ê½£¬ËÙÂÊµÈ²ÎÊı¡£
 * Input         : None
 * Return        : None
 *************************************************************************************************************************/
@@ -126,7 +126,7 @@ void UART1_PIN_CFG(void)
 
 /************************************************************************************************************************
 * Function Name : void UART1_PIN_CLOSE()
-* Description   : UART1çš„Txã€ Rx pinè„šå…³é—­ï¼ˆç¦èƒ½ï¼‰
+* Description   : UART1µÄTx¡¢ Rx pin½Å¹Ø±Õ£¨½ûÄÜ£©
 * Input         : None
 * Return        : None
 *************************************************************************************************************************/
@@ -149,7 +149,7 @@ void UART1_PIN_CLOSE(void)
 
 /************************************************************************************************************************
 * Function Name : void UART2_PIN_CFG()
-* Description   : UART2çš„Txã€ Rx pinè„šé…ç½®ï¼Œä½¿èƒ½æ€»çº¿ï¼Œé…ç½®ç®¡è„šå·¥ä½œæ¨¡å¼ï¼Œé€Ÿç‡ç­‰å‚æ•°ã€‚
+* Description   : UART2µÄTx¡¢ Rx pin½ÅÅäÖÃ£¬Ê¹ÄÜ×ÜÏß£¬ÅäÖÃ¹Ü½Å¹¤×÷Ä£Ê½£¬ËÙÂÊµÈ²ÎÊı¡£
 * Input         : None
 * Return        : None
 *************************************************************************************************************************/
@@ -171,7 +171,7 @@ void UART2_PIN_CFG(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-	/*485ENï¼ˆPB15ï¼‰*/
+	/*485EN£¨PB15£©*/
 	GPIO_InitStructure.GPIO_Pin = EN485_PIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
@@ -180,7 +180,7 @@ void UART2_PIN_CFG(void)
 
 /************************************************************************************************************************
 * Function Name : void UART2_PIN_CLOSE()
-* Description   : UART2çš„Txã€ Rx pinè„šå…³é—­ï¼ˆç¦èƒ½ï¼‰
+* Description   : UART2µÄTx¡¢ Rx pin½Å¹Ø±Õ£¨½ûÄÜ£©
 * Input         : None
 * Return        : None
 *************************************************************************************************************************/
@@ -202,7 +202,7 @@ void UART2_PIN_CLOSE(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-	/*485ENï¼ˆPB15ï¼‰*/
+	/*485EN£¨PB15£©*/
 	GPIO_InitStructure.GPIO_Pin = EN485_PIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
@@ -211,7 +211,7 @@ void UART2_PIN_CLOSE(void)
 
 /************************************************************************************************************************
 * Function Name : void UART3_PIN_CFG()
-* Description   : UART3çš„Txã€ Rx pinè„šé…ç½®ï¼Œä½¿èƒ½æ€»çº¿ï¼Œé…ç½®ç®¡è„šå·¥ä½œæ¨¡å¼ï¼Œé€Ÿç‡ç­‰å‚æ•°ã€‚
+* Description   : UART3µÄTx¡¢ Rx pin½ÅÅäÖÃ£¬Ê¹ÄÜ×ÜÏß£¬ÅäÖÃ¹Ü½Å¹¤×÷Ä£Ê½£¬ËÙÂÊµÈ²ÎÊı¡£
 * Input         : None
 * Return        : None
 *************************************************************************************************************************/
@@ -236,7 +236,7 @@ void UART3_PIN_CFG(void)
 
 /************************************************************************************************************************
 * Function Name : void UART3_PIN_CLOSE()
-* Description   : UART3çš„Txã€ Rx pinè„šå…³é—­ï¼ˆç¦èƒ½ï¼‰
+* Description   : UART3µÄTx¡¢ Rx pin½Å¹Ø±Õ£¨½ûÄÜ£©
 * Input         : None
 * Return        : None
 *************************************************************************************************************************/
@@ -261,7 +261,7 @@ void UART3_PIN_CLOSE(void)
 
 /************************************************************************************************************************
 * Function Name : void UART4_PIN_CFG()
-* Description   : UART4çš„Txã€ Rx pinè„šé…ç½®ï¼Œä½¿èƒ½æ€»çº¿ï¼Œé…ç½®ç®¡è„šå·¥ä½œæ¨¡å¼ï¼Œé€Ÿç‡ç­‰å‚æ•°ã€‚
+* Description   : UART4µÄTx¡¢ Rx pin½ÅÅäÖÃ£¬Ê¹ÄÜ×ÜÏß£¬ÅäÖÃ¹Ü½Å¹¤×÷Ä£Ê½£¬ËÙÂÊµÈ²ÎÊı¡£
 * Input         : None
 * Return        : None
 *************************************************************************************************************************/
@@ -286,7 +286,7 @@ void UART4_PIN_CFG(void)
 
 /************************************************************************************************************************
 * Function Name : void UART5_PIN_CFG()
-* Description   : UART5çš„Txã€ Rx pinè„šé…ç½®ï¼Œä½¿èƒ½æ€»çº¿ï¼Œé…ç½®ç®¡è„šå·¥ä½œæ¨¡å¼ï¼Œé€Ÿç‡ç­‰å‚æ•°ã€‚
+* Description   : UART5µÄTx¡¢ Rx pin½ÅÅäÖÃ£¬Ê¹ÄÜ×ÜÏß£¬ÅäÖÃ¹Ü½Å¹¤×÷Ä£Ê½£¬ËÙÂÊµÈ²ÎÊı¡£
 * Input         : None
 * Return        : None
 *************************************************************************************************************************/
@@ -311,12 +311,12 @@ void UART5_PIN_CFG(void)
 
 /************************************************************************************************************************
 * Function Name : USART_TypeDef *GetCommHandle(INT8U ComPort)
-* Description   : ä¸²å£å·åˆ°ç»“æ„ä½“çš„æ˜ å°„ 
+* Description   : ´®¿ÚºÅµ½½á¹¹ÌåµÄÓ³Éä 
 *
 * Input         : ComPort : 1...5
 *
-* Return        : éç©ºå€¼ ï¼š 1...5å·ä¸²å£å¯¹åº”çš„èµ„æºå¥æŸ„
-*                 NULL   : å…¥å‚é”™è¯¯
+* Return        : ·Ç¿ÕÖµ £º 1...5ºÅ´®¿Ú¶ÔÓ¦µÄ×ÊÔ´¾ä±ú
+*                 NULL   : Èë²Î´íÎó
 *************************************************************************************************************************/
 USART_TypeDef *GetCommHandle(INT8U ComPort)
 {
@@ -336,10 +336,10 @@ USART_TypeDef *GetCommHandle(INT8U ComPort)
 
 /************************************************************************************************************************
 * Function Name : __inline void  MODE485_RxEnable(INT8U port)
-* Description   : RS485èŠ¯ç‰‡æ¥æ”¶ä½¿èƒ½å‡½æ•°ã€‚zzs noteï¼ŒRS485æ¨¡å¼ï¼Œå¤–æ¥485ç”µå¹³è½¬æ¢èŠ¯ç‰‡. ä»…å‘é€æ•°æ®æ—¶ä½¿èƒ½å‘é€ï¼Œä¸€å¸§æ•°æ®
-*                 å‘é€å®Œæ¯•ï¼Œç«‹å³ä½¿èƒ½æ¥æ”¶ï¼Œå‘é€ç¦æ­¢ã€‚
+* Description   : RS485Ğ¾Æ¬½ÓÊÕÊ¹ÄÜº¯Êı¡£zzs note£¬RS485Ä£Ê½£¬Íâ½Ó485µçÆ½×ª»»Ğ¾Æ¬. ½ö·¢ËÍÊı¾İÊ±Ê¹ÄÜ·¢ËÍ£¬Ò»Ö¡Êı¾İ
+*                 ·¢ËÍÍê±Ï£¬Á¢¼´Ê¹ÄÜ½ÓÊÕ£¬·¢ËÍ½ûÖ¹¡£
 *
-* Input         : Port : è¿™ä¸ªPortå‚æ•°ï¼Œç°åœ¨åªæ˜¯åšåšæ ·å­ç½¢äº†ï¼Œå› ä¸ºé™åˆ¶æ­»äº†ï¼Œåªèƒ½æ˜¯2
+* Input         : Port : Õâ¸öPort²ÎÊı£¬ÏÖÔÚÖ»ÊÇ×ö×öÑù×Ó°ÕÁË£¬ÒòÎªÏŞÖÆËÀÁË£¬Ö»ÄÜÊÇ2
 *
 * Return        : None
 *************************************************************************************************************************/
@@ -349,16 +349,16 @@ __inline void  MODE485_RxEnable(INT8U port)
 	
 	if( port ==  2)
 	{
-		GPIO_ResetBits(GPIOB,GPIO_Pin_15);  // PSAM å†™å…¥ä½¿èƒ½
-		// for(i=0;i<100;i++) {;}  // zzs commented this ,å†…è”å‡½æ•°ä¸­ï¼Œä¸å…è®¸ä½¿ç”¨å¾ªç¯ä½“ã€switchã€é€’å½’ï¼Œå¦åˆ™å°†æŒ‰ç…§æ™®é€šå‡½æ•°å¤„ç†ã€‚
+		GPIO_ResetBits(GPIOB,GPIO_Pin_15);  // PSAM Ğ´ÈëÊ¹ÄÜ
+		// for(i=0;i<100;i++) {;}  // zzs commented this ,ÄÚÁªº¯ÊıÖĞ£¬²»ÔÊĞíÊ¹ÓÃÑ­»·Ìå¡¢switch¡¢µİ¹é£¬·ñÔò½«°´ÕÕÆÕÍ¨º¯Êı´¦Àí¡£
 	}	
 }
 
 /************************************************************************************************************************
 * Function Name : __inline void  MODE485_TxEnable(INT8U port)
-* Description   : RS485å‘é€æ•°æ®ä½¿èƒ½
+* Description   : RS485·¢ËÍÊı¾İÊ¹ÄÜ
 *
-* Input         : Port : è¿™ä¸ªPortå‚æ•°ï¼Œç°åœ¨åªæ˜¯åšåšæ ·å­ç½¢äº†ï¼Œå› ä¸ºé™åˆ¶æ­»äº†ï¼Œåªèƒ½æ˜¯2
+* Input         : Port : Õâ¸öPort²ÎÊı£¬ÏÖÔÚÖ»ÊÇ×ö×öÑù×Ó°ÕÁË£¬ÒòÎªÏŞÖÆËÀÁË£¬Ö»ÄÜÊÇ2
 *
 * Return        : None
 *************************************************************************************************************************/
@@ -368,20 +368,20 @@ __inline void  MODE485_TxEnable(INT8U port)
 	
 	if(port == 2)
 	{
-		GPIO_SetBits(GPIOB,GPIO_Pin_15);   // 485å‘é€ä½¿èƒ½
+		GPIO_SetBits(GPIOB,GPIO_Pin_15);   // 485·¢ËÍÊ¹ÄÜ
 	}
 	
-	// for(i=0;i<100;i++) {;}  // zzs commented this ,å†…è”å‡½æ•°ä¸­ï¼Œä¸å…è®¸ä½¿ç”¨å¾ªç¯ä½“ã€switchã€é€’å½’ï¼Œå¦åˆ™å°†æŒ‰ç…§æ™®é€šå‡½æ•°å¤„ç†ã€‚
+	// for(i=0;i<100;i++) {;}  // zzs commented this ,ÄÚÁªº¯ÊıÖĞ£¬²»ÔÊĞíÊ¹ÓÃÑ­»·Ìå¡¢switch¡¢µİ¹é£¬·ñÔò½«°´ÕÕÆÕÍ¨º¯Êı´¦Àí¡£
 }
 
 
 /************************************************************************************************************************
 * Function Name : __inline void  UART_RxEnable(INT8U Com,INT8U Enable)
-* Description   : æ¥æ”¶æ•°æ®ä½¿èƒ½,æˆ–è€…é™¤èƒ½
+* Description   : ½ÓÊÕÊı¾İÊ¹ÄÜ,»òÕß³ıÄÜ
 *
-* Input         : Com    : ä¸²å£å·
-*                 Enable : 1 ï¼šæ¥æ”¶ä½¿èƒ½
-*                          0 ï¼šæ¥æ”¶é™¤èƒ½
+* Input         : Com    : ´®¿ÚºÅ
+*                 Enable : 1 £º½ÓÊÕÊ¹ÄÜ
+*                          0 £º½ÓÊÕ³ıÄÜ
 *
 * Return        : None
 *************************************************************************************************************************/
@@ -408,39 +408,39 @@ __inline void  UART_RxEnable(INT8U Com,INT8U Enable)
 
 /************************************************************************************************************************
 * Function Name : void SendReceiveMsg(INT8U ComPort,UARTx_Ctrl_Struct *pCtrl_UARTx)          
-* Description   : æœ¬å‡½æ•°å°±åªæ˜¯ä¸ªå¹²æ´»çš„ï¼Œç”±ç³»ç»ŸTickerä¸­æ–­è°ƒç”¨åˆ†å¸§æ‰«æå‡½æ•°åï¼Œå†ç”±åˆ†å¸§æ‰«æå‡½æ•°è°ƒç”¨æœ¬å‡½æ•°post receive msgï¼Œ
-*                 æœ¬å‡½æ•°æ‰§è¡Œâ€œæ¥æ”¶åˆ°ä¸€å¸§ä¸²å£æ•°æ®â€æ¶ˆæ¯çš„è£…é…å¡«å……ï¼Œç»´æŠ¤ä¸€ä¸‹ä¸²å£ç®¡ç†å™¨ï¼Œç„¶åå¯¹ä¸²å£ç»‘å®šçš„é‚®ç®±æ‰§è¡ŒPostæ“ä½œã€‚
+* Description   : ±¾º¯Êı¾ÍÖ»ÊÇ¸ö¸É»îµÄ£¬ÓÉÏµÍ³TickerÖĞ¶Ïµ÷ÓÃ·ÖÖ¡É¨Ãèº¯Êıºó£¬ÔÙÓÉ·ÖÖ¡É¨Ãèº¯Êıµ÷ÓÃ±¾º¯Êıpost receive msg£¬
+*                 ±¾º¯ÊıÖ´ĞĞ¡°½ÓÊÕµ½Ò»Ö¡´®¿ÚÊı¾İ¡±ÏûÏ¢µÄ×°ÅäÌî³ä£¬Î¬»¤Ò»ÏÂ´®¿Ú¹ÜÀíÆ÷£¬È»ºó¶Ô´®¿Ú°ó¶¨µÄÓÊÏäÖ´ĞĞPost²Ù×÷¡£
 *
-* Input         : ComPort :  è¦åˆå§‹åŒ–çš„ä¸²å£å·ï¼Œ 1 ... 5
-*                 pCtrl_UARTx :  ä¸²å£ç®¡ç†ç»“æ„ä½“
+* Input         : ComPort :  Òª³õÊ¼»¯µÄ´®¿ÚºÅ£¬ 1 ... 5
+*                 pCtrl_UARTx :  ´®¿Ú¹ÜÀí½á¹¹Ìå
 *                 
 *
-* Return        : éšå¼è¿”å›ï¼šæŠ›å‡ºä¸€æ¡æ¶ˆæ¯ï¼Œæ¶ˆæ¯å†…å®¹åœ¨ è¿™ä¸ªä½ç½® pCtrl_UARTx->pRecvBuf + pCtrl_UARTx->RxOffset
+* Return        : ÒşÊ½·µ»Ø£ºÅ×³öÒ»ÌõÏûÏ¢£¬ÏûÏ¢ÄÚÈİÔÚ Õâ¸öÎ»ÖÃ pCtrl_UARTx->pRecvBuf + pCtrl_UARTx->RxOffset
 *************************************************************************************************************************/
 void SendReceiveMsg(INT8U ComPort,UARTx_Ctrl_Struct *pCtrl_UARTx)
 {
 	struct Str_Msg *TmpMsg = (struct Str_Msg *)0;
 	
 	
-	if(pCtrl_UARTx->BspMsg[0].DataLen == 0xFFFF)   // zzs??? â€œ0xFFFFï¼Œè®¤ä¸ºæ˜¯å¯ç”¨çš„â€ ï¼Œæ³¨ï¼š è¿™è¦æ˜¯ä¸¤ä¸ªçš„ DataLen éƒ½ ==0xFFFFå‘¢ï¼Ÿï¼Ÿï¼Ÿ 
+	if(pCtrl_UARTx->BspMsg[0].DataLen == 0xFFFF)   // zzs??? ¡°0xFFFF£¬ÈÏÎªÊÇ¿ÉÓÃµÄ¡± £¬×¢£º ÕâÒªÊÇÁ½¸öµÄ DataLen ¶¼ ==0xFFFFÄØ£¿£¿£¿ 
 		TmpMsg = &pCtrl_UARTx->BspMsg[0];
 	
-	if(pCtrl_UARTx->BspMsg[1].DataLen == 0xFFFF)  // zzs??? å§æ§½ï¼Œäº‹å®è¯æ˜ï¼Œè¿™ä¸¤ä¸ªçš„DataLenéƒ½ = 0xFFFF ï¼Œè¿™æ˜¯è¦å¹²å˜›å‘¢ï¼Ÿï¼Ÿï¼Ÿ
+	if(pCtrl_UARTx->BspMsg[1].DataLen == 0xFFFF)  // zzs??? ÎÔ²Û£¬ÊÂÊµÖ¤Ã÷£¬ÕâÁ½¸öµÄDataLen¶¼ = 0xFFFF £¬ÕâÊÇÒª¸ÉÂïÄØ£¿£¿£¿
 		TmpMsg = &pCtrl_UARTx->BspMsg[1];
 	
 	if((INT32U) TmpMsg == 0)
 		return;
 	
-	/* å¡« å…… æ¶ˆ æ¯ */		
-	TmpMsg->DivNum  = ComPort ;                      // è®¾å¤‡å·ï¼Œå®é™…å°±æ˜¯æŒ‡å®šä¸åŒçš„ä¸²å£å·ï¼Œæ¥åŒºåˆ†ä¸åŒçš„è®¾å¤‡ã€‚ 
-	TmpMsg->pData   = (void *)(pCtrl_UARTx->pRecvBuf + pCtrl_UARTx->RxOffset);                            // zzs!!!æ¶ˆæ¯å†…å®¹çš„å®é™…è£…è½½ä½ç½®
-	TmpMsg->DataLen = pCtrl_UARTx->RxPointer - pCtrl_UARTx->RxOffset;           // æŒ‡æ˜æ¶ˆæ¯çš„é•¿åº¦ 
-	if(ComPort == 1)	TmpMsg->MsgID   = BSP_MSGID_RFDataIn;        	 //  Rfä¸²å£æ¥æ”¶å®Œæˆæ¶ˆæ¯ID	
+	/* Ìî ³ä Ïû Ï¢ */		
+	TmpMsg->DivNum  = ComPort ;                      // Éè±¸ºÅ£¬Êµ¼Ê¾ÍÊÇÖ¸¶¨²»Í¬µÄ´®¿ÚºÅ£¬À´Çø·Ö²»Í¬µÄÉè±¸¡£ 
+	TmpMsg->pData   = (void *)(pCtrl_UARTx->pRecvBuf + pCtrl_UARTx->RxOffset);                            // zzs!!!ÏûÏ¢ÄÚÈİµÄÊµ¼Ê×°ÔØÎ»ÖÃ
+	TmpMsg->DataLen = pCtrl_UARTx->RxPointer - pCtrl_UARTx->RxOffset;           // Ö¸Ã÷ÏûÏ¢µÄ³¤¶È 
+	if(ComPort == 1)	TmpMsg->MsgID   = BSP_MSGID_RFDataIn;        	 //  Rf´®¿Ú½ÓÊÕÍê³ÉÏûÏ¢ID	
 	if(ComPort == 2)	TmpMsg->MsgID   = BSP_MSGID_RS485DataIn;  
-	if(ComPort == 3)	TmpMsg->MsgID   = BSP_MSGID_UART_RXOVER;         // GPRS ä¸²å£æ¥æ”¶å®Œæˆæ¶ˆæ¯ID
+	if(ComPort == 3)	TmpMsg->MsgID   = BSP_MSGID_UART_RXOVER;         // GPRS ´®¿Ú½ÓÊÕÍê³ÉÏûÏ¢ID
 
-	/* ä¸‹ä¸€å¸§èµ·å§‹åœ°å€ */
-	pCtrl_UARTx->RxOffset = pCtrl_UARTx->RxPointer;   // æ›´æ–°ç»´æŠ¤RxOffset,ä»…æ­¤ä¸€ä¸ªä½ç½®ç»´æŠ¤äº†RxOffset
+	/* ÏÂÒ»Ö¡ÆğÊ¼µØÖ· */
+	pCtrl_UARTx->RxOffset = pCtrl_UARTx->RxPointer;   // ¸üĞÂÎ¬»¤RxOffset,½ö´ËÒ»¸öÎ»ÖÃÎ¬»¤ÁËRxOffset
 	if(pCtrl_UARTx->MailOrQueue != 0)	
 	{
 		if(pCtrl_UARTx->MailOrQueue->OSEventType == OS_EVENT_TYPE_Q )
@@ -452,13 +452,13 @@ void SendReceiveMsg(INT8U ComPort,UARTx_Ctrl_Struct *pCtrl_UARTx)
 
 /************************************************************************************************************************
 * Function Name : INT8U BSP_UART_Init(INT8U ComPort, UARTx_Setting_Struct *pUartSet, OS_EVENT *Mail_Queue)              
-* Description   : ä¸²å£åˆå§‹åŒ–
-* Input         : ComPort :  è¦åˆå§‹åŒ–çš„ä¸²å£å·ï¼Œ 1 ... 5
-*                 pUartSet :  ä¸²å£çš„é…ç½®å‚æ•°ï¼Œ
-*                 Mail_Queue : ç»™è¿™ä¸ªä¸²å£é…å¤‡ä¸€ä¸ªé‚®ç®±ï¼Œé‚®ç®±æˆ–é˜Ÿåˆ—æŒ‡é’ˆ	ä¸ç”¨GPRSBOXçš„è¯å¯ä»¥ç›´æ¥ç”¨UARTx_Ctrl_Array[x]->MailOrQueueå»åˆå§‹åŒ–ä¸²å£
+* Description   : ´®¿Ú³õÊ¼»¯
+* Input         : ComPort :  Òª³õÊ¼»¯µÄ´®¿ÚºÅ£¬ 1 ... 5
+*                 pUartSet :  ´®¿ÚµÄÅäÖÃ²ÎÊı£¬
+*                 Mail_Queue : ¸øÕâ¸ö´®¿ÚÅä±¸Ò»¸öÓÊÏä£¬ÓÊÏä»ò¶ÓÁĞÖ¸Õë	²»ÓÃGPRSBOXµÄ»°¿ÉÒÔÖ±½ÓÓÃUARTx_Ctrl_Array[x]->MailOrQueueÈ¥³õÊ¼»¯´®¿Ú
 *
-* Return        : 0 : å½¢å‚æœ‰è¯¯
-*                 1 ï¼šæˆåŠŸè¿”å›
+* Return        : 0 : ĞÎ²ÎÓĞÎó
+*                 1 £º³É¹¦·µ»Ø
 *************************************************************************************************************************/
 INT8U BSP_UART_Init(INT8U ComPort, UARTx_Setting_Struct *pUartSet, OS_EVENT *Mail_Queue)
 {
@@ -467,7 +467,7 @@ INT8U BSP_UART_Init(INT8U ComPort, UARTx_Setting_Struct *pUartSet, OS_EVENT *Mai
 	UARTx_Ctrl_Struct *pCtrl_UARTx = NULL;
 	USART_TypeDef * pUARTx = NULL;
 
-	/* å‚æ•°æœ‰æ•ˆæ€§æ£€æŸ¥ */
+	/* ²ÎÊıÓĞĞ§ĞÔ¼ì²é */
 	if(ComPort <= 5 && (pUartSet->DataBits < 7 || pUartSet->DataBits > 8))
 		return 0;
 	if(pUartSet->Parity > 2)
@@ -477,7 +477,7 @@ INT8U BSP_UART_Init(INT8U ComPort, UARTx_Setting_Struct *pUartSet, OS_EVENT *Mai
 	//if(pUartSet->BaudRate < 300 || pUartSet->BaudRate > 57600)
 	//	return 0;
 	if(pUartSet->DataBits == 7 && pUartSet->Parity == 0 && ComPort <= 5)
-		return 0;         /* CORTEXä¸²å£ä¸æ”¯æŒ7ä½æ— æ ¡éªŒæ–¹å¼ï¼Œæ”¹ä¸ºæœ‰æ ¡éªŒçš„å§ã€‚æ‰©å±•ä¸²å£æ”¯æŒçš„ */
+		return 0;         /* CORTEX´®¿Ú²»Ö§³Ö7Î»ÎŞĞ£Ñé·½Ê½£¬¸ÄÎªÓĞĞ£ÑéµÄ°É¡£À©Õ¹´®¿ÚÖ§³ÖµÄ */
 	if(ComPort < 1 || ComPort > 5 )
 		return 0;	
 	
@@ -563,39 +563,39 @@ INT8U BSP_UART_Init(INT8U ComPort, UARTx_Setting_Struct *pUartSet, OS_EVENT *Mai
 			 ;
 	}
 
-/* ä¸ºäº†å¸§é—´éš”æ—¶é—´æ§åˆ¶çš„ç²¾ç¡®åº¦ï¼ŒOS_TICKS_PER_SEC åº”è¯¥å¤§äºç­‰äº 100 */  // zzs note,ä½†æ˜¯ï¼Œç°åœ¨çš„ç³»ç»Ÿè®¾è®¡ï¼Œæ²¡æœ‰è¾¾åˆ°è¿™ä¸ªè¦æ±‚ã€‚
+/* ÎªÁËÖ¡¼ä¸ôÊ±¼ä¿ØÖÆµÄ¾«È·¶È£¬OS_TICKS_PER_SEC Ó¦¸Ã´óÓÚµÈÓÚ 100 */  // zzs note,µ«ÊÇ£¬ÏÖÔÚµÄÏµÍ³Éè¼Æ£¬Ã»ÓĞ´ïµ½Õâ¸öÒªÇó¡£
 #if OS_TICKS_PER_SEC < 10
    #error OS_TICKS_PER_SEC should bigger than 100 for UART frame
 #endif
 
 	switch(pUartSet->BaudRate)
 	{
-		case 300: pCtrl_UARTx->RxFrameIntvSet = (OS_TICKS_PER_SEC *4)/5;/* 800ms, 240ä½æ—¶é—´ */
+		case 300: pCtrl_UARTx->RxFrameIntvSet = (OS_TICKS_PER_SEC *4)/5;/* 800ms, 240Î»Ê±¼ä */
 			      break;
 		
-		case 600: pCtrl_UARTx->RxFrameIntvSet = (OS_TICKS_PER_SEC *2)/5;/* 400ms, 240ä½æ—¶é—´ */
+		case 600: pCtrl_UARTx->RxFrameIntvSet = (OS_TICKS_PER_SEC *2)/5;/* 400ms, 240Î»Ê±¼ä */
 			      break;
 		
-		case 1200: pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 5;   /* 200ms, 240ä½æ—¶é—´ */
+		case 1200: pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 5;   /* 200ms, 240Î»Ê±¼ä */
 				   break;
 		
-		case 2400: pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 10;  /* 100ms, 240ä½æ—¶é—´ */
+		case 2400: pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 10;  /* 100ms, 240Î»Ê±¼ä */
 				   break;
 		
-		case 4800: pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 20;  /* 50ms,  240ä½æ—¶é—´ */
+		case 4800: pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 20;  /* 50ms,  240Î»Ê±¼ä */
 			       break;
 		
-		case 9600: // zzs??? ç°åœ¨OS_TICKS_PER_SEC = 20ï¼ŒTicker = 50ms,å› æ­¤9600æ³¢ç‰¹ç‡ä»¥åçš„å‡ ä¸ªå€¼éƒ½å°†ä¸º0ï¼Ÿï¼Ÿï¼Ÿ
-			       pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 50;  /* 20ms,  192ä½æ—¶é—´ */   
+		case 9600: // zzs??? ÏÖÔÚOS_TICKS_PER_SEC = 20£¬Ticker = 50ms,Òò´Ë9600²¨ÌØÂÊÒÔºóµÄ¼¸¸öÖµ¶¼½«Îª0£¿£¿£¿
+			       pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 50;  /* 20ms,  192Î»Ê±¼ä */   
 			       break;
 		
-		case 19200: pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 50;  /* 20ms,  384ä½æ—¶é—´ */
+		case 19200: pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 50;  /* 20ms,  384Î»Ê±¼ä */
 			        break;
 		
-		case 38400: pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 100; /* 10ms,  384ä½æ—¶é—´ */
+		case 38400: pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 100; /* 10ms,  384Î»Ê±¼ä */
 			        break;
 					
-		case 57600: pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 100; /* 10ms,  576ä½æ—¶é—´ */
+		case 57600: pCtrl_UARTx->RxFrameIntvSet = OS_TICKS_PER_SEC / 100; /* 10ms,  576Î»Ê±¼ä */
 			        break;
 
 		default: pCtrl_UARTx->RxFrameIntvSet = 9;
@@ -603,8 +603,8 @@ INT8U BSP_UART_Init(INT8U ComPort, UARTx_Setting_Struct *pUartSet, OS_EVENT *Mai
 	}
 
 	pCtrl_UARTx->RxNum = 0;
-	pCtrl_UARTx->TxBusy = 0;            // å¿™ç¢Œæƒ…å†µï¼Œç½®åˆå€¼
-	pCtrl_UARTx->TxCompletedCnt = 0;    // åˆå§‹åŒ–ä¸º0
+	pCtrl_UARTx->TxBusy = 0;            // Ã¦ÂµÇé¿ö£¬ÖÃ³õÖµ
+	pCtrl_UARTx->TxCompletedCnt = 0;    // ³õÊ¼»¯Îª0
 	pCtrl_UARTx->RxOffset = 0;           
 	pCtrl_UARTx->RxPointer = 0;
 	pCtrl_UARTx->FrameRxIntv = 0;
@@ -636,11 +636,11 @@ INT8U BSP_UART_Init(INT8U ComPort, UARTx_Setting_Struct *pUartSet, OS_EVENT *Mai
 	
 	/* Enable the USART Transmoit interrupt: this interrupt is generated when the
 	   USART transmit data register is empty after send */
-	if(ComPort != 4) USART_ITConfig( pUARTx, USART_IT_TC, ENABLE);  // zzs note,å‘é€ä¸­æ–­ä½¿èƒ½
+	if(ComPort != 4) USART_ITConfig( pUARTx, USART_IT_TC, ENABLE);  // zzs note,·¢ËÍÖĞ¶ÏÊ¹ÄÜ
 
 	/* Enable the USART Receive interrupt: this interrupt is generated when the
 	   USART receive data register is not empty */
-	USART_ITConfig( pUARTx, USART_IT_RXNE, ENABLE);    // zzs note,æ¥æ”¶ä¸­æ–­ä½¿èƒ½
+	USART_ITConfig( pUARTx, USART_IT_RXNE, ENABLE);    // zzs note,½ÓÊÕÖĞ¶ÏÊ¹ÄÜ
 
 	USART_Cmd( pUARTx,ENABLE);				// Enable USARTx
 	OS_EXIT_CRITICAL();
@@ -650,10 +650,10 @@ INT8U BSP_UART_Init(INT8U ComPort, UARTx_Setting_Struct *pUartSet, OS_EVENT *Mai
 
 /************************************************************************************************************************
 * Function Name:  void SYS_UART_ISR(INT8U ComPort)   
-* Description  :  ä¸²å£ä¸­æ–­æœåŠ¡å­ç¨‹åºï¼Œå­—èŠ‚ä¸­æ–­ã€‚
+* Description  :  ´®¿ÚÖĞ¶Ï·şÎñ×Ó³ÌĞò£¬×Ö½ÚÖĞ¶Ï¡£
 *
-* Input        :  ComPort  : ä¸²å£å· 
-*                 éšå¼è¾“å…¥ ï¼šä¸²å£å·å¯¹åº”çš„ç®¡ç†ç»“æ„ä½“
+* Input        :  ComPort  : ´®¿ÚºÅ 
+*                 ÒşÊ½ÊäÈë £º´®¿ÚºÅ¶ÔÓ¦µÄ¹ÜÀí½á¹¹Ìå
 *
 * Return       :  None
 *************************************************************************************************************************/
@@ -669,30 +669,30 @@ void SYS_UART_ISR(INT8U ComPort)
 	
     pCtrl_UARTx = &UARTx_Ctrl_Array[ComPort-1];
 	
-    /* åŠåŒå·¥æ¨¡å¼, æœ€åå‘é€å­—èŠ‚å‘\æ”¶ä¸­æ–­é¡ºåºåˆ°æ¥ */
+    /* °ëË«¹¤Ä£Ê½, ×îºó·¢ËÍ×Ö½Ú·¢\ÊÕÖĞ¶ÏË³Ğòµ½À´ */
 	TxStatus = USART_GetITStatus(pUARTx, USART_IT_TC);
  	
-	/* æ¥æ”¶ä¸­æ–­å¤„ç† */ 
+	/* ½ÓÊÕÖĞ¶Ï´¦Àí */ 
     if(USART_GetITStatus( pUARTx, USART_IT_RXNE) == SET)
 	{
-		/* æ¸…é™¤USARTæ¥æ”¶ä¸­æ–­æ ‡å¿— */
+		/* Çå³ıUSART½ÓÊÕÖĞ¶Ï±êÖ¾ */
 		USART_ClearITPendingBit( pUARTx, USART_IT_RXNE);
 
 		if(pCtrl_UARTx->RxNum < pCtrl_UARTx->MaxRxBufLen)
 		{
-			/* ä»UARTæ¥æ”¶å¯„å­˜å™¨è¯»å–ä¸€ä¸ªå­—èŠ‚çš„æ•°æ® */
+			/* ´ÓUART½ÓÊÕ¼Ä´æÆ÷¶ÁÈ¡Ò»¸ö×Ö½ÚµÄÊı¾İ */
 			RcvData = USART_ReceiveData( pUARTx);
 			
-			/* 7ä½æ•°æ®ä½æ—¶,Cortexæœ€é«˜ä½æ ¡éªŒä¼šè¯»è¿›æ¥ï¼Œæ¸…ç†æ‰ */
+			/* 7Î»Êı¾İÎ»Ê±,Cortex×î¸ßÎ»Ğ£Ñé»á¶Á½øÀ´£¬ÇåÀíµô */
 	        if(pCtrl_UARTx->Setting.DataBits == 7)
 			{
 				RcvData	&= 0x7f;	
 			}
-			pCtrl_UARTx->pRecvBuf[pCtrl_UARTx->RxNum] = RcvData;             // zzs note,è½¬ç§»ä¸­æ–­æ¥æ”¶åˆ°çš„æ•°æ®(Byte by Byte)
-			pCtrl_UARTx->RxNum++;                                            // zzs note,ç»´æŠ¤è®¡æ•°å™¨
+			pCtrl_UARTx->pRecvBuf[pCtrl_UARTx->RxNum] = RcvData;             // zzs note,×ªÒÆÖĞ¶Ï½ÓÊÕµ½µÄÊı¾İ(Byte by Byte)
+			pCtrl_UARTx->RxNum++;                                            // zzs note,Î¬»¤¼ÆÊıÆ÷
 		}
 		else
-		{   /* ç¼“å†²åŒºæº¢å‡ºå¤„ç†, ä¸æ”¶æ•°æ®é¡»ç”±åº”ç”¨å±‚å½’0 */
+		{   /* »º³åÇøÒç³ö´¦Àí, ²»ÊÕÊı¾İĞëÓÉÓ¦ÓÃ²ã¹é0 */
 			USART_ReceiveData( pUARTx);
 		}
 			
@@ -703,25 +703,25 @@ void SYS_UART_ISR(INT8U ComPort)
 		}
 	}
 
-	/* å‘é€ä¸­æ–­å¤„ç† */ 
+	/* ·¢ËÍÖĞ¶Ï´¦Àí */ 
 	if(TxStatus == SET)
 	{
-		/* æ¸…é™¤USARTå‘é€ä¸­æ–­æ ‡å¿— */
+		/* Çå³ıUSART·¢ËÍÖĞ¶Ï±êÖ¾ */
 		USART_ClearITPendingBit( pUARTx, USART_IT_TC);
-		pCtrl_UARTx->TxCompletedCnt++;                  // å‘é€å®Œæˆå­—èŠ‚æ•°è®¡æ•°å™¨ç»´æŠ¤æ›´æ–°
+		pCtrl_UARTx->TxCompletedCnt++;                  // ·¢ËÍÍê³É×Ö½ÚÊı¼ÆÊıÆ÷Î¬»¤¸üĞÂ
 		
 		/* insert little timing interval */
  					    
-		if(pCtrl_UARTx->TxCompletedCnt < pCtrl_UARTx->TxBusy)	/* æ£€æŸ¥å‘é€æ˜¯å¦å®Œæˆ */  //TxCompletedCntå‘ä¸€ä¸ªå­—èŠ‚åŠ 1ï¼ŒTxBusyå°±æ˜¯ä¼ å…¥çš„ä¸²å£è¾“å‡ºé•¿åº¦
+		if(pCtrl_UARTx->TxCompletedCnt < pCtrl_UARTx->TxBusy)	/* ¼ì²é·¢ËÍÊÇ·ñÍê³É */  //TxCompletedCnt·¢Ò»¸ö×Ö½Ú¼Ó1£¬TxBusy¾ÍÊÇ´«ÈëµÄ´®¿ÚÊä³ö³¤¶È
 		{
 			USART_SendData( pUARTx, pCtrl_UARTx->pSendBuf[pCtrl_UARTx->TxCompletedCnt]);
 		}
 		else  // zzs note, (pCtrl_UARTx->TxCompletedCnt >= pCtrl_UARTx->TxBusy)
 		{     // send all data ok
-			 // åˆå§‹åŒ–æ—¶ä¼šè¿›æ¥ä¸¤æ¬¡ä¸­æ–­ï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿ
+			 // ³õÊ¼»¯Ê±»á½øÀ´Á½´ÎÖĞ¶Ï£¿£¿£¿£¿£¿
 		     if(pCtrl_UARTx->Setting.Mode == UART_RS485_MODE)    
 			 {
-			 	MODE485_RxEnable(2);      // zzs??? è¿™é‡Œä¸ºä»€ä¹ˆè¦å†™æ­»ä¸º2å‘¢ï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿ
+			 	MODE485_RxEnable(2);      // zzs??? ÕâÀïÎªÊ²Ã´ÒªĞ´ËÀÎª2ÄØ£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿
 				UART_RxEnable(ComPort,1);
 			 }
 			 
@@ -730,9 +730,9 @@ void SYS_UART_ISR(INT8U ComPort)
 			 	UART_RxEnable(ComPort,1);
 			 }
 			
-             // if(pCtrl_UARTx->TxBusy) pCtrl_UARTx->TxIntv = pCtrl_UARTx->TxIntvSet; /* å¸§é—´éš”è®¾ç½® */
-			 pCtrl_UARTx->TxCompletedCnt = 0;    // å½’0å‘é€å®Œæˆå­—èŠ‚æ•°è®¡æ•°å™¨
-			 pCtrl_UARTx->TxBusy= 0;             // å½’0æ¸…é™¤å¿™ç¢Œæƒ…å†µç»Ÿè®¡å™¨
+             // if(pCtrl_UARTx->TxBusy) pCtrl_UARTx->TxIntv = pCtrl_UARTx->TxIntvSet; /* Ö¡¼ä¸ôÉèÖÃ */
+			 pCtrl_UARTx->TxCompletedCnt = 0;    // ¹é0·¢ËÍÍê³É×Ö½ÚÊı¼ÆÊıÆ÷
+			 pCtrl_UARTx->TxBusy= 0;             // ¹é0Çå³ıÃ¦ÂµÇé¿öÍ³¼ÆÆ÷
 			 pCtrl_UARTx->TxIntv=0;
 		}
 	}
@@ -742,10 +742,10 @@ void SYS_UART_ISR(INT8U ComPort)
 
 /************************************************************************************************************************
 * Function Name:  void SYS_UART_FSR(INT8U ComPort)    
-* Description  :  ä¸²å£å­—èŠ‚æµç»„å¸§æœåŠ¡ç¨‹åºï¼ŒæŒ‰è¶…æ—¶ä½(æ—¶é—´)åŒºåˆ†å’Œå­—èŠ‚ä¸ªæ•°åŒºåˆ†ã€‚
-*                 zzs note: è¿™ä¸ªä¸²å£åˆ†å¸§å¤„ç†ç¨‹åºï¼Œä¾èµ–äºç³»ç»ŸTickerä¸æ–­çš„è°ƒç”¨æœ¬å‡½æ•°æ¥æ‰«æä¸²å£ç®¡ç†ç»“æ„ä½“ä¸­çš„å„ä¸ªç®¡ç†å˜é‡çš„çŠ¶æ€ï¼Œ
-*                           åˆ¤æ–­ä½•æ—¶æ˜¯ä¸€å¸§çš„ç»“æŸï¼Œç„¶åæŠ›å‡ºæ¶ˆæ¯ã€‚
-* Input        :  ComPort : ä¸²å£å· 1...5
+* Description  :  ´®¿Ú×Ö½ÚÁ÷×éÖ¡·şÎñ³ÌĞò£¬°´³¬Ê±Î»(Ê±¼ä)Çø·ÖºÍ×Ö½Ú¸öÊıÇø·Ö¡£
+*                 zzs note: Õâ¸ö´®¿Ú·ÖÖ¡´¦Àí³ÌĞò£¬ÒÀÀµÓÚÏµÍ³Ticker²»¶ÏµÄµ÷ÓÃ±¾º¯ÊıÀ´É¨Ãè´®¿Ú¹ÜÀí½á¹¹ÌåÖĞµÄ¸÷¸ö¹ÜÀí±äÁ¿µÄ×´Ì¬£¬
+*                           ÅĞ¶ÏºÎÊ±ÊÇÒ»Ö¡µÄ½áÊø£¬È»ºóÅ×³öÏûÏ¢¡£
+* Input        :  ComPort : ´®¿ÚºÅ 1...5
 *
 * Return       :  
 *************************************************************************************************************************/
@@ -758,44 +758,44 @@ void SYS_UART_FSR(INT8U ComPort)
 	
 	pCtrl_UARTx = &UARTx_Ctrl_Array[ComPort-1];
 
-	/* æ— æ¥æ”¶ç¼“å†²åŒºï¼Œè¿”å› */
+	/* ÎŞ½ÓÊÕ»º³åÇø£¬·µ»Ø */
 	if(pCtrl_UARTx->MaxRxBufLen == 0) return;
 		
-	/* å‘é€å¸§é—´éš”   */
-//	if(pCtrl_UARTx->MaxTxBufLen && pCtrl_UARTx->TxIntv)   //zzs??? è¿™ä¸ªé€»è¾‘ä¹Ÿè¦æ³¨æ„ï¼Œä½•æ—¶å°†è¿™ä¸ªå‘é€é—´éš”é‡æ–°è£…è½½çš„é—®é¢˜ï¼ï¼ï¼
+	/* ·¢ËÍÖ¡¼ä¸ô   */
+//	if(pCtrl_UARTx->MaxTxBufLen && pCtrl_UARTx->TxIntv)   //zzs??? Õâ¸öÂß¼­Ò²Òª×¢Òâ£¬ºÎÊ±½«Õâ¸ö·¢ËÍ¼ä¸ôÖØĞÂ×°ÔØµÄÎÊÌâ£¡£¡£¡
 //	{
-//		pCtrl_UARTx->TxIntv--;         // å‘é€é—´éš”ç»´æŠ¤ ,// zzs note,æŸ¥æ˜ä¸€ä¸ªé—®é¢˜ï¼Œç°åœ¨è¿™ä¸ªTxIntvçš„é‡æ–°è£…è½½çš„åœ°æ–¹éƒ½è¢«æ³¨é‡Šæ‰äº†ï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿ
-//		                                               // ç›¸å½“äºï¼Œç°åœ¨å‘é€é—´éš”æœºåˆ¶å‹æ ¹å„¿å°±ä¸èµ·ä½œç”¨ã€‚ ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼  
+//		pCtrl_UARTx->TxIntv--;         // ·¢ËÍ¼ä¸ôÎ¬»¤ ,// zzs note,²éÃ÷Ò»¸öÎÊÌâ£¬ÏÖÔÚÕâ¸öTxIntvµÄÖØĞÂ×°ÔØµÄµØ·½¶¼±»×¢ÊÍµôÁË£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿
+//		                                               // Ïàµ±ÓÚ£¬ÏÖÔÚ·¢ËÍ¼ä¸ô»úÖÆÑ¹¸ù¶ù¾Í²»Æğ×÷ÓÃ¡£ £¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡  
 //	}
 
-	/* æ•°æ®æ¥æ”¶åˆ†å¸§å¤„ç† */
-	if((pCtrl_UARTx->RxFrameIntvSet & 0x8000) == 0)     // zzs note,è¿™ä¸ª0x8000æœ€å¥½æ˜¯å®šä¹‰æˆä¸€ä¸ªå®ï¼Œæè¿°æ¸…æ¥šï¼šè¿™ä¸ªæ˜¯u16çš„RxFrameIntvSetçš„Bit15çš„Maské¡¹ï¼Œç”¨äºåŒºåˆ†æ˜¯ç”¨æ—¶é—´æ¥åˆ†å¸§ï¼Œè¿˜æ˜¯ç”¨å­—èŠ‚æ•°æ¥åˆ†å¸§ã€‚
-	{   /* ä»¥æ—¶é—´åˆ†å¸§ */
+	/* Êı¾İ½ÓÊÕ·ÖÖ¡´¦Àí */
+	if((pCtrl_UARTx->RxFrameIntvSet & 0x8000) == 0)     // zzs note,Õâ¸ö0x8000×îºÃÊÇ¶¨Òå³ÉÒ»¸öºê£¬ÃèÊöÇå³ş£ºÕâ¸öÊÇu16µÄRxFrameIntvSetµÄBit15µÄMaskÏî£¬ÓÃÓÚÇø·ÖÊÇÓÃÊ±¼äÀ´·ÖÖ¡£¬»¹ÊÇÓÃ×Ö½ÚÊıÀ´·ÖÖ¡¡£
+	{   /* ÒÔÊ±¼ä·ÖÖ¡ */
 		if(pCtrl_UARTx->RxPointer == pCtrl_UARTx->RxNum)
 		{
 			if(pCtrl_UARTx->RxNum) 
-			{	/* æœªæ”¶åˆ°æœ€æ–°æ•°æ®   */       
-				pCtrl_UARTx->FrameRxIntv++;    //å“¦ï¼Œ è€è¡²æ˜ç™½äº†ï¼Œæœªæ”¶åˆ°æ–°çš„æ•°æ®è¶…è¿‡å¤šä¹…å¤šä¹…ï¼Œå³è®¤ä¸ºæ˜¯ä¸€å¸§çš„æœ«å°¾ï¼Œâ€œæ–¹æ³•å¾ˆå·§å¦™ï¼Œè¡Œä¸ºä¸å¯å–â€ ï¼Œå› ä¸ºæ²¡è§ç€åˆ†å¸§æ–­å¥åè®®å•Šï¼Œè¿™ä¸ªè¦æ˜¯åšæé™æµ‹è¯•ï¼Œè¿™ä¸ªç¨‹åºåªèƒ½å‘µå‘µäº†ã€‚
-				if(pCtrl_UARTx->FrameRxIntv >= pCtrl_UARTx->RxFrameIntvSet) // è€è¡²æ˜ç™½äº† â€œæ­£å¸¸å­—èŠ‚é—´çš„æ—¶é—´â€
+			{	/* Î´ÊÕµ½×îĞÂÊı¾İ   */       
+				pCtrl_UARTx->FrameRxIntv++;    //Å¶£¬ ÀÏñÄÃ÷°×ÁË£¬Î´ÊÕµ½ĞÂµÄÊı¾İ³¬¹ı¶à¾Ã¶à¾Ã£¬¼´ÈÏÎªÊÇÒ»Ö¡µÄÄ©Î²£¬¡°·½·¨ºÜÇÉÃî£¬ĞĞÎª²»¿ÉÈ¡¡± £¬ÒòÎªÃ»¼û×Å·ÖÖ¡¶Ï¾äĞ­Òé°¡£¬Õâ¸öÒªÊÇ×ö¼«ÏŞ²âÊÔ£¬Õâ¸ö³ÌĞòÖ»ÄÜºÇºÇÁË¡£
+				if(pCtrl_UARTx->FrameRxIntv >= pCtrl_UARTx->RxFrameIntvSet) // ÀÏñÄÃ÷°×ÁË ¡°Õı³£×Ö½Ú¼äµÄÊ±¼ä¡±
 				{
 					if(pCtrl_UARTx->RxOffset != pCtrl_UARTx->RxPointer)
-					{   /* ä¸ æ˜¯ ç©º å¸§ */
-						OSSchedLock();    // è¿›å…¥éè°ƒåº¦åŒº
+					{   /* ²» ÊÇ ¿Õ Ö¡ */
+						OSSchedLock();    // ½øÈë·Çµ÷¶ÈÇø
 						SendReceiveMsg(ComPort,pCtrl_UARTx);
-						OSSchedUnlock();  // é€€å‡ºéè°ƒåº¦åŒº
+						OSSchedUnlock();  // ÍË³ö·Çµ÷¶ÈÇø
 						pCtrl_UARTx->FrameRxIntv = 0;			
 					}
 				}
 			}
 		}
 		else
-		{ /* æ”¶åˆ°æœ€æ–°æ•°æ®   */
-			pCtrl_UARTx->RxPointer = pCtrl_UARTx->RxNum;   // æ”¶åˆ°æ–°çš„n = 1...xä¸ªæ•°æ®ï¼Œåˆ™ç«‹é©¬ç»´æŠ¤RxPointerï¼Œä¸ºä»€ä¹ˆè¯´æ˜¯1...xä¸ªï¼Œæ˜¯å› ä¸ºtickerä¸­æ–­ä¸€ä¸ªtick = xx msä¸‹æ¥ï¼Œæœ‰å¯èƒ½ä¸€æ•´å¸§æ•°æ®éƒ½æ”¶å®Œäº†ã€‚
+		{ /* ÊÕµ½×îĞÂÊı¾İ   */
+			pCtrl_UARTx->RxPointer = pCtrl_UARTx->RxNum;   // ÊÕµ½ĞÂµÄn = 1...x¸öÊı¾İ£¬ÔòÁ¢ÂíÎ¬»¤RxPointer£¬ÎªÊ²Ã´ËµÊÇ1...x¸ö£¬ÊÇÒòÎªtickerÖĞ¶ÏÒ»¸ötick = xx msÏÂÀ´£¬ÓĞ¿ÉÄÜÒ»ÕûÖ¡Êı¾İ¶¼ÊÕÍêÁË¡£
 			pCtrl_UARTx->FrameRxIntv = 0;
 		}
 	}  
 	else
-	{ /*ä»¥å­—èŠ‚æ•°åˆ†å¸§ */
+	{ /*ÒÔ×Ö½ÚÊı·ÖÖ¡ */
 		if(pCtrl_UARTx->RxNum != pCtrl_UARTx->RxOffset)
 		{
 			if((pCtrl_UARTx->RxNum - pCtrl_UARTx->RxOffset >= (pCtrl_UARTx->RxFrameIntvSet & 0x3fff)) || 
@@ -803,7 +803,7 @@ void SYS_UART_FSR(INT8U ComPort)
 			{
 				pCtrl_UARTx->RxPointer = pCtrl_UARTx->RxOffset + (pCtrl_UARTx->RxFrameIntvSet & 0x3fff);
 				if(pCtrl_UARTx->RxPointer >= pCtrl_UARTx->MaxRxBufLen)
-				{/* ç¼“å†²åŒºä¸å¤Ÿçš„æƒ…å†µ */
+				{/* »º³åÇø²»¹»µÄÇé¿ö */
 					pCtrl_UARTx->RxPointer = pCtrl_UARTx->MaxRxBufLen;
 					pCtrl_UARTx->RxNum = pCtrl_UARTx->MaxRxBufLen;
 				}
@@ -818,24 +818,24 @@ void SYS_UART_FSR(INT8U ComPort)
 
 /************************************************************************************************************************
 * Function Name:  INT8U BspUartWrite(INT8U ComPort, INT8U *pFrameBuf, INT16U FrameLen)
-* Description  :  å¾€ä¸²å£å‘é€ä¸€å¸§æ•°æ®ã€‚è‹¥å‰ä¸€å¸§æœªå‘å®Œï¼Œé™„åŠ åˆ°å‰ä¸€å¸§æ•°æ®æœ«å°¾å‘,è‹¥ç¼“å†²åŒºé•¿åº¦ä¸å¤Ÿï¼Œæœ¬å¸§æ•°æ®ä¸å‘é€ï¼Œè¿”å›å¤±è´¥ã€‚å¸§ä¸å¸§ä¹‹é—´é»˜è®¤æœ‰
-*                 ä¸€å®šçš„æ—¶é—´é—´éš”ã€‚æ—¶é—´é—´éš”å¯ä»¥ BSP_UART_TxIntvSet è®¾ç½®ï¼Œè®¾0ä¸ºæ— é—´éš”ã€‚
+* Description  :  Íù´®¿Ú·¢ËÍÒ»Ö¡Êı¾İ¡£ÈôÇ°Ò»Ö¡Î´·¢Íê£¬¸½¼Óµ½Ç°Ò»Ö¡Êı¾İÄ©Î²·¢,Èô»º³åÇø³¤¶È²»¹»£¬±¾Ö¡Êı¾İ²»·¢ËÍ£¬·µ»ØÊ§°Ü¡£Ö¡ÓëÖ¡Ö®¼äÄ¬ÈÏÓĞ
+*                 Ò»¶¨µÄÊ±¼ä¼ä¸ô¡£Ê±¼ä¼ä¸ô¿ÉÒÔ BSP_UART_TxIntvSet ÉèÖÃ£¬Éè0ÎªÎŞ¼ä¸ô¡£
 *
-* Input        :  ComPort   : ä¸²å£å· 1...5
-*                 pFrameBuf : è¦å‘é€å‡ºå»çš„å†…å®¹å¸§ç¼“å†²é¦–åœ°å€
-*                 FrameLen  ï¼šè¦å‘é€çš„é•¿åº¦
+* Input        :  ComPort   : ´®¿ÚºÅ 1...5
+*                 pFrameBuf : Òª·¢ËÍ³öÈ¥µÄÄÚÈİÖ¡»º³åÊ×µØÖ·
+*                 FrameLen  £ºÒª·¢ËÍµÄ³¤¶È
 *
-* Return       :  1 : è¾“å…¥å‚æ•°é”™è¯¯
-*                 2 ï¼šä¸²å£å¿™ç¢Œä¸­ï¼Œè¯·ç¨åå†è¯•
-*                 0 ï¼šæˆåŠŸ
+* Return       :  1 : ÊäÈë²ÎÊı´íÎó
+*                 2 £º´®¿ÚÃ¦ÂµÖĞ£¬ÇëÉÔºóÔÙÊÔ
+*                 0 £º³É¹¦
 *************************************************************************************************************************/
 INT8U BspUartWrite(INT8U ComPort, INT8U *pFrameBuf, INT16U FrameLen)
 {
 	UARTx_Ctrl_Struct *pCtrl_UARTx = NULL;
 	USART_TypeDef * pUARTx = NULL;
 	
-#ifdef B485DIS 		/*æ³¨æ„ï¼Œæ²¡åˆå§‹åŒ–485æ—¶ä¸‡ä¸‡ä¸å¯å‘é€485æ•°æ®ï¼Œå¦åˆ™TxBusyéç©ºä¼šå¯¼è‡´æ— æ³•è¿›å…¥STOPæ¨¡å¼*/
-	if(!(TaskActive & Local_ACT))	//LOCALå·²ç»ç»“æŸ
+#ifdef B485DIS 		/*×¢Òâ£¬Ã»³õÊ¼»¯485Ê±ÍòÍò²»¿É·¢ËÍ485Êı¾İ£¬·ñÔòTxBusy·Ç¿Õ»áµ¼ÖÂÎŞ·¨½øÈëSTOPÄ£Ê½*/
+	if(!(TaskActive & Local_ACT))	//LOCALÒÑ¾­½áÊø
 		if(ComPort==2) return 0;
 #endif	
 
@@ -850,16 +850,16 @@ INT8U BspUartWrite(INT8U ComPort, INT8U *pFrameBuf, INT16U FrameLen)
 	#if 1  // zzs commented this
 	if( (FrameLen > (pCtrl_UARTx->MaxTxBufLen - pCtrl_UARTx->TxBusy)) || (FrameLen == 0)  )   //|| BSP_UART_TxState(ComPort)
 	
-	{   // zzs???,è¿™é‡Œæœ‰é—®é¢˜ï¼Œéœ€è¦æ”¹è¿›ï¼ï¼ï¼ä¸å•åªæ˜¯å¤±è´¥è¿”å›å°±å®Œäº†ï¼Œæ²¡è§ç€åœ¨å“ªå„¿å¤„ç† ç¼“å†²åŒºé•¿åº¦ä¸å¤Ÿ çš„é—®é¢˜å•Šï¼Ÿï¼Ÿï¼Ÿ
+	{   // zzs???,ÕâÀïÓĞÎÊÌâ£¬ĞèÒª¸Ä½ø£¡£¡£¡²»µ¥Ö»ÊÇÊ§°Ü·µ»Ø¾ÍÍêÁË£¬Ã»¼û×ÅÔÚÄÄ¶ù´¦Àí »º³åÇø³¤¶È²»¹» µÄÎÊÌâ°¡£¿£¿£¿
     	OS_EXIT_CRITICAL();
 		return FALSE;
 	}
 	#else
-	if(FrameLen == 0)  return 1;   // å‚æ•°é”™è¯¯
+	if(FrameLen == 0)  return 1;   // ²ÎÊı´íÎó
 	
-	if( FrameLen > (pCtrl_UARTx->MaxTxBufLen - pCtrl_UARTx->TxBusy) )  return 2;  // ä¸²å£åœ¨å¿™
+	if( FrameLen > (pCtrl_UARTx->MaxTxBufLen - pCtrl_UARTx->TxBusy) )  return 2;  // ´®¿ÚÔÚÃ¦
     
-	if( BSP_UART_TxState(ComPort) )	 return 2; // ä¸²å£åœ¨å¿™ï¼Œé‡å¤çš„é€»è¾‘ï¼Œå¾ˆæœ‰æ„æ€å—ï¼Ÿ
+	if( BSP_UART_TxState(ComPort) )	 return 2; // ´®¿ÚÔÚÃ¦£¬ÖØ¸´µÄÂß¼­£¬ºÜÓĞÒâË¼Âğ£¿
 	#endif
 	
 	if(pCtrl_UARTx->Setting.Mode == UART_RS485_MODE)
@@ -873,21 +873,21 @@ INT8U BspUartWrite(INT8U ComPort, INT8U *pFrameBuf, INT16U FrameLen)
 		UART_RxEnable(ComPort,0);
 	}
 	
-	if(pCtrl_UARTx->TxBusy == 0)    // zzs note,è¿™ä¸ªçš„æ„æ€è¯´ï¼Œæœ‰å‘é€éœ€æ±‚åˆ°æ¥æ—¶ï¼Œä¸²å£æœ¬èº« å°± å¤„åœ¨ç©ºé—²çŠ¶æ€ï¼Œ
-	{/* ç©ºé—²çŠ¶æ€ */		
-		pCtrl_UARTx->TxBusy = FrameLen;  // zzs note,ä¸²å£è¿™ä¼šå„¿å¼€å§‹è¦å¿™èµ·æ¥äº†.
+	if(pCtrl_UARTx->TxBusy == 0)    // zzs note,Õâ¸öµÄÒâË¼Ëµ£¬ÓĞ·¢ËÍĞèÇóµ½À´Ê±£¬´®¿Ú±¾Éí ¾Í ´¦ÔÚ¿ÕÏĞ×´Ì¬£¬
+	{/* ¿ÕÏĞ×´Ì¬ */		
+		pCtrl_UARTx->TxBusy = FrameLen;  // zzs note,´®¿ÚÕâ»á¶ù¿ªÊ¼ÒªÃ¦ÆğÀ´ÁË.
 		pCtrl_UARTx->TxCompletedCnt = 0;
 		memcpy((void *)(pCtrl_UARTx->pSendBuf), pFrameBuf, FrameLen);
 		
 		/* Send the first data with pUARTx, and the next data send
 	       by ISR automatic */
- 		USART_SendData(pUARTx, pCtrl_UARTx->pSendBuf[0]);   // zzs noteï¼ï¼ï¼æ³¨æ„ï¼ŒINT8Uçš„å…¥å‚ï¼Œä¼ ç»™ä¸€ä¸ªu16çš„å‚æ•°ï¼Œè¿™ä¸ªæ˜¯æ²¡æœ‰ä»»ä½•é—®é¢˜çš„ã€‚
+ 		USART_SendData(pUARTx, pCtrl_UARTx->pSendBuf[0]);   // zzs note£¡£¡£¡×¢Òâ£¬INT8UµÄÈë²Î£¬´«¸øÒ»¸öu16µÄ²ÎÊı£¬Õâ¸öÊÇÃ»ÓĞÈÎºÎÎÊÌâµÄ¡£
 	}
-	else   // zzs note, è¿™ä¸ªçš„æ„æ€æ˜¯è¯´ï¼Œâ€œå“ï¼Œæˆ‘è¿™å„¿æ­£å¿™ç€å‘¢ï¼Œåé¢æ’é˜Ÿå»å§ã€‚â€
+	else   // zzs note, Õâ¸öµÄÒâË¼ÊÇËµ£¬¡°°¥£¬ÎÒÕâ¶ùÕıÃ¦×ÅÄØ£¬ºóÃæÅÅ¶ÓÈ¥°É¡£¡±
 	{
-		/* UARTæ•° æ® æ­£ åœ¨ å‘ é€  */
+		/* UARTÊı ¾İ Õı ÔÚ ·¢ ËÍ  */
 		memcpy((void *)(pCtrl_UARTx->pSendBuf + pCtrl_UARTx->TxBusy), pFrameBuf, FrameLen);
-		pCtrl_UARTx->TxBusy += FrameLen;   // zzs note,ä¸²å£å‘é€å¿™ä¸åŠçš„æƒ…å†µä¸‹å°±ä¼šå‡ºç°è¿™ä¸ªæ ·å­å•°ã€‚
+		pCtrl_UARTx->TxBusy += FrameLen;   // zzs note,´®¿Ú·¢ËÍÃ¦²»¼°µÄÇé¿öÏÂ¾Í»á³öÏÖÕâ¸öÑù×Ó†ª¡£
 	}
 
 	OS_EXIT_CRITICAL();
@@ -900,8 +900,8 @@ INT8U BspUartWrite(INT8U ComPort, INT8U *pFrameBuf, INT16U FrameLen)
 
 /*******************************************************************************
 * Function Name  : BSP_UART_TxAbort
-* Description    : å½“å‰å¸§å‘é€ç»ˆæ­¢
-* Input          : ComPort : ä¸²å£å·1...7
+* Description    : µ±Ç°Ö¡·¢ËÍÖÕÖ¹
+* Input          : ComPort : ´®¿ÚºÅ1...7
 * Output         : None
 * Return         : None
 *******************************************************************************/ 
@@ -915,10 +915,10 @@ INT8U BspUartWrite(INT8U ComPort, INT8U *pFrameBuf, INT16U FrameLen)
 //	OS_ENTER_CRITICAL();
 //	pCtrl_UARTx->TxBusy = 0;
 //	pCtrl_UARTx->TxCompletedCnt = 0;
-//	pCtrl_UARTx->TxIntv = pCtrl_UARTx->TxIntvSet + 4; // ç§»ä½å¯„å­˜å™¨æ—¶é—´4
+//	pCtrl_UARTx->TxIntv = pCtrl_UARTx->TxIntvSet + 4; // ÒÆÎ»¼Ä´æÆ÷Ê±¼ä4
 //	OS_EXIT_CRITICAL();
 // 
-//	/* ç­‰å¾…ç§»ä½å¯„å­˜å™¨ç©º */
+//	/* µÈ´ıÒÆÎ»¼Ä´æÆ÷¿Õ */
 //	OSTimeDly(4);
 //	
 //	if(pCtrl_UARTx->Setting.Mode == UART_RS485_MODE)
@@ -935,11 +935,11 @@ INT8U BspUartWrite(INT8U ComPort, INT8U *pFrameBuf, INT16U FrameLen)
 
 /******************************************************************************
 * Function Name: BSP_UART_RxAll
-* Description: ä¸²å£æ¥æ”¶ç¼“å†²åŒºæ‰€æœ‰æ•°æ®è¯»å…¥ã€‚æ•°æ®æµæ¥æ”¶æ—¶è‡ªåŠ¨ä»ç¼“å†²åŒº0åœ°å€å¼€å§‹é‡
-*              æ–°æ¥æ”¶æ•°æ®ã€‚
-* Input:  ComPort : ä¸²å£å·1...7        
+* Description: ´®¿Ú½ÓÊÕ»º³åÇøËùÓĞÊı¾İ¶ÁÈë¡£Êı¾İÁ÷½ÓÊÕÊ±×Ô¶¯´Ó»º³åÇø0µØÖ·¿ªÊ¼ÖØ
+*              ĞÂ½ÓÊÕÊı¾İ¡£
+* Input:  ComPort : ´®¿ÚºÅ1...7        
 * Output: Nothing
-* Return: struct Str_Msg æ¶ˆæ¯æŒ‡é’ˆ
+* Return: struct Str_Msg ÏûÏ¢Ö¸Õë
 ******************************************************************************/
 //struct Str_Msg  BSP_RxAllMsg[5];                 // zzs commented it ,because of this function didn't invoked in anywhere.
 //struct Str_Msg  *BSP_UART_RxAll(INT8U ComPort)
@@ -953,20 +953,20 @@ INT8U BspUartWrite(INT8U ComPort, INT8U *pFrameBuf, INT16U FrameLen)
 // 	OS_ENTER_CRITICAL();
 //	pCtrl_UARTx->BspMsg[0].DataLen = 0xFFFF;
 //		
-//	/* å¡« å…… æ¶ˆ æ¯ */			
+//	/* Ìî ³ä Ïû Ï¢ */			
 //	BSP_RxAllMsg[ComPort -1].MsgID  = BSP_MSGID_UART_RXOVER;
 //	BSP_RxAllMsg[ComPort -1].DivNum = ComPort;
 //	BSP_RxAllMsg[ComPort -1].pData  = (void *)(pCtrl_UARTx->pRecvBuf + pCtrl_UARTx->RxOffset);
 //	BSP_RxAllMsg[ComPort -1].DataLen= pCtrl_UARTx->RxNum - pCtrl_UARTx->RxOffset;
 
-//	/* ä¸‹ä¸€å¸§èµ·å§‹åœ°å€ */
+//	/* ÏÂÒ»Ö¡ÆğÊ¼µØÖ· */
 //	if(pCtrl_UARTx->RxOffset == 0)
-//	{/* ç¼“å†²åŒºå‰åŠéƒ¨åˆ†  */
+//	{/* »º³åÇøÇ°°ë²¿·Ö  */
 //		pCtrl_UARTx->RxOffset = pCtrl_UARTx->RxNum;
 //		pCtrl_UARTx->RxPointer= pCtrl_UARTx->RxNum; 
 //	}
 //	else
-//	{/* ç¼“å†²åŒºååŠéƒ¨åˆ† */
+//	{/* »º³åÇøºó°ë²¿·Ö */
 //		pCtrl_UARTx->RxOffset = 0;
 //		pCtrl_UARTx->RxNum = 0;
 //		pCtrl_UARTx->RxPointer = 0;
@@ -978,10 +978,10 @@ INT8U BspUartWrite(INT8U ComPort, INT8U *pFrameBuf, INT16U FrameLen)
 
 /************************************************************************************************************************
 * Function Name:  void  BSP_UART_RxClear(INT8U ComPort)
-* Description  :  ä¸²å£æ¥æ”¶ç¼“å†²åŒºæ¸…ç©ºã€‚
-*                 æ¶ˆæ¯æ¸…ç©ºï¼Œå‘æ¶ˆæ¯å®¹å™¨çš„ DataLenå­—æ®µå†™ 0xFFFFï¼Œå³è®¤ä¸ºæ˜¯è±¡æ“¦é»‘æ¿ä¸€æ ·ä¸€æ ·çš„å•¦ã€‚
+* Description  :  ´®¿Ú½ÓÊÕ»º³åÇøÇå¿Õ¡£
+*                 ÏûÏ¢Çå¿Õ£¬ÏòÏûÏ¢ÈİÆ÷µÄ DataLen×Ö¶ÎĞ´ 0xFFFF£¬¼´ÈÏÎªÊÇÏó²ÁºÚ°åÒ»ÑùÒ»ÑùµÄÀ²¡£
 *
-* Input        :  ComPort   : ä¸²å£å· 1...5
+* Input        :  ComPort   : ´®¿ÚºÅ 1...5
 *                
 * Return       :  None
 *************************************************************************************************************************/
@@ -992,14 +992,14 @@ void  BSP_UART_RxClear(INT8U ComPort)
 	if(ComPort == 0) return ;
 	
  	pCtrl_UARTx = &UARTx_Ctrl_Array[ComPort-1];
-  	/* æ™® é€š ä¸² å£ æ¸… ç©º */
+  	/* ÆÕ Í¨ ´® ¿Ú Çå ¿Õ */
 	OS_ENTER_CRITICAL();
 	pCtrl_UARTx->RxNum = 0;
 	pCtrl_UARTx->RxOffset = 0;
 	pCtrl_UARTx->RxPointer = 0;
 	pCtrl_UARTx->FrameRxIntv = 0;
 
-	/* æ¸…ç©ºæ¶ˆæ¯ */
+	/* Çå¿ÕÏûÏ¢ */
 	pCtrl_UARTx->BspMsg[0].DataLen = 0xFFFF;
 	pCtrl_UARTx->BspMsg[0].pData	= (INT8U *)pCtrl_UARTx->pRecvBuf;
 	pCtrl_UARTx->BspMsg[1].DataLen = 0xFFFF;
@@ -1009,13 +1009,13 @@ void  BSP_UART_RxClear(INT8U ComPort)
 
 /******************************************************************************
 * Function Name: BSP_UART_FrameIntv
-* Description: ä¸²å£æ¥æ”¶å¸§é—´éš”è®¾ç½®
-* Input:  ComPort : ä¸²å£å·1...5
-*         IntvMS_NumBytes: bit15 = 0æ—¶	bit13~0	è¡¨ç¤ºåˆ†å¸§æ—¶é—´,ä»¥TICKä¸ºå•ä½
-*                          bit15 = 1æ—¶	bit13~0	è¡¨ç¤ºåˆ†å¸§å­—èŠ‚æ•°ï¼Œå­—èŠ‚ä¸ºå•ä½
+* Description: ´®¿Ú½ÓÊÕÖ¡¼ä¸ôÉèÖÃ
+* Input:  ComPort : ´®¿ÚºÅ1...5
+*         IntvMS_NumBytes: bit15 = 0Ê±	bit13~0	±íÊ¾·ÖÖ¡Ê±¼ä,ÒÔTICKÎªµ¥Î»
+*                          bit15 = 1Ê±	bit13~0	±íÊ¾·ÖÖ¡×Ö½ÚÊı£¬×Ö½ÚÎªµ¥Î»
 *
 * Output: Nothing
-* Return: 0 å¤±è´¥ / å…¶å®ƒï¼šè¿”å›åŸæ¥çš„è®¾ç½®ã€‚
+* Return: 0 Ê§°Ü / ÆäËü£º·µ»ØÔ­À´µÄÉèÖÃ¡£
 ******************************************************************************/
 //INT16U BSP_UART_FrameIntv(INT8U ComPort,INT16U IntvMS_NumBytes)   // zzs commented it ,because of this function didn't invoked in anywhere.
 //{
@@ -1047,12 +1047,12 @@ void  BSP_UART_RxClear(INT8U ComPort)
 
 /******************************************************************************
 * Function Name: BSP_UART_TxIntvSet
-* Description: ä¸²å£å‘é€å¸§é—´éš”è®¾ç½®
-* Input:  ComPort : ä¸²å£å·1...7
-*         IntvMS: bit15 = 0æ—¶	bit13~0	è¡¨ç¤ºåˆ†å¸§æ—¶é—´TICKä¸ºå•ä½
+* Description: ´®¿Ú·¢ËÍÖ¡¼ä¸ôÉèÖÃ
+* Input:  ComPort : ´®¿ÚºÅ1...7
+*         IntvMS: bit15 = 0Ê±	bit13~0	±íÊ¾·ÖÖ¡Ê±¼äTICKÎªµ¥Î»
 *
 * Output: Nothing
-* Return: 0xFFFF å¤±è´¥ / å…¶å®ƒï¼šè¿”å›åŸæ¥çš„è®¾ç½®ã€‚
+* Return: 0xFFFF Ê§°Ü / ÆäËü£º·µ»ØÔ­À´µÄÉèÖÃ¡£
 ******************************************************************************/
 //INT16U BSP_UART_TxIntvSet(INT8U ComPort,INT16U IntvMS)   // zzs commented it ,because of this function didn't invoked in anywhere.
 //{
@@ -1075,14 +1075,14 @@ void  BSP_UART_RxClear(INT8U ComPort)
 
 /************************************************************************************************************************
 * Function Name:  INT8U BSP_UART_TxState(INT8U ComPort)
-* Description  :  è·å–ä¸²å£å‘é€çŠ¶æ€
+* Description  :  »ñÈ¡´®¿Ú·¢ËÍ×´Ì¬
 *
-* Input        :  ComPort   : ä¸²å£å· 1...5
+* Input        :  ComPort   : ´®¿ÚºÅ 1...5
 *
 * Return       :  1 send busy / 0 send free     
 *************************************************************************************************************************/
-INT8U BSP_UART_TxState(INT8U ComPort)     // zzs noteï¼ï¼ï¼è¿™ä¸ªå‡½æ•°çš„è¿”å›é€»è¾‘æœ‰é—®é¢˜ï¼Œç°åœ¨åªèƒ½å¯„å¸Œæœ›äºè¾“å…¥å½¢å‚ ComPortä¸å‡ºé”™çš„æƒ…å†µä¸‹ï¼Œ
-{                                         // è¿”å›é€»è¾‘æ˜¯å¯ä»¥æ­£å¸¸å·¥ä½œçš„ ï¼Œè¿™ä¸ªå¾—æ”¹ã€‚
+INT8U BSP_UART_TxState(INT8U ComPort)     // zzs note£¡£¡£¡Õâ¸öº¯ÊıµÄ·µ»ØÂß¼­ÓĞÎÊÌâ£¬ÏÖÔÚÖ»ÄÜ¼ÄÏ£ÍûÓÚÊäÈëĞÎ²Î ComPort²»³ö´íµÄÇé¿öÏÂ£¬
+{                                         // ·µ»ØÂß¼­ÊÇ¿ÉÒÔÕı³£¹¤×÷µÄ £¬Õâ¸öµÃ¸Ä¡£
 	UARTx_Ctrl_Struct * pCtrl_UARTx = NULL;
 	
 	if(ComPort > 5) return 0;
@@ -1090,7 +1090,7 @@ INT8U BSP_UART_TxState(INT8U ComPort)     // zzs noteï¼ï¼ï¼è¿™ä¸ªå‡½æ•°çš„è¿”
  	
 	pCtrl_UARTx = &UARTx_Ctrl_Array[ComPort-1];
  	
-	if(pCtrl_UARTx->TxCompletedCnt/*FIFOæœªç©º*/|| pCtrl_UARTx->TxBusy || pCtrl_UARTx->TxIntv)
+	if(pCtrl_UARTx->TxCompletedCnt/*FIFOÎ´¿Õ*/|| pCtrl_UARTx->TxBusy || pCtrl_UARTx->TxIntv)
 		return 1;
 	else
 		return 0;
@@ -1098,11 +1098,11 @@ INT8U BSP_UART_TxState(INT8U ComPort)     // zzs noteï¼ï¼ï¼è¿™ä¸ªå‡½æ•°çš„è¿”
 
 /************************************************************************************************************************
 * Function Name:  INT8U BSP_UART_Close(INT8U ComPort)
-* Description  :  å…³é—­å¯¹åº”çš„ä¸²å£
+* Description  :  ¹Ø±Õ¶ÔÓ¦µÄ´®¿Ú
 *
-* Input        :  ComPort   : ä¸²å£å· 1...5
+* Input        :  ComPort   : ´®¿ÚºÅ 1...5
 *
-* Return       :  1: é»˜è®¤è¿”å›æˆåŠŸ               
+* Return       :  1: Ä¬ÈÏ·µ»Ø³É¹¦               
 *************************************************************************************************************************/
 INT8U BSP_UART_Close(INT8U ComPort)
 {	
@@ -1117,7 +1117,7 @@ INT8U BSP_UART_Close(INT8U ComPort)
 			    break;
 		case 2: pUARTx    = USART2;		
 //				UART2_PIN_CLOSE();
-				B485_LowPower();         //ä¿®æ”¹485ä½åŠŸè€—å¼•è„šé…ç½®
+				B485_LowPower();         //ĞŞ¸Ä485µÍ¹¦ºÄÒı½ÅÅäÖÃ
 			    break;
 		case 3:	pUARTx    = USART3;
 				UART3_PIN_CLOSE();
@@ -1134,12 +1134,12 @@ INT8U BSP_UART_Close(INT8U ComPort)
 }
 /*******************************************************************************
 * Function Name  : INT8U BSP_UART_Close(INT8U ComPort)
-* Description    : å…³é—­å¯¹åº”çš„ä¸²å£
+* Description    : ¹Ø±Õ¶ÔÓ¦µÄ´®¿Ú
 * Input          : ComPort:    1 ... 7
-*                  Settings:   ä¸²å£é…ç½®
-*              	   Mail_Queueï¼šé‚®ç®±æˆ–é˜Ÿåˆ—æŒ‡é’ˆ
+*                  Settings:   ´®¿ÚÅäÖÃ
+*              	   Mail_Queue£ºÓÊÏä»ò¶ÓÁĞÖ¸Õë
 * Output         : None
-* Return         : 1 æˆåŠŸ / 0 å¤±è´¥ 
+* Return         : 1 ³É¹¦ / 0 Ê§°Ü 
 *******************************************************************************/
 //INT8U BSP_UART_LP(INT8U ComPort)    // zzs commented it ,because of this function didn't invoked in anywhere.
 //{	
@@ -1163,11 +1163,11 @@ INT8U BSP_UART_Close(INT8U ComPort)
 
 /************************************************************************************************************************
 * Function Name:  INT8U * BSP_UART_GetRecvLen(INT8U ComPort,INT16U *RLEN)             
-* Description  :  è¿”å›ä¸²å£æ¥æ”¶åˆ°çš„æ•°æ®çš„é•¿åº¦ï¼ŒåŠé¦–åœ°å€
-* Input        :  ComPort : ä¸²å£å· ï¼Œå–å€¼èŒƒå›´ 1,2,3
+* Description  :  ·µ»Ø´®¿Ú½ÓÊÕµ½µÄÊı¾İµÄ³¤¶È£¬¼°Ê×µØÖ·
+* Input        :  ComPort : ´®¿ÚºÅ £¬È¡Öµ·¶Î§ 1,2,3
 *
-* Return       :  æ˜å¼è¿”å›ï¼ŒUARTx_Ctrl_Array[ComPort-1].pRecvBuf ï¼šComPortå·ä¸²å£æ”¶åˆ°çš„æ•°æ®çš„é¦–åœ°å€
-*                 å½¢å‚è¿”å›ï¼ŒUARTx_Ctrl_Array[ComPort-1].RxPointer : è¿™ä¸ªè¿”å›ï¼Œå·²ç»æ˜¯ä¸€ä¸ªé•¿åº¦æ•°æ®äº†ï¼Œè€Œä¸æ˜¯æŒ‡é’ˆï¼Œä¸è¦è¢«è‹±æ–‡å­—é¢æ„æ€å¼„ç³Šæ¶‚äº†ã€‚
+* Return       :  Ã÷Ê½·µ»Ø£¬UARTx_Ctrl_Array[ComPort-1].pRecvBuf £ºComPortºÅ´®¿ÚÊÕµ½µÄÊı¾İµÄÊ×µØÖ·
+*                 ĞÎ²Î·µ»Ø£¬UARTx_Ctrl_Array[ComPort-1].RxPointer : Õâ¸ö·µ»Ø£¬ÒÑ¾­ÊÇÒ»¸ö³¤¶ÈÊı¾İÁË£¬¶ø²»ÊÇÖ¸Õë£¬²»Òª±»Ó¢ÎÄ×ÖÃæÒâË¼ÅªºıÍ¿ÁË¡£
 *************************************************************************************************************************/
 INT8U * BSP_UART_GetRecvLen(INT8U ComPort,INT16U *RLEN)
 {
@@ -1181,7 +1181,7 @@ INT8U * BSP_UART_GetRecvLen(INT8U ComPort,INT16U *RLEN)
 
 /******************************************************************************
 * Function Name: void Power485Pin_Init(void)
-* Description:   ä¸485ç”µæºç›¸å…³çš„å¼•è„šé…ç½®
+* Description:   Óë485µçÔ´Ïà¹ØµÄÒı½ÅÅäÖÃ
 								 
 * Input:  Nothing
 * Output: Nothing
@@ -1192,8 +1192,8 @@ void Power485Pin_Init(void)
 {
 	GPIO_InitTypeDef	GPIO_InitStructure;
 	
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);						//å¼€æ—¶é’Ÿ
-	PWDC485DIS();																//è®¾ç½®ä¸ºå…³é—­		
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);						//¿ªÊ±ÖÓ
+	PWDC485DIS();																//ÉèÖÃÎª¹Ø±Õ		
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Pin =PWDC485_PIN;
@@ -1202,7 +1202,7 @@ void Power485Pin_Init(void)
 
 /******************************************************************************
 * Function Name: SYS_UART_DeInit
-* Description: å¤ä½å¤–éƒ¨ä¸²å£ï¼Œ æ‰©å±•ä¸²å£èŠ¯ç‰‡ç¡¬ä»¶å¤ä½
+* Description: ¸´Î»Íâ²¿´®¿Ú£¬ À©Õ¹´®¿ÚĞ¾Æ¬Ó²¼ş¸´Î»
 * Input:  Nothing       
 * Output: Nothing
 * Return: Nothing

@@ -72,7 +72,7 @@ static const INT8U CC1101InitData[INITNUM][2]=
 {
   {CC1101_IOCFG0,      0x46},
   {CC1101_IOCFG2,      0x09},
-  {CC1101_FIFOTHR,     0x4f},//定为0x4f时，接收字节数可扩大，不影响发送
+  {CC1101_FIFOTHR,     0x4f},//��Ϊ0x4fʱ�������ֽ��������󣬲�Ӱ�췢��
   {CC1101_PKTCTRL1,    0x0f},
   {CC1101_PKTCTRL0,    0x05},
   {CC1101_ADDR,        0x05},
@@ -184,7 +184,7 @@ void RF_dealy_us(INT16U us)
  /*******************************************************************************
 * Function Name  : SPI_ExchangeByte.
 * Description    :  
-* Input 1        :  SPI  空余  与STM8L 程序吻合，
+* Input 1        :  SPI  ����  ��STM8L �����Ǻϣ�
 * Input 2        : PtrToBuffer is an u8 pointer to the first word to be transmitted.
 * Input 3        : NbOfWords parameter indicates the number of words to be sent.
 * Output         : None.
@@ -199,10 +199,10 @@ void RF_dealy_us(INT16U us)
 			for(i=0x80;i!=0;i>>=1)
 			{	
 				CC_CLK_LOW();
-				if(val&i)    	CC_MOSI_HIGH();//数据建立
+				if(val&i)    	CC_MOSI_HIGH();//���ݽ���
 				else         	CC_MOSI_LOW();
  
-				CC_CLK_HIGH();      //上升沿数据被写入到铁电  
+				CC_CLK_HIGH();      //���������ݱ�д�뵽����  
 				if(CC_SOMI())
 				{
 						RxData|=i;
@@ -535,7 +535,7 @@ void CC1101SetSYNCForByte( INT8U hsync,INT8U Lsync )
 /*
 ================================================================================
 Function : void CC1101SetFREQ(INT8U FREQ2,INT8U FREQ1,INT8U FREQ0)
-            设置CC1101的通信频点
+            ����CC1101��ͨ��Ƶ��
 INPUT    : 
 OUTPUT   : None
 ================================================================================
@@ -622,10 +622,10 @@ INT8U CC1101Init( void )
 		CC1101WriteReg( CC1101InitData[i][0], CC1101InitData[i][1] );
 	}
 	
-	Get_Local_Para(0x000B,Temp,&Le);//AYNC                  默认值 8799
+	Get_Local_Para(0x000B,Temp,&Le);//AYNC                  Ĭ��ֵ 8799
 	CC1101SetSYNCForByte(Temp[0],Temp[1]);
-	Get_Local_Para(0x000C,Temp,&Le);//频率                  频率 默认10 A7 84
-	CC1101SetFREQ(Temp[0],Temp[1],Temp[2]);//设置频率 
+	Get_Local_Para(0x000C,Temp,&Le);//Ƶ��                  Ƶ�� Ĭ��10 A7 84
+	CC1101SetFREQ(Temp[0],Temp[1],Temp[2]);//����Ƶ�� 
 	// CC1101SetAddress( 0x05, BROAD_0AND255 );
 	// CC1101SetSYNC( 0xAA55);
 	CC1101WriteReg(CC1101_MDMCFG1,   0x72); //Modem Configuration
@@ -673,10 +673,10 @@ INT8U RF_RxHandler(INT8U *OutBuff)
 }
 
 /********************************************************************
-函数名：INT8U RF_SignCS(INT16U CS_Time)
-功能：  检测RF信道是否占用
-入参：  CS_Time 检测时间，检测GD2（PB2）是否为高电平 以100US 检测一次
-出参：  返回值 1:检测到空间内有信号，0 ：未检测到无线信号
+��������INT8U RF_SignCS(INT16U CS_Time)
+���ܣ�  ���RF�ŵ��Ƿ�ռ��
+��Σ�  CS_Time ���ʱ�䣬���GD2��PB2���Ƿ�Ϊ�ߵ�ƽ ��100US ���һ��
+���Σ�  ����ֵ 1:��⵽�ռ������źţ�0 ��δ��⵽�����ź�
 ***********************************************************************/
 INT8U RF_SignCS(INT16U CS_Time)
 {
@@ -701,21 +701,21 @@ INT8U RF_SignCS(INT16U CS_Time)
 
 /************************************************************************************************************************
 * Function Name:  INT8U RF_SoftWOR(void)            
-* Description  :  RF_软件的WOR功能使用。检测信道需要打开RX功能，打工RX功能需要等待2MS，才能检测信道
-* Input        :  time : 世纪秒
+* Description  :  RF_������WOR����ʹ�á�����ŵ���Ҫ��RX���ܣ���RX������Ҫ�ȴ�2MS�����ܼ���ŵ�
+* Input        :  time : ������
 *
-* Return       :  1 : 检测到空间内有信号
-*                 0 ：未检测到无线信号
+* Return       :  1 : ��⵽�ռ������ź�
+*                 0 ��δ��⵽�����ź�
 *
 * Author:                               
-* Date First Issued: 赵志舜于2018年1月125日创建本函数             E-Mail:11207656@qq.com
+* Date First Issued: ��־˴��2018��1��125�մ���������             E-Mail:11207656@qq.com
 * Version:  V1.0
 *************************************************************************************************************************/
 INT8U RF_SoftWOR(void)
 {
 	if(RF_SignCS(30))
 	{
-		return 1;  // 有信号
+		return 1;  // ���ź�
 	}
 	
 	CC1101WriteCmd(CC1101_SIDLE);

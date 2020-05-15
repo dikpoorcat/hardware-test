@@ -18,14 +18,14 @@
 #define ADC1_DR_Address    ((u32)0x4001244C)    //ADC1 DR address
 
 
-#define ADCEN_Pin       GPIO_Pin_12				//ADCæ£€æµ‹æ§åˆ¶
+#define ADCEN_Pin       GPIO_Pin_12				//ADC¼ì²â¿ØÖÆ
 #define ADCEN_Port      GPIOC
 
 
-typedef struct{ 								//è®¾å¤‡ä¿¡æ¯ï¼Œæµ®ç‚¹æ•°æ®
-	float	BAT_Volt;							//é”‚ç”µæ± ç”µå‹
-	float	FALA_Volt;							//æ³•æ‹‰ç”µå®¹ç”µå‹
-	float	MCU_Temp;							//å•ç‰‡æœºæ¸©åº¦
+typedef struct{ 								//Éè±¸ĞÅÏ¢£¬¸¡µãÊı¾İ
+	float	BAT_Volt;							//ï®µç³ØµçÑ¹
+	float	FALA_Volt;							//·¨À­µçÈİµçÑ¹
+	float	MCU_Temp;							//µ¥Æ¬»úÎÂ¶È
 }Equi_STA;
 
 
@@ -33,7 +33,7 @@ extern Equi_STA	Equipment_state;
 
 
 
-//å‡½æ•°å£°æ˜
+//º¯ÊıÉùÃ÷
 void ADC1_Configuration(void);
 void DMA_Configuration(void);
 void AD_Init(void);

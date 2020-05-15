@@ -3,17 +3,17 @@
 *               (c) Copyright 2006-2008, hui lian. luo, china, zj. hz 
 *                            All Rights Reserved
 *
-*							 æ·±åœ³å¸‚è‹±è““ç‰¹ä¿¡æ¯æŠ€æœ¯æœ‰é™å…¬å¸
+*							 ÉîÛÚÊĞÓ¢İíÌØĞÅÏ¢¼¼ÊõÓĞÏŞ¹«Ë¾
 *                            http://www.embedinfo.com
-*                            åšæ ¼è¾¾ç§‘æŠ€æœ‰é™å…¬å¸
+*                            ²©¸ñ´ï¿Æ¼¼ÓĞÏŞ¹«Ë¾
 *                            http://www.bogodtech.com                         
 *
 *---------- File Info ---------------------------------------------------------------
 * File name: 		os_cpu_c.c
-* Created By: 		ç½—è¾‰è”(armgcc@foxmail.com, wyuyun@hotmail.com, lhlzjut@hotmail.com) 	
+* Created By: 		ÂŞ»ÔÁª(armgcc@foxmail.com, wyuyun@hotmail.com, lhlzjut@hotmail.com) 	
 * Created date: 	2007.11.28
 * Descriptions: 	The C functions that a uC/OS-II port requires
-* Adviser: 			æ¥¼ä¸œæ­¦(professor)  æµ™æ±Ÿå¤§å­¦ä¿¡ç”µç³»
+* Adviser: 			Â¥¶«Îä(professor)  Õã½­´óÑ§ĞÅµçÏµ
 *
 *---------- History Info -------------------------------------------------------------
 * Version: 			Ver1.0
@@ -38,16 +38,16 @@ static  INT16U  OSTmrCtr;
 #endif
 
 /***************************************************************************************
-* å‡½æ•°åç§°: OSInitHookBegin 
+* º¯ÊıÃû³Æ: OSInitHookBegin 
 *
-* åŠŸèƒ½æè¿°: This function is called by OSInit() at the beginning of OSInit(). 
+* ¹¦ÄÜÃèÊö: This function is called by OSInit() at the beginning of OSInit(). 
 *            
-* å‚    æ•°: None
+* ²Î    Êı: None
 *
-* è¿” å› å€¼: None
+* ·µ »Ø Öµ: None
 *         
-* ä½œã€€  è€…: ç½—è¾‰è”
-* æ—¥  ã€€æœŸ: 2007å¹´11æœˆ10æ—¥
+* ×÷¡¡  Õß: ÂŞ»ÔÁª
+* ÈÕ  ¡¡ÆÚ: 2007Äê11ÔÂ10ÈÕ
 *----------------------------------------------------------------------------------------
 *****************************************************************************************/
 
@@ -61,16 +61,16 @@ void  OSInitHookBegin (void)
 #endif
 
 /***************************************************************************************
-* å‡½æ•°åç§°: OSInitHookEnd, 
+* º¯ÊıÃû³Æ: OSInitHookEnd, 
 *
-* åŠŸèƒ½æè¿°: This function is called by OSInit() at the end of OSInit().
+* ¹¦ÄÜÃèÊö: This function is called by OSInit() at the end of OSInit().
 *            
-* å‚    æ•°: None
+* ²Î    Êı: None
 *
-* è¿” å› å€¼: None
+* ·µ »Ø Öµ: None
 *         
-* ä½œã€€  è€…: ç½—è¾‰è”
-* æ—¥  ã€€æœŸ: 2007å¹´11æœˆ10æ—¥
+* ×÷¡¡  Õß: ÂŞ»ÔÁª
+* ÈÕ  ¡¡ÆÚ: 2007Äê11ÔÂ10ÈÕ
 *----------------------------------------------------------------------------------------
 *****************************************************************************************/
 
@@ -82,16 +82,16 @@ void  OSInitHookEnd (void)
 #endif
 
 /***************************************************************************************
-* å‡½æ•°åç§°: OSTaskCreateHook 
+* º¯ÊıÃû³Æ: OSTaskCreateHook 
 *
-* åŠŸèƒ½æè¿°: This function is called when a task is created. 
+* ¹¦ÄÜÃèÊö: This function is called when a task is created. 
 *            
-* å‚    æ•°: ptcb   is a pointer to the task control block of the task being created.
+* ²Î    Êı: ptcb   is a pointer to the task control block of the task being created.
 *
-* è¿” å› å€¼: None
+* ·µ »Ø Öµ: None
 *         
-* ä½œã€€  è€…: ç½—è¾‰è”
-* æ—¥  ã€€æœŸ: 2007å¹´11æœˆ10æ—¥
+* ×÷¡¡  Õß: ÂŞ»ÔÁª
+* ÈÕ  ¡¡ÆÚ: 2007Äê11ÔÂ10ÈÕ
 *----------------------------------------------------------------------------------------
 *****************************************************************************************/
 
@@ -107,16 +107,16 @@ void  OSTaskCreateHook (OS_TCB *ptcb)
 #endif
 
 /***************************************************************************************
-* å‡½æ•°åç§°: OSTaskDelHook 
+* º¯ÊıÃû³Æ: OSTaskDelHook 
 *
-* åŠŸèƒ½æè¿°: This function is called when a task is deleted.
+* ¹¦ÄÜÃèÊö: This function is called when a task is deleted.
 *            
-* å‚    æ•°: ptcb   is a pointer to the task control block of the task being deleted.
+* ²Î    Êı: ptcb   is a pointer to the task control block of the task being deleted.
 *
-* è¿” å› å€¼: None
+* ·µ »Ø Öµ: None
 *         
-* ä½œã€€  è€…: ç½—è¾‰è”
-* æ—¥  ã€€æœŸ: 2007å¹´11æœˆ10æ—¥
+* ×÷¡¡  Õß: ÂŞ»ÔÁª
+* ÈÕ  ¡¡ÆÚ: 2007Äê11ÔÂ10ÈÕ
 *----------------------------------------------------------------------------------------
 *****************************************************************************************/
 
@@ -128,17 +128,17 @@ void  OSTaskDelHook (OS_TCB *ptcb)
 #endif
 
 /***************************************************************************************
-* å‡½æ•°åç§°: OSTaskIdleHook 
+* º¯ÊıÃû³Æ: OSTaskIdleHook 
 *
-* åŠŸèƒ½æè¿°: This function is called by the idle task.  This hook has been added to allow 
+* ¹¦ÄÜÃèÊö: This function is called by the idle task.  This hook has been added to allow 
 *           you to do such things as STOP the CPU to conserve power.
 *            
-* å‚    æ•°: None
+* ²Î    Êı: None
 *
-* è¿” å› å€¼: None
+* ·µ »Ø Öµ: None
 *         
-* ä½œã€€  è€…: ç½—è¾‰è”
-* æ—¥  ã€€æœŸ: 2007å¹´11æœˆ10æ—¥
+* ×÷¡¡  Õß: ÂŞ»ÔÁª
+* ÈÕ  ¡¡ÆÚ: 2007Äê11ÔÂ10ÈÕ
 *----------------------------------------------------------------------------------------
 *****************************************************************************************/
 
@@ -148,7 +148,7 @@ void  OSTaskDelHook (OS_TCB *ptcb)
 void  OSTaskIdleHook (void)
 {
     /* Nothing to do, But MUST keep this code to improve INT latency */
-	/*åœ¨è¿™é‡Œè¿›è¡Œè¿›å…¥ä½åŠŸè€—ä»¥åŠå”¤é†’ä¹‹åçš„æ“ä½œ*/
+	/*ÔÚÕâÀï½øĞĞ½øÈëµÍ¹¦ºÄÒÔ¼°»½ĞÑÖ®ºóµÄ²Ù×÷*/
 	OS_TCB    *ptcb;
 	INT16U 	  DLYmin=0;
 	INT16U    alarmcount=0;
@@ -156,42 +156,42 @@ void  OSTaskIdleHook (void)
 	
 	OS_ENTER_CRITICAL();
 	ptcb = OSTCBList; 	
-	DLYmin=ptcb->OSTCBDly;														//è¯»å–ä»»åŠ¡é“¾è¡¨ç¬¬ä¸€ä¸ªdelay time					    
+	DLYmin=ptcb->OSTCBDly;														//¶ÁÈ¡ÈÎÎñÁ´±íµÚÒ»¸ödelay time					    
 	while (ptcb->OSTCBPrio != OS_TASK_IDLE_PRIO)
 	{ 	
-		if((ptcb->OSTCBStat & OS_STAT_SUSPEND) == OS_STAT_RDY)	 				//è¢«æŒ‚èµ·çš„ä»»åŠ¡ï¼Œdelaytimeéƒ½ä¼šè¢«ç½®ä¸º0
+		if((ptcb->OSTCBStat & OS_STAT_SUSPEND) == OS_STAT_RDY)	 				//±»¹ÒÆğµÄÈÎÎñ£¬delaytime¶¼»á±»ÖÃÎª0
 		{temp=ptcb->OSTCBDly;}
 		if(temp<DLYmin)
-		{DLYmin=temp;}										   					//æŸ¥æ‰¾æœ€å°çš„ä»»åŠ¡delay time	
+		{DLYmin=temp;}										   					//²éÕÒ×îĞ¡µÄÈÎÎñdelay time	
 		ptcb = ptcb->OSTCBNext;  		 
 	 }
 	OS_EXIT_CRITICAL();	
-	if(DLYmin==0) return;														//æœ‰æ•ˆæ€§æ£€æŸ¥
+	if(DLYmin==0) return;														//ÓĞĞ§ĞÔ¼ì²é
 	  		        	
 //	Led_OFF();	
 	 
 	SysTick_ITConfig(DISABLE);
-    SysTick_CounterCmd(SysTick_Counter_Disable);								//å…³é—­systick,ä¸å¯ææ—©å…³é—­	 	
+    SysTick_CounterCmd(SysTick_Counter_Disable);								//¹Ø±Õsystick,²»¿ÉÌáÔç¹Ø±Õ	 	
 	 
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);	//ä½¿èƒ½PWRå’ŒBKPå¤–è®¾æ—¶é’Ÿ   	   				RTCå¯„å­˜å™¨ä½äºåå¤‡åŒºåŸŸ							
-	PWR_BackupAccessCmd(ENABLE);												//ä½¿èƒ½åå¤‡å¯„å­˜å™¨è®¿é—®  
-	RTC_WaitForLastTask();														//ç­‰å¾…æœ€è¿‘ä¸€æ¬¡å¯¹RTCå¯„å­˜å™¨çš„å†™æ“ä½œå®Œæˆ
-	RTC_EnterConfigMode();      												//å…è®¸é…ç½®	
-	RTC_SetCounter(0);															//éšæ„åˆå§‹åŒ–ä¸€ä¸ªæ—¶é—´ï¼Œä»æ­¤æ—¶å¼€å§‹è®¡æ•°
-	RTC_ExitConfigMode();														//é€€å‡ºé…ç½®æ¨¡å¼  
-	RTC_WaitForLastTask();  													//ç­‰å¾…æœ€è¿‘ä¸€æ¬¡å¯¹RTCå¯„å­˜å™¨çš„å†™æ“ä½œå®Œæˆ
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);	//Ê¹ÄÜPWRºÍBKPÍâÉèÊ±ÖÓ   	   				RTC¼Ä´æÆ÷Î»ÓÚºó±¸ÇøÓò							
+	PWR_BackupAccessCmd(ENABLE);												//Ê¹ÄÜºó±¸¼Ä´æÆ÷·ÃÎÊ  
+	RTC_WaitForLastTask();														//µÈ´ı×î½üÒ»´Î¶ÔRTC¼Ä´æÆ÷µÄĞ´²Ù×÷Íê³É
+	RTC_EnterConfigMode();      												//ÔÊĞíÅäÖÃ	
+	RTC_SetCounter(0);															//ËæÒâ³õÊ¼»¯Ò»¸öÊ±¼ä£¬´Ó´ËÊ±¿ªÊ¼¼ÆÊı
+	RTC_ExitConfigMode();														//ÍË³öÅäÖÃÄ£Ê½  
+	RTC_WaitForLastTask();  													//µÈ´ı×î½üÒ»´Î¶ÔRTC¼Ä´æÆ÷µÄĞ´²Ù×÷Íê³É
 	 
-	alarmcount=DLYmin-1; 														//-1,RTCé—¹é’Ÿæœ¬èº«è‡ªå¸¦+1
-	RTC_SetAlarm(RTC_GetCounter()+alarmcount);			        				//è¿›è¡ŒRTCé—¹é’Ÿè®¾ç½®  50msåŸºæ•°	
-	RTC_WaitForLastTask();  													//ç­‰å¾…æœ€è¿‘ä¸€æ¬¡å¯¹RTCå¯„å­˜å™¨çš„å†™æ“ä½œå®Œæˆ
+	alarmcount=DLYmin-1; 														//-1,RTCÄÖÖÓ±¾Éí×Ô´ø+1
+	RTC_SetAlarm(RTC_GetCounter()+alarmcount);			        				//½øĞĞRTCÄÖÖÓÉèÖÃ  50ms»ùÊı	
+	RTC_WaitForLastTask();  													//µÈ´ı×î½üÒ»´Î¶ÔRTC¼Ä´æÆ÷µÄĞ´²Ù×÷Íê³É
 	 
-	PWR_EnterSTOPMode(PWR_Regulator_LowPower,PWR_STOPEntry_WFI);   				//è¿›å…¥åœæ­¢æ¨¡å¼ï¼ˆPWR_Regulator_LowPowerï¼ŒWFIï¼‰
+	PWR_EnterSTOPMode(PWR_Regulator_LowPower,PWR_STOPEntry_WFI);   				//½øÈëÍ£Ö¹Ä£Ê½£¨PWR_Regulator_LowPower£¬WFI£©
 	
-	 /*å”¤é†’åä»é—¹é’Ÿä¸­æ–­é‡Œé€€å‡ºåç”±æ­¤å¼€å§‹ç»§ç»­æ‰§è¡Œ*/
-	RCC_Configuration4M();                                     					//ä¸»é¢‘é…ç½®ä¸ç³»ç»Ÿæ—¶é’Ÿé‡æ–°è®¾å®šï¼Œè¿™éƒ¨åˆ†ä¸é€‚åˆæ”¾åœ¨é—¹é’Ÿä¸­æ–­æœåŠ¡å‡½æ•°ä¸­ï¼ˆå¯èƒ½å­˜åœ¨å…¶ä»–éé—¹é’Ÿå”¤é†’æƒ…å†µï¼‰	
+	 /*»½ĞÑºó´ÓÄÖÖÓÖĞ¶ÏÀïÍË³öºóÓÉ´Ë¿ªÊ¼¼ÌĞøÖ´ĞĞ*/
+	RCC_Configuration4M();                                     					//Ö÷ÆµÅäÖÃÓëÏµÍ³Ê±ÖÓÖØĞÂÉè¶¨£¬Õâ²¿·Ö²»ÊÊºÏ·ÅÔÚÄÖÖÓÖĞ¶Ï·şÎñº¯ÊıÖĞ£¨¿ÉÄÜ´æÔÚÆäËû·ÇÄÖÖÓ»½ĞÑÇé¿ö£©	
 	
 	// Led_On();	 
-    // OSTime+=DLYmin;    											 			//è¿™ä¸ªæš‚æ—¶çœ‹æ¥æ˜¯æ— ç”¨çš„ï¼Œå¹¶æ²¡æœ‰ç”¨è¿™ä¸ªæ¥è®¡æ—¶
+    // OSTime+=DLYmin;    											 			//Õâ¸öÔİÊ±¿´À´ÊÇÎŞÓÃµÄ£¬²¢Ã»ÓĞÓÃÕâ¸öÀ´¼ÆÊ±
     if (OSRunning == OS_TRUE) 
 	{
 		ptcb = OSTCBList;                                  						/* Point at first TCB in TCB list                 */
@@ -203,12 +203,12 @@ void  OSTaskIdleHook (void)
 				else
 				{ptcb->OSTCBDly-=DLYmin;}                  
                 if (ptcb->OSTCBDly== 0) 
-					{               					   						/* Decrement nbr of ticks to end of delay          */		//å‡å°‘delayçš„tickerè®¡æ•° ï¼Œè‹¥ä¸º0åˆ™å»¶æ—¶åˆ°ç‚¹äº†
+					{               					   						/* Decrement nbr of ticks to end of delay          */		//¼õÉÙdelayµÄticker¼ÆÊı £¬ÈôÎª0ÔòÑÓÊ±µ½µãÁË
 																				/* Check for timeout                               */
 						if ((ptcb->OSTCBStat & OS_STAT_PEND_ANY) != OS_STAT_RDY) 
-						{																						     	//è‹¥è¯¥ä»»åŠ¡åœ¨pendçŠ¶æ€
-							ptcb->OSTCBStat   &= ~OS_STAT_PEND_ANY;             /* Yes, Clear status flag   */		//æ¸…é™¤pendæ ‡å¿—
-							ptcb->OSTCBPendTO  = OS_TRUE;                       /* Indicate PEND timeout    */	    //pendç»“æŸ		pendè¶…æ—¶
+						{																						     	//Èô¸ÃÈÎÎñÔÚpend×´Ì¬
+							ptcb->OSTCBStat   &= ~OS_STAT_PEND_ANY;             /* Yes, Clear status flag   */		//Çå³ıpend±êÖ¾
+							ptcb->OSTCBPendTO  = OS_TRUE;                       /* Indicate PEND timeout    */	    //pend½áÊø		pend³¬Ê±
 						} 
 						else 
 						{
@@ -216,8 +216,8 @@ void  OSTaskIdleHook (void)
 						}
 
 						if ((ptcb->OSTCBStat & OS_STAT_SUSPEND) == OS_STAT_RDY) 
-						{  														/* Is task suspended?       */		//è¯¥ä»»åŠ¡åœ¨suspendçŠ¶æ€
-							OSRdyGrp               |= ptcb->OSTCBBitY;          /* No,  Make ready          */		//è‹¥æ²¡æœ‰ï¼Œç½®ä¸ºready
+						{  														/* Is task suspended?       */		//¸ÃÈÎÎñÔÚsuspend×´Ì¬
+							OSRdyGrp               |= ptcb->OSTCBBitY;          /* No,  Make ready          */		//ÈôÃ»ÓĞ£¬ÖÃÎªready
 							OSRdyTbl[ptcb->OSTCBY] |= ptcb->OSTCBBitX;
 						}
 					}
@@ -226,22 +226,22 @@ void  OSTaskIdleHook (void)
             OS_EXIT_CRITICAL();
         }
 	}	
-	Tmr_TickInit(4000000);   													//å°†systickä¸­æ–­å¼€å¯æ”¾åœ¨æœ€åï¼Œé¿å…å½±å“å‰é¢è¿™äº›
+	Tmr_TickInit(4000000);   													//½«systickÖĞ¶Ï¿ªÆô·ÅÔÚ×îºó£¬±ÜÃâÓ°ÏìÇ°ÃæÕâĞ©
 }
 #endif
 
 /***************************************************************************************
-* å‡½æ•°åç§°: OSTaskStatHook 
+* º¯ÊıÃû³Æ: OSTaskStatHook 
 *
-* åŠŸèƒ½æè¿°: This function is called every second by uC/OS-II's statistics task.This allows 
+* ¹¦ÄÜÃèÊö: This function is called every second by uC/OS-II's statistics task.This allows 
 *           your application to add functionality to the statistics task.
 *            
-* å‚    æ•°: none
+* ²Î    Êı: none
 *
-* è¿” å› å€¼: None
+* ·µ »Ø Öµ: None
 *         
-* ä½œã€€  è€…: ç½—è¾‰è”
-* æ—¥  ã€€æœŸ: 2007å¹´11æœˆ10æ—¥
+* ×÷¡¡  Õß: ÂŞ»ÔÁª
+* ÈÕ  ¡¡ÆÚ: 2007Äê11ÔÂ10ÈÕ
 *----------------------------------------------------------------------------------------
 *****************************************************************************************/
 
@@ -252,19 +252,19 @@ void  OSTaskStatHook (void)
 #endif
 
 /****************************************************************************************
-* å‡½æ•°åç§°: OSTaskStkInit
-* åŠŸèƒ½æè¿°: OSTaskCreate() å’Œ OSTaskCreateExt()è°ƒç”¨æœ¬å‡½æ•°åˆå§‹åŒ–æ­£è¢«åˆ›å»ºçš„ä»»åŠ¡çš„å †æ ˆ
-*            æœ¬å‡½æ•°å’Œå…·ä½“çš„å¤„ç†å™¨æœ‰å…³ 
+* º¯ÊıÃû³Æ: OSTaskStkInit
+* ¹¦ÄÜÃèÊö: OSTaskCreate() ºÍ OSTaskCreateExt()µ÷ÓÃ±¾º¯Êı³õÊ¼»¯Õı±»´´½¨µÄÈÎÎñµÄ¶ÑÕ»
+*            ±¾º¯ÊıºÍ¾ßÌåµÄ´¦ÀíÆ÷ÓĞ¹Ø 
 * 
-* å‚    æ•°: task  : ä»»åŠ¡å¼€å§‹æ‰§è¡Œçš„åœ°å€
-*           pdata ï¼šä¼ é€’ç»™ä»»åŠ¡çš„å‚æ•°
-*           ptos  ï¼šä»»åŠ¡çš„å †æ ˆå¼€å§‹ä½ç½®
-*           opt   ï¼šé™„åŠ å‚æ•°ï¼Œå…·ä½“æ„ä¹‰å‚è§OSTaskCreateExt()çš„optå‚æ•°
+* ²Î    Êı: task  : ÈÎÎñ¿ªÊ¼Ö´ĞĞµÄµØÖ·
+*           pdata £º´«µİ¸øÈÎÎñµÄ²ÎÊı
+*           ptos  £ºÈÎÎñµÄ¶ÑÕ»¿ªÊ¼Î»ÖÃ
+*           opt   £º¸½¼Ó²ÎÊı£¬¾ßÌåÒâÒå²Î¼ûOSTaskCreateExt()µÄopt²ÎÊı
 *
-* è¿” å› å€¼: æ ˆé¡¶æŒ‡é’ˆä½ç½®
+* ·µ »Ø Öµ: Õ»¶¥Ö¸ÕëÎ»ÖÃ
 *         
-* ä½œã€€  è€…: ç½—è¾‰è”
-* æ—¥  ã€€æœŸ: 2006å¹´6æœˆ10æ—¥
+* ×÷¡¡  Õß: ÂŞ»ÔÁª
+* ÈÕ  ¡¡ÆÚ: 2006Äê6ÔÂ10ÈÕ
 *----------------------------------------------------------------------------------------
 *****************************************************************************************/ 
 
@@ -274,19 +274,19 @@ OS_STK *OSTaskStkInit (void  (*task)(void  *parg), void  *parg, OS_STK  *ptos, I
 
 
     (void)opt;                                        /*  'opt' is not used, prevent  */
-                                                      /*  warning æ²¡æœ‰ç”¨'opt'ï¼Œ       */
-                                                      /*  é˜²æ­¢ç¼–è¯‘è­¦å‘Š                */
+                                                      /*  warning Ã»ÓĞÓÃ'opt'£¬       */
+                                                      /*  ·ÀÖ¹±àÒë¾¯¸æ                */
                                                                             
     stk = ptos;                                       /*  Load stack pointer          */
-                                                      /*  è£…è½½å †æ ˆæŒ‡é’ˆ                */                                    
+                                                      /*  ×°ÔØ¶ÑÕ»Ö¸Õë                */                                    
 
                                                       /*  Registers stacked as if     */
                                                       /*  auto-saved on exception     */             
-	                                              /*  æ¨¡æ‹Ÿæˆå¼‚å¸¸ï¼Œè‡ªåŠ¨æŠŠå¯„å­˜å™¨å‹æ ˆ*/
+	                                              /*  Ä£Äâ³ÉÒì³££¬×Ô¶¯°Ñ¼Ä´æÆ÷Ñ¹Õ»*/
 
     *(stk) = (INT32U)0x01000000L;                     /*  xPSR                        */ 
     *(--stk) = (INT32U)task;                          /*  Entry Point of the task     */
-                                                      /*  ä»»åŠ¡å…¥å£åœ°å€                */
+                                                      /*  ÈÎÎñÈë¿ÚµØÖ·                */
     *(--stk) = (INT32U)0xFFFFFFFEL;                   /*  R14 (LR)  (init value will  */
                                                       /*  cause fault if ever used)   */
                                                                            
@@ -294,15 +294,15 @@ OS_STK *OSTaskStkInit (void  (*task)(void  *parg), void  *parg, OS_STK  *ptos, I
     *(--stk) = (INT32U)0x03030303L;                   /*  R3                          */
     *(--stk) = (INT32U)0x02020202L;                   /*  R2                          */
     *(--stk) = (INT32U)0x01010101L;                   /*  R1                          */
-    *(--stk) = (INT32U)parg;                          /*  R0 : argument  è¾“å…¥å‚æ•°ï¼ŒARM*/
-                                                      /*  ä½¿ç”¨R0-R3å¯„å­˜å™¨ä¼ é€’å‚æ•°ï¼Œè¿™ */
-                                                      /*  é‡Œåªæœ‰ä¸€ä¸ªå‚æ•°ï¼Œæ‰€ä»¥åªä½¿ç”¨äº†*/
-                                                      /*  R0å¯„å­˜å™¨                    */
+    *(--stk) = (INT32U)parg;                          /*  R0 : argument  ÊäÈë²ÎÊı£¬ARM*/
+                                                      /*  Ê¹ÓÃR0-R3¼Ä´æÆ÷´«µİ²ÎÊı£¬Õâ */
+                                                      /*  ÀïÖ»ÓĞÒ»¸ö²ÎÊı£¬ËùÒÔÖ»Ê¹ÓÃÁË*/
+                                                      /*  R0¼Ä´æÆ÷                    */
                                                       
                                                       
                                                       /*  Remaining registers saved on*/
                                                       /*  process stack               */   
-	                                                  /*  å‰©ä¸‹çš„å¯„å­˜å™¨ä¿å­˜åˆ°å †æ ˆ      */
+	                                                  /*  Ê£ÏÂµÄ¼Ä´æÆ÷±£´æµ½¶ÑÕ»      */
 
     *(--stk) = (INT32U)0x11111111L;                   /*  R11                         */
     *(--stk) = (INT32U)0x10101010L;                   /*  R10                         */
@@ -317,18 +317,18 @@ OS_STK *OSTaskStkInit (void  (*task)(void  *parg), void  *parg, OS_STK  *ptos, I
 }
 
 /***************************************************************************************
-* å‡½æ•°åç§°: OSTaskSwHook 
+* º¯ÊıÃû³Æ: OSTaskSwHook 
 *
-* åŠŸèƒ½æè¿°: This function is called when a task switch is performed.  This allows you
+* ¹¦ÄÜÃèÊö: This function is called when a task switch is performed.  This allows you
 *           perform other operations during a context switch. 
 *
 *            
-* å‚    æ•°: None
+* ²Î    Êı: None
 *
-* è¿” å› å€¼: None
+* ·µ »Ø Öµ: None
 *         
-* ä½œã€€  è€…: ç½—è¾‰è”
-* æ—¥  ã€€æœŸ: 2007å¹´11æœˆ10æ—¥
+* ×÷¡¡  Õß: ÂŞ»ÔÁª
+* ÈÕ  ¡¡ÆÚ: 2007Äê11ÔÂ10ÈÕ
 *----------------------------------------------------------------------------------------
 *****************************************************************************************/
 
@@ -342,16 +342,16 @@ void  OSTaskSwHook (void)
 #endif
 
 /***************************************************************************************
-* å‡½æ•°åç§°: OSTCBInitHook, 
+* º¯ÊıÃû³Æ: OSTCBInitHook, 
 *
-* åŠŸèƒ½æè¿°: This function is called by OS_TCBInit() after setting up most of the TCB.
+* ¹¦ÄÜÃèÊö: This function is called by OS_TCBInit() after setting up most of the TCB.
 *            
-* å‚    æ•°: ptcb    is a pointer to the TCB of the task being created.
+* ²Î    Êı: ptcb    is a pointer to the TCB of the task being created.
 *
-* è¿” å› å€¼: None
+* ·µ »Ø Öµ: None
 *         
-* ä½œã€€  è€…: ç½—è¾‰è”
-* æ—¥  ã€€æœŸ: 2007å¹´11æœˆ10æ—¥
+* ×÷¡¡  Õß: ÂŞ»ÔÁª
+* ÈÕ  ¡¡ÆÚ: 2007Äê11ÔÂ10ÈÕ
 *----------------------------------------------------------------------------------------
 *****************************************************************************************/
 
@@ -363,16 +363,16 @@ void  OSTCBInitHook (OS_TCB *ptcb)
 #endif
 
 /***************************************************************************************
-* å‡½æ•°åç§°: OSTimeTickHook, 
+* º¯ÊıÃû³Æ: OSTimeTickHook, 
 *
-* åŠŸèƒ½æè¿°: This function is called every tick.
+* ¹¦ÄÜÃèÊö: This function is called every tick.
 *            
-* å‚    æ•°: None
+* ²Î    Êı: None
 *
-* è¿” å› å€¼: None
+* ·µ »Ø Öµ: None
 *         
-* ä½œã€€  è€…: ç½—è¾‰è”
-* æ—¥  ã€€æœŸ: 2007å¹´11æœˆ10æ—¥
+* ×÷¡¡  Õß: ÂŞ»ÔÁª
+* ÈÕ  ¡¡ÆÚ: 2007Äê11ÔÂ10ÈÕ
 *----------------------------------------------------------------------------------------
 *****************************************************************************************/
 

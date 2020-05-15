@@ -1,16 +1,16 @@
 /***********************************************************************************************************************                                    
 *
-*               (c) Copyright 2017-2030, æ­å·æ–¹è¯šç”µåŠ›æŠ€æœ¯æœ‰é™å…¬å¸(http://www.fcdl.com.cn)
+*               (c) Copyright 2017-2030, º¼Öİ·½³ÏµçÁ¦¼¼ÊõÓĞÏŞ¹«Ë¾(http://www.fcdl.com.cn)
 *                            All Rights Reserved
 *
 *---------- File Info ---------------------------------------------------------------
 * File name   :  bsp_spi.c
 *
-* Descriptions:  FM25CL64å’ŒW25Q256 æŒ‚æ¥åœ¨åŒä¸€ç»„çš„SPIæ¥å£ä¸Šï¼Œå› æ­¤ï¼Œå¦‚æœéœ€è¦åŒæ—¶ä½¿ç”¨è¿™ä¸¤é¢—å­˜å‚¨å™¨çš„è¯ï¼Œ
-*                åˆ™éœ€è¦ä»¥æ€»çº¿æ–¹å¼æ­¤é©±åŠ¨ï¼Œä¸ºBsp_fmå’ŒBsp_W25Q256æœåŠ¡
-* 					     åœ¨ä½¿ç”¨æœ¬æ–‡ä»¶ä¸­çš„å‡½æ•° å‰åéœ€è¦å¢åŠ OSSchedLock OSSchedUnlock è¿›è¡Œé”å®šä¿æŠ¤
+* Descriptions:  FM25CL64ºÍW25Q256 ¹Ò½ÓÔÚÍ¬Ò»×éµÄSPI½Ó¿ÚÉÏ£¬Òò´Ë£¬Èç¹ûĞèÒªÍ¬Ê±Ê¹ÓÃÕâÁ½¿Å´æ´¢Æ÷µÄ»°£¬
+*                ÔòĞèÒªÒÔ×ÜÏß·½Ê½´ËÇı¶¯£¬ÎªBsp_fmºÍBsp_W25Q256·şÎñ
+* 					     ÔÚÊ¹ÓÃ±¾ÎÄ¼şÖĞµÄº¯Êı Ç°ºóĞèÒªÔö¼ÓOSSchedLock OSSchedUnlock ½øĞĞËø¶¨±£»¤
 *
-* Created By  :  èµµå¿—èˆœ(11207656@qq.com)
+* Created By  :  ÕÔÖ¾Ë´(11207656@qq.com)
 * Created date:  2017.12.21
 *
 *---------- History Info -------------------------------------------------------------
@@ -25,7 +25,7 @@
 //#include "stm32l1xx_rcc.h"
 
 /* --------------------------------Private define---------------------------------------------*/
-/* Noteï¼šä½¿ç”¨è¯»å–æˆ–è€…å†™å…¥çš„æ—¶å€™ï¼Œè¦è¿›è¡Œ open å’Œ close çš„æ“ä½œ */
+/* Note£ºÊ¹ÓÃ¶ÁÈ¡»òÕßĞ´ÈëµÄÊ±ºò£¬Òª½øĞĞ open ºÍ close µÄ²Ù×÷ */
 #define MAX_FM_LEN 0x2000
 #define FM_WREN 0x06
 #define FM_WRDI 0x04
@@ -84,7 +84,7 @@ void SPI_1_Init(void)
 }
  /*******************************************************************************
 * Function Name  : BSP_SoftSpiSend.
-* Description    : è½¯ä»¶æ¨¡æ‹ŸSPI
+* Description    : Èí¼şÄ£ÄâSPI
 * Input 1        : SPIx where x can be 0,1,2 to select the SPI peripheral.
 * Input 2        : PtrToBuffer is an u8 pointer to the first word to be transmitted.
 * Input 3        : NbOfWords parameter indicates the number of words to be sent.
@@ -98,19 +98,19 @@ void BSP_SoftSpiSend(INT8U val)
 	for(i=0x80;i!=0;i>>=1)
 	{	
  		SCK_L();
-		if(val&i) MOSI_H();//æ•°æ®å»ºç«‹
+		if(val&i) MOSI_H();//Êı¾İ½¨Á¢
 		else MOSI_L();
 		
 		//Fmdelay(1);
-		SCK_H();       // ä¸Šå‡æ²¿æ•°æ®è¢«å†™å…¥åˆ°é“ç”µ  
-		//Fmdelay(1);  // zzs note,è¿™äº›å»¶æ—¶éƒ½å»æ‰æ˜¯ä¸å®‰å…¨çš„ï¼Œæœ‰å¾…ç¡®è®¤ä¸€ä¸‹å­??? zzsæŸ¥æ˜çœŸç›¸ï¼Œé“ç”µï¼Œä¸éœ€è¦å¤ªæ‹…å¿ƒï¼Œå†…å­˜çš„é€Ÿåº¦ã€‚
+		SCK_H();       // ÉÏÉıÑØÊı¾İ±»Ğ´Èëµ½Ìúµç  
+		//Fmdelay(1);  // zzs note,ÕâĞ©ÑÓÊ±¶¼È¥µôÊÇ²»°²È«µÄ£¬ÓĞ´ıÈ·ÈÏÒ»ÏÂ×Ó??? zzs²éÃ÷ÕæÏà£¬Ìúµç£¬²»ĞèÒªÌ«µ£ĞÄ£¬ÄÚ´æµÄËÙ¶È¡£
 	}
-	SCK_L();					//æ‹‰ä½ä»¥é™åŠŸè€—
+	SCK_L();					//À­µÍÒÔ½µ¹¦ºÄ
 }
 
  /*******************************************************************************
 * Function Name  : BSP_SoftSpiSend.
-* Description    : è½¯ä»¶æ¨¡æ‹ŸSPI
+* Description    : Èí¼şÄ£ÄâSPI
 * Input 1        : SPIx where x can be 0,1,2 to select the SPI peripheral.
 * Input 2        : PtrToBuffer is an u8 pointer to the first word to be transmitted.
 * Input 3        : NbOfWords parameter indicates the number of words to be sent.
@@ -127,7 +127,7 @@ INT8U BSP_SoftSpiRece(INT8U val)
 	{	
 		//Fmdelay(1);
 		SCK_L();
-		//Fmdelay(1);   // ä¸‹é™ æ¥æ”¶
+		//Fmdelay(1);   // ÏÂ½µ ½ÓÊÕ
 		SCK_H();     
 		Rd = MISO();
 		if(Rd==1) 
@@ -136,16 +136,16 @@ INT8U BSP_SoftSpiRece(INT8U val)
 		}
 	
 	}
-	SCK_L();					//æ‹‰ä½ä»¥é™åŠŸè€—	
+	SCK_L();					//À­µÍÒÔ½µ¹¦ºÄ	
 	return data;				
 }
 
 /***************************************************************************************
-åç§°ï¼šINT8U  SPI_BufferSend(const INT8U *PtrToBuffer, INT32U Len)
-åŠŸèƒ½ï¼šSPIå‘é€Lenå­—èŠ‚ã€‚æ¯1Kå°±å–‚ä¸€æ¬¡ç‹—ã€‚
-å…¥å‚ï¼šINT8U *PtrToBuffer, å¾…å‘é€çš„æ•°æ®åœ°å€ï¼›INT32U Lenï¼Œå‘é€é•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ’ä¸º1
+Ãû³Æ£ºINT8U  SPI_BufferSend(const INT8U *PtrToBuffer, INT32U Len)
+¹¦ÄÜ£ºSPI·¢ËÍLen×Ö½Ú¡£Ã¿1K¾ÍÎ¹Ò»´Î¹·¡£
+Èë²Î£ºINT8U *PtrToBuffer, ´ı·¢ËÍµÄÊı¾İµØÖ·£»INT32U Len£¬·¢ËÍ³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£ººãÎª1
 ****************************************************************************************/
 INT8U  SPI_BufferSend(const INT8U *PtrToBuffer, INT32U Len)
 {
@@ -154,22 +154,22 @@ INT8U  SPI_BufferSend(const INT8U *PtrToBuffer, INT32U Len)
 	while(Len)
 	{	
 		Feed_Dog();
-		Num = Len/1024 ? 1024:Len%1024;											//æ¯1Kå°±å–‚ä¸€æ¬¡ç‹—ï¼Œé˜²æ­¢çœ‹é—¨ç‹—å¤ä½
+		Num = Len/1024 ? 1024:Len%1024;											//Ã¿1K¾ÍÎ¹Ò»´Î¹·£¬·ÀÖ¹¿´ÃÅ¹·¸´Î»
 		Len -= Num;		
-		while (Num--)															//å†™Numå­—èŠ‚
+		while (Num--)															//Ğ´Num×Ö½Ú
 		{
-			BSP_SoftSpiSend(*PtrToBuffer++);									//å†™å®ŒæŒ‡é’ˆè‡ªå¢1
+			BSP_SoftSpiSend(*PtrToBuffer++);									//Ğ´ÍêÖ¸Õë×ÔÔö1
 		}
 	}
 	return 1;
 }
 
 /***************************************************************************************
-åç§°ï¼šINT8U SPI_BufferReceive(INT8U *PtrToBuffer, INT32U Len)
-åŠŸèƒ½ï¼šSPIæ¥æ”¶Lenå­—èŠ‚ã€‚æ¯1Kå°±å–‚ä¸€æ¬¡ç‹—ã€‚
-å…¥å‚ï¼šINT8U *PtrToBuffer, æ¥æ”¶æ•°æ®åçš„å­˜æ”¾åœ°å€ï¼›INT32U Lenï¼Œæ¥æ”¶é•¿åº¦
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ’ä¸º1
+Ãû³Æ£ºINT8U SPI_BufferReceive(INT8U *PtrToBuffer, INT32U Len)
+¹¦ÄÜ£ºSPI½ÓÊÕLen×Ö½Ú¡£Ã¿1K¾ÍÎ¹Ò»´Î¹·¡£
+Èë²Î£ºINT8U *PtrToBuffer, ½ÓÊÕÊı¾İºóµÄ´æ·ÅµØÖ·£»INT32U Len£¬½ÓÊÕ³¤¶È
+³ö²Î£ºÎŞ
+·µ»Ø£ººãÎª1
 ****************************************************************************************/
 INT8U SPI_BufferReceive(INT8U *PtrToBuffer, INT32U Len)
 {
@@ -178,11 +178,11 @@ INT8U SPI_BufferReceive(INT8U *PtrToBuffer, INT32U Len)
 	while(Len)
 	{	
 		Feed_Dog();
-		Num = Len/1024 ? 1024:Len%1024;											//æ¯1Kå°±å–‚ä¸€æ¬¡ç‹—ï¼Œé˜²æ­¢çœ‹é—¨ç‹—å¤ä½
+		Num = Len/1024 ? 1024:Len%1024;											//Ã¿1K¾ÍÎ¹Ò»´Î¹·£¬·ÀÖ¹¿´ÃÅ¹·¸´Î»
 		Len -= Num;		
-		while (Num--)															//è¯»Numå­—èŠ‚
+		while (Num--)															//¶ÁNum×Ö½Ú
 		{
-			*PtrToBuffer++ = BSP_SoftSpiRece(0xff);								//æ”¶å®ŒæŒ‡é’ˆè‡ªå¢1
+			*PtrToBuffer++ = BSP_SoftSpiRece(0xff);								//ÊÕÍêÖ¸Õë×ÔÔö1
 		}
 	}
 	return 1;

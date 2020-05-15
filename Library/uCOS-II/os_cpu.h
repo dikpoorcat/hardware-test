@@ -1,15 +1,15 @@
 /****************************Copyright (c)*********************************************                                     
 *                                          
-*                      åšæ ¼è¾¾ç§‘æŠ€æœ‰é™å…¬å¸
+*                      ²©¸ñ´ï¿Æ¼¼ÓĞÏŞ¹«Ë¾
 *
 *                        http://www.bogodtech.com
 *
 *---------- File Info ---------------------------------------------------------------
 * File name: 		OS_CPU.H
-* Created By: 		ç½—è¾‰è”(armgcc@foxmail.com   lhlzjut@hotmail.com) 	
+* Created By: 		ÂŞ»ÔÁª(armgcc@foxmail.com   lhlzjut@hotmail.com) 	
 * Created date: 	2007.11.28
 * Descriptions: 	Header file of the ported code
-* Adviser: 			æ¥¼ä¸œæ­¦(professor)  æµ™æ±Ÿå¤§å­¦ä¿¡ç”µç³»
+* Adviser: 			Â¥¶«Îä(professor)  Õã½­´óÑ§ĞÅµçÏµ
 *
 *---------- History Info -------------------------------------------------------------
 * Version: 			Ver1.0

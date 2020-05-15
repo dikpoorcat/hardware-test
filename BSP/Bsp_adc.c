@@ -3,24 +3,24 @@
 * Author: GuoWei Dong
 * Date First Issued: 2015-05-18
 * Version: 1.0.0
-* Description: ADé‡‡æ ·
+* Description: AD²ÉÑù
 *********************************************************************************
 * History:
 * 2018.08.30
-* Description: Z.E.æ•´ç†
+* Description: Z.E.ÕûÀí
 *							 
 ********************************************************************************/
 #include "Bsp_adc.h"
 
 #define ADC1_DR_Address    ((u32)0x4001244C) 
 
-INT16U		AD_Value[3];													//å¢è®¾ä¸€è·¯é‡‡é›†ï¼Œç”¨äºæ³•æ‹‰ç”µå®¹ç”µå‹é‡‡é›†ï¼ˆDMAç”¨ï¼‰
-Equi_STA	Equipment_state={ 0, 0, 0 };									//æŒ‰å›½ç½‘è§„çº¦ç»„å¸§æ—¶ï¼Œå¯ç›´æ¥memcpy
+INT16U		AD_Value[3];													//ÔöÉèÒ»Â·²É¼¯£¬ÓÃÓÚ·¨À­µçÈİµçÑ¹²É¼¯£¨DMAÓÃ£©
+Equi_STA	Equipment_state={ 0, 0, 0 };									//°´¹úÍø¹æÔ¼×éÖ¡Ê±£¬¿ÉÖ±½Ómemcpy
 
 
 /******************************************************************************* 
 * Function Name  : void ADC1_Configuration(void) 
-* Description    : ADC1é…ç½®ï¼Œè½¬åŒ–é¡ºåºï¼ŒDMAå¼€å¯
+* Description    : ADC1ÅäÖÃ£¬×ª»¯Ë³Ğò£¬DMA¿ªÆô
 * Input          : None 
 * Output         : None 
 * Return         : None 
@@ -30,32 +30,32 @@ Equi_STA	Equipment_state={ 0, 0, 0 };									//æŒ‰å›½ç½‘è§„çº¦ç»„å¸§æ—¶ï¼Œå¯ç›
 	ADC_InitTypeDef ADC_InitStructure; 
 
 	ADC_Cmd(ADC1, DISABLE);  
-	ADC_DMACmd(ADC1, DISABLE);    //å…³é—­ADC1,ADC1 DMA
+	ADC_DMACmd(ADC1, DISABLE);    //¹Ø±ÕADC1,ADC1 DMA
 
-	ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;                                  //ç‹¬ç«‹ADCæ¨¡å¼
-	ADC_InitStructure.ADC_ScanConvMode = ENABLE;                       	         		//ADCæ‰«ææ¨¡å¼ï¼Œä½¿ç”¨DMA
-	ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;                                  //è¿ç»­è½¬åŒ–
-	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;                 //è½¯ä»¶å¯åŠ¨
-	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;                              //å³å¯¹é½
-	ADC_InitStructure.ADC_NbrOfChannel = 3;                                             //ä½¿ç”¨ä¸‰ä¸ªé€šé“
-	ADC_Init(ADC1, &ADC_InitStructure);                                                 //ADCåˆå§‹åŒ–
-	ADC_TempSensorVrefintCmd(ENABLE);                                                   //å¼€å¯å†…éƒ¨æ¸©åº¦ä¼ æ„Ÿå™¨é€šé“
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_239Cycles5);        //PC1å¯¹åº”ä¸ºADC channel 11 ç¬¬ä¸€é¡ºåºè½¬åŒ–ï¼Œé‡‡æ ·æ—¶é—´41.5ä¸ªå‘¨æœŸ
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 2, ADC_SampleTime_239Cycles5);        //PC2å¯¹åº”ä¸ºADC channel 12 ç¬¬äºŒé¡ºåºè½¬åŒ–ï¼Œé‡‡æ ·æ—¶é—´41.5ä¸ªå‘¨æœŸ
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_16, 3, ADC_SampleTime_239Cycles5);       //å†…éƒ¨æ¸©åº¦ä¼ æ„Ÿå™¨ channel 16 ï¼Œç¬¬äºŒé¡ºåºè½¬åŒ–ï¼Œé‡‡æ ·æ—¶é—´239.5ä¸ªå‘¨æœŸ
+	ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;                                  //¶ÀÁ¢ADCÄ£Ê½
+	ADC_InitStructure.ADC_ScanConvMode = ENABLE;                       	         		//ADCÉ¨ÃèÄ£Ê½£¬Ê¹ÓÃDMA
+	ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;                                  //Á¬Ğø×ª»¯
+	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;                 //Èí¼şÆô¶¯
+	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;                              //ÓÒ¶ÔÆë
+	ADC_InitStructure.ADC_NbrOfChannel = 3;                                             //Ê¹ÓÃÈı¸öÍ¨µÀ
+	ADC_Init(ADC1, &ADC_InitStructure);                                                 //ADC³õÊ¼»¯
+	ADC_TempSensorVrefintCmd(ENABLE);                                                   //¿ªÆôÄÚ²¿ÎÂ¶È´«¸ĞÆ÷Í¨µÀ
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_239Cycles5);        //PC1¶ÔÓ¦ÎªADC channel 11 µÚÒ»Ë³Ğò×ª»¯£¬²ÉÑùÊ±¼ä41.5¸öÖÜÆÚ
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 2, ADC_SampleTime_239Cycles5);        //PC2¶ÔÓ¦ÎªADC channel 12 µÚ¶şË³Ğò×ª»¯£¬²ÉÑùÊ±¼ä41.5¸öÖÜÆÚ
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_16, 3, ADC_SampleTime_239Cycles5);       //ÄÚ²¿ÎÂ¶È´«¸ĞÆ÷ channel 16 £¬µÚ¶şË³Ğò×ª»¯£¬²ÉÑùÊ±¼ä239.5¸öÖÜÆÚ
 	ADC_Cmd(ADC1, ENABLE);  
-	ADC_DMACmd(ADC1, ENABLE);                                                           //ä½¿èƒ½ADCï¼Œä½¿èƒ½ADC DMA
-	// Enable ADC1 reset calibaration register è¿›è¡Œæ ¡å‡†
+	ADC_DMACmd(ADC1, ENABLE);                                                           //Ê¹ÄÜADC£¬Ê¹ÄÜADC DMA
+	// Enable ADC1 reset calibaration register ½øĞĞĞ£×¼
 	ADC_ResetCalibration(ADC1);  // Check the end of ADC1 reset calibration register
 	while(ADC_GetResetCalibrationStatus(ADC1)); 
 	// Start ADC1 calibaration
 	ADC_StartCalibration(ADC1);  
-	while(ADC_GetCalibrationStatus(ADC1)); // ADCæ ¡å‡†å®Œæˆ
+	while(ADC_GetCalibrationStatus(ADC1)); // ADCĞ£×¼Íê³É
 }
 
 /******************************************************************************* 
 * Function Name  : void DMA_Configuration(void) 
-* Description    : DMAé…ç½®ã€‚CMAR=AD_Valueæ•°ç»„çš„åœ°å€
+* Description    : DMAÅäÖÃ¡£CMAR=AD_ValueÊı×éµÄµØÖ·
 * Input          : None 
 * Output         : None 
 * Return         : None 
@@ -63,26 +63,26 @@ Equi_STA	Equipment_state={ 0, 0, 0 };									//æŒ‰å›½ç½‘è§„çº¦ç»„å¸§æ—¶ï¼Œå¯ç›
 void DMA_Configuration(void) 
 { 
     DMA_InitTypeDef DMA_InitStructure;   
-	DMA_Cmd(DMA1_Channel1, DISABLE); 	                                                //ADC1å¯¹åº”DMA channel 1
-    DMA_DeInit(DMA1_Channel1);                                                          //å¤ä½
-    DMA_InitStructure.DMA_PeripheralBaseAddr = ADC1_DR_Address;                         //CPAR= ADC1çš„DRå¯„å­˜å™¨åœ°å€
-    DMA_InitStructure.DMA_MemoryBaseAddr = (u32)&AD_Value;                              //CMAR=AD_Valueæ•°ç»„çš„åœ°å€
-    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;                                  //ä¼ è¾“æ–¹å‘ç”±ADCåˆ°å­˜å‚¨å™¨    
-    DMA_InitStructure.DMA_BufferSize = 3;                                               //æ•°æ®é‡ 3ä¸ª
-    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;                    //å¤–è®¾åœ°å€æ— å¢é‡
-    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;                             //å­˜å‚¨å™¨åœ°å€å¢é‡
-    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;         //ADCæ•°æ®å®½åº¦16ä½
-    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;                 //å­˜å‚¨å™¨æ¥æ”¶æ•°æ®å®½åº¦16ä½
-    DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;                                     //å¾ªç¯ä¼ è¾“
-    DMA_InitStructure.DMA_Priority = DMA_Priority_High;                                 //ä¼˜å…ˆçº§é«˜
-    DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;                                        //å…³é—­M2M
-    DMA_Init(DMA1_Channel1, &DMA_InitStructure);                                        //åˆå§‹åŒ– DMA CH1ï¼ˆADC1ï¼‰ä¼ è¾“
-    DMA_Cmd(DMA1_Channel1, ENABLE);                                                     //å¼€å¯DMAä¼ è¾“
+	DMA_Cmd(DMA1_Channel1, DISABLE); 	                                                //ADC1¶ÔÓ¦DMA channel 1
+    DMA_DeInit(DMA1_Channel1);                                                          //¸´Î»
+    DMA_InitStructure.DMA_PeripheralBaseAddr = ADC1_DR_Address;                         //CPAR= ADC1µÄDR¼Ä´æÆ÷µØÖ·
+    DMA_InitStructure.DMA_MemoryBaseAddr = (u32)&AD_Value;                              //CMAR=AD_ValueÊı×éµÄµØÖ·
+    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;                                  //´«Êä·½ÏòÓÉADCµ½´æ´¢Æ÷    
+    DMA_InitStructure.DMA_BufferSize = 3;                                               //Êı¾İÁ¿ 3¸ö
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;                    //ÍâÉèµØÖ·ÎŞÔöÁ¿
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;                             //´æ´¢Æ÷µØÖ·ÔöÁ¿
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;         //ADCÊı¾İ¿í¶È16Î»
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;                 //´æ´¢Æ÷½ÓÊÕÊı¾İ¿í¶È16Î»
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;                                     //Ñ­»·´«Êä
+    DMA_InitStructure.DMA_Priority = DMA_Priority_High;                                 //ÓÅÏÈ¼¶¸ß
+    DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;                                        //¹Ø±ÕM2M
+    DMA_Init(DMA1_Channel1, &DMA_InitStructure);                                        //³õÊ¼»¯ DMA CH1£¨ADC1£©´«Êä
+    DMA_Cmd(DMA1_Channel1, ENABLE);                                                     //¿ªÆôDMA´«Êä
 } 
 
 /******************************************************************************* 
 * Function Name  : void AD_Init(void)
-* Description    : ADC1åˆå§‹åŒ–
+* Description    : ADC1³õÊ¼»¯
 * Input          : None 
 * Output         : None 
 * Return         : None 
@@ -91,22 +91,22 @@ void AD_Init(void)
 {
 	GPIO_InitTypeDef 	GPIO_InitStructure;
 
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1|RCC_APB2Periph_GPIOC ,ENABLE);			//ä½¿èƒ½ADC1æ—¶é’Ÿï¼Œä½¿èƒ½PCå£æ—¶é’Ÿ
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);					//å¼€å¯å¤ç”¨æ—¶é’Ÿï¼ŒPC
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);						//ä½¿èƒ½DMA1æ—¶é’Ÿ
-	RCC_ADCCLKConfig(RCC_PCLK2_Div8);										//ADCæ—¶é’Ÿ8åˆ†é¢‘ 
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1|RCC_APB2Periph_GPIOC ,ENABLE);			//Ê¹ÄÜADC1Ê±ÖÓ£¬Ê¹ÄÜPC¿ÚÊ±ÖÓ
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);					//¿ªÆô¸´ÓÃÊ±ÖÓ£¬PC
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);						//Ê¹ÄÜDMA1Ê±ÖÓ
+	RCC_ADCCLKConfig(RCC_PCLK2_Div8);										//ADCÊ±ÖÓ8·ÖÆµ 
 
-	/*ADCå¼•è„šæ¨¡æ‹Ÿè¾“å…¥æ£€æµ‹*/
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1|GPIO_Pin_2;					//PC1 æ¨¡æ‹Ÿè¾“å…¥ç”¨ä½œADC_BATæ£€æµ‹ï¼ŒPC2 æ¨¡æ‹Ÿè¾“å…¥ç”¨ä½œADC_FALAæ£€æµ‹
+	/*ADCÒı½ÅÄ£ÄâÊäÈë¼ì²â*/
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1|GPIO_Pin_2;					//PC1 Ä£ÄâÊäÈëÓÃ×÷ADC_BAT¼ì²â£¬PC2 Ä£ÄâÊäÈëÓÃ×÷ADC_FALA¼ì²â
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
 	
-	/*ä½¿èƒ½å¼•è„šæ¨æŒ½è¾“å‡ºé«˜ç”µå¹³*/
+	/*Ê¹ÄÜÒı½ÅÍÆÍìÊä³ö¸ßµçÆ½*/
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;						//æ¨æŒ½è¾“å‡º
-	GPIO_InitStructure.GPIO_Pin = ADCEN_Pin;								//ADCä½¿èƒ½
-	GPIO_SetBits(ADCEN_Port, ADCEN_Pin);									//æ‹‰é«˜
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;						//ÍÆÍìÊä³ö
+	GPIO_InitStructure.GPIO_Pin = ADCEN_Pin;								//ADCÊ¹ÄÜ
+	GPIO_SetBits(ADCEN_Port, ADCEN_Pin);									//À­¸ß
 	GPIO_Init(ADCEN_Port, &GPIO_InitStructure);								
 
 	ADC1_Configuration();
@@ -115,7 +115,7 @@ void AD_Init(void)
 
 /******************************************************************************* 
 * Function Name  : void AD_LowPower(void)
-* Description    : ADC1æ—¶é’Ÿå…³é—­çœç”µ
+* Description    : ADC1Ê±ÖÓ¹Ø±ÕÊ¡µç
 * Input          : None 
 * Output         : None 
 * Return         : None 
@@ -124,85 +124,85 @@ void AD_LowPower(void)
 {
 	GPIO_InitTypeDef 	GPIO_InitStructure;
 	
-	ADC_DeInit(ADC1);														//æ²¡æœ‰è¿™ä¸ªä¼šå¢åŠ 46uA
-	ADC_Cmd(ADC1, DISABLE);													//å…³ADCå¤–è®¾
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1,DISABLE);					//å…³ADCæ—¶é’Ÿ		ä¸å…³å¤ç”¨æ—¶é’Ÿ|RCC_APB2Periph_AFIOï¼ˆä¸²å£ä¹Ÿç”¨åˆ°è¿™ä¸ªï¼‰  å®æµ‹è¿™ä¸¤ä¸ªæ—¶é’Ÿå…³ä¸å…³éƒ½ä¸å½±å“
+	ADC_DeInit(ADC1);														//Ã»ÓĞÕâ¸ö»áÔö¼Ó46uA
+	ADC_Cmd(ADC1, DISABLE);													//¹ØADCÍâÉè
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1,DISABLE);					//¹ØADCÊ±ÖÓ		²»¹Ø¸´ÓÃÊ±ÖÓ|RCC_APB2Periph_AFIO£¨´®¿ÚÒ²ÓÃµ½Õâ¸ö£©  Êµ²âÕâÁ½¸öÊ±ÖÓ¹Ø²»¹Ø¶¼²»Ó°Ïì
 	
-	ADC_DMACmd(ADC1, DISABLE);												//å…³é—­ADC1 DMA
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, DISABLE);						//å…³DMAæ—¶é’Ÿ
+	ADC_DMACmd(ADC1, DISABLE);												//¹Ø±ÕADC1 DMA
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, DISABLE);						//¹ØDMAÊ±ÖÓ
 
-	/*ä½¿èƒ½å¼•è„šã€ä¸¤ä¸ªADCé‡‡æ ·å¼•è„šæ¨¡æ‹Ÿè¾“å…¥*/
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;						//ADCä¸¤ä¸ªå¼•è„šæœ¬æ¥å°±æ˜¯æ¨¡æ‹Ÿè¾“å…¥ï¼Œå°†50MHzæ”¹ä¸º2MHz
+	/*Ê¹ÄÜÒı½Å¡¢Á½¸öADC²ÉÑùÒı½ÅÄ£ÄâÊäÈë*/
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;						//ADCÁ½¸öÒı½Å±¾À´¾ÍÊÇÄ£ÄâÊäÈë£¬½«50MHz¸ÄÎª2MHz
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
 	
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1|GPIO_Pin_2;					//PC1ã€PC2
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1|GPIO_Pin_2;					//PC1¡¢PC2
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
 	
-//	GPIO_InitStructure.GPIO_Pin = ADCEN_Pin;								//ADCä½¿èƒ½
+//	GPIO_InitStructure.GPIO_Pin = ADCEN_Pin;								//ADCÊ¹ÄÜ
 //	GPIO_Init(ADCEN_Port, &GPIO_InitStructure);
-	GPIO_ResetBits(ADCEN_Port, ADCEN_Pin);									//æ‹‰ä½
+	GPIO_ResetBits(ADCEN_Port, ADCEN_Pin);									//À­µÍ
 }
 	
 /******************************************************************************* 
 * Function Name  : u32 GET_ADVALUE(u8 ch,u8 CISHU)   
-* Description    : è·å–ADè½¬åŒ–ç»“æœ
-* Input          : chï¼šé€šé“
+* Description    : »ñÈ¡AD×ª»¯½á¹û
+* Input          : ch£ºÍ¨µÀ
 					#define CH_BAT 0
 					#define CH_FALA 1
 					#define CH_MCUWD 2
-	               countï¼šå–å‡ æ¬¡çš„å¹³å‡å€¼
+	               count£ºÈ¡¼¸´ÎµÄÆ½¾ùÖµ
 * Output         : 
-* Return         : è½¬åŒ–å12ä½ADé‡‡æ ·å€¼
+* Return         : ×ª»¯ºó12Î»AD²ÉÑùÖµ
 *******************************************************************************/ 
 u32 GET_ADVALUE(u8 ch,u8 count)       
 {
 	u32		ADvalue=0;														//typedef unsigned long	u32
 	INT8U	i;
-	INT16U	temp[20]={0};													//countæœ€å¤š20æ¬¡é‡‡æ ·
+	INT16U	temp[20]={0};													//count×î¶à20´Î²ÉÑù
   
 	for(i=0;i<count;i++)
 	{
-		ADC_SoftwareStartConvCmd(ADC1, ENABLE);								//å¼€å¯ADC1è½¬åŒ–
-		delay_2us_4M(500*50);												//å»¶æ—¶20ms
+		ADC_SoftwareStartConvCmd(ADC1, ENABLE);								//¿ªÆôADC1×ª»¯
+		delay_2us_4M(500*50);												//ÑÓÊ±20ms
 //		OSTimeDly(1);
 		BSP_WDGFeedDog(); 
-		temp[i]=AD_Value[ch];												//å¼€å¯DMAä¼ è¾“åï¼ŒADC CH_Xæ•°æ®ç›´æ¥ä¼ è¾“åˆ°AD_Value[X]
+		temp[i]=AD_Value[ch];												//¿ªÆôDMA´«Êäºó£¬ADC CH_XÊı¾İÖ±½Ó´«Êäµ½AD_Value[X]
 	}
 	for(i=0;i<count;i++)
 	{
 		ADvalue+=temp[i];			 
 	}
-	ADvalue /= count;														//å–é‡‡æ ·å¹³å‡å€¼ï¼Œæ­¤ä¸º12ä½ADå€¼
+	ADvalue /= count;														//È¡²ÉÑùÆ½¾ùÖµ£¬´ËÎª12Î»ADÖµ
 
 	return ADvalue;		
 }
 	
 /******************************************************************************* 
 * Function Name  : u32 Read_Voltage(u8 ch,u8 count)  
-* Description    : è·å–ç”µæ± æˆ–æ³•æ‹‰ç”µå®¹çš„ç”µå‹ï¼Œåˆ†å‹ç³»æ•°æ˜¯1/4ï¼Œæ£€æµ‹èŒƒå›´0-13.2V
-* Input          : chï¼šé€šé“ CH_BAT 0||CH_FALA 1
-	               countï¼šå–å‡ æ¬¡çš„å¹³å‡å€¼
+* Description    : »ñÈ¡µç³Ø»ò·¨À­µçÈİµÄµçÑ¹£¬·ÖÑ¹ÏµÊıÊÇ1/4£¬¼ì²â·¶Î§0-13.2V
+* Input          : ch£ºÍ¨µÀ CH_BAT 0||CH_FALA 1
+	               count£ºÈ¡¼¸´ÎµÄÆ½¾ùÖµ
 * Output         : 
-* Return         : ç”µæ± æˆ–æ³•æ‹‰ç”µå®¹ç”µå‹å€¼é‡‡æ ·å¹³å‡å€¼ï¼ˆå®é™…å€¼çš„100å€ï¼‰ï¼Œå•ä½10mV,å–å°æ•°ç‚¹åä¸¤ä½
+* Return         : µç³Ø»ò·¨À­µçÈİµçÑ¹Öµ²ÉÑùÆ½¾ùÖµ£¨Êµ¼ÊÖµµÄ100±¶£©£¬µ¥Î»10mV,È¡Ğ¡ÊıµãºóÁ½Î»
 *******************************************************************************/ 
 u32 Read_Voltage(u8 ch,u8 count)
 {
 	u32 Voltage;
 
 	Voltage=GET_ADVALUE(ch,count);
-	Voltage=Voltage*330/4096*4;												//å•ä½10mV,ç³»æ•°4ï¼Œé»˜è®¤å‚è€ƒç”µå‹3.3V
+	Voltage=Voltage*330/4096*4;												//µ¥Î»10mV,ÏµÊı4£¬Ä¬ÈÏ²Î¿¼µçÑ¹3.3V
 	
-	Voltage = Voltage-4.9;													//è¡¥å¿
+	Voltage = Voltage-4.9;													//²¹³¥
 	
 	return Voltage;       
 }
 
 /******************************************************************************* 
 * Function Name  : u32 Read_MCU_Temp( u8 count )
-* Description    : è·å–MCUå†…éƒ¨æ¸©åº¦ï¼Œè¿›è¡Œcountæ¬¡é‡‡æ ·å–å¹³å‡å€¼ï¼Œé‡‡æ ·å‘¨æœŸæœ€é•¿ã€‚å•ä½ï¼šâ„ƒ*100
-* Input          :  u8 count ï¼Œé‡‡æ ·æ¬¡æ•°
+* Description    : »ñÈ¡MCUÄÚ²¿ÎÂ¶È£¬½øĞĞcount´Î²ÉÑùÈ¡Æ½¾ùÖµ£¬²ÉÑùÖÜÆÚ×î³¤¡£µ¥Î»£º¡æ*100
+* Input          :  u8 count £¬²ÉÑù´ÎÊı
 * Output         : 
-* Return         : è¿”å›MCUæ¸©åº¦çš„100å€ï¼Œå–å°æ•°ç‚¹åä¸¤ä½
+* Return         : ·µ»ØMCUÎÂ¶ÈµÄ100±¶£¬È¡Ğ¡ÊıµãºóÁ½Î»
 *******************************************************************************/ 
 u32 Read_MCU_Temp( u8 count )
 {
@@ -210,16 +210,16 @@ u32 Read_MCU_Temp( u8 count )
 	u32 MCU_Temp; 
 	Temp=GET_ADVALUE(CH_MCUWD,1);
 	
-	MCU_Temp=(u32)((1.43-Temp*3.3/4096)*1000/4.3+25)*100 ; //å–å°æ•°ç‚¹åä¸¤ä½
-	return MCU_Temp;   //è¿”å›æ¸©åº¦çš„100å€
+	MCU_Temp=(u32)((1.43-Temp*3.3/4096)*1000/4.3+25)*100 ; //È¡Ğ¡ÊıµãºóÁ½Î»
+	return MCU_Temp;   //·µ»ØÎÂ¶ÈµÄ100±¶
 }
 
 /******************************************************************************* 
 * Function Name  : void ADC_HEXtoASCII(u32 In,u8 *pOut)
-* Description    : å°†ç”µå‹å€¼ï¼Œæ¸©åº¦è½¬åŒ–ä¸ºå­—ç¬¦è¾“å‡º
+* Description    : ½«µçÑ¹Öµ£¬ÎÂ¶È×ª»¯Îª×Ö·ûÊä³ö
 * Input          : u32 In
 * Output         : u8 *pOut
-* Return         : æ— 
+* Return         : ÎŞ
 *******************************************************************************/ 
 void ADC_HEXtoASCII(u32 In,u8 *pOut)
 {
@@ -237,17 +237,17 @@ void ADC_HEXtoASCII(u32 In,u8 *pOut)
 
 /******************************************************************************* 
 * Function Name  : void ReadVCC_Test(void)
-* Description    : æµ‹è¯•æ‰“å°V_BATã€V_FALAã€MCUWD
-* Input          : æ— 
-* Output         : æ— 
-* Return         : æ— 
+* Description    : ²âÊÔ´òÓ¡V_BAT¡¢V_FALA¡¢MCUWD
+* Input          : ÎŞ
+* Output         : ÎŞ
+* Return         : ÎŞ
 *******************************************************************************/ 
 void ReadVCC_Test(void)
 {
 	u32 Vbat=0,Vfala=0,Tmcu=0;
 
 	AD_Init();
-	Vbat=Read_Voltage(CH_BAT,5);											//å–5æ¬¡é‡‡æ ·å¹³å‡å€¼ 
+	Vbat=Read_Voltage(CH_BAT,5);											//È¡5´Î²ÉÑùÆ½¾ùÖµ 
     Print_Voltage( CH_BAT, Vbat );
 	
 	Vfala=Read_Voltage(CH_FALA,5);
@@ -256,96 +256,96 @@ void ReadVCC_Test(void)
 	Tmcu=Read_MCU_Temp( 5 );
 	Print_Voltage( CH_MCUWD, Tmcu );
 	
-	OSTimeDly(5);															//ç­‰å¾…æ‰“å°å®Œæˆ
+	OSTimeDly(5);															//µÈ´ı´òÓ¡Íê³É
 }
 
 /*******************************************************************************
-åç§°ï¼švoid Print_Voltage( INT8U Channel, INT32U Voltage )
-åŠŸèƒ½ï¼šé€‰æ‹©éœ€è¦æ‰“å°çš„ç±»å‹ï¼Œå¹¶è¾“å…¥å€¼ï¼Œå¯ä»485æ‰“å°å‡ºæµ‹è¯•ä¿¡æ¯
-å…¥å‚ï¼šINT8U Channel, é€šé“ï¼›INT32U Voltageï¼Œéœ€è¦æ‰“å°çš„å€¼
+Ãû³Æ£ºvoid Print_Voltage( INT8U Channel, INT32U Voltage )
+¹¦ÄÜ£ºÑ¡ÔñĞèÒª´òÓ¡µÄÀàĞÍ£¬²¢ÊäÈëÖµ£¬¿É´Ó485´òÓ¡³ö²âÊÔĞÅÏ¢
+Èë²Î£ºINT8U Channel, Í¨µÀ£»INT32U Voltage£¬ĞèÒª´òÓ¡µÄÖµ
 		#define CH_BAT 0
 		#define CH_FALA 1
 		#define CH_MCUWD 2
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void Print_Voltage( INT8U Channel, INT32U Voltage )
 {
 	INT8U	temp[7]={0};
 	
-	ADC_HEXtoASCII( Voltage, temp );											//è½¬æ¢ä¸ºå­—ç¬¦ä¸²
+	ADC_HEXtoASCII( Voltage, temp );											//×ª»»Îª×Ö·û´®
 	
 	switch( Channel ){
 		case CH_BAT:
-			BspUartWrite(2,SIZE_OF("V_BAT---->"));								//è¾“å‡ºV_BAT
+			BspUartWrite(2,SIZE_OF("V_BAT---->"));								//Êä³öV_BAT
 			break;
 		case CH_FALA:
-			BspUartWrite(2,SIZE_OF("V_FALA--->"));								//è¾“å‡ºV_FALA
+			BspUartWrite(2,SIZE_OF("V_FALA--->"));								//Êä³öV_FALA
 			break;
 		case CH_MCUWD:
-			BspUartWrite(2,SIZE_OF("MCUWD---->"));								//è¾“å‡ºå•ç‰‡æœºæ¸©åº¦
+			BspUartWrite(2,SIZE_OF("MCUWD---->"));								//Êä³öµ¥Æ¬»úÎÂ¶È
 			break;
 		default:
-			BspUartWrite(2,SIZE_OF("æœªæŒ‡å®šé€šé“"));
+			BspUartWrite(2,SIZE_OF("Î´Ö¸¶¨Í¨µÀ"));
 			break;
 	}
 	BspUartWrite( 2, temp, 7 );
 }
 
 /*******************************************************************************
-åç§°ï¼švoid Get_Voltage_MCUtemp_Data( INT8U Count )
-åŠŸèƒ½ï¼šè·å–ç”µæ± ç”µå‹æ•°æ®å’Œå•ç‰‡æœºæ¸©åº¦ï¼Œå¤šæ¬¡é‡‡æ ·å–å¹³å‡å€¼å¹¶è½¬æ¢ä¸ºæµ®ç‚¹ï¼Œå­˜å…¥Equipment_stateç»“æ„ä½“ï¼Œ
-å¹¶è¿›è¡Œæ•…éšœåˆ¤æ–­ã€‚è‹¥485å·²å¼€æ”¾ï¼Œå¯å°†é‡‡é›†åˆ°çš„æ•°æ®å’Œæ•…éšœä¿¡æ¯ï¼Œä»485æ‰“å°å‡ºæ¥ï¼ˆå‡½æ•°å†…æ— 485åˆå§‹åŒ–ï¼‰ã€‚
-å…¥å‚ï¼šINT8U Countï¼Œé‡‡æ ·çš„æ¬¡æ•°
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šæ— 
+Ãû³Æ£ºvoid Get_Voltage_MCUtemp_Data( INT8U Count )
+¹¦ÄÜ£º»ñÈ¡µç³ØµçÑ¹Êı¾İºÍµ¥Æ¬»úÎÂ¶È£¬¶à´Î²ÉÑùÈ¡Æ½¾ùÖµ²¢×ª»»Îª¸¡µã£¬´æÈëEquipment_state½á¹¹Ìå£¬
+²¢½øĞĞ¹ÊÕÏÅĞ¶Ï¡£Èô485ÒÑ¿ª·Å£¬¿É½«²É¼¯µ½µÄÊı¾İºÍ¹ÊÕÏĞÅÏ¢£¬´Ó485´òÓ¡³öÀ´£¨º¯ÊıÄÚÎŞ485³õÊ¼»¯£©¡£
+Èë²Î£ºINT8U Count£¬²ÉÑùµÄ´ÎÊı
+³ö²Î£ºÎŞ
+·µ»Ø£ºÎŞ
 *******************************************************************************/
 void Get_Voltage_MCUtemp_Data( INT8U Count )
 {
 	INT32U	Vbat=0,Vfala=0,Tmcu=0;
 	
-	/*æ¸…ä¸Šæ¬¡æ•°æ®*/
+	/*ÇåÉÏ´ÎÊı¾İ*/
 	Equipment_state.BAT_Volt= 0;											
 	Equipment_state.FALA_Volt= 0;
 	Equipment_state.MCU_Temp= 0;
 	
-	/*é‡‡é›†*/
-	AD_Init();																//åˆå§‹åŒ–ADC
-	Vbat= Read_Voltage( CH_BAT, Count );									//ç”µæ± ç”µå‹é‡‡æ ·Countæ¬¡ï¼Œè¿”å›å¹³å‡å€¼ï¼ˆå®é™…å€¼çš„100å€ï¼‰ï¼ŒINT32U
-	Vfala= Read_Voltage( CH_FALA, Count );									//æ³•æ‹‰ç”µå®¹ç”µå‹é‡‡æ ·Countæ¬¡ï¼Œè¿”å›å¹³å‡å€¼ï¼ˆå®é™…å€¼çš„100å€ï¼‰ï¼ŒINT32U
-	Tmcu= Read_MCU_Temp( Count );											//å•ç‰‡æœºæ¸©åº¦ç”µå‹é‡‡æ ·Countæ¬¡ï¼Œè¿”å›å¹³å‡å€¼ï¼ˆå®é™…å€¼çš„100å€ï¼‰ï¼ŒINT32U
+	/*²É¼¯*/
+	AD_Init();																//³õÊ¼»¯ADC
+	Vbat= Read_Voltage( CH_BAT, Count );									//µç³ØµçÑ¹²ÉÑùCount´Î£¬·µ»ØÆ½¾ùÖµ£¨Êµ¼ÊÖµµÄ100±¶£©£¬INT32U
+	Vfala= Read_Voltage( CH_FALA, Count );									//·¨À­µçÈİµçÑ¹²ÉÑùCount´Î£¬·µ»ØÆ½¾ùÖµ£¨Êµ¼ÊÖµµÄ100±¶£©£¬INT32U
+	Tmcu= Read_MCU_Temp( Count );											//µ¥Æ¬»úÎÂ¶ÈµçÑ¹²ÉÑùCount´Î£¬·µ»ØÆ½¾ùÖµ£¨Êµ¼ÊÖµµÄ100±¶£©£¬INT32U
     AD_LowPower();
 
-	/*æ‰“å°æµ‹è¯•ä¿¡æ¯ï¼Œé»˜è®¤å¤–é¢å·²å¼€å¯485*/
+	/*´òÓ¡²âÊÔĞÅÏ¢£¬Ä¬ÈÏÍâÃæÒÑ¿ªÆô485*/
 	Print_Voltage( CH_BAT, Vbat );
 	Print_Voltage( CH_FALA, Vfala );
 	Print_Voltage( CH_MCUWD, Tmcu );
 	
-	/*å­˜å…¥ç»“æ„ä½“*/
-	Equipment_state.BAT_Volt= ( (float)Vbat ) / 100;						//è½¬æ¢ä¸ºæµ®ç‚¹ï¼ˆåå°è¦æ±‚çš„æ•°æ®ç±»å‹ï¼‰ï¼Œè®¡ç®—çœŸå®å€¼å¹¶è½¬å­˜åˆ°Equipment_stateï¼ˆåŸä¸º100å€ï¼‰
-	Equipment_state.FALA_Volt= ( (float)Vfala ) / 100;						//è½¬æ¢ä¸ºæµ®ç‚¹ï¼ˆåå°è¦æ±‚çš„æ•°æ®ç±»å‹ï¼‰ï¼Œè®¡ç®—çœŸå®å€¼å¹¶è½¬å­˜åˆ°Equipment_stateï¼ˆåŸä¸º100å€ï¼‰
-	Equipment_state.MCU_Temp= ( (float)Tmcu ) / 100;						//è½¬æ¢ä¸ºæµ®ç‚¹ï¼ˆåå°æ— æ­¤è¦æ±‚ï¼Œæ•°æ®ç±»å‹ä¸ç¯å¢ƒæ¸©åº¦ç›¸åŒï¼‰ï¼Œè®¡ç®—çœŸå®å€¼å¹¶è½¬å­˜åˆ°Equipment_stateï¼ˆåŸä¸º100å€ï¼‰
+	/*´æÈë½á¹¹Ìå*/
+	Equipment_state.BAT_Volt= ( (float)Vbat ) / 100;						//×ª»»Îª¸¡µã£¨ºóÌ¨ÒªÇóµÄÊı¾İÀàĞÍ£©£¬¼ÆËãÕæÊµÖµ²¢×ª´æµ½Equipment_state£¨Ô­Îª100±¶£©
+	Equipment_state.FALA_Volt= ( (float)Vfala ) / 100;						//×ª»»Îª¸¡µã£¨ºóÌ¨ÒªÇóµÄÊı¾İÀàĞÍ£©£¬¼ÆËãÕæÊµÖµ²¢×ª´æµ½Equipment_state£¨Ô­Îª100±¶£©
+	Equipment_state.MCU_Temp= ( (float)Tmcu ) / 100;						//×ª»»Îª¸¡µã£¨ºóÌ¨ÎŞ´ËÒªÇó£¬Êı¾İÀàĞÍÓë»·¾³ÎÂ¶ÈÏàÍ¬£©£¬¼ÆËãÕæÊµÖµ²¢×ª´æµ½Equipment_state£¨Ô­Îª100±¶£©
 	
-	/*æ•…éšœåˆ¤æ–­*/
-	if((Equipment_state.BAT_Volt<BAT_UNDER) && (!Fault_Manage.F_BAT)) 		//ç”µæ± ç”µå‹<9.2Vï¼Œä¸”æ— æ•…éšœæ ‡å¿—
-		NW_Fault_Manage(BAT_F, FAULT_STA);									//ä¸ŠæŠ¥ç”µæ± æ¬ å‹æ•…éšœ		
-	else if((Equipment_state.BAT_Volt>BAT_UP) && Fault_Manage.F_BAT)		//ç”µæ± ç”µå‹>9.5Vï¼Œä¸”æœ‰æ•…éšœæ ‡å¿—	
-		NW_Fault_Manage(BAT_F, NOFAULT_STA);								//ä¸ŠæŠ¥ç”µå‹æ¬ å‹æ•…éšœæ¢å¤	
+	/*¹ÊÕÏÅĞ¶Ï*/
+	if((Equipment_state.BAT_Volt<BAT_UNDER) && (!Fault_Manage.F_BAT)) 		//µç³ØµçÑ¹<9.2V£¬ÇÒÎŞ¹ÊÕÏ±êÖ¾
+		NW_Fault_Manage(BAT_F, FAULT_STA);									//ÉÏ±¨µç³ØÇ·Ñ¹¹ÊÕÏ		
+	else if((Equipment_state.BAT_Volt>BAT_UP) && Fault_Manage.F_BAT)		//µç³ØµçÑ¹>9.5V£¬ÇÒÓĞ¹ÊÕÏ±êÖ¾	
+		NW_Fault_Manage(BAT_F, NOFAULT_STA);								//ÉÏ±¨µçÑ¹Ç·Ñ¹¹ÊÕÏ»Ö¸´	
 }
 
 /*******************************************************************************
-åç§°ï¼šINT8U HB_Get_Voltage( INT8U Count )
-åŠŸèƒ½ï¼šè·å–ç”µæ± ç”µå‹æ•°æ®å’Œå•ç‰‡æœºæ¸©åº¦ï¼Œå¤šæ¬¡é‡‡æ ·å–å¹³å‡å€¼å¹¶è½¬æ¢ä¸ºæµ®ç‚¹ï¼Œå­˜å…¥Equipment_stateç»“æ„ä½“
-	è‹¥485å·²å¼€æ”¾ï¼Œå¯å°†é‡‡é›†åˆ°çš„æ•°æ®ä»485æ‰“å°å‡ºæ¥ï¼ˆå‡½æ•°å†…æ— 485åˆå§‹åŒ–ï¼‰
-å…¥å‚ï¼šcountï¼šå–countæ¬¡é‡‡æ ·çš„å¹³å‡å€¼
-å‡ºå‚ï¼šæ— 
-è¿”å›ï¼šå¿ƒè·³ç»„å¸§éœ€è¦çš„ç”µæ± ç”µå‹æ•°å€¼ï¼Œå•ä½100mv
+Ãû³Æ£ºINT8U HB_Get_Voltage( INT8U Count )
+¹¦ÄÜ£º»ñÈ¡µç³ØµçÑ¹Êı¾İºÍµ¥Æ¬»úÎÂ¶È£¬¶à´Î²ÉÑùÈ¡Æ½¾ùÖµ²¢×ª»»Îª¸¡µã£¬´æÈëEquipment_state½á¹¹Ìå
+	Èô485ÒÑ¿ª·Å£¬¿É½«²É¼¯µ½µÄÊı¾İ´Ó485´òÓ¡³öÀ´£¨º¯ÊıÄÚÎŞ485³õÊ¼»¯£©
+Èë²Î£ºcount£ºÈ¡count´Î²ÉÑùµÄÆ½¾ùÖµ
+³ö²Î£ºÎŞ
+·µ»Ø£ºĞÄÌø×éÖ¡ĞèÒªµÄµç³ØµçÑ¹ÊıÖµ£¬µ¥Î»100mv
 *******************************************************************************/
 INT8U HB_Get_Voltage( INT8U Count )
 {
 	INT8U Vbat;
 	AD_Init();	
-	Vbat=(INT8U) (Read_Voltage(CH_BAT,Count)/10);							//éœ€æ±‚ä¸€ä¸ªå­—èŠ‚ï¼Œå•ä½100mv														
+	Vbat=(INT8U) (Read_Voltage(CH_BAT,Count)/10);							//ĞèÇóÒ»¸ö×Ö½Ú£¬µ¥Î»100mv														
 	AD_LowPower();
 	return Vbat;
 }

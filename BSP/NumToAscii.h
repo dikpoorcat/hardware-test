@@ -7,7 +7,7 @@
 
 
 
-/*ÂºÂ¯ÃŠÃ½Ã‰Ã¹ÃƒÃ·*/
+/*º¯ÊýÉùÃ÷*/
 INT8U Int16uHexToAscii(INT16U InData,INT8U *pOut);
 void Int8uHexToAscii(INT8U InData,INT8U *pOut);
 void FloatToStr(double fda,char *pString,INT8U dNum);

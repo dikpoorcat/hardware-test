@@ -47,7 +47,7 @@ void  OSTimeDly (INT16U ticks)
         y            =  OSTCBCur->OSTCBY;        /* Delay current task                                 */
         OSRdyTbl[y] &= ~OSTCBCur->OSTCBBitX;
         if (OSRdyTbl[y] == 0) {
-            OSRdyGrp &= ~OSTCBCur->OSTCBBitY;              //Â¾ÃÃÃ·tableÃ–ÃÃ„ÃƒÂµÃ´
+            OSRdyGrp &= ~OSTCBCur->OSTCBBitY;              //¾ÍÐ÷tableÖÐÄÃµô
         }
         OSTCBCur->OSTCBDly = ticks;              /* Load ticks in TCB                                  */
         OS_EXIT_CRITICAL();

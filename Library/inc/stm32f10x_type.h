@@ -74,16 +74,16 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrorStatus;
 
 
 
-/*å¸¸ç”¨ç»“æ„ä½“å®šä¹‰*/
-struct BSPRTC_TIME																//RX8025ç»“æ„ä½“ï¼Œè¯»å†™çš„æ—¶å€™æŒ‰è¿™ä¸ªé¡ºåºå°±è¡Œï¼Œæ•°æ®ä¸º8421BCDç 
+/*³£ÓÃ½á¹¹Ìå¶¨Òå*/
+struct BSPRTC_TIME																//RX8025½á¹¹Ìå£¬¶ÁĞ´µÄÊ±ºò°´Õâ¸öË³Ğò¾ÍĞĞ£¬Êı¾İÎª8421BCDÂë
 {
-	unsigned char Second;														//ç§’ï¼Œ8421BCDç 
-	unsigned char Minute;														//åˆ†ï¼Œ8421BCDç 
-	unsigned char Hour;															//æ—¶ï¼Œ8421BCDç 
-	unsigned char Week;															//å‘¨ï¼Œ8421BCDç ï¼Œå¥½åƒæ˜¯0~6ï¼Œå…·ä½“æˆ‘è¿˜ä¸æ¸…æ¥š ZE
-	unsigned char Day;															//æ—¥ï¼Œ8421BCDç 
-	unsigned char Month;														//æœˆï¼Œ8421BCDç 
-	unsigned char Year;															//å¹´ï¼Œ8421BCDç ï¼Œä¸ºå®é™…å¹´ä»½-2000
+	unsigned char Second;														//Ãë£¬8421BCDÂë
+	unsigned char Minute;														//·Ö£¬8421BCDÂë
+	unsigned char Hour;															//Ê±£¬8421BCDÂë
+	unsigned char Week;															//ÖÜ£¬8421BCDÂë£¬ºÃÏñÊÇ0~6£¬¾ßÌåÎÒ»¹²»Çå³ş ZE
+	unsigned char Day;															//ÈÕ£¬8421BCDÂë
+	unsigned char Month;														//ÔÂ£¬8421BCDÂë
+	unsigned char Year;															//Äê£¬8421BCDÂë£¬ÎªÊµ¼ÊÄê·İ-2000
 };
 
 

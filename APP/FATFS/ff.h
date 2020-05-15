@@ -129,23 +129,23 @@ typedef struct {
 	WORD	id;				/* Volume mount ID */
 	WORD	n_rootdir;		/* Number of root directory entries (FAT12/16) */
 	WORD	csize;			/* Cluster size [sectors] */
-#if FF_MAX_SS != FF_MIN_SS		//Êó†
+#if FF_MAX_SS != FF_MIN_SS		//Œﬁ
 	WORD	ssize;			/* Sector size (512, 1024, 2048 or 4096) */
 #endif
-#if FF_USE_LFN					//Êó†
+#if FF_USE_LFN					//Œﬁ
 	WCHAR*	lfnbuf;			/* LFN working buffer */
 #endif
-#if FF_FS_EXFAT					//Êó†
+#if FF_FS_EXFAT					//Œﬁ
 	BYTE*	dirbuf;			/* Directory entry block scratchpad buffer for exFAT */
 #endif
-#if FF_FS_REENTRANT				//Êó†
+#if FF_FS_REENTRANT				//Œﬁ
 	FF_SYNC_t	sobj;		/* Identifier of sync object */
 #endif
 #if !FF_FS_READONLY
 	DWORD	last_clst;		/* Last allocated cluster */
 	DWORD	free_clst;		/* Number of free clusters */
 #endif
-#if FF_FS_RPATH					//Êó†
+#if FF_FS_RPATH					//Œﬁ
 	DWORD	cdir;			/* Current directory start cluster (0:root) */
 #if FF_FS_EXFAT
 	DWORD	cdc_scl;		/* Containing directory start cluster (invalid when cdir is 0) */
@@ -335,7 +335,7 @@ TCHAR* f_gets (TCHAR* buff, int len, FIL* fp);						/* Get a string from the fil
 /* Additional user defined functions                            */
 
 /* RTC function */
-#if !FF_FS_READONLY && !FF_FS_NORTC			//ÈùûÂè™ËØª‰∏îÂèØ‰ª•Ëé∑ÂæóÁ≥ªÁªüÊó∂Èó¥
+#if !FF_FS_READONLY && !FF_FS_NORTC			//∑«÷ª∂¡«“ø…“‘ªÒµ√œµÕ≥ ±º‰
 DWORD get_fattime (void);
 #endif
 

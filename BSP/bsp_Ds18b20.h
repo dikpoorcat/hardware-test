@@ -6,29 +6,29 @@
 
 
 
-//-----------------------------------DS18B20ç”µæºæ§åˆ¶å¼•è„š----------------------------------------
-#define DS18B20_PW_PIN		  GPIO_Pin_11														//æ¸©æ¹¿åº¦ç”µæºæ§åˆ¶å¼•è„š
+//-----------------------------------DS18B20µçÔ´¿ØÖÆÒı½Å----------------------------------------
+#define DS18B20_PW_PIN		  GPIO_Pin_11														//ÎÂÊª¶ÈµçÔ´¿ØÖÆÒı½Å
 #define DS18B20_PW_PORT		  GPIOA
 #define DS18B20_PW_ON()		  GPIO_SetBits(DS18B20_PW_PORT,DS18B20_PW_PIN);
 #define DS18B20_PW_OFF()	  GPIO_ResetBits(DS18B20_PW_PORT,DS18B20_PW_PIN);
 #define DS18B20_PW_Port_CK    RCC_APB2Periph_GPIOA
 
-//-----------------------------------DS18B20æ•°æ®å¼•è„š----------------------------------------
+//-----------------------------------DS18B20Êı¾İÒı½Å----------------------------------------
 #define DS18B20_IO_PIN        GPIO_Pin_8
 #define DS18B20_IO_PORT       GPIOC
-#define DS18B20_H()           DS18B20_IO_PORT->BSRR = DS18B20_IO_PIN;							//å¿«é€Ÿç¿»è½¬
-#define DS18B20_L()           DS18B20_IO_PORT->BRR = DS18B20_IO_PIN;							//å¿«é€Ÿç¿»è½¬
+#define DS18B20_H()           DS18B20_IO_PORT->BSRR = DS18B20_IO_PIN;							//¿ìËÙ·­×ª
+#define DS18B20_L()           DS18B20_IO_PORT->BRR = DS18B20_IO_PIN;							//¿ìËÙ·­×ª
 #define DS18B20_IO_Port_CK	  RCC_APB2Periph_GPIOC
 #define DS18B20_IN            DS18B20_IO_PORT->IDR&DS18B20_IO_PIN
 
-#define DS18B20_IO_IN()       {DS18B20_IO_PORT->CRH&=0XFFFFFFF0;DS18B20_IO_PORT->CRH|=8;}       // PC8è¾“å…¥æ¨¡å¼1000
-#define DS18B20_IO_OUT()      {DS18B20_IO_PORT->CRH&=0XFFFFFFF0;DS18B20_IO_PORT->CRH|=3;}       // PC8è¾“å‡ºæ¨¡å¼0011
+#define DS18B20_IO_IN()       {DS18B20_IO_PORT->CRH&=0XFFFFFFF0;DS18B20_IO_PORT->CRH|=8;}       // PC8ÊäÈëÄ£Ê½1000
+#define DS18B20_IO_OUT()      {DS18B20_IO_PORT->CRH&=0XFFFFFFF0;DS18B20_IO_PORT->CRH|=3;}       // PC8Êä³öÄ£Ê½0011
 
 
 
 
 
-//28ä¸ªæœºå™¨å‘¨æœŸ
+//28¸ö»úÆ÷ÖÜÆÚ
 #define MachineCycle_27 \
 {\
 	__nop();__nop();__nop();__nop();__nop();\
@@ -40,10 +40,10 @@
 }
 
 
-#if 0	/*32Mä¸»é¢‘æ—¶é€‰1*/
-	#define SYSfre 32 //32:ä¸»é¢‘32Mï¼›4ï¼šä¸»é¢‘4M
+#if 0	/*32MÖ÷ÆµÊ±Ñ¡1*/
+	#define SYSfre 32 //32:Ö÷Æµ32M£»4£ºÖ÷Æµ4M
 #else
-	#define SYSfre 4 //32:ä¸»é¢‘32Mï¼›4ï¼šä¸»é¢‘4M
+	#define SYSfre 4 //32:Ö÷Æµ32M£»4£ºÖ÷Æµ4M
 #endif
 
 #if SYSfre == 4
@@ -74,18 +74,18 @@
 							  
 
 void DS18B20_LowPower(void);
-void delay_SYS_2us(u32 n2us);                          //systickå»¶æ—¶
-void DS18B20_RST(void);                             //å¤ä½
-u8 DS18B20_CHECK(void);                             //DS18B20å¤ä½åº”ç­”åº”ç­”0ï¼šDS18B20 READY
-u8 DS18B20_Init(void);                              //åˆå§‹åŒ–ï¼šPOWERå¼•è„šåˆå§‹åŒ–ï¼ŒåŠå¤ä½åº”ç­”ï¼Œè¿”å›åº”ç­”0ï¼šDS18B20 READY
-void DS18B20_Write_Byte(u8 dat);                    //å†™DS18B20ä¸€ä¸ªå­—èŠ‚  
-u8 DS18B20_Read_Bit(void);                          //è¯»ä¸€ä½
-u8 DS18B20_Read_Byte(void);                         //è¯»ä¸€ä¸ªå­—èŠ‚
-u8 DS18B20_Get_Temperature(u16 *TempBuff);          //è¯»ä¸€æ¬¡æ¸©åº¦æ•°æ®
-u8 Get_DS18B20Temp(u16 *temp);                      //è¿ç»­è¯»äº”æ¬¡æ¸©åº¦ï¼Œå–ä¸­é—´å€¼
+void delay_SYS_2us(u32 n2us);                          //systickÑÓÊ±
+void DS18B20_RST(void);                             //¸´Î»
+u8 DS18B20_CHECK(void);                             //DS18B20¸´Î»Ó¦´ğÓ¦´ğ0£ºDS18B20 READY
+u8 DS18B20_Init(void);                              //³õÊ¼»¯£ºPOWERÒı½Å³õÊ¼»¯£¬¼°¸´Î»Ó¦´ğ£¬·µ»ØÓ¦´ğ0£ºDS18B20 READY
+void DS18B20_Write_Byte(u8 dat);                    //Ğ´DS18B20Ò»¸ö×Ö½Ú  
+u8 DS18B20_Read_Bit(void);                          //¶ÁÒ»Î»
+u8 DS18B20_Read_Byte(void);                         //¶ÁÒ»¸ö×Ö½Ú
+u8 DS18B20_Get_Temperature(u16 *TempBuff);          //¶ÁÒ»´ÎÎÂ¶ÈÊı¾İ
+u8 Get_DS18B20Temp(u16 *temp);                      //Á¬Ğø¶ÁÎå´ÎÎÂ¶È£¬È¡ÖĞ¼äÖµ
 
-void DS18B20_Wakeup(void) ;                         //å”¤é†’DS18B20ï¼Œä¸Šç”µåéœ€è¿›è¡Œå¤ä½
-void DS18B20_Sleep(void)  ;                         //é™ä½åŠŸè€—ï¼Œå…³é—­ç”µæºä¸DQå£
-float TempU16toFloat(INT16U In);					//å°†DS18B20è¯»å‡ºçš„U16è½¬åŒ–æˆæµ®ç‚¹å‹
-INT16U FloatToTempU16(float In);					//æµ®ç‚¹è½¬æ•´å½¢,DS18B20			
+void DS18B20_Wakeup(void) ;                         //»½ĞÑDS18B20£¬ÉÏµçºóĞè½øĞĞ¸´Î»
+void DS18B20_Sleep(void)  ;                         //½µµÍ¹¦ºÄ£¬¹Ø±ÕµçÔ´ÓëDQ¿Ú
+float TempU16toFloat(INT16U In);					//½«DS18B20¶Á³öµÄU16×ª»¯³É¸¡µãĞÍ
+INT16U FloatToTempU16(float In);					//¸¡µã×ªÕûĞÎ,DS18B20			
 #endif /* __Bsp_Ds18b20_H */

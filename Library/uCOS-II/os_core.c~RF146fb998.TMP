@@ -502,7 +502,7 @@ void  OSStatInit (void)
     OS_ENTER_CRITICAL();
     OSIdleCtr    = 0L;                           /* Clear idle counter                                 */
     OS_EXIT_CRITICAL();
-    OSTimeDly(OS_TICKS_PER_SEC / 10);            /* Determine MAX. idle counter value for 1/10 second  */ //åˆå§‹åŒ–ï¼Œåœ¨ä»»åŠ¡æœªè·‘èµ·æ¥çš„æ—¶å€™éƒ½æ˜¯IDLEï¼Œè¿™æ—¶å€™è®¡ç®—å‡ºOSIdleCtrMax
+    OSTimeDly(OS_TICKS_PER_SEC / 10);            /* Determine MAX. idle counter value for 1/10 second  */ //³õÊ¼»¯£¬ÔÚÈÎÎñÎ´ÅÜÆğÀ´µÄÊ±ºò¶¼ÊÇIDLE£¬ÕâÊ±ºò¼ÆËã³öOSIdleCtrMax
     OS_ENTER_CRITICAL();
     OSIdleCtrMax = OSIdleCtr;                    /* Store maximum idle counter count in 1/10 second    */
     OSStatRdy    = OS_TRUE;
@@ -1360,7 +1360,7 @@ void  OS_TaskIdle (void *p_arg)
         OSIdleCtr++;
 //		WDG_clr_flag = 1;	
         OS_EXIT_CRITICAL();	
-		if((OSIntNesting==0)&&(MailWaiting==0)&&(BSP_UART_TxState(2)==0)&&(BSP_UART_TxState(1)==0)&&(BSP_UART_TxState(3)==0))    //ä¸åœ¨ä¸­æ–­ä¸­ï¼Œä¸”ä¸²å£å‘é€å®Œæˆï¼›æ·»åŠ è®Šé‡MailWaitingç”¨æ–¼åœ¨ç­‰å¾…éƒµç®±æ™‚ä¸é€²å…¥ä½åŠŸè€—ï¼ˆæŸ¥è©¢OSTCBStatè€—æ™‚å¤ªä¹…ï¼Œä¸²å£å®¹æ˜“å‡ºéŒ¯ï¼‰
+		if((OSIntNesting==0)&&(MailWaiting==0)&&(BSP_UART_TxState(2)==0)&&(BSP_UART_TxState(1)==0)&&(BSP_UART_TxState(3)==0))    //²»ÔÚÖĞ¶ÏÖĞ£¬ÇÒ´®¿Ú·¢ËÍÍê³É£»Ìí¼Ó×ƒÁ¿MailWaitingÓÃì¶ÔÚµÈ´ıà]Ïä•r²»ßMÈëµÍ¹¦ºÄ£¨²éÔƒOSTCBStatºÄ•rÌ«¾Ã£¬´®¿ÚÈİÒ×³öåe£©
 		{
 			OSSchedLock();
 			OSTaskIdleHook();                        /* Call user definable HOOK                           */
@@ -1412,17 +1412,17 @@ void  OS_TaskStat (void *p_arg)
     while (OSStatRdy == OS_FALSE) {
         OSTimeDly(2 * OS_TICKS_PER_SEC / 10);    /* Wait until statistic task is ready                 */
     }
-    max = OSIdleCtrMax / 100L;                    //100ç­‰åˆ†
+    max = OSIdleCtrMax / 100L;                    //100µÈ·Ö
     for (;;) {
         OS_ENTER_CRITICAL();
-        OSIdleCtrRun = OSIdleCtr                ;/* Obtain the of the idle counter for the past second */ //OSIdleCtråœ¨IDLEä»»åŠ¡ä¸­++ï¼Œåœ¨è¿™é‡Œæ¸…é›¶
+        OSIdleCtrRun = OSIdleCtr                ;/* Obtain the of the idle counter for the past second */ //OSIdleCtrÔÚIDLEÈÎÎñÖĞ++£¬ÔÚÕâÀïÇåÁã
         run          = OSIdleCtr;
         OSIdleCtr    = 0L;                       /* Reset the idle counter for the next second         */
         OS_EXIT_CRITICAL();
         if (max > 0L) {
             usage = (INT8S)(100L - run / max);
             if (usage >= 0) {                    /* Make sure we don't have a negative percentage      */
-                OSCPUUsage = usage;              //è¿™å°±æ˜¯CPUå ç”¨ç‡
+                OSCPUUsage = usage;              //Õâ¾ÍÊÇCPUÕ¼ÓÃÂÊ
             } else {
                 OSCPUUsage = 0;
             }

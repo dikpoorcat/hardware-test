@@ -48,7 +48,7 @@ void CC1101_Pin_Init(void);
  /*******************************************************************************
 * Function Name  : SPI_ExchangeByte.
 * Description    :  
-* Input 1        :  SPI  Â¿Ã•Ã“Ã   Ã“Ã«STM8L Â³ÃŒÃÃ²ÃÃ‡ÂºÃÂ£Â¬
+* Input 1        :  SPI  ¿ÕÓà  ÓëSTM8L ³ÌĞòÎÇºÏ£¬
 * Input 2        : PtrToBuffer is an u8 pointer to the first word to be transmitted.
 * Input 3        : NbOfWords parameter indicates the number of words to be sent.
 * Output         : None.

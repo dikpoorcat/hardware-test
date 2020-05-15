@@ -8,7 +8,7 @@
 #include "SysConfigVC.h" 
 #include "stm32f10x_bkp.h"
 
-#define NRTC_Fre 20    //设置内部RTC频率  此频率应为系统频率的整数倍  如20 40 80 ，规定最长不能超过1s，也即是1（安全范围是）
+#define NRTC_Fre 20    //�����ڲ�RTCƵ��  ��Ƶ��ӦΪϵͳƵ�ʵ�������  ��20 40 80 ���涨����ܳ���1s��Ҳ����1����ȫ��Χ�ǣ�
 
 INT8U RTC_Init(INT16U Fre);
 void RTC_EXTI_INITIAL(FunctionalState interrupt_en_or_dis);

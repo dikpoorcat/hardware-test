@@ -2,27 +2,27 @@
 
 
 
-/*é…ç½®å†…éƒ¨RTCä¸­æ–­*/
+/*ÅäÖÃÄÚ²¿RTCÖÐ¶Ï*/
 void RTC_EXTI_INITIAL(FunctionalState interrupt_en_or_dis)
 {
 	NVIC_InitTypeDef NVIC_InitStructure;
     EXTI_InitTypeDef EXTI_InitStructure; 
 
-//------------EXTI17 é…ç½® -------------------   
-    EXTI_InitStructure.EXTI_Line = EXTI_Line17;          		//å†…éƒ¨äº‹ä»¶é€šé“ï¼Œä¸­æ–­è¿žæŽ¥åˆ°RTCé—¹é’Ÿäº‹ä»¶
-    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;			//è‹¥ALRF=1ï¼Œå¦‚æžœåœ¨EXTIæŽ§åˆ¶å™¨ä¸­è®¾ç½®äº†EXTIçº¿ 17çš„ä¸­æ–­æ¨¡å¼ï¼Œåˆ™å…è®¸äº§ç”ŸRTCé—¹é’Ÿä¸­æ–­ï¼›å¦‚æžœåœ¨EXTIæŽ§åˆ¶å™¨ä¸­è®¾ç½®äº†EXTIçº¿ 17çš„äº‹ä»¶æ¨¡å¼ï¼Œåˆ™è¿™æ¡çº¿ä¸Šä¼šäº§ç”Ÿä¸€ä¸ªè„‰å†²(ä¸ä¼šäº§ç”ŸRTCé—¹é’Ÿä¸­æ–­)ã€‚
+//------------EXTI17 ÅäÖÃ -------------------   
+    EXTI_InitStructure.EXTI_Line = EXTI_Line17;          		//ÄÚ²¿ÊÂ¼þÍ¨µÀ£¬ÖÐ¶ÏÁ¬½Óµ½RTCÄÖÖÓÊÂ¼þ
+    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;			//ÈôALRF=1£¬Èç¹ûÔÚEXTI¿ØÖÆÆ÷ÖÐÉèÖÃÁËEXTIÏß 17µÄÖÐ¶ÏÄ£Ê½£¬ÔòÔÊÐí²úÉúRTCÄÖÖÓÖÐ¶Ï£»Èç¹ûÔÚEXTI¿ØÖÆÆ÷ÖÐÉèÖÃÁËEXTIÏß 17µÄÊÂ¼þÄ£Ê½£¬ÔòÕâÌõÏßÉÏ»á²úÉúÒ»¸öÂö³å(²»»á²úÉúRTCÄÖÖÓÖÐ¶Ï)¡£
     EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
     EXTI_InitStructure.EXTI_LineCmd = interrupt_en_or_dis;
     EXTI_Init(&EXTI_InitStructure); 
-//------------è®¾ç½® ä¸­æ–­------------------- 
-    NVIC_InitStructure.NVIC_IRQChannel = RTCAlarm_IRQChannel;    //è®¾ç½®é—¹é’Ÿä¸­æ–­
+//------------ÉèÖÃ ÖÐ¶Ï------------------- 
+    NVIC_InitStructure.NVIC_IRQChannel = RTCAlarm_IRQChannel;    //ÉèÖÃÄÖÖÓÖÐ¶Ï
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
     NVIC_InitStructure.NVIC_IRQChannelCmd = interrupt_en_or_dis;
     NVIC_Init(&NVIC_InitStructure);     
 //------------------------------------------- 
-//	//------------è®¾ç½® ä¸­æ–­------------------- 
-//    NVIC_InitStructure.NVIC_IRQChannel = RTC_IRQChannel;    //è®¾ç½®é—¹é’Ÿä¸­æ–­
+//	//------------ÉèÖÃ ÖÐ¶Ï------------------- 
+//    NVIC_InitStructure.NVIC_IRQChannel = RTC_IRQChannel;    //ÉèÖÃÄÖÖÓÖÐ¶Ï
 //    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 //    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 //    NVIC_InitStructure.NVIC_IRQChannelCmd = interrupt_en_or_dis;
@@ -31,54 +31,54 @@ void RTC_EXTI_INITIAL(FunctionalState interrupt_en_or_dis)
 }
 
 
-/*å†…éƒ¨RTCæ—¶é’Ÿåˆå§‹åŒ–*/
+/*ÄÚ²¿RTCÊ±ÖÓ³õÊ¼»¯*/
 INT8U RTC_FisrtSet=0;
 INT8U RTC_Init(INT16U Fre)
 {
 	INT16U Setcount=0;	
-	Setcount=(40000/Fre)-1;     //LSIé¢‘çŽ‡çº¦40K   ä¾‹ï¼šè¦è®¾ç½®50msä¸ºä¸€ä¸ªè®¡æ•°ç‚¹ï¼Œåˆ™é¢‘çŽ‡ä¸º20Hzï¼Œéœ€è¦è®¾ç½®çš„è®¡æ•°åˆå€¼å°±æ˜¯40K/20-1=1999.
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);	//ä½¿èƒ½PWRå’ŒBKPå¤–è®¾æ—¶é’Ÿ   	   				RTCå¯„å­˜å™¨ä½äºŽåŽå¤‡åŒºåŸŸ							
-	PWR_BackupAccessCmd(ENABLE);									//ä½¿èƒ½åŽå¤‡å¯„å­˜å™¨è®¿é—®  
-//	BKP_DeInit();													//å¤ä½å¤‡ä»½åŒºåŸŸ 	ä¸å¯å¼€å¯ï¼Œä¼šæ¸…å¤‡ä»½å¯„å­˜å™¨ï¼
-	RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);							//è®¾ç½®RTCæ—¶é’Ÿ(RTCCLK),é€‰æ‹©LSIä½œä¸ºRTCæ—¶é’Ÿ    
-	RCC_RTCCLKCmd(ENABLE);											//ä½¿èƒ½RTCæ—¶é’Ÿ  
-	RTC_WaitForLastTask();											//ç­‰å¾…æœ€è¿‘ä¸€æ¬¡å¯¹RTCå¯„å­˜å™¨çš„å†™æ“ä½œå®Œæˆ
-	RTC_WaitForSynchro();											//ç­‰å¾…RTCå¯„å­˜å™¨åŒæ­¥  
-	RTC_EnterConfigMode();      									// å…è®¸é…ç½®	
-	RTC_SetPrescaler(Setcount);    								    //è®¾ç½®RTCé¢„åˆ†é¢‘çš„å€¼  
-	RTC_WaitForLastTask();  										//ç­‰å¾…æœ€è¿‘ä¸€æ¬¡å¯¹RTCå¯„å­˜å™¨çš„å†™æ“ä½œå®Œæˆ
-	RTC_SetCounter(0);												//éšæ„åˆå§‹åŒ–ä¸€ä¸ªæ—¶é—´ï¼Œä»Žæ­¤æ—¶å¼€å§‹è®¡æ•°
-	RTC_ExitConfigMode();											//é€€å‡ºé…ç½®æ¨¡å¼  
+	Setcount=(40000/Fre)-1;     //LSIÆµÂÊÔ¼40K   Àý£ºÒªÉèÖÃ50msÎªÒ»¸ö¼ÆÊýµã£¬ÔòÆµÂÊÎª20Hz£¬ÐèÒªÉèÖÃµÄ¼ÆÊý³õÖµ¾ÍÊÇ40K/20-1=1999.
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);	//Ê¹ÄÜPWRºÍBKPÍâÉèÊ±ÖÓ   	   				RTC¼Ä´æÆ÷Î»ÓÚºó±¸ÇøÓò							
+	PWR_BackupAccessCmd(ENABLE);									//Ê¹ÄÜºó±¸¼Ä´æÆ÷·ÃÎÊ  
+//	BKP_DeInit();													//¸´Î»±¸·ÝÇøÓò 	²»¿É¿ªÆô£¬»áÇå±¸·Ý¼Ä´æÆ÷£¡
+	RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);							//ÉèÖÃRTCÊ±ÖÓ(RTCCLK),Ñ¡ÔñLSI×÷ÎªRTCÊ±ÖÓ    
+	RCC_RTCCLKCmd(ENABLE);											//Ê¹ÄÜRTCÊ±ÖÓ  
+	RTC_WaitForLastTask();											//µÈ´ý×î½üÒ»´Î¶ÔRTC¼Ä´æÆ÷µÄÐ´²Ù×÷Íê³É
+	RTC_WaitForSynchro();											//µÈ´ýRTC¼Ä´æÆ÷Í¬²½  
+	RTC_EnterConfigMode();      									// ÔÊÐíÅäÖÃ	
+	RTC_SetPrescaler(Setcount);    								    //ÉèÖÃRTCÔ¤·ÖÆµµÄÖµ  
+	RTC_WaitForLastTask();  										//µÈ´ý×î½üÒ»´Î¶ÔRTC¼Ä´æÆ÷µÄÐ´²Ù×÷Íê³É
+	RTC_SetCounter(0);												//ËæÒâ³õÊ¼»¯Ò»¸öÊ±¼ä£¬´Ó´ËÊ±¿ªÊ¼¼ÆÊý
+	RTC_ExitConfigMode();											//ÍË³öÅäÖÃÄ£Ê½  
 		
-//	RTC_EXTI_INITIAL(ENABLE);										//RCTä¸­æ–­é…ç½®ï¼Œé…ç½®äº†å†…éƒ¨	äº‹ä»¶é€šé“ï¼ŒALARMä¸­æ–­	(æ”¾åœ¨æ€»çš„ä¸­æ–­åˆ†é…ä¸­)
+//	RTC_EXTI_INITIAL(ENABLE);										//RCTÖÐ¶ÏÅäÖÃ£¬ÅäÖÃÁËÄÚ²¿	ÊÂ¼þÍ¨µÀ£¬ALARMÖÐ¶Ï	(·ÅÔÚ×ÜµÄÖÐ¶Ï·ÖÅäÖÐ)
 	RTC_WaitForLastTask();		
-	RTC_ITConfig(RTC_IT_SEC|RTC_IT_OW,DISABLE);   		            //åˆå§‹åŒ–æ—¶ï¼Œç§’ä¸­æ–­æº¢å‡ºä¸­æ–­å…³é—­
-	RTC_WaitForLastTask();											//ç­‰å¾…æœ€è¿‘ä¸€æ¬¡å¯¹RTCå¯„å­˜å™¨çš„å†™æ“ä½œå®Œæˆ
-	RTC_ITConfig(RTC_IT_ALR,ENABLE);							    //é—¹é’Ÿä¸­æ–­æ‰“å¼€
-	RTC_WaitForLastTask();											//ç­‰å¾…æœ€è¿‘ä¸€æ¬¡å¯¹RTCå¯„å­˜å™¨çš„å†™æ“ä½œå®Œæˆ
+	RTC_ITConfig(RTC_IT_SEC|RTC_IT_OW,DISABLE);   		            //³õÊ¼»¯Ê±£¬ÃëÖÐ¶ÏÒç³öÖÐ¶Ï¹Ø±Õ
+	RTC_WaitForLastTask();											//µÈ´ý×î½üÒ»´Î¶ÔRTC¼Ä´æÆ÷µÄÐ´²Ù×÷Íê³É
+	RTC_ITConfig(RTC_IT_ALR,ENABLE);							    //ÄÖÖÓÖÐ¶Ï´ò¿ª
+	RTC_WaitForLastTask();											//µÈ´ý×î½üÒ»´Î¶ÔRTC¼Ä´æÆ÷µÄÐ´²Ù×÷Íê³É
 	return 1; //ok
 }
 
-/*è®¾ç½®é—¹é’Ÿ*/
+/*ÉèÖÃÄÖÖÓ*/
 void RTC_SET_ALARM(u32 sec)
 {
-  //DEBUG_COM_STREAM("-é—¹é’Ÿ-",NULL);
+  //DEBUG_COM_STREAM("-ÄÖÖÓ-",NULL);
   RTC_SetAlarm(RTC_GetCounter()+sec);
-  //DEBUG_COM_STREAM("-é—¹é’Ÿ1-",NULL);
+  //DEBUG_COM_STREAM("-ÄÖÖÓ1-",NULL);
   RTC_WaitForLastTask();
-  //DEBUG_COM_STREAM("-é—¹é’Ÿ2-",NULL);
+  //DEBUG_COM_STREAM("-ÄÖÖÓ2-",NULL);
   RTC_ITConfig(RTC_FLAG_ALR,ENABLE);
 }
 
 
-/*æœ€ç»ˆçš„é—¹é’Ÿå”¤é†’è®¾ç½®  5S*/
+/*×îÖÕµÄÄÖÖÓ»½ÐÑÉèÖÃ  5S*/
 void RTC_AWU_SET(void)
 {
-  //å¯ç”¨PWRå’ŒBKPçš„æ—¶é’Ÿï¼ˆfrom APB1ï¼‰
+  //ÆôÓÃPWRºÍBKPµÄÊ±ÖÓ£¨from APB1£©
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);
-  //åŽå¤‡åŸŸè§£é”
+  //ºó±¸Óò½âËø
   PWR_BackupAccessCmd(ENABLE);
-  RTC_ITConfig(RTC_IT_SEC, DISABLE);   //å…³æŽ‰ç§’ä¸­æ–­
+  RTC_ITConfig(RTC_IT_SEC, DISABLE);   //¹ØµôÃëÖÐ¶Ï
   RTC_SET_ALARM(5);
   //PWR_BackupAccessCmd(DISABLE);
   RTC_EXTI_INITIAL(ENABLE);

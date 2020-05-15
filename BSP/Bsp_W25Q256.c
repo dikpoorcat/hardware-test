@@ -4,18 +4,18 @@
 unsigned char W25QXX_BUFFER[4096] = {0};
 
 //INT8U WQ256_Using=0;
- INT8U WQ256_Flag=0;			//bit	7	6 	5 	4 	3 	2 	1 	0		å„ä»»åŠ¡å ç”¨æ ‡å¿—ä½
-								//ä»»åŠ¡	X	X	X	X	Wdt	GY	RF	GPRS
+ INT8U WQ256_Flag=0;			//bit	7	6 	5 	4 	3 	2 	1 	0		¸÷ÈÎÎñÕ¼ÓÃ±êÖ¾Î»
+								//ÈÎÎñ	X	X	X	X	Wdt	GY	RF	GPRS
 
 
 /* --------------------Private functions------------------------------------------------------*/
 /************************************************************************************************************************
 * Function Name : void SPI1_Init(void)                          
-* Description   : SPI1 I/Oå£æ¨¡æ‹Ÿï¼Œç›¸å…³I/Oå£çš„é…ç½®ã€‚
+* Description   : SPI1 I/O¿ÚÄ£Äâ£¬Ïà¹ØI/O¿ÚµÄÅäÖÃ¡£
 * Input         : None
 * Return        : None
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
@@ -58,7 +58,7 @@ void SPI1_Init(void)
 
 }
 
-////SPI1è¯»å†™ä¸€å­—èŠ‚æ•°æ®
+////SPI1¶ÁĞ´Ò»×Ö½ÚÊı¾İ
 //unsigned char SPI1_ReadWrite(unsigned char writedat)
 //{
 //   /* Loop while DR register in not emplty */
@@ -76,14 +76,14 @@ void SPI1_Init(void)
 
 /************************************************************************************************************************
 * Function Name : unsigned char  SPI1_ReadWrite(unsigned char val)                            
-* Description   : SPI1æ¥å£ä¸Šè¯»å†™ä¸€ä¸ªå­—èŠ‚ï¼Œå¤‡æ³¨ï¼šè½¯ä»¶æ¨¡æ‹ŸSPIæ¥å£ï¼Œè€Œéæ ‡å‡†çš„SPIæ¥å£ï¼Œå› æ­¤ï¼šä½¿ç”¨è¿™ä¸ªå™¨ä»¶ï¼Œä¼šç‰¹åˆ«æ…¢ï¼Œä¸é€‚åˆå¤§æ•°
-*                 æ®é‡ï¼Œå¹¶ä¸”é€Ÿåº¦æœ‰è¦æ±‚çš„åœºåˆã€‚
+* Description   : SPI1½Ó¿ÚÉÏ¶ÁĞ´Ò»¸ö×Ö½Ú£¬±¸×¢£ºÈí¼şÄ£ÄâSPI½Ó¿Ú£¬¶ø·Ç±ê×¼µÄSPI½Ó¿Ú£¬Òò´Ë£ºÊ¹ÓÃÕâ¸öÆ÷¼ş£¬»áÌØ±ğÂı£¬²»ÊÊºÏ´óÊı
+*                 ¾İÁ¿£¬²¢ÇÒËÙ¶ÈÓĞÒªÇóµÄ³¡ºÏ¡£
 *                       
-* Input         : val  ï¼šè¦å†™å…¥çš„å€¼
-* Return        : data ï¼šè¯»å‡ºçš„å€¼
+* Input         : val  £ºÒªĞ´ÈëµÄÖµ
+* Return        : data £º¶Á³öµÄÖµ
 *                
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
@@ -96,36 +96,36 @@ unsigned char  SPI1_ReadWrite(unsigned char val)
 	for(i = 0x80; i != 0;i >>= 1)
 	{	
 		W25SCK_L();
-		if(val&i) W25MOSI_H();   												// æ•°æ®å»ºç«‹
+		if(val&i) W25MOSI_H();   												// Êı¾İ½¨Á¢
 		else W25MOSI_L();
-//		Fmdelay(1);																//4Mæµ‹äº†æ²¡é—®é¢˜ï¼Œ32Mæ²¡æµ‹
-		W25SCK_H();           	   												// ä¸Šå‡æ²¿æ•°æ®è¢«å†™å…¥åˆ°é“ç”µ  
-//		Fmdelay(1);																//4Mæµ‹äº†æ²¡é—®é¢˜ï¼Œ32Mæ²¡æµ‹
+//		Fmdelay(1);																//4M²âÁËÃ»ÎÊÌâ£¬32MÃ»²â
+		W25SCK_H();           	   												// ÉÏÉıÑØÊı¾İ±»Ğ´Èëµ½Ìúµç  
+//		Fmdelay(1);																//4M²âÁËÃ»ÎÊÌâ£¬32MÃ»²â
 		Rd = W25MISO();
 		if(Rd == 1) 
 		{
 			data |= i;           
 		}
 	}
-	W25SCK_L();																	//æ‹‰ä½ä»¥é™åŠŸè€—
+	W25SCK_L();																	//À­µÍÒÔ½µ¹¦ºÄ
 	return data;
 }
 
 /************************************************************************************************************************
 * Function Name : INT8U W25QXX_Init(void)                              
-* Description   : åˆå§‹åŒ–W25QXXï¼Œ ä¸»è¦æ˜¯ï¼Œåˆå§‹åŒ–SPI FLASHçš„IOå£ï¼Œä½¿èƒ½4å­—èŠ‚åœ°å€æ¨¡å¼ï¼Œè¯»å–èŠ¯ç‰‡çš„ç‰ˆæœ¬å·ï¼Œä»¥æ­¤åˆ¤æ–­æ˜¯å¦åˆå§‹åŒ–æˆã€‚
-*                 å¤‡æ³¨ï¼š
-*                 256ä¸ªå­—èŠ‚ä¸ºä¸€é¡µ(page)ï¼Œç”±16ä¸ªé¡µå…±4K bytesç»„æˆä¸ºä¸€ä¸ªæ‰‡åŒº(Sector)ï¼Œ8ä¸ªæ‰‡åŒº(å…±128ä¸ªé¡µ)ä¸º1ä¸ªï¼ˆ32k Bytesï¼‰
-*                 å¤§å°çš„Blockï¼Œ16ä¸ªæ‰‡åŒºï¼ˆå…±256ä¸ªé¡µï¼‰ä¸ºä¸€ä¸ªï¼ˆ64k Bytesï¼‰å¤§å°çš„Blockã€‚
+* Description   : ³õÊ¼»¯W25QXX£¬ Ö÷ÒªÊÇ£¬³õÊ¼»¯SPI FLASHµÄIO¿Ú£¬Ê¹ÄÜ4×Ö½ÚµØÖ·Ä£Ê½£¬¶ÁÈ¡Ğ¾Æ¬µÄ°æ±¾ºÅ£¬ÒÔ´ËÅĞ¶ÏÊÇ·ñ³õÊ¼»¯³É¡£
+*                 ±¸×¢£º
+*                 256¸ö×Ö½ÚÎªÒ»Ò³(page)£¬ÓÉ16¸öÒ³¹²4K bytes×é³ÉÎªÒ»¸öÉÈÇø(Sector)£¬8¸öÉÈÇø(¹²128¸öÒ³)Îª1¸ö£¨32k Bytes£©
+*                 ´óĞ¡µÄBlock£¬16¸öÉÈÇø£¨¹²256¸öÒ³£©ÎªÒ»¸ö£¨64k Bytes£©´óĞ¡µÄBlock¡£
 *                 
-*                 W25Q256ï¼š3å­—èŠ‚åœ°å€æ¨¡å¼æ—¶ï¼šå®¹é‡ä¸º16Må­—èŠ‚, 4096ä¸ªSectorï¼Œå—çš„è¯ï¼Œçˆ±ä»¥å¤šå¤§ç®—ä¸€å—è‡ªå·±å»åˆ†ï¼Œæ‰‹å†Œä¹Ÿè®²å¾—è®©äººè¿·ç³Šã€‚
-*                          4å­—èŠ‚åœ°å€æ¨¡å¼æ—¶ï¼šå®¹é‡ä¸º32Må­—èŠ‚ï¼Œ8192ä¸ªSectorï¼Œå—çš„è¯ï¼Œçˆ±ä»¥å¤šå¤§ç®—ä¸€å—è‡ªå·±å»åˆ†ï¼Œæ‰‹å†Œä¹Ÿè®²å¾—è®©äººè¿·ç³Šã€‚
+*                 W25Q256£º3×Ö½ÚµØÖ·Ä£Ê½Ê±£ºÈİÁ¿Îª16M×Ö½Ú, 4096¸öSector£¬¿éµÄ»°£¬°®ÒÔ¶à´óËãÒ»¿é×Ô¼ºÈ¥·Ö£¬ÊÖ²áÒ²½²µÃÈÃÈËÃÔºı¡£
+*                          4×Ö½ÚµØÖ·Ä£Ê½Ê±£ºÈİÁ¿Îª32M×Ö½Ú£¬8192¸öSector£¬¿éµÄ»°£¬°®ÒÔ¶à´óËãÒ»¿é×Ô¼ºÈ¥·Ö£¬ÊÖ²áÒ²½²µÃÈÃÈËÃÔºı¡£
 *                       
-* Input         : é”
-* Return        : 1 ï¼šæˆåŠŸ
-*                 0 ï¼šå¤±è´¥
+* Input         : Ëø
+* Return        : 1 £º³É¹¦
+*                 0 £ºÊ§°Ü
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : /
 *************************************************************************************************************************/
@@ -135,17 +135,17 @@ INT8U W25QXX_Init(INT8U Task_Num)
 	unsigned int Status = 0; 
 	
 	WQ256_Flag|=(1<<Task_Num);								//
-	if( WQ256_Flag&~(1<<Task_Num) ) return 1;				//è‹¥å…¶ä»–ä»»åŠ¡å·²åˆå§‹åŒ–ï¼ŒFM_Flagé0ï¼Œç›´æ¥è¿”å›
+	if( WQ256_Flag&~(1<<Task_Num) ) return 1;				//ÈôÆäËûÈÎÎñÒÑ³õÊ¼»¯£¬FM_Flag·Ç0£¬Ö±½Ó·µ»Ø
 	
 	SPI1_Init();
 	W25QXX_WAKEUP();
-	W25QXX_EnterOrQuit_4Bytes_AddrMode(W25X_Enable4ByteAddr);    // zzs add ,å¼€å¯4å­—èŠ‚åœ°å€æ¨¡å¼,æœ¬æŒ‡ä»¤å†™å…¥åï¼Œå½±å“çš„æ˜¯éæ˜“å¤±æ€§ä½
+	W25QXX_EnterOrQuit_4Bytes_AddrMode(W25X_Enable4ByteAddr);    // zzs add ,¿ªÆô4×Ö½ÚµØÖ·Ä£Ê½,±¾Ö¸ÁîĞ´Èëºó£¬Ó°ÏìµÄÊÇ·ÇÒ×Ê§ĞÔÎ»
 	Status = W25QXX_ReadSR();
-	if(!(Status&ADS)) return 0;     // 4å­—èŠ‚åœ°å€æ¨¡å¼è®¾ç½®å¤±è´¥
+	if(!(Status&ADS)) return 0;     // 4×Ö½ÚµØÖ·Ä£Ê½ÉèÖÃÊ§°Ü
 	
 	BANBEN = W25QXX_ReadID();
-	if(BANBEN == W25QXX_TYPE) return 1;  // æˆåŠŸ
-	else return 0;                       // å¤±è´¥
+	if(BANBEN == W25QXX_TYPE) return 1;  // ³É¹¦
+	else return 0;                       // Ê§°Ü
 }  
 
 
@@ -155,19 +155,19 @@ INT8U W25QXX_Init(INT8U Task_Num)
 
 /************************************************************************************************************************
 * Function Name : unsigned int W25QXX_ReadSR(void)                                     
-* Description   : è¯»å–W25QXXçš„çŠ¶æ€å¯„å­˜å™¨ï¼ˆé»˜è®¤ : 0x00 zzs???ï¼‰
+* Description   : ¶ÁÈ¡W25QXXµÄ×´Ì¬¼Ä´æÆ÷£¨Ä¬ÈÏ : 0x00 zzs???£©
 *                  Bit23    22   21   20  19   18   17   16  |  15   14   13   12   11   10   9    8  |   7   6   5   4   3    2     1    0
 *                 HOLD/RST DRV1 DRV0 (R)  (R)  WPS  ADP  ADS    SUS  CMP  LB3  LB2  LB1  (R)  QE  SRP1  SRP0  TB BP3 BP2  BP1  BP0  WEL  BUSY
-*                 å¤‡æ³¨: ADP : Power Up Address Mode  ---(æœªåˆ—å‡ºçš„ï¼Œå…·ä½“æŸ¥çœ‹æ•°æ®æ‰‹å†Œï¼Œè¿™å„¿ä»…å°†æ¯”è¾ƒä¸»è¦çš„å¤‡æ³¨å†™æ˜ä¸€ä¸‹)           
-*                       SRP0                : é»˜è®¤0,çŠ¶æ€å¯„å­˜å™¨ä¿æŠ¤ä½,é…åˆWPä½¿ç”¨
-*                       TB,BP3,BP2,BP1,BP0 : FLASHåŒºåŸŸå†™ä¿æŠ¤è®¾ç½®
-*                       WEL                : å†™ä½¿èƒ½é”å®š
-*                       BUSY               : å¿™æ ‡è®°ä½(1,å¿™;0,ç©ºé—²)
+*                 ±¸×¢: ADP : Power Up Address Mode  ---(Î´ÁĞ³öµÄ£¬¾ßÌå²é¿´Êı¾İÊÖ²á£¬Õâ¶ù½ö½«±È½ÏÖ÷ÒªµÄ±¸×¢Ğ´Ã÷Ò»ÏÂ)           
+*                       SRP0                : Ä¬ÈÏ0,×´Ì¬¼Ä´æÆ÷±£»¤Î»,ÅäºÏWPÊ¹ÓÃ
+*                       TB,BP3,BP2,BP1,BP0 : FLASHÇøÓòĞ´±£»¤ÉèÖÃ
+*                       WEL                : Ğ´Ê¹ÄÜËø¶¨
+*                       BUSY               : Ã¦±ê¼ÇÎ»(1,Ã¦;0,¿ÕÏĞ)
 *                       
 * Input         : None
 * Return        : None
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
@@ -176,10 +176,10 @@ unsigned char W25QXX_ReadSR(void)
 {  
 	unsigned char byte=0;
 
-	W25CS_L();                               // ä½¿èƒ½å™¨ä»¶ï¼ˆç‰‡é€‰é€‰ä¸­ï¼‰ 
-	SPI1_ReadWrite(W25X_ReadStatusReg);      // å‘é€è¯»å–çŠ¶æ€å¯„å­˜å™¨å‘½ä»¤    
-	byte = SPI1_ReadWrite(0Xff);             // è¯»å–ä¸€ä¸ªå­—èŠ‚  
-	W25CS_H();                               // ç¦èƒ½å™¨ä»¶ï¼ˆå–æ¶ˆç‰‡é€‰ï¼‰
+	W25CS_L();                               // Ê¹ÄÜÆ÷¼ş£¨Æ¬Ñ¡Ñ¡ÖĞ£© 
+	SPI1_ReadWrite(W25X_ReadStatusReg);      // ·¢ËÍ¶ÁÈ¡×´Ì¬¼Ä´æÆ÷ÃüÁî    
+	byte = SPI1_ReadWrite(0Xff);             // ¶ÁÈ¡Ò»¸ö×Ö½Ú  
+	W25CS_H();                               // ½ûÄÜÆ÷¼ş£¨È¡ÏûÆ¬Ñ¡£©
 	
 	return byte;   
 } 
@@ -189,27 +189,27 @@ unsigned int W25QXX_ReadSR(void)
 	INT8U i = 0;
 	unsigned int Stat = 0;
 		
-	W25CS_L();                               // ä½¿èƒ½å™¨ä»¶ï¼ˆç‰‡é€‰é€‰ä¸­ï¼‰ 
-	SPI1_ReadWrite(W25X_ReadStatusReg3);     // å‘é€è¯»å–çŠ¶æ€å¯„å­˜å™¨3å‘½ä»¤    
+	W25CS_L();                               // Ê¹ÄÜÆ÷¼ş£¨Æ¬Ñ¡Ñ¡ÖĞ£© 
+	SPI1_ReadWrite(W25X_ReadStatusReg3);     // ·¢ËÍ¶ÁÈ¡×´Ì¬¼Ä´æÆ÷3ÃüÁî    
 	Stat = SPI1_ReadWrite(0xff);
 	Stat <<=8;
 	
-	W25CS_H();     // ç¦èƒ½å™¨ä»¶ï¼ˆå–æ¶ˆç‰‡é€‰ï¼‰ //ä¸æ‰‹å†Œæè¿°ä¸ä¸€è‡´ï¼Œéå¾—é‡æ–°ç‰‡é€‰ï¼Œåé‚¦,å§æ§½å°¼ç›ï¼Œä½ æ‰‹å†Œå’‹å†™çš„ï¼Ÿï¼Ÿï¼Ÿè¿™ä¹ˆå¤§å…¬å¸ï¼Œè¿™ä¹Ÿå¤ªä¸ä¸¥è°¨äº†å§
+	W25CS_H();     // ½ûÄÜÆ÷¼ş£¨È¡ÏûÆ¬Ñ¡£© //ÓëÊÖ²áÃèÊö²»Ò»ÖÂ£¬·ÇµÃÖØĞÂÆ¬Ñ¡£¬»ª°î,ÎÔ²ÛÄáÂê£¬ÄãÊÖ²áÕ¦Ğ´µÄ£¿£¿£¿ÕâÃ´´ó¹«Ë¾£¬ÕâÒ²Ì«²»ÑÏ½÷ÁË°É
 	for(i = 0; i < 100; i++) {;}
-	W25CS_L();                             // ä½¿èƒ½å™¨ä»¶ï¼ˆç‰‡é€‰é€‰ä¸­ï¼‰ 
+	W25CS_L();                             // Ê¹ÄÜÆ÷¼ş£¨Æ¬Ñ¡Ñ¡ÖĞ£© 
 		
-	SPI1_ReadWrite(W25X_ReadStatusReg2);   // å‘é€è¯»å–çŠ¶æ€å¯„å­˜å™¨2å‘½ä»¤  
+	SPI1_ReadWrite(W25X_ReadStatusReg2);   // ·¢ËÍ¶ÁÈ¡×´Ì¬¼Ä´æÆ÷2ÃüÁî  
 	Stat |=SPI1_ReadWrite(0xff);
 	Stat <<=8;
 	
-	W25CS_H();     // ç¦èƒ½å™¨ä»¶ï¼ˆå–æ¶ˆç‰‡é€‰ï¼‰ //ä¸æ‰‹å†Œæè¿°ä¸ä¸€è‡´ï¼Œéå¾—é‡æ–°ç‰‡é€‰ï¼Œåé‚¦,å§æ§½å°¼ç›ï¼Œä½ æ‰‹å†Œå’‹å†™çš„ï¼Ÿï¼Ÿï¼Ÿè¿™ä¹ˆå¤§å…¬å¸ï¼Œè¿™ä¹Ÿå¤ªä¸ä¸¥è°¨äº†å§
+	W25CS_H();     // ½ûÄÜÆ÷¼ş£¨È¡ÏûÆ¬Ñ¡£© //ÓëÊÖ²áÃèÊö²»Ò»ÖÂ£¬·ÇµÃÖØĞÂÆ¬Ñ¡£¬»ª°î,ÎÔ²ÛÄáÂê£¬ÄãÊÖ²áÕ¦Ğ´µÄ£¿£¿£¿ÕâÃ´´ó¹«Ë¾£¬ÕâÒ²Ì«²»ÑÏ½÷ÁË°É
 	for(i = 0; i < 100; i++) {;}
-	W25CS_L();                             // ä½¿èƒ½å™¨ä»¶ï¼ˆç‰‡é€‰é€‰ä¸­ï¼‰
+	W25CS_L();                             // Ê¹ÄÜÆ÷¼ş£¨Æ¬Ñ¡Ñ¡ÖĞ£©
 	
-	SPI1_ReadWrite(W25X_ReadStatusReg1);   // å‘é€è¯»å–çŠ¶æ€å¯„å­˜å™¨1å‘½ä»¤  
+	SPI1_ReadWrite(W25X_ReadStatusReg1);   // ·¢ËÍ¶ÁÈ¡×´Ì¬¼Ä´æÆ÷1ÃüÁî  
 	Stat |=SPI1_ReadWrite(0xff);
 	
-	W25CS_H();                             // ç¦èƒ½å™¨ä»¶ï¼ˆå–æ¶ˆç‰‡é€‰ï¼‰
+	W25CS_H();                             // ½ûÄÜÆ÷¼ş£¨È¡ÏûÆ¬Ñ¡£©
 	
 	return Stat;   
 } 
@@ -217,12 +217,12 @@ unsigned int W25QXX_ReadSR(void)
 
 /************************************************************************************************************************
 * Function Name : void W25QXX_EnterOrQuit_4Bytes_AddrMode(unsigned char Cmd_Byte)                                     
-* Description   : W25QXXè¿›å…¥4Bytesåœ°å€æ¨¡å¼
+* Description   : W25QXX½øÈë4BytesµØÖ·Ä£Ê½
 *                 
 * Input         : None
 * Return        : None
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
@@ -242,105 +242,105 @@ void W25QXX_EnterOrQuit_4Bytes_AddrMode(unsigned char Cmd_Byte)
 #if 0
 /************************************************************************************************************************
 * Function Name : void W25QXX_Write_SR(unsigned char sr)                                       
-* Description   : å†™W25QXXçŠ¶æ€å¯„å­˜å™¨
-*                 å¤‡æ³¨ï¼šåªæœ‰SPR,TB,BP2,BP1,BP0(bit 7,5,4,3,2)å¯ä»¥å†™ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ zzs??? çœŸç›¸å¾…æŸ¥æ˜ï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿ
-* Input         : sr : è¦å†™å…¥çš„å€¼
+* Description   : Ğ´W25QXX×´Ì¬¼Ä´æÆ÷
+*                 ±¸×¢£ºÖ»ÓĞSPR,TB,BP2,BP1,BP0(bit 7,5,4,3,2)¿ÉÒÔĞ´£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡ zzs??? ÕæÏà´ı²éÃ÷£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿
+* Input         : sr : ÒªĞ´ÈëµÄÖµ
 * Return        : None
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
 void W25QXX_Write_SR(unsigned char sr)   
 {   
-	W25CS_L();                             // ä½¿èƒ½å™¨ä»¶ï¼ˆç‰‡é€‰é€‰ä¸­ï¼‰ 
-	SPI1_ReadWrite(W25X_WriteStatusReg);   // å‘é€å†™å–çŠ¶æ€å¯„å­˜å™¨å‘½ä»¤    
-	SPI1_ReadWrite(sr);                    // å†™å…¥ä¸€ä¸ªå­—èŠ‚  
-	W25CS_H();                             // ç¦èƒ½å™¨ä»¶ï¼ˆå–æ¶ˆç‰‡é€‰ï¼‰ 	      
+	W25CS_L();                             // Ê¹ÄÜÆ÷¼ş£¨Æ¬Ñ¡Ñ¡ÖĞ£© 
+	SPI1_ReadWrite(W25X_WriteStatusReg);   // ·¢ËÍĞ´È¡×´Ì¬¼Ä´æÆ÷ÃüÁî    
+	SPI1_ReadWrite(sr);                    // Ğ´ÈëÒ»¸ö×Ö½Ú  
+	W25CS_H();                             // ½ûÄÜÆ÷¼ş£¨È¡ÏûÆ¬Ñ¡£© 	      
 }   
 #else
 /************************************************************************************************************************
 * Function Name : void W25QXX_Write_SR(unsigned char WriteStatusRegX,unsigned char Value)                                   
-* Description   : å†™W25QXXçš„çŠ¶æ€å¯„å­˜å™¨, 
-*                 å¤‡æ³¨ï¼šå†™ä½¿èƒ½æŒ‡ä»¤åï¼Œç¦èƒ½åˆä½¿èƒ½ï¼Œè¯·çœ‹æ‰‹å†Œï¼šâ€œThe WEL bit must be set prior to every ...â€
-*                 è€Œä¸”æ˜¯ï¼šåªæœ‰å½“â€œdriving /CS highâ€ä¹‹åï¼ŒèŠ¯ç‰‡æ‰ä¼šå¤„åœ¨å¯å†™çš„çŠ¶æ€ï¼Œè¯´æ˜å†™ä½¿èƒ½æŒ‡ä»¤ï¼Œéœ€è¦æå‰ã€ç‹¬ç«‹å‘å¸ƒå…ˆã€‚
-*                 â€œAfter power-up the device is automatically placed in a write-disabled state with the Status Register 
+* Description   : Ğ´W25QXXµÄ×´Ì¬¼Ä´æÆ÷, 
+*                 ±¸×¢£ºĞ´Ê¹ÄÜÖ¸Áîºó£¬½ûÄÜÓÖÊ¹ÄÜ£¬Çë¿´ÊÖ²á£º¡°The WEL bit must be set prior to every ...¡±
+*                 ¶øÇÒÊÇ£ºÖ»ÓĞµ±¡°driving /CS high¡±Ö®ºó£¬Ğ¾Æ¬²Å»á´¦ÔÚ¿ÉĞ´µÄ×´Ì¬£¬ËµÃ÷Ğ´Ê¹ÄÜÖ¸Áî£¬ĞèÒªÌáÇ°¡¢¶ÀÁ¢·¢²¼ÏÈ¡£
+*                 ¡°After power-up the device is automatically placed in a write-disabled state with the Status Register 
 *                   Write Enable Latch (WEL) set to a 0. A Write Enable instruction must be issued before a Page Program, 
 *                   Sector Erase, Block Erase, Chip Erase or Write Status Register instruction will be accepted. After 
 *                   completing a program, erase or write instruction the Write Enable Latch (WEL) is automatically cleared 
-*                   to a write-disabled state of 0.â€ çœ‹åˆ°è¿™æ®µé‡Œå¤´çš„â€œmust be issued before...â€æ²¡ï¼Ÿ
+*                   to a write-disabled state of 0.¡± ¿´µ½Õâ¶ÎÀïÍ·µÄ¡°must be issued before...¡±Ã»£¿
 *
-* Input         : WriteStatusRegX   : æ ‡æ˜è¦å†™çš„æ˜¯å“ªä¸€ä¸ªçŠ¶æ€å¯„å­˜å™¨
-*                 Value             : å€¼
+* Input         : WriteStatusRegX   : ±êÃ÷ÒªĞ´µÄÊÇÄÄÒ»¸ö×´Ì¬¼Ä´æÆ÷
+*                 Value             : Öµ
 * Return        : None
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
 void W25QXX_Write_SR(unsigned char WriteStatusRegX,unsigned char Value)   
 {   
 	unsigned char i = 0;
-	W25CS_L();                             // ä½¿èƒ½å™¨ä»¶ï¼ˆç‰‡é€‰é€‰ä¸­ï¼‰ 
-	SPI1_ReadWrite(W25X_WriteEnable);      // å‘é€å†™ä½¿èƒ½,
+	W25CS_L();                             // Ê¹ÄÜÆ÷¼ş£¨Æ¬Ñ¡Ñ¡ÖĞ£© 
+	SPI1_ReadWrite(W25X_WriteEnable);      // ·¢ËÍĞ´Ê¹ÄÜ,
 	
-	W25CS_H();                             // ç¦èƒ½å™¨ä»¶ï¼ˆå–æ¶ˆç‰‡é€‰ï¼‰
+	W25CS_H();                             // ½ûÄÜÆ÷¼ş£¨È¡ÏûÆ¬Ñ¡£©
 	for(i = 0; i < 100; i++) {;}
-	W25CS_L();                             // ä½¿èƒ½å™¨ä»¶ï¼ˆç‰‡é€‰é€‰ä¸­ï¼‰
+	W25CS_L();                             // Ê¹ÄÜÆ÷¼ş£¨Æ¬Ñ¡Ñ¡ÖĞ£©
 		
-	SPI1_ReadWrite(WriteStatusRegX);       // å‘é€å†™å–çŠ¶æ€å¯„å­˜å™¨å‘½ä»¤    
-	SPI1_ReadWrite(Value);                 // å†™å…¥ä¸€ä¸ªå­—èŠ‚  
-	W25CS_H();                             // ç¦èƒ½å™¨ä»¶ï¼ˆå–æ¶ˆç‰‡é€‰ï¼‰ 	      
+	SPI1_ReadWrite(WriteStatusRegX);       // ·¢ËÍĞ´È¡×´Ì¬¼Ä´æÆ÷ÃüÁî    
+	SPI1_ReadWrite(Value);                 // Ğ´ÈëÒ»¸ö×Ö½Ú  
+	W25CS_H();                             // ½ûÄÜÆ÷¼ş£¨È¡ÏûÆ¬Ñ¡£© 	      
 }   
 #endif
 
 /************************************************************************************************************************
 * Function Name : void W25QXX_Write_Enable(void)                                          
-* Description   : W25QXXå†™ä½¿èƒ½ï¼Œå°†WELç½®ä½
+* Description   : W25QXXĞ´Ê¹ÄÜ£¬½«WELÖÃÎ»
 * Input         : None
 * Return        : None
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
 void W25QXX_Write_Enable(void)   
 {
-	W25CS_L();                            // ä½¿èƒ½å™¨ä»¶ï¼ˆç‰‡é€‰é€‰ä¸­ï¼‰   
-	SPI1_ReadWrite(W25X_WriteEnable);     // å‘é€å†™ä½¿èƒ½  
-	W25CS_H();                            // ç¦èƒ½å™¨ä»¶ï¼ˆå–æ¶ˆç‰‡é€‰ï¼‰   	      
+	W25CS_L();                            // Ê¹ÄÜÆ÷¼ş£¨Æ¬Ñ¡Ñ¡ÖĞ£©   
+	SPI1_ReadWrite(W25X_WriteEnable);     // ·¢ËÍĞ´Ê¹ÄÜ  
+	W25CS_H();                            // ½ûÄÜÆ÷¼ş£¨È¡ÏûÆ¬Ñ¡£©   	      
 } 
 
 /************************************************************************************************************************
 * Function Name : void W25QXX_Write_Disable(void)	                                            
-* Description   : W25QXXå†™ç¦æ­¢ï¼Œå°†WELæ¸…é›¶ 
+* Description   : W25QXXĞ´½ûÖ¹£¬½«WELÇåÁã 
 * Input         : None
 * Return        : None
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
 void W25QXX_Write_Disable(void)   
 {  
-	W25CS_L();                            // ä½¿èƒ½å™¨ä»¶ï¼ˆç‰‡é€‰é€‰ä¸­ï¼‰  
-    SPI1_ReadWrite(W25X_WriteDisable);    // å‘é€å†™ç¦æ­¢æŒ‡ä»¤    
-	W25CS_H();                            // ç¦èƒ½å™¨ä»¶ï¼ˆå–æ¶ˆç‰‡é€‰ï¼‰ 	      
+	W25CS_L();                            // Ê¹ÄÜÆ÷¼ş£¨Æ¬Ñ¡Ñ¡ÖĞ£©  
+    SPI1_ReadWrite(W25X_WriteDisable);    // ·¢ËÍĞ´½ûÖ¹Ö¸Áî    
+	W25CS_H();                            // ½ûÄÜÆ÷¼ş£¨È¡ÏûÆ¬Ñ¡£© 	      
 } 
 
 /************************************************************************************************************************
 * Function Name : unsigned short W25QXX_ReadID(void)	                                            
-* Description   : è¯»å–èŠ¯ç‰‡ID
+* Description   : ¶ÁÈ¡Ğ¾Æ¬ID
 * Input         : None
 *                
-* Return        : Temp : = 0XEF13,è¡¨ç¤ºèŠ¯ç‰‡å‹å·ä¸ºW25Q80  
-*                        = 0XEF14,è¡¨ç¤ºèŠ¯ç‰‡å‹å·ä¸ºW25Q16
-*                        = 0XEF15,è¡¨ç¤ºèŠ¯ç‰‡å‹å·ä¸ºW25Q32
-*                        = 0XEF16,è¡¨ç¤ºèŠ¯ç‰‡å‹å·ä¸ºW25Q64
-*                        = 0XEF17,è¡¨ç¤ºèŠ¯ç‰‡å‹å·ä¸ºW25Q128
-*                        = 0XEF18,è¡¨ç¤ºèŠ¯ç‰‡å‹å·ä¸ºW25Q256
+* Return        : Temp : = 0XEF13,±íÊ¾Ğ¾Æ¬ĞÍºÅÎªW25Q80  
+*                        = 0XEF14,±íÊ¾Ğ¾Æ¬ĞÍºÅÎªW25Q16
+*                        = 0XEF15,±íÊ¾Ğ¾Æ¬ĞÍºÅÎªW25Q32
+*                        = 0XEF16,±íÊ¾Ğ¾Æ¬ĞÍºÅÎªW25Q64
+*                        = 0XEF17,±íÊ¾Ğ¾Æ¬ĞÍºÅÎªW25Q128
+*                        = 0XEF18,±íÊ¾Ğ¾Æ¬ĞÍºÅÎªW25Q256
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
@@ -349,7 +349,7 @@ unsigned short W25QXX_ReadID(void)
 	unsigned short Temp = 0;	  
 
 	W25CS_L();	            
-	SPI1_ReadWrite(0x90);         // å‘é€è¯»å–IDå‘½ä»¤	    
+	SPI1_ReadWrite(0x90);         // ·¢ËÍ¶ÁÈ¡IDÃüÁî	    
 	SPI1_ReadWrite(0x00); 	    
 	SPI1_ReadWrite(0x00); 	    
 	SPI1_ReadWrite(0x00);
@@ -365,14 +365,14 @@ unsigned short W25QXX_ReadID(void)
 
 /************************************************************************************************************************
 * Function Name : void W25QXX_Read(unsigned int ReadAddr,unsigned char* pBuffer,unsigned short NumByteToRead)	                                            
-* Description   : è¯»å–SPI FLASH ,W25Qxx,åœ¨æŒ‡å®šåœ°å€å¼€å§‹è¯»å–æŒ‡å®šé•¿åº¦çš„æ•°æ®
-* Input         : ReadAddr      : å¼€å§‹è¯»å–çš„åœ°å€(4Bytes Address Mode)
-*                 pBuffer       : ä¸»è°ƒå¼€è¾Ÿçš„ç©ºé—´çš„æŒ‡é’ˆï¼Œç”¨äºæ¥æ”¶ã€å­˜å‚¨æœ¬å‡½æ•°è¯»å–è¿”å›æ•°æ®
-*                 NumByteToRead : è¯»å–çš„é•¿åº¦(æœ€å¤§65535)
+* Description   : ¶ÁÈ¡SPI FLASH ,W25Qxx,ÔÚÖ¸¶¨µØÖ·¿ªÊ¼¶ÁÈ¡Ö¸¶¨³¤¶ÈµÄÊı¾İ
+* Input         : ReadAddr      : ¿ªÊ¼¶ÁÈ¡µÄµØÖ·(4Bytes Address Mode)
+*                 pBuffer       : Ö÷µ÷¿ª±ÙµÄ¿Õ¼äµÄÖ¸Õë£¬ÓÃÓÚ½ÓÊÕ¡¢´æ´¢±¾º¯Êı¶ÁÈ¡·µ»ØÊı¾İ
+*                 NumByteToRead : ¶ÁÈ¡µÄ³¤¶È(×î´ó65535)
 * Return        : None
 *
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
@@ -380,12 +380,12 @@ void W25QXX_Read(unsigned int ReadAddr,unsigned char* pBuffer,unsigned short Num
 { 
 	unsigned short i = 0;  
 	
-	__disable_irq(); // ç¦æ­¢æ€»ä¸­æ–­     // zzs add 2018.3.31
+	__disable_irq(); // ½ûÖ¹×ÜÖĞ¶Ï     // zzs add 2018.3.31
 	
 	Feed_Dog();	
 	
-	W25CS_L();	                                      // ä½¿èƒ½å™¨ä»¶ï¼ˆç‰‡é€‰é€‰ä¸­ï¼‰ 
-	// SPI1_ReadWrite(W25X_ReadData);                 // å‘é€è¯»å–å‘½ä»¤
+	W25CS_L();	                                      // Ê¹ÄÜÆ÷¼ş£¨Æ¬Ñ¡Ñ¡ÖĞ£© 
+	// SPI1_ReadWrite(W25X_ReadData);                 // ·¢ËÍ¶ÁÈ¡ÃüÁî
 	SPI1_ReadWrite(W25X_ReadData_With4BytesAddr);     // zzs modified it like this
 	SPI1_ReadWrite((unsigned char)((ReadAddr)>>24));  // zzs add this
 	SPI1_ReadWrite((unsigned char)((ReadAddr)>>16));  
@@ -396,28 +396,28 @@ void W25QXX_Read(unsigned int ReadAddr,unsigned char* pBuffer,unsigned short Num
 	{ 
 		if(i%1024==0) 
 		{		
-			Feed_Dog();								  //æ¯å†™1Kå°±å–‚ä¸€æ¬¡ç‹—ï¼Œé˜²æ­¢çœ‹é—¨ç‹—å¤ä½
+			Feed_Dog();								  //Ã¿Ğ´1K¾ÍÎ¹Ò»´Î¹·£¬·ÀÖ¹¿´ÃÅ¹·¸´Î»
 		}
-		pBuffer[i] = SPI1_ReadWrite(0XFF);            // å¾ªç¯è¯»æ•°ï¼ˆå…ˆå‘SPI2->DRå†™å…¥OXFFä»¥é˜²è¯»å–çš„æ•°æ®é”™è¯¯ï¼‰  
+		pBuffer[i] = SPI1_ReadWrite(0XFF);            // Ñ­»·¶ÁÊı£¨ÏÈÏòSPI2->DRĞ´ÈëOXFFÒÔ·À¶ÁÈ¡µÄÊı¾İ´íÎó£©  
 	}
-	W25CS_H();	                                      // ç¦èƒ½å™¨ä»¶ï¼ˆå–æ¶ˆç‰‡é€‰ï¼‰     	      
+	W25CS_H();	                                      // ½ûÄÜÆ÷¼ş£¨È¡ÏûÆ¬Ñ¡£©     	      
 	
-	__enable_irq();	// å¼€æ€»ä¸­æ–­	  // zzs add 2018.3.31
+	__enable_irq();	// ¿ª×ÜÖĞ¶Ï	  // zzs add 2018.3.31
 }  
 
 /************************************************************************************************************************
 * Function Name : void W25QXX_Write_Page(unsigned int WriteAddr,unsigned char* pBuffer,unsigned short NumByteToWrite)                                                            
-* Description   : SPIåœ¨ä¸€é¡µ(0~65535)å†…å†™å…¥å°‘äº256ä¸ªå­—èŠ‚çš„æ•°æ®
-*                 åœ¨æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æœ€å¤§256å­—èŠ‚çš„æ•°æ®
+* Description   : SPIÔÚÒ»Ò³(0~65535)ÄÚĞ´ÈëÉÙÓÚ256¸ö×Ö½ÚµÄÊı¾İ
+*                 ÔÚÖ¸¶¨µØÖ·¿ªÊ¼Ğ´Èë×î´ó256×Ö½ÚµÄÊı¾İ
 *                          
-* Input         : WriteAddr      ï¼šå¼€å§‹å†™å…¥çš„åœ°å€(4Bytes Address Mode)
-*                 pBuffer        : è¦å†™å…¥çš„æ•°æ®
-*                 NumByteToWrite : è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§256),è¯¥æ•°ä¸åº”è¯¥è¶…è¿‡è¯¥é¡µçš„å‰©ä½™å­—èŠ‚æ•°ï¼ï¼ï¼
+* Input         : WriteAddr      £º¿ªÊ¼Ğ´ÈëµÄµØÖ·(4Bytes Address Mode)
+*                 pBuffer        : ÒªĞ´ÈëµÄÊı¾İ
+*                 NumByteToWrite : ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó256),¸ÃÊı²»Ó¦¸Ã³¬¹ı¸ÃÒ³µÄÊ£Óà×Ö½ÚÊı£¡£¡£¡
 *                 
 * Return        : None
 *
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
@@ -425,83 +425,83 @@ void W25QXX_Write_Page(unsigned int WriteAddr,unsigned char* pBuffer,unsigned sh
 {
  	unsigned short i = 0;  
 	
-	__disable_irq(); // ç¦æ­¢æ€»ä¸­æ–­     // zzs add 2018.3.31
+	__disable_irq(); // ½ûÖ¹×ÜÖĞ¶Ï     // zzs add 2018.3.31
 	
-    W25QXX_Write_Enable();                  // SET WEL     // å†™ä½¿èƒ½å‘½ä»¤éœ€è¦ä¸€ä¸ªç‹¬ç«‹çš„ â€œç‰‡é€‰æ‹‰ä½ + ç§»å…¥å†™ä½¿èƒ½æŒ‡ä»¤ + ç‰‡é€‰æ‹‰é«˜â€è¿‡ç¨‹
+    W25QXX_Write_Enable();                  // SET WEL     // Ğ´Ê¹ÄÜÃüÁîĞèÒªÒ»¸ö¶ÀÁ¢µÄ ¡°Æ¬Ñ¡À­µÍ + ÒÆÈëĞ´Ê¹ÄÜÖ¸Áî + Æ¬Ñ¡À­¸ß¡±¹ı³Ì
 	
-	W25CS_L();                              // ä½¿èƒ½å™¨ä»¶ï¼ˆç‰‡é€‰é€‰ä¸­ï¼‰ 
-    SPI1_ReadWrite(W25X_PageProgram);       // å‘é€å†™é¡µå‘½ä»¤ 
+	W25CS_L();                              // Ê¹ÄÜÆ÷¼ş£¨Æ¬Ñ¡Ñ¡ÖĞ£© 
+    SPI1_ReadWrite(W25X_PageProgram);       // ·¢ËÍĞ´Ò³ÃüÁî 
     SPI1_ReadWrite((unsigned char)((WriteAddr)>>24));  // zzs add this	
     SPI1_ReadWrite((unsigned char)((WriteAddr)>>16));  
     SPI1_ReadWrite((unsigned char)((WriteAddr)>>8));   
     SPI1_ReadWrite((unsigned char)WriteAddr);   
     for(i=0;i<NumByteToWrite;i++)
 	{
-	   SPI1_ReadWrite(pBuffer[i]);   // å¾ªç¯å†™æ•° 
+	   SPI1_ReadWrite(pBuffer[i]);   // Ñ­»·Ğ´Êı 
 	}		
-	W25CS_H();	                     // ç¦èƒ½å™¨ä»¶ï¼ˆå–æ¶ˆç‰‡é€‰ï¼‰ 
-	W25QXX_Wait_Busy();				 // ç­‰å¾…å†™å…¥ç»“æŸ
+	W25CS_H();	                     // ½ûÄÜÆ÷¼ş£¨È¡ÏûÆ¬Ñ¡£© 
+	W25QXX_Wait_Busy();				 // µÈ´ıĞ´Èë½áÊø
 	
-	__enable_irq();	// å¼€æ€»ä¸­æ–­	  // zzs add 2018.3.31
+	__enable_irq();	// ¿ª×ÜÖĞ¶Ï	  // zzs add 2018.3.31
 } 
 
 /************************************************************************************************************************
 * Function Name : void W25QXX_Write_NoCheck(unsigned int WriteAddr,unsigned char* pBuffer,unsigned short NumByteToWrite)                                                             
-* Description   : æ— æ£€éªŒå†™SPI FLASHï¼Œåœ¨æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ®,ä½†æ˜¯è¦ç¡®ä¿åœ°å€ä¸è¶Šç•Œ!
-*                 å¿…é¡»ç¡®ä¿æ‰€å†™çš„åœ°å€èŒƒå›´å†…çš„æ•°æ®å…¨éƒ¨ä¸º0XFF,å¦åˆ™åœ¨é0XFFå¤„å†™å…¥çš„æ•°æ®å°†å¤±è´¥!
-*                 (zzsæ€»ç»“ä¸‹ï¼šæ€»ä¹‹ä¸€æ¡ï¼Œ1è¦å†™ä¸º0ï¼Œè¡Œï¼Œok,ä½†æ˜¯ï¼Œå¦‚æœFlashä¸­åŸå§‹çš„ä¸œè¥¿å·²ç»æ˜¯0ï¼Œä½†æ˜¯ä½ è¦å†™çš„æ•°æ®ï¼Œåœ¨è¿™ä¸ªä½ç½®ä¸Šåˆä¸æ˜¯0ï¼Œ
-*                  è€Œæ˜¯1çš„è¯ï¼Œé‚£ï¼Œå¯¹ä¸èµ·ï¼Œæ²¡åŠæ³•å†™å›1çš„ã€‚Flashçš„å†™æœºåˆ¶å°±æ˜¯ï¼šæ•°æ®1ï¼Œæ˜¯ä¸éœ€è¦ä»€ä¹ˆåŠ¨ä½œçš„ï¼Œåªéœ€è¦å°†éœ€è¦å†™ä¸º0çš„åœ°æ–¹ï¼Œä»1å†™ä¸º0å°±å¯)
-*                 å…·æœ‰è‡ªåŠ¨æ¢é¡µåŠŸèƒ½          
-* Input         : WriteAddr      ï¼šå¼€å§‹å†™å…¥çš„åœ°å€(4Bytes Address Mode)
-*                 pBuffer        : è¦å†™å…¥çš„æ•°æ®
-*                 NumByteToWrite : è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§65535)
+* Description   : ÎŞ¼ìÑéĞ´SPI FLASH£¬ÔÚÖ¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨³¤¶ÈµÄÊı¾İ,µ«ÊÇÒªÈ·±£µØÖ·²»Ô½½ç!
+*                 ±ØĞëÈ·±£ËùĞ´µÄµØÖ··¶Î§ÄÚµÄÊı¾İÈ«²¿Îª0XFF,·ñÔòÔÚ·Ç0XFF´¦Ğ´ÈëµÄÊı¾İ½«Ê§°Ü!
+*                 (zzs×Ü½áÏÂ£º×ÜÖ®Ò»Ìõ£¬1ÒªĞ´Îª0£¬ĞĞ£¬ok,µ«ÊÇ£¬Èç¹ûFlashÖĞÔ­Ê¼µÄ¶«Î÷ÒÑ¾­ÊÇ0£¬µ«ÊÇÄãÒªĞ´µÄÊı¾İ£¬ÔÚÕâ¸öÎ»ÖÃÉÏÓÖ²»ÊÇ0£¬
+*                  ¶øÊÇ1µÄ»°£¬ÄÇ£¬¶Ô²»Æğ£¬Ã»°ì·¨Ğ´»Ø1µÄ¡£FlashµÄĞ´»úÖÆ¾ÍÊÇ£ºÊı¾İ1£¬ÊÇ²»ĞèÒªÊ²Ã´¶¯×÷µÄ£¬Ö»ĞèÒª½«ĞèÒªĞ´Îª0µÄµØ·½£¬´Ó1Ğ´Îª0¾Í¿É)
+*                 ¾ßÓĞ×Ô¶¯»»Ò³¹¦ÄÜ          
+* Input         : WriteAddr      £º¿ªÊ¼Ğ´ÈëµÄµØÖ·(4Bytes Address Mode)
+*                 pBuffer        : ÒªĞ´ÈëµÄÊı¾İ
+*                 NumByteToWrite : ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó65535)
 * Return        : None
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
 void W25QXX_Write_NoCheck(unsigned int WriteAddr,unsigned char* pBuffer,unsigned short NumByteToWrite)   
 { 			 		 
 	unsigned short  pageremain = 0;	
-    unsigned char Loop_cnt=0; // zzs add ï¼ï¼ï¼è¿™ä¸ªä¸å±äºW25Qé©±åŠ¨å±‚çš„ä¸œè¥¿
+    unsigned char Loop_cnt=0; // zzs add £¡£¡£¡Õâ¸ö²»ÊôÓÚW25QÇı¶¯²ãµÄ¶«Î÷
 	
-	pageremain = 256 - WriteAddr%256;  // å•é¡µå‰©ä½™çš„å­—èŠ‚æ•°		 	    
-	if(NumByteToWrite <= pageremain) pageremain = NumByteToWrite; // ä¸å¤§äº256ä¸ªå­—èŠ‚
+	pageremain = 256 - WriteAddr%256;  // µ¥Ò³Ê£ÓàµÄ×Ö½ÚÊı		 	    
+	if(NumByteToWrite <= pageremain) pageremain = NumByteToWrite; // ²»´óÓÚ256¸ö×Ö½Ú
 	while(1)
 	{	   
 		W25QXX_Write_Page(WriteAddr,pBuffer,pageremain);
-		if(NumByteToWrite == pageremain) break;         // å†™å…¥ç»“æŸäº†
+		if(NumByteToWrite == pageremain) break;         // Ğ´Èë½áÊøÁË
 		else  // NumByteToWrite > pageremain
 		{
-			Loop_cnt++;         // zzs addï¼ï¼ï¼è¿™ä¸ªä¸å±äºW25Qé©±åŠ¨å±‚çš„ä¸œè¥¿
-			if(Loop_cnt%4==0)   // zzs addï¼ï¼ï¼è¿™ä¸ªä¸å±äºW25Qé©±åŠ¨å±‚çš„ä¸œè¥¿
+			Loop_cnt++;         // zzs add£¡£¡£¡Õâ¸ö²»ÊôÓÚW25QÇı¶¯²ãµÄ¶«Î÷
+			if(Loop_cnt%4==0)   // zzs add£¡£¡£¡Õâ¸ö²»ÊôÓÚW25QÇı¶¯²ãµÄ¶«Î÷
 			{
-				Feed_Dog();						//æ¯å†™1Kå°±å–‚ä¸€æ¬¡ç‹—ï¼Œé˜²æ­¢çœ‹é—¨ç‹—å¤ä½	
-				OSTimeDly(2); // 100ms // zzs addï¼ï¼ï¼è¿™ä¸ªä¸å±äºW25Qé©±åŠ¨å±‚çš„ä¸œè¥¿ï¼Œè¿™ä¸ªå®Œå…¨æ˜¯å› ä¸ºåŠ å…¥æ“ä½œç³»ç»Ÿåï¼Œå¦‚æœå‡ºç°æ»¡é¡µå†™æ—¶ï¼Œå®¹æ˜“é€ æˆCPUå ç”¨è¿‡é•¿æ—¶é—´è€Œå¯¼è‡´å…¶ä»–ä»»åŠ¡ç­‰ä¸åŠè€Œå‘ç”Ÿæ„å¤–ï¼Œæ‰€ä»¥åœ¨è¿™é‡Œè®©å‡ºä¸€ä¼šå„¿ã€‚	
+				Feed_Dog();						//Ã¿Ğ´1K¾ÍÎ¹Ò»´Î¹·£¬·ÀÖ¹¿´ÃÅ¹·¸´Î»	
+				OSTimeDly(2); // 100ms // zzs add£¡£¡£¡Õâ¸ö²»ÊôÓÚW25QÇı¶¯²ãµÄ¶«Î÷£¬Õâ¸öÍêÈ«ÊÇÒòÎª¼ÓÈë²Ù×÷ÏµÍ³ºó£¬Èç¹û³öÏÖÂúÒ³Ğ´Ê±£¬ÈİÒ×Ôì³ÉCPUÕ¼ÓÃ¹ı³¤Ê±¼ä¶øµ¼ÖÂÆäËûÈÎÎñµÈ²»¼°¶ø·¢ÉúÒâÍâ£¬ËùÒÔÔÚÕâÀïÈÃ³öÒ»»á¶ù¡£	
 			}
 			
 			pBuffer += pageremain;
 			WriteAddr += pageremain;	
-			NumByteToWrite -= pageremain;			    // å‡å»å·²ç»å†™å…¥äº†çš„å­—èŠ‚æ•°
-			if(NumByteToWrite > 256) pageremain = 256;  // ä¸€æ¬¡æœ€å¤šå¯ä»¥å†™å…¥256ä¸ªå­—èŠ‚
-			else pageremain = NumByteToWrite; 	        // ä¸å¤Ÿ256ä¸ªå­—èŠ‚äº†
+			NumByteToWrite -= pageremain;			    // ¼õÈ¥ÒÑ¾­Ğ´ÈëÁËµÄ×Ö½ÚÊı
+			if(NumByteToWrite > 256) pageremain = 256;  // Ò»´Î×î¶à¿ÉÒÔĞ´Èë256¸ö×Ö½Ú
+			else pageremain = NumByteToWrite; 	        // ²»¹»256¸ö×Ö½ÚÁË
 		}
 	}	    
 } 
 
 /************************************************************************************************************************
 * Function Name : void W25QXX_Write(unsigned int WriteAddr,unsigned char* pBuffer,unsigned short  NumByteToWrite)                                                          
-* Description   : å†™SPI FLASH ,åœ¨æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ® ,è¯¥å‡½æ•°å¸¦æ“¦é™¤æ“ä½œ!
+* Description   : Ğ´SPI FLASH ,ÔÚÖ¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨³¤¶ÈµÄÊı¾İ ,¸Ãº¯Êı´ø²Á³ı²Ù×÷!
 *                
-* Input         : WriteAddr      ï¼šå¼€å§‹å†™å…¥çš„åœ°å€(4Bytes Address Mode)
-*                 pBuffer        : è¦å†™å…¥çš„æ•°æ®
-*                 NumByteToWrite : è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§65535)
+* Input         : WriteAddr      £º¿ªÊ¼Ğ´ÈëµÄµØÖ·(4Bytes Address Mode)
+*                 pBuffer        : ÒªĞ´ÈëµÄÊı¾İ
+*                 NumByteToWrite : ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó65535)
 *                 
 * Return        : None
 *
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
@@ -515,57 +515,57 @@ void W25QXX_Write(unsigned int WriteAddr,unsigned char* pBuffer,unsigned short  
    
 	Feed_Dog();	
 	
- 	secpos = WriteAddr/4096;    // æ‰‡åŒºåœ°å€ ,0~8192 for w25Q256 
-	secoff = WriteAddr%4096;    // åœ¨æ‰‡åŒºå†…çš„åç§»
-	secremain = 4096 - secoff;  // æ‰‡åŒºå‰©ä½™ç©ºé—´å¤§å°   
- 	// printf("ad:%X,nb:%X\r\n",WriteAddr,NumByteToWrite);//æµ‹è¯•ç”¨
- 	if(NumByteToWrite <= secremain) secremain = NumByteToWrite;    // ä¸å¤§äº4096ä¸ªå­—èŠ‚
+ 	secpos = WriteAddr/4096;    // ÉÈÇøµØÖ· ,0~8192 for w25Q256 
+	secoff = WriteAddr%4096;    // ÔÚÉÈÇøÄÚµÄÆ«ÒÆ
+	secremain = 4096 - secoff;  // ÉÈÇøÊ£Óà¿Õ¼ä´óĞ¡   
+ 	// printf("ad:%X,nb:%X\r\n",WriteAddr,NumByteToWrite);//²âÊÔÓÃ
+ 	if(NumByteToWrite <= secremain) secremain = NumByteToWrite;    // ²»´óÓÚ4096¸ö×Ö½Ú
 	while(1) 
 	{	
-		W25QXX_Read(secpos*4096,W25QXX_BUF,4096);    // è¯»å‡ºæ•´ä¸ªæ‰‡åŒºçš„å†…å®¹---OK
+		W25QXX_Read(secpos*4096,W25QXX_BUF,4096);    // ¶Á³öÕû¸öÉÈÇøµÄÄÚÈİ---OK
 		
-		OSTimeDly(4); // 200ms  // ï¼ï¼ï¼è¿™ä¸ªä¸å±äºW25Qé©±åŠ¨å±‚çš„ä¸œè¥¿ï¼Œè¿™ä¸ªå®Œå…¨æ˜¯å› ä¸ºåŠ å…¥æ“ä½œç³»ç»Ÿåï¼Œå¦‚æœå‡ºç°æ»¡é¡µå†™æ—¶ï¼Œå®¹æ˜“é€ æˆCPUå ç”¨è¿‡é•¿æ—¶é—´è€Œå¯¼è‡´å…¶ä»–ä»»åŠ¡ç­‰ä¸åŠè€Œå‘ç”Ÿæ„å¤–ï¼Œæ‰€ä»¥åœ¨è¿™é‡Œè®©å‡ºä¸€ä¼šå„¿ã€‚
+		OSTimeDly(4); // 200ms  // £¡£¡£¡Õâ¸ö²»ÊôÓÚW25QÇı¶¯²ãµÄ¶«Î÷£¬Õâ¸öÍêÈ«ÊÇÒòÎª¼ÓÈë²Ù×÷ÏµÍ³ºó£¬Èç¹û³öÏÖÂúÒ³Ğ´Ê±£¬ÈİÒ×Ôì³ÉCPUÕ¼ÓÃ¹ı³¤Ê±¼ä¶øµ¼ÖÂÆäËûÈÎÎñµÈ²»¼°¶ø·¢ÉúÒâÍâ£¬ËùÒÔÔÚÕâÀïÈÃ³öÒ»»á¶ù¡£
 		
-		for(i = 0;i < secremain; i++)                // æ ¡éªŒæ•°æ®
+		for(i = 0;i < secremain; i++)                // Ğ£ÑéÊı¾İ
 		{
-			if(W25QXX_BUF[secoff+i] != 0XFF) break;     // éœ€è¦æ“¦é™¤  	  
+			if(W25QXX_BUF[secoff+i] != 0XFF) break;     // ĞèÒª²Á³ı  	  
 		}
 		
-		if(i < secremain)    // éœ€è¦æ“¦é™¤
+		if(i < secremain)    // ĞèÒª²Á³ı
 		{
-			W25QXX_Erase_Sector(secpos);             // æ“¦é™¤è¿™ä¸ªæ‰‡åŒº---ERROR!
+			W25QXX_Erase_Sector(secpos);             // ²Á³ıÕâ¸öÉÈÇø---ERROR!
 			
-			for(i = 0;i < secremain; i++)	         // å¤åˆ¶
+			for(i = 0;i < secremain; i++)	         // ¸´ÖÆ
 			{
 				W25QXX_BUF[i + secoff] = pBuffer[i];	  
 			}
 			
-			W25QXX_Write_NoCheck(secpos*4096,W25QXX_BUF,4096);    // å†™å…¥æ•´ä¸ªæ‰‡åŒº---ERROR!  
+			W25QXX_Write_NoCheck(secpos*4096,W25QXX_BUF,4096);    // Ğ´ÈëÕû¸öÉÈÇø---ERROR!  
 
-		}else W25QXX_Write_NoCheck(WriteAddr,pBuffer,secremain);  // å†™å·²ç»æ“¦é™¤äº†çš„,ç›´æ¥å†™å…¥æ‰‡åŒºå‰©ä½™åŒºé—´. 				   
+		}else W25QXX_Write_NoCheck(WriteAddr,pBuffer,secremain);  // Ğ´ÒÑ¾­²Á³ıÁËµÄ,Ö±½ÓĞ´ÈëÉÈÇøÊ£ÓàÇø¼ä. 				   
 		
-		if(NumByteToWrite == secremain) break;   // å†™å…¥ç»“æŸäº†
-		else             // å†™å…¥æœªç»“æŸ
+		if(NumByteToWrite == secremain) break;   // Ğ´Èë½áÊøÁË
+		else             // Ğ´ÈëÎ´½áÊø
 		{
-			secpos++;    // æ‰‡åŒºåœ°å€å¢1
-			secoff = 0;  // åç§»ä½ç½®ä¸º0 	 
+			secpos++;    // ÉÈÇøµØÖ·Ôö1
+			secoff = 0;  // Æ«ÒÆÎ»ÖÃÎª0 	 
 
-		   	pBuffer += secremain;    // æŒ‡é’ˆåç§»
-			WriteAddr += secremain;  // å†™åœ°å€åç§»	   
-		   	NumByteToWrite -= secremain;				  // å­—èŠ‚æ•°é€’å‡
-			if(NumByteToWrite > 4096) secremain = 4096;	  // ä¸‹ä¸€ä¸ªæ‰‡åŒºè¿˜æ˜¯å†™ä¸å®Œ
-			else secremain=NumByteToWrite;			      // ä¸‹ä¸€ä¸ªæ‰‡åŒºå¯ä»¥å†™å®Œäº†
+		   	pBuffer += secremain;    // Ö¸ÕëÆ«ÒÆ
+			WriteAddr += secremain;  // Ğ´µØÖ·Æ«ÒÆ	   
+		   	NumByteToWrite -= secremain;				  // ×Ö½ÚÊıµİ¼õ
+			if(NumByteToWrite > 4096) secremain = 4096;	  // ÏÂÒ»¸öÉÈÇø»¹ÊÇĞ´²»Íê
+			else secremain=NumByteToWrite;			      // ÏÂÒ»¸öÉÈÇø¿ÉÒÔĞ´ÍêÁË
 		}	 
 	}	 
 }
 
 /************************************************************************************************************************
 * Function Name : void W25QXX_Erase_Chip(void)                                             
-* Description   : æ“¦é™¤æ•´ä¸ªèŠ¯ç‰‡ï¼ˆå¤‡æ³¨ï¼šç­‰å¾…æ—¶é—´è¶…é•¿:å‡ åç§’ï¼Œå‡†ç¡®æµ‹è¿‡,æ•´ç‰‡æ“¦é™¤ï¼Œè€—æ—¶72ç§’ï¼‰
+* Description   : ²Á³ıÕû¸öĞ¾Æ¬£¨±¸×¢£ºµÈ´ıÊ±¼ä³¬³¤:¼¸Ê®Ãë£¬×¼È·²â¹ı,ÕûÆ¬²Á³ı£¬ºÄÊ±72Ãë£©
 * Input         : None
 * Return        : None 
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
@@ -573,111 +573,111 @@ void W25QXX_Erase_Chip(void)
 {                                   
 	W25QXX_Write_Enable();                 // SET WEL 
 	W25QXX_Wait_Busy();   
-	W25CS_L();                             // ä½¿èƒ½å™¨ä»¶   
-	SPI1_ReadWrite(W25X_ChipErase);        // å‘é€ç‰‡æ“¦é™¤å‘½ä»¤  
-	W25CS_H();                             // å–æ¶ˆç‰‡é€‰     	      
-	W25QXX_Wait_Busy();   				   // ç­‰å¾…èŠ¯ç‰‡æ“¦é™¤ç»“æŸ
+	W25CS_L();                             // Ê¹ÄÜÆ÷¼ş   
+	SPI1_ReadWrite(W25X_ChipErase);        // ·¢ËÍÆ¬²Á³ıÃüÁî  
+	W25CS_H();                             // È¡ÏûÆ¬Ñ¡     	      
+	W25QXX_Wait_Busy();   				   // µÈ´ıĞ¾Æ¬²Á³ı½áÊø
 }   
 
 /************************************************************************************************************************
 * Function Name : void W25QXX_Erase_Sector(unsigned int Dst_Addr)                                              
-* Description   : æ“¦é™¤ä¸€ä¸ªæ‰‡åŒºï¼ˆå¤‡æ³¨ï¼šæ“¦é™¤ä¸€ä¸ªæ‰‡åŒºçš„æœ€å°‘æ—¶é—´:150msï¼‰
-* Input         : Dst_Addr : æ‰‡åŒºåœ°å€ æ ¹æ®å®é™…å®¹é‡è®¾ç½®
+* Description   : ²Á³ıÒ»¸öÉÈÇø£¨±¸×¢£º²Á³ıÒ»¸öÉÈÇøµÄ×îÉÙÊ±¼ä:150ms£©
+* Input         : Dst_Addr : ÉÈÇøµØÖ· ¸ù¾İÊµ¼ÊÈİÁ¿ÉèÖÃ
 * Return        : None 
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
 void W25QXX_Erase_Sector(unsigned int Dst_Addr)   
 {  	  
-	// printf("fe:%x\r\n",Dst_Addr);	  // ç›‘è§†falshæ“¦é™¤æƒ…å†µ,æµ‹è¯•ç”¨ 
+	// printf("fe:%x\r\n",Dst_Addr);	  // ¼àÊÓfalsh²Á³ıÇé¿ö,²âÊÔÓÃ 
 	
-	__disable_irq(); // ç¦æ­¢æ€»ä¸­æ–­     // zzs add 2018.3.31
+	__disable_irq(); // ½ûÖ¹×ÜÖĞ¶Ï     // zzs add 2018.3.31
 	
 	BSP_WDGFeedDog();                 // zzs add 2018.06.12
 	
 	Dst_Addr *= 4096;
 	W25QXX_Write_Enable();                // SET WEL 	 
 	W25QXX_Wait_Busy();   
-	W25CS_L();                            // ä½¿èƒ½å™¨ä»¶   
-	SPI1_ReadWrite(W25X_SectorErase);     // å‘é€æ‰‡åŒºæ“¦é™¤æŒ‡ä»¤ 
+	W25CS_L();                            // Ê¹ÄÜÆ÷¼ş   
+	SPI1_ReadWrite(W25X_SectorErase);     // ·¢ËÍÉÈÇø²Á³ıÖ¸Áî 
 	SPI1_ReadWrite((u8)((Dst_Addr)>>24)); // zzs add this 
 	SPI1_ReadWrite((u8)((Dst_Addr)>>16));  
 	SPI1_ReadWrite((u8)((Dst_Addr)>>8));   
 	SPI1_ReadWrite((u8)Dst_Addr);  
-	W25CS_H();                            // å–æ¶ˆç‰‡é€‰     	      
-	W25QXX_Wait_Busy();   				  // ç­‰å¾…æ“¦é™¤å®Œæˆ
+	W25CS_H();                            // È¡ÏûÆ¬Ñ¡     	      
+	W25QXX_Wait_Busy();   				  // µÈ´ı²Á³ıÍê³É
 	
-	__enable_irq();	// å¼€æ€»ä¸­æ–­	  // zzs add 2018.3.31
+	__enable_irq();	// ¿ª×ÜÖĞ¶Ï	  // zzs add 2018.3.31
 } 
 
 /************************************************************************************************************************
 * Function Name : void W25QXX_PowerDown(void)                                               
-* Description   : ç­‰å¾…W25Q256ç©ºé—²
+* Description   : µÈ´ıW25Q256¿ÕÏĞ
 * Input         : None
 * Return        : None 
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
 void W25QXX_Wait_Busy(void)   
 {   
 	// printf("W25QXX_ReadSR()=%x\r\n",W25QXX_ReadSR());
-	while( (W25QXX_ReadSR()&0x01) == 0x01) {;}           // ç­‰å¾…BUSYä½æ¸…ç©º
+	while( (W25QXX_ReadSR()&0x01) == 0x01) {;}           // µÈ´ıBUSYÎ»Çå¿Õ
 }  
 
 /************************************************************************************************************************
 * Function Name : void W25QXX_PowerDown(void)                                               
-* Description   : W25Q256è¿›å…¥æ‰ç”µæ¨¡å¼
+* Description   : W25Q256½øÈëµôµçÄ£Ê½
 * Input         : None
 * Return        : None 
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
 void W25QXX_PowerDown(void)   
 { 
-	W25CS_L();                          // ä½¿èƒ½å™¨ä»¶
-	SPI1_ReadWrite(W25X_PowerDown);     // å‘é€æ‰ç”µå‘½ä»¤  
-	W25CS_H();                          // å–æ¶ˆç‰‡é€‰     	      
-	delay_2us_4M(1);                    // ç­‰å¾…TPD	å…¥å‚ä¸º1çš„å•æ¬¡è°ƒç”¨çº¦5.4usï¼Œè€Œé2usï¼›
+	W25CS_L();                          // Ê¹ÄÜÆ÷¼ş
+	SPI1_ReadWrite(W25X_PowerDown);     // ·¢ËÍµôµçÃüÁî  
+	W25CS_H();                          // È¡ÏûÆ¬Ñ¡     	      
+	delay_2us_4M(1);                    // µÈ´ıTPD	Èë²ÎÎª1µÄµ¥´Îµ÷ÓÃÔ¼5.4us£¬¶ø·Ç2us£»
 }
 
 /************************************************************************************************************************
 * Function Name : void W25QXX_WAKEUP(void)                                                 
-* Description   : å”¤é†’W25Q256ã€‚
+* Description   : »½ĞÑW25Q256¡£
 * Input         : None
 * Return        : None 
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
 void W25QXX_WAKEUP(void)   
 {  
-	W25CS_L();                               // ä½¿èƒ½å™¨ä»¶   
+	W25CS_L();                               // Ê¹ÄÜÆ÷¼ş   
 	SPI1_ReadWrite(W25X_ReleasePowerDown);   // send W25X_PowerDown command 0xAB    
-	W25CS_H();                               // å–æ¶ˆç‰‡é€‰     	      
-	delay_2us_4M(1);                         // ç­‰å¾…TRES1	å…¥å‚ä¸º1çš„å•æ¬¡è°ƒç”¨çº¦5.4usï¼Œè€Œé2usï¼›
+	W25CS_H();                               // È¡ÏûÆ¬Ñ¡     	      
+	delay_2us_4M(1);                         // µÈ´ıTRES1	Èë²ÎÎª1µÄµ¥´Îµ÷ÓÃÔ¼5.4us£¬¶ø·Ç2us£»
 }   
 
 /************************************************************************************************************************
 * Function Name : INT8U WQ256_Test(void)                                                  
-* Description   : æµ‹è¯•W25Q256ã€‚
-*                 èŠ¯ç‰‡å®¹é‡ä¸º256M Bits,32M Bytes,æœ‰3å­—èŠ‚åœ°å€æ¨¡å¼ï¼Œå’Œ4å­—èŠ‚åœ°å€æ¨¡å¼ï¼Œzzs note:æ³¨æ„ç”¨é‡ï¼Œæ˜¯åŠç‰‡ç”¨(3å­—èŠ‚åœ°å€ï¼Œ
-*                 16M Byteså¯»å€èŒƒå›´)ï¼Œè¿˜æ˜¯å…¨ç‰‡ç”¨ï¼ˆ4å­—èŠ‚åœ°å€æ¨¡å¼ï¼Œ32M Bytesï¼‰ã€‚
+* Description   : ²âÊÔW25Q256¡£
+*                 Ğ¾Æ¬ÈİÁ¿Îª256M Bits,32M Bytes,ÓĞ3×Ö½ÚµØÖ·Ä£Ê½£¬ºÍ4×Ö½ÚµØÖ·Ä£Ê½£¬zzs note:×¢ÒâÓÃÁ¿£¬ÊÇ°ëÆ¬ÓÃ(3×Ö½ÚµØÖ·£¬
+*                 16M BytesÑ°Ö··¶Î§)£¬»¹ÊÇÈ«Æ¬ÓÃ£¨4×Ö½ÚµØÖ·Ä£Ê½£¬32M Bytes£©¡£
 *                 
-*                 æ³¨ï¼šW25Q256ï¼ŒSPI-Flash, 256Bytesä»¥é¡µï¼Œæœ€å°æ“¦é™¤å•ä½ï¼š16é¡µï¼ˆ4kBytesï¼‰ï¼Œä¹Ÿå¯æŒ‰128é¡µä¸ºä¸€å—ï¼ˆ32kBytesï¼‰è¿›è¡Œæ“¦é™¤ï¼Œ
-*                     ä¹Ÿå¯æŒ‰256é¡µä¸ºä¸€å—ï¼ˆ64kBytesï¼‰è¿›è¡Œæ“¦é™¤ï¼Œä¹Ÿå¯æŒ‰æ•´ç‰‡(entire chip erase)
+*                 ×¢£ºW25Q256£¬SPI-Flash, 256BytesÒÔÒ³£¬×îĞ¡²Á³ıµ¥Î»£º16Ò³£¨4kBytes£©£¬Ò²¿É°´128Ò³ÎªÒ»¿é£¨32kBytes£©½øĞĞ²Á³ı£¬
+*                     Ò²¿É°´256Ò³ÎªÒ»¿é£¨64kBytes£©½øĞĞ²Á³ı£¬Ò²¿É°´ÕûÆ¬(entire chip erase)
 * Input         : None
-* Return        :  0 ï¼šæµ‹è¯•å¤±è´¥
-*                  1 ï¼šæµ‹è¯•æˆåŠŸ
+* Return        :  0 £º²âÊÔÊ§°Ü
+*                  1 £º²âÊÔ³É¹¦
 *
 * History :                               
-* First Issued  : èµµå¿—èˆœäº2018å¹´2æœˆ7æ—¥åˆ›å»ºæœ¬å‡½æ•°             E-Mail:11207656@qq.com
+* First Issued  : ÕÔÖ¾Ë´ÓÚ2018Äê2ÔÂ7ÈÕ´´½¨±¾º¯Êı             E-Mail:11207656@qq.com
 * Version       : V1.0
 * Modify By     : 
 *************************************************************************************************************************/
@@ -692,44 +692,44 @@ INT8U WQ256_Test(void)
 	if(ERR == 0) return 0;
 	
 	#if zzs_Test_W25Q
-	W25QXX_Erase_Sector(0);          // æ“¦é™¤ç¬¬0å—
-	W25QXX_Read(0,FMTESTBUFF,256);   // è¯»å‡ºçœ‹åˆå§‹æ“¦çš„æƒ…å†µ
+	W25QXX_Erase_Sector(0);          // ²Á³ıµÚ0¿é
+	W25QXX_Read(0,FMTESTBUFF,256);   // ¶Á³ö¿´³õÊ¼²ÁµÄÇé¿ö
 	for(i = 0; i < 256; i++)
 	{
-		FMTESTBUFF[i]=i;    // å¡«å……ç¼“å†²
+		FMTESTBUFF[i]=i;    // Ìî³ä»º³å
 	}
 	
-	W25QXX_Write_NoCheck(0,FMTESTBUFF,256);   // æ— æ ¡éªŒï¼Œä¸å¸¦æ“¦é™¤ï¼Œå†™ä¸€æ¬¡
-	for(i = 0; i < 256; i++) FMTESTBUFF[i]=0; // æ¸…é™¤ç¼“å†²
-	W25QXX_Read(0,FMTESTBUFF,256);            // è¯»å‡ºçœ‹ç¬¬ä¸€æ¬¡å†™çš„æƒ…å†µ      // è¿™æ¬¡å†™ï¼Œæ˜¯èƒ½å¤Ÿå®Œå…¨æ­£ç¡®çš„
-	
-	for(i = 0; i < 256; i++)
-	{
-		FMTESTBUFF[i] =  255 - i;             // å°†ç¼“å†²å†…å®¹å‰åé¢ å€’è¿‡æ¥,  å†ç”¨æ— æ ¡éªŒï¼Œæ— æ“¦é™¤å‡½æ•°å†™ï¼Œä¹Ÿå°±æ˜¯å†™ä¸Šæ¬¡æ¯ä¸ªå­—èŠ‚ä¸­ç•™ä¸‹æ¥ä¸º1çš„ä½ï¼Œä¸‹é¢è¯»å‡ºæ¥åªè¦æ˜¯å…¨0ï¼Œå°±OKäº†  
-		                                      // ä¹Ÿå¯éšä¾¿ç”¨ä¸ªå…¶ä»–çš„æµ‹è¯•å€¼ï¼Œä¾‹å¦‚ï¼š0xAAæ¥å¡«å……å…¨éƒ¨ç¼“å†²;ä½†æ˜¯åé¢è¯»å‡ºæ¥çš„å€¼å°±æ˜¯ä¸€äº›ä¹±ä¹±çš„å€¼ã€‚
-	}
-	W25QXX_Write_NoCheck(0,FMTESTBUFF,256);       // æ— æ ¡éªŒï¼Œä¸å¸¦æ“¦é™¤ï¼Œå†™ç¬¬äºŒæ¬¡
-	for(i = 0; i < 256; i++) FMTESTBUFF[i] =0xFF; // æ¶‚æŠ¹ç¼“å†²
-	W25QXX_Read(0,FMTESTBUFF,256);                // è¯»å‡ºçœ‹ç¬¬äºŒæ¬¡å†™çš„æƒ…å†µ   // è¯»å‡ºå…¨ä¸º0å°±å¯¹äº†ã€‚
+	W25QXX_Write_NoCheck(0,FMTESTBUFF,256);   // ÎŞĞ£Ñé£¬²»´ø²Á³ı£¬Ğ´Ò»´Î
+	for(i = 0; i < 256; i++) FMTESTBUFF[i]=0; // Çå³ı»º³å
+	W25QXX_Read(0,FMTESTBUFF,256);            // ¶Á³ö¿´µÚÒ»´ÎĞ´µÄÇé¿ö      // Õâ´ÎĞ´£¬ÊÇÄÜ¹»ÍêÈ«ÕıÈ·µÄ
 	
 	for(i = 0; i < 256; i++)
 	{
-		FMTESTBUFF[i]=i;    // å¡«å……ç¼“å†²
+		FMTESTBUFF[i] =  255 - i;             // ½«»º³åÄÚÈİÇ°ºóµßµ¹¹ıÀ´,  ÔÙÓÃÎŞĞ£Ñé£¬ÎŞ²Á³ıº¯ÊıĞ´£¬Ò²¾ÍÊÇĞ´ÉÏ´ÎÃ¿¸ö×Ö½ÚÖĞÁôÏÂÀ´Îª1µÄÎ»£¬ÏÂÃæ¶Á³öÀ´Ö»ÒªÊÇÈ«0£¬¾ÍOKÁË  
+		                                      // Ò²¿ÉËæ±ãÓÃ¸öÆäËûµÄ²âÊÔÖµ£¬ÀıÈç£º0xAAÀ´Ìî³äÈ«²¿»º³å;µ«ÊÇºóÃæ¶Á³öÀ´µÄÖµ¾ÍÊÇÒ»Ğ©ÂÒÂÒµÄÖµ¡£
 	}
-	W25QXX_Write(0,FMTESTBUFF,256);           // å¸¦æ“¦é™¤å†™ç¬¬ä¸€æ¬¡
-	for(i = 0; i < 256; i++) FMTESTBUFF[i]=0; // æ¸…é™¤ç¼“å†²
-	W25QXX_Read(0,FMTESTBUFF,256);            // è¯»å‡ºçœ‹å¸¦æ“¦é™¤å†™çš„æƒ…å†µ
+	W25QXX_Write_NoCheck(0,FMTESTBUFF,256);       // ÎŞĞ£Ñé£¬²»´ø²Á³ı£¬Ğ´µÚ¶ş´Î
+	for(i = 0; i < 256; i++) FMTESTBUFF[i] =0xFF; // Í¿Ä¨»º³å
+	W25QXX_Read(0,FMTESTBUFF,256);                // ¶Á³ö¿´µÚ¶ş´ÎĞ´µÄÇé¿ö   // ¶Á³öÈ«Îª0¾Í¶ÔÁË¡£
 	
-	W25QXX_Erase_Sector(0);         // æ“¦é™¤ç¬¬0å—
-	W25QXX_Read(0,FMTESTBUFF,256);  // è¯»å‡ºçœ‹ç¬¬0å—çš„çš„æ“¦é™¤æƒ…å†µ
+	for(i = 0; i < 256; i++)
+	{
+		FMTESTBUFF[i]=i;    // Ìî³ä»º³å
+	}
+	W25QXX_Write(0,FMTESTBUFF,256);           // ´ø²Á³ıĞ´µÚÒ»´Î
+	for(i = 0; i < 256; i++) FMTESTBUFF[i]=0; // Çå³ı»º³å
+	W25QXX_Read(0,FMTESTBUFF,256);            // ¶Á³ö¿´´ø²Á³ıĞ´µÄÇé¿ö
 	
-	W25QXX_Erase_Chip();                  // æ•´ç‰‡æ“¦é™¤
+	W25QXX_Erase_Sector(0);         // ²Á³ıµÚ0¿é
+	W25QXX_Read(0,FMTESTBUFF,256);  // ¶Á³ö¿´µÚ0¿éµÄµÄ²Á³ıÇé¿ö
+	
+	W25QXX_Erase_Chip();                  // ÕûÆ¬²Á³ı
 	
 		#if 0
-		// W25QXX_Erase_Sector(Scetor_No);    // å—æ“¦é™¤
-		W25QXX_Erase_Chip();                  // æ•´ç‰‡æ“¦é™¤
+		// W25QXX_Erase_Sector(Scetor_No);    // ¿é²Á³ı
+		W25QXX_Erase_Chip();                  // ÕûÆ¬²Á³ı
 			
-		for(j = 0; j < 65536; j++)  // å‰åŠç‰‡
+		for(j = 0; j < 65536; j++)  // Ç°°ëÆ¬
 		{
 			W25QXX_Read(j*256,FMTESTBUFF,256);
 			for(i = 0;i < 256;i++)
@@ -747,10 +747,10 @@ INT8U WQ256_Test(void)
 		}
 		#else
 
-		// W25QXX_Erase_Sector(Scetor_No);    // å—æ“¦é™¤
-		W25QXX_Erase_Chip();                  // æ•´ç‰‡æ“¦é™¤
+		// W25QXX_Erase_Sector(Scetor_No);    // ¿é²Á³ı
+		W25QXX_Erase_Chip();                  // ÕûÆ¬²Á³ı
 
-		for(j = 65536; j < 131072; j++)       // ååŠç‰‡
+		for(j = 65536; j < 131072; j++)       // ºó°ëÆ¬
 		{
 			W25QXX_Read(j*256,FMTESTBUFF,256);         // zzs note,
 			for(i = 0;i < 256; i++)
@@ -771,33 +771,33 @@ INT8U WQ256_Test(void)
 	
 	#endif
 	
-	W25QXX_Erase_Sector(0);          // æ“¦é™¤ç¬¬0å—
-	W25QXX_Read(0,FMTESTBUFF,256);   // ä»éé¡µåœ°å€ä¸Šè¯»ï¼Œæ˜¯æ²¡æœ‰å¤ªå¤§é—®é¢˜çš„ï¼Œ
+	W25QXX_Erase_Sector(0);          // ²Á³ıµÚ0¿é
+	W25QXX_Read(0,FMTESTBUFF,256);   // ´Ó·ÇÒ³µØÖ·ÉÏ¶Á£¬ÊÇÃ»ÓĞÌ«´óÎÊÌâµÄ£¬
 	for(i = 0; i < 256; i++)
 	{
 		FMTESTBUFF[i] = i;
 	}
 	
-	W25QXX_Write_NoCheck(0,FMTESTBUFF,256);     // ä½†æ˜¯ä»éé¡µåœ°å€ä¸Šå†™ï¼Œé‚£å°±å¾—æ³¨æ„å•¦ï¼Œç¨ä¸æ³¨æ„å°±å‡ºé”™ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼
+	W25QXX_Write_NoCheck(0,FMTESTBUFF,256);     // µ«ÊÇ´Ó·ÇÒ³µØÖ·ÉÏĞ´£¬ÄÇ¾ÍµÃ×¢ÒâÀ²£¬ÉÔ²»×¢Òâ¾Í³ö´í£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡
 	
 	for(i = 0; i < 256; i++) FMTESTBUFF[i]=0;
 	
 	W25QXX_Read(0,FMTESTBUFF,256);  
 	for(i = 0; i < 256; i++)
 	{
-		if(FMTESTBUFF[i] != i) return 0;           // W25Qxxæµ‹è¯•å¤±è´¥
+		if(FMTESTBUFF[i] != i) return 0;           // W25Qxx²âÊÔÊ§°Ü
 	}
     
-	W25QXX_Erase_Chip();    // æµ‹è¯•å®Œæˆåæ“¦é™¤èŠ¯ç‰‡
+	W25QXX_Erase_Chip();    // ²âÊÔÍê³Éºó²Á³ıĞ¾Æ¬
 	
-	return 1;  //W25Qxx æµ‹è¯•æˆåŠŸ
+	return 1;  //W25Qxx ²âÊÔ³É¹¦
 }
 
 
 
 /******************************************************************************* 
 * Function Name  : void W25Q256_LowPower(void)
-* Description    : W25Q256è¿›å…¥ä½åŠŸè€—ï¼Œå¹¶å¯¹ç›¸åº”IOå£ä½œä½åŠŸè€—å¤„ç†
+* Description    : W25Q256½øÈëµÍ¹¦ºÄ£¬²¢¶ÔÏàÓ¦IO¿Ú×÷µÍ¹¦ºÄ´¦Àí
 * Input          : None 
 * Output         : None 
 * Return         : None 
@@ -806,38 +806,38 @@ void W25Q256_LowPower(INT8U Task_Num)
 {
 	GPIO_InitTypeDef 	GPIO_InitStructure;	
 	
-	WQ256_Flag&=~(1<<Task_Num);							//æ¸…å½“å‰ä»»åŠ¡bit	
-	if(WQ256_Flag) return;								//è‹¥å…¶ä»–ä»»åŠ¡å ç”¨ï¼ŒFM_Flagé0ï¼Œç›´æ¥è¿”å›
+	WQ256_Flag&=~(1<<Task_Num);							//Çåµ±Ç°ÈÎÎñbit	
+	if(WQ256_Flag) return;								//ÈôÆäËûÈÎÎñÕ¼ÓÃ£¬FM_Flag·Ç0£¬Ö±½Ó·µ»Ø
 	
-	/*è‹¥æœªåˆå§‹åŒ–ï¼Œæ— æ³•è¿›å…¥å…³æœºçŠ¶æ€*/
-	W25QXX_PowerDown();														//è¿›å…¥å…³æœºçŠ¶æ€
+	/*ÈôÎ´³õÊ¼»¯£¬ÎŞ·¨½øÈë¹Ø»ú×´Ì¬*/
+	W25QXX_PowerDown();														//½øÈë¹Ø»ú×´Ì¬
 	
 
-	/*ç‰‡é€‰å£ã€å†™ä¿æŠ¤å£æ¨¡æ‹Ÿè¾“å…¥*/
+	/*Æ¬Ñ¡¿Ú¡¢Ğ´±£»¤¿ÚÄ£ÄâÊäÈë*/
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;							//æ¨¡æ‹Ÿè¾“å…¥
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;							//Ä£ÄâÊäÈë
 	
-	GPIO_InitStructure.GPIO_Pin = W25CS_PIN;								//ç‰‡é€‰å£
+	GPIO_InitStructure.GPIO_Pin = W25CS_PIN;								//Æ¬Ñ¡¿Ú
 	GPIO_Init(W25CS_Port, &GPIO_InitStructure);								//
 	
-//	GPIO_InitStructure.GPIO_Pin = W25WP_PIN;								//å†™ä¿æŠ¤å£æœªä½¿ç”¨
+//	GPIO_InitStructure.GPIO_Pin = W25WP_PIN;								//Ğ´±£»¤¿ÚÎ´Ê¹ÓÃ
 //	GPIO_Init(W25WP_Port, &GPIO_InitStructure);								//	
 	
 	
-	/*SPIä¸‰ä¸ªå¼•è„šæ¨æŒ½æ‹‰ä½*/
+	/*SPIÈı¸öÒı½ÅÍÆÍìÀ­µÍ*/
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;						//æ¨æŒ½è¾“å‡º
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;						//ÍÆÍìÊä³ö
 	
 	GPIO_InitStructure.GPIO_Pin = W25MOSI_PIN;								//MOSI
-	GPIO_ResetBits(W25MOSI_Port, W25MOSI_PIN);								//æ‹‰ä½
+	GPIO_ResetBits(W25MOSI_Port, W25MOSI_PIN);								//À­µÍ
 	GPIO_Init(W25MOSI_Port, &GPIO_InitStructure);							//
 	
 	GPIO_InitStructure.GPIO_Pin = W25MISO_PIN;								//MISO
-	GPIO_ResetBits(W25MISO_Port, W25MISO_PIN);								//æ‹‰ä½
+	GPIO_ResetBits(W25MISO_Port, W25MISO_PIN);								//À­µÍ
 	GPIO_Init(W25MISO_Port, &GPIO_InitStructure);							//
 	
 	GPIO_InitStructure.GPIO_Pin = W25CLK_PIN;								//SCK
-	GPIO_ResetBits(W25CLK_Port, W25CLK_PIN);								//æ‹‰ä½
+	GPIO_ResetBits(W25CLK_Port, W25CLK_PIN);								//À­µÍ
 	GPIO_Init(W25CLK_Port, &GPIO_InitStructure);							//
 }
 
@@ -848,24 +848,24 @@ void W25Q256_LowPower(INT8U Task_Num)
 
 
 
-/***********************************************************************************æ–°å†™çš„é©±åŠ¨*****************************************************************/
+/***********************************************************************************ĞÂĞ´µÄÇı¶¯*****************************************************************/
 /************************************************************************************************************************
 * Function Name : INT8U W25QXX_Read_By_Sector(INT8U *OutBuff,INT32U Sector_Index,INT8U Count)			                                            
-* Description   : è¯»å–SPI FLASH ,W25Qxx,æŒ‰Sectorè¿›è¡Œè¯»å–ä¸€ä¸ªæ‰‡åŒºæˆ–å¤šä¸ª
-* Input         : Sector_Index  : æ‰‡åŒºåœ°å€ç´¢å¼• 0~Sector_Maxï¼ˆ8191 for WQ256ï¼‰
-*                 OutBuff       : ä¸»è°ƒå¼€è¾Ÿçš„ç©ºé—´çš„æŒ‡é’ˆï¼Œç”¨äºæ¥æ”¶ã€å­˜å‚¨æœ¬å‡½æ•°è¯»å–è¿”å›æ•°æ®
-*                 Count			: è¯»å–çš„æ‰‡åŒºæ•°
-* Return        : 1ï¼šè¯»å–æˆåŠŸ 0ï¼šå‚æ•°é”™è¯¯
+* Description   : ¶ÁÈ¡SPI FLASH ,W25Qxx,°´Sector½øĞĞ¶ÁÈ¡Ò»¸öÉÈÇø»ò¶à¸ö
+* Input         : Sector_Index  : ÉÈÇøµØÖ·Ë÷Òı 0~Sector_Max£¨8191 for WQ256£©
+*                 OutBuff       : Ö÷µ÷¿ª±ÙµÄ¿Õ¼äµÄÖ¸Õë£¬ÓÃÓÚ½ÓÊÕ¡¢´æ´¢±¾º¯Êı¶ÁÈ¡·µ»ØÊı¾İ
+*                 Count			: ¶ÁÈ¡µÄÉÈÇøÊı
+* Return        : 1£º¶ÁÈ¡³É¹¦ 0£º²ÎÊı´íÎó
 *************************************************************************************************************************/
 INT8U W25QXX_Read_By_Sector(INT8U *OutBuff,INT32U Sector_Index,INT8U Count)	
 {
 	INT8U i = 0;  
 	if(!Count)	return 0;	
-	if((Sector_Index>Sector_Max)||(Sector_Index+Count-1>Sector_Max))	return 0;		//è¯»å–èŒƒå›´è¶…å‡ºæœ€å¤§æ‰‡åŒº	
+	if((Sector_Index>Sector_Max)||(Sector_Index+Count-1>Sector_Max))	return 0;		//¶ÁÈ¡·¶Î§³¬³ö×î´óÉÈÇø	
 
 	for(i = 0; i < Count; i++)
 	{ 
-		W25QXX_Read(Sector_Index*Sector_Size,OutBuff,Sector_Size);						//æŒ‰æ‰‡åŒºè¯»å‡ºæŒ‡å®šæ–‡ä»¶ï¼Œæ‰‡åŒºåœ°å€è½¬åŒ–æˆå­˜å‚¨ç»å¯¹åœ°å€
+		W25QXX_Read(Sector_Index*Sector_Size,OutBuff,Sector_Size);						//°´ÉÈÇø¶Á³öÖ¸¶¨ÎÄ¼ş£¬ÉÈÇøµØÖ·×ª»¯³É´æ´¢¾ø¶ÔµØÖ·
 		Sector_Index++;
 		OutBuff+=Sector_Size;
 	}
@@ -874,22 +874,22 @@ INT8U W25QXX_Read_By_Sector(INT8U *OutBuff,INT32U Sector_Index,INT8U Count)
 
 /************************************************************************************************************************
 * Function Name : INT8U W25QXX_Write_By_Sector(INT8U *InBuff,INT32U Sector_Index,INT8U Count)                                                              
-* Description   : å†™SPI FLASHï¼ŒæŒ‰æ‰‡åŒºå†™å…¥æ•°æ®ï¼Œå¯ä¸€æ¬¡å†™å…¥ä¸€ä¸ªæˆ–å¤šä¸ªæ‰‡åŒº                 
-* Input         : Sector_Index   : å¼€å§‹å†™å…¥çš„æ‰‡åŒºåœ°å€
-*                 InBuff         : è¦å†™å…¥çš„æ•°æ®æŒ‡é’ˆ
-*                 Count			 : å†™å…¥çš„æ‰‡åŒºæ•°
-* Return        : 1:å†™å…¥æˆåŠŸ 0ï¼šå‚æ•°é”™è¯¯
+* Description   : Ğ´SPI FLASH£¬°´ÉÈÇøĞ´ÈëÊı¾İ£¬¿ÉÒ»´ÎĞ´ÈëÒ»¸ö»ò¶à¸öÉÈÇø                 
+* Input         : Sector_Index   : ¿ªÊ¼Ğ´ÈëµÄÉÈÇøµØÖ·
+*                 InBuff         : ÒªĞ´ÈëµÄÊı¾İÖ¸Õë
+*                 Count			 : Ğ´ÈëµÄÉÈÇøÊı
+* Return        : 1:Ğ´Èë³É¹¦ 0£º²ÎÊı´íÎó
 *************************************************************************************************************************/
 INT8U W25QXX_Write_By_Sector(INT8U *InBuff,INT32U Sector_Index,INT8U Count)  
 { 			 		 
 	INT8U i = 0;  
 	if(!Count)	return 0;	
-	if((Sector_Index>Sector_Max)||(Sector_Index+Count-1>Sector_Max))	return 0;		//å†™å…¥èŒƒå›´è¶…å‡ºæœ€å¤§æ‰‡åŒº
+	if((Sector_Index>Sector_Max)||(Sector_Index+Count-1>Sector_Max))	return 0;		//Ğ´Èë·¶Î§³¬³ö×î´óÉÈÇø
 	
 	for(i = 0; i < Count; i++)
 	{
 		W25QXX_Erase_Sector(Sector_Index); 
-		W25QXX_Write_NoCheck(Sector_Index*Sector_Size,InBuff,Sector_Size);    			// å†™å…¥æ•´ä¸ªæ‰‡åŒº 
+		W25QXX_Write_NoCheck(Sector_Index*Sector_Size,InBuff,Sector_Size);    			// Ğ´ÈëÕû¸öÉÈÇø 
 		Sector_Index++;
 		InBuff+=Sector_Size;
 	}			

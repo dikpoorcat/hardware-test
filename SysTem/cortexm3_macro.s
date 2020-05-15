@@ -45,9 +45,9 @@
   EXPORT __REV_HalfWord
   EXPORT __REV_Word
 
-; andyæ·»åŠ 
-	EXPORT __EINT								; å¼€æ€»ä¸­æ–­
-	EXPORT __DINT								; å…³æ€»ä¸­æ–­
+; andyÌí¼Ó
+	EXPORT __EINT								; ¿ª×ÜÖÐ¶Ï
+	EXPORT __DINT								; ¹Ø×ÜÖÐ¶Ï
 	EXPORT __NOP								; NOP
 	EXPORT __GET_LR
 ;*******************************************************************************
@@ -306,7 +306,7 @@ __REV_Word
     
 ;/***********************************************************************************************
 ;* Function		: __EINT
-;* Description	: å¼€æ€»ä¸­æ–­
+;* Description	: ¿ª×ÜÖÐ¶Ï
 ;* Input		: 
 ;* Output		: 
 ;* Note(s)		: 
@@ -317,7 +317,7 @@ __EINT
 	BX	r14
 ;/***********************************************************************************************
 ;* Function		: __DINT
-;* Description	: å…³æ€»ä¸­æ–­
+;* Description	: ¹Ø×ÜÖÐ¶Ï
 ;* Input		: 
 ;* Output		: 
 ;* Note(s)		: 

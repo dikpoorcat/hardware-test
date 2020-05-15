@@ -11,8 +11,8 @@
 #define Bmp180_SCLKPort     GPIOC
 #define Bmp180_SCLKPin      GPIO_Pin_7
 
-#define Bmp180_IN()        {Bmp180_SDAPort->CRL&=0XF0FFFFFF;Bmp180_SDAPort->CRL|=(u32)8<<24;}       //PC6è¾“å…¥æ¨¡å¼1000
-#define Bmp180_OUT()       {Bmp180_SDAPort->CRL&=0XF0FFFFFF;Bmp180_SDAPort->CRL|=(u32)3<<24;}       //PC6è¾“å‡ºæ¨¡å¼0011
+#define Bmp180_IN()        {Bmp180_SDAPort->CRL&=0XF0FFFFFF;Bmp180_SDAPort->CRL|=(u32)8<<24;}       //PC6ÊäÈëÄ£Ê½1000
+#define Bmp180_OUT()       {Bmp180_SDAPort->CRL&=0XF0FFFFFF;Bmp180_SDAPort->CRL|=(u32)3<<24;}       //PC6Êä³öÄ£Ê½0011
 
 #define Bmp180_SCLK_H()     Bmp180_SCLKPort->BSRR=Bmp180_SCLKPin;
 #define Bmp180_SCLK_L()	    Bmp180_SCLKPort->BRR=Bmp180_SCLKPin;
@@ -24,7 +24,7 @@
 
 
 
-//BMP180æ ¡æ­£å‚æ•°(calibration param)
+//BMP180Ğ£Õı²ÎÊı(calibration param)
 typedef struct {
 	 short AC1 ;
 	 short AC2 ;
@@ -40,19 +40,19 @@ typedef struct {
 }BMP180_cal_param;
 
 typedef struct {
-	unsigned char  ExistFlag ;  //å­˜åœ¨æ ‡å¿—
+	unsigned char  ExistFlag ;  //´æÔÚ±êÖ¾
 
-	BMP180_cal_param  cal_param;//ä¿®æ­£ç³»æ•°
+	BMP180_cal_param  cal_param;//ĞŞÕıÏµÊı
 
-	unsigned char Version ;				//ç‰ˆæœ¬
+	unsigned char Version ;				//°æ±¾
 
-	unsigned long UnsetTemperature ;		//æœªæ ¡æ­£çš„æ¸©åº¦å€¼
-	unsigned long UnsetGasPress	  ;		//æœªæ ¡æ­£çš„æ°”å‹å€¼
+	unsigned long UnsetTemperature ;		//Î´Ğ£ÕıµÄÎÂ¶ÈÖµ
+	unsigned long UnsetGasPress	  ;		//Î´Ğ£ÕıµÄÆøÑ¹Öµ
 
-	unsigned long Temperature ;			/*æ ¡æ­£åçš„æ¸©åº¦å€¼*/
-	unsigned long GasPress ;				/*æ ¡æ­£åçš„æ°”å‹å€¼*/
+	unsigned long Temperature ;			/*Ğ£ÕıºóµÄÎÂ¶ÈÖµ*/
+	unsigned long GasPress ;				/*Ğ£ÕıºóµÄÆøÑ¹Öµ*/
 
-	float Altitude ;				/*æµ·æ‹”*/
+	float Altitude ;				/*º£°Î*/
 	
 }BMP180_info ;
 
@@ -60,41 +60,41 @@ typedef struct {
 
 
 
-#define BMP180_NOT_EXISTENCE 0	/*ä¸å­˜åœ¨*/
-#define BMP180_EXISTENCE     1	/*å­˜åœ¨*/
+#define BMP180_NOT_EXISTENCE 0	/*²»´æÔÚ*/
+#define BMP180_EXISTENCE     1	/*´æÔÚ*/
 
-#define OSS  2	//èŒƒå›´(0~3)
+#define OSS  2	//·¶Î§(0~3)
 
 #define BMP180_READ		        0x01
 #define BMP180_WRITE	        0x00	
 
-#define	BMP180_DEVICE_ADDRESS_BASE_VALUE   0xee			 /*å™¨ä»¶åœ°å€åŸºå€¼*/                  
-//#define BMP180_CONTROL_REGISTER_ADDRESS_BASE_VALUE	0xf4 /*æ§åˆ¶å¯„å­˜å™¨åœ°å€*/
-#define BMP180_ID_REGISTER_ADDRESS		0xd0 /*IDç¼–å·å¯„å­˜å™¨(0x55å›ºå®š)*/
-#define BMP180_VERSION_REGISTER_ADDRESS	0XD1 /*ç‰ˆæœ¬ç¼–å·*/
-//#define BMP180_SOFT_RESET_REGISTER_BASE_VALUE	    0xe0 /*è½¯ä»¶å¤ä½å¯„å­˜å™¨,åªå†™ï¼Œè®¾ç½®0xb6*/
+#define	BMP180_DEVICE_ADDRESS_BASE_VALUE   0xee			 /*Æ÷¼şµØÖ·»ùÖµ*/                  
+//#define BMP180_CONTROL_REGISTER_ADDRESS_BASE_VALUE	0xf4 /*¿ØÖÆ¼Ä´æÆ÷µØÖ·*/
+#define BMP180_ID_REGISTER_ADDRESS		0xd0 /*ID±àºÅ¼Ä´æÆ÷(0x55¹Ì¶¨)*/
+#define BMP180_VERSION_REGISTER_ADDRESS	0XD1 /*°æ±¾±àºÅ*/
+//#define BMP180_SOFT_RESET_REGISTER_BASE_VALUE	    0xe0 /*Èí¼ş¸´Î»¼Ä´æÆ÷,Ö»Ğ´£¬ÉèÖÃ0xb6*/
 
 
 //control register
 //#define BMP180_CONTROL_REGISTER_SCO_BIT (0X01<<5)
 
 //id register 
-#define BMP180_ID_FIXED_VALUE		0x55 /*idå›ºå®šç¼–å·(0x55)*/
+#define BMP180_ID_FIXED_VALUE		0x55 /*id¹Ì¶¨±àºÅ(0x55)*/
 
 
 
-/*****************å†…éƒ¨å‡½æ•°******************/
-//åˆå§‹åŒ–
+/*****************ÄÚ²¿º¯Êı******************/
+//³õÊ¼»¯
 extern void BMP180Init(BMP180_info *p);				
 
-//è½¬æ¢ï¼Œä¿®æ­£æ¸©åº¦ã€æ°”å‹ï¼Œè®¡ç®—æµ·æ‹”
+//×ª»»£¬ĞŞÕıÎÂ¶È¡¢ÆøÑ¹£¬¼ÆËãº£°Î
 extern void BMP180Convert(BMP180_info *temp) ;		
 
-/*ä¸‹é¢ä¸¤ä¸ªå‡½æ•°ä¸€èˆ¬ä¸åœ¨å¤–éƒ¨ä½¿ç”¨ï¼Œä¹Ÿå¯ä»¥ç›´æ¥å£°æ˜ä¸ºBMP180.cçš„å†…éƒ¨å‡½æ•°*/
-//åœ°å€å†™æ•°æ®
+/*ÏÂÃæÁ½¸öº¯ÊıÒ»°ã²»ÔÚÍâ²¿Ê¹ÓÃ£¬Ò²¿ÉÒÔÖ±½ÓÉùÃ÷ÎªBMP180.cµÄÄÚ²¿º¯Êı*/
+//µØÖ·Ğ´Êı¾İ
 extern void BMP180AddressWrite(unsigned char addresss,unsigned char dataCode) ;
 
-//åœ°å€è¯»æ•°æ®
+//µØÖ·¶ÁÊı¾İ
 extern unsigned char BMP180AddressReadByte(unsigned char address) ;
 
 

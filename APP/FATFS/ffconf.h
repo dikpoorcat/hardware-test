@@ -25,7 +25,7 @@
 /   3: f_lseek() function is removed in addition to 2. */
 
 
-#define FF_USE_STRFUNC	1				//ç”±0ä¿®æ”¹ä¸º1ï¼Œå¼€å¯å­—ç¬¦ä¸²åŠŸèƒ½
+#define FF_USE_STRFUNC	1				//ÓÉ0ĞŞ¸ÄÎª1£¬¿ªÆô×Ö·û´®¹¦ÄÜ
 /* This option switches string functions, f_gets(), f_putc(), f_puts() and f_printf().
 /
 /  0: Disable string functions.
@@ -38,7 +38,7 @@
 /  f_findnext(). (0:Disable, 1:Enable 2:Enable with matching altname[] too) */
 
 
-#define FF_USE_MKFS		1				//ç”±0ä¿®æ”¹ä¸º1ï¼Œå¼€å¯æ ¼å¼åŒ–åŠŸèƒ½
+#define FF_USE_MKFS		1				//ÓÉ0ĞŞ¸ÄÎª1£¬¿ªÆô¸ñÊ½»¯¹¦ÄÜ
 /* This option switches f_mkfs() function. (0:Disable or 1:Enable) */
 
 
@@ -68,7 +68,7 @@
 / Locale and Namespace Configurations
 /---------------------------------------------------------------------------*/
 
-#define FF_CODE_PAGE	936					//ç”±932æ”¹ä¸º936ï¼Œç®€ä½“ä¸­æ–‡
+#define FF_CODE_PAGE	936					//ÓÉ932¸ÄÎª936£¬¼òÌåÖĞÎÄ
 /* This option specifies the OEM code page to be used on the target system.
 /  Incorrect code page setting can cause a file open failure.
 /
@@ -163,7 +163,7 @@
 / Drive/Volume Configurations
 /---------------------------------------------------------------------------*/
 
-#define FF_VOLUMES		1		//ä»…ä½¿ç”¨å•ä¸ªè®¾å¤‡æ—¶è®¾ç½®ä¸º1å³å¯ï¼Œè‹¥ä½¿ç”¨å¤šä¸ªè®¾å¤‡ï¼Œæ­¤å€¼å¤§äº1çš„æ—¶å€™ï¼Œåœ¨ä½¿ç”¨f_mountæ—¶éœ€æŒ‡å®šç›˜ç¬¦ï¼ˆç¬¬äºŒä¸ªå‚æ•°ï¼‰
+#define FF_VOLUMES		1		//½öÊ¹ÓÃµ¥¸öÉè±¸Ê±ÉèÖÃÎª1¼´¿É£¬ÈôÊ¹ÓÃ¶à¸öÉè±¸£¬´ËÖµ´óÓÚ1µÄÊ±ºò£¬ÔÚÊ¹ÓÃf_mountÊ±ĞèÖ¸¶¨ÅÌ·û£¨µÚ¶ş¸ö²ÎÊı£©
 /* Number of volumes (logical drives) to be used. (1-10) */
 
 
@@ -181,7 +181,7 @@
 */
 
 
-#define FF_MULTI_PARTITION	0					//0ï¼šä¸å…è®¸ç£ç›˜åˆ†åŒº
+#define FF_MULTI_PARTITION	0					//0£º²»ÔÊĞí´ÅÅÌ·ÖÇø
 /* This option switches support for multiple volumes on the physical drive.
 /  By default (0), each logical drive number is bound to the same physical drive
 /  number and only an FAT volume found on the physical drive will be mounted.
@@ -191,7 +191,7 @@
 
 
 #define FF_MIN_SS		4096
-#define FF_MAX_SS		4096				//æ‰‡åŒºå¤§å°ç”±512ä¿®æ”¹ä¸º4096  WQ256ä¸€ä¸ªæ‰‡åŒº4096å­—èŠ‚
+#define FF_MAX_SS		4096				//ÉÈÇø´óĞ¡ÓÉ512ĞŞ¸ÄÎª4096  WQ256Ò»¸öÉÈÇø4096×Ö½Ú
 /* This set of options configures the range of sector size to be supported. (512,
 /  1024, 2048 or 4096) Always set both 512 for most systems, generic memory card and
 /  harddisk. But a larger value may be required for on-board flash memory and some
@@ -223,7 +223,7 @@
 / System Configurations
 /---------------------------------------------------------------------------*/
 
-#define FF_FS_TINY		1	//ç”±0ä¿®æ”¹ä¸º1  æ–‡ä»¶å¯¹è±¡ï¼ˆFILï¼‰ä¸å†åŒ…æ‹¬æ•°æ®ç¼“å†²åŒºï¼Œè€Œæ˜¯ä½¿ç”¨FatFsä¸­çš„å…¬ç”¨ç¼“å†²åŒºï¼Œé€‚ç”¨äºRAMåå°çš„æƒ…å†µ
+#define FF_FS_TINY		1	//ÓÉ0ĞŞ¸ÄÎª1  ÎÄ¼ş¶ÔÏó£¨FIL£©²»ÔÙ°üÀ¨Êı¾İ»º³åÇø£¬¶øÊÇÊ¹ÓÃFatFsÖĞµÄ¹«ÓÃ»º³åÇø£¬ÊÊÓÃÓÚRAMÆ«Ğ¡µÄÇé¿ö
 /* This option switches tiny buffer configuration. (0:Normal or 1:Tiny)
 /  At the tiny configuration, size of file object (FIL) is shrinked FF_MAX_SS bytes.
 /  Instead of private sector buffer eliminated from the file object, common sector

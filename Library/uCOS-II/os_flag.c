@@ -1084,7 +1084,7 @@ static  BOOLEAN  OS_FlagTaskRdy (OS_FLAG_NODE *pnode, OS_FLAGS flags_rdy)
     ptcb->OSTCBDly      = 0;
     ptcb->OSTCBFlagsRdy = flags_rdy;
     ptcb->OSTCBStat    &= ~OS_STAT_FLAG;
-    ptcb->OSTCBPendTO   = OS_FALSE;         // zzs???ÃŒÃ¸Ã“Â²Â¼Ã¾Â´Ã­ÃÃ³
+    ptcb->OSTCBPendTO   = OS_FALSE;         // zzs???ÌøÓ²¼ş´íÎó
     if (ptcb->OSTCBStat == OS_STAT_RDY) {                  /* Task now ready?                          */
         OSRdyGrp               |= ptcb->OSTCBBitY;         /* Put task into ready list                 */
         OSRdyTbl[ptcb->OSTCBY] |= ptcb->OSTCBBitX;
@@ -1144,7 +1144,7 @@ void  OS_FlagUnlink (OS_FLAG_NODE *pnode)
     }
 #if OS_TASK_DEL_EN > 0
     ptcb                = (OS_TCB *)pnode->OSFlagNodeTCB;
-    ptcb->OSTCBFlagNode = (OS_FLAG_NODE *)0;         // zzs???ÃŒÃ¸Ã“Â²Â¼Ã¾Â´Ã­ÃÃ³
+    ptcb->OSTCBFlagNode = (OS_FLAG_NODE *)0;         // zzs???ÌøÓ²¼ş´íÎó
 #endif
 }
 #endif

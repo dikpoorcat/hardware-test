@@ -57,11 +57,11 @@ DWORD pn (		/* Pseudo random number generator */
 /* Command code for disk_ioctrl fucntion */
 
 /* Generic command (Used by FatFs) */
-#define CTRL_SYNC			0	/* Complete pending write process (needed at FF_FS_READONLY == 0) */	//å†™å…¥æ“ä½œå·²å®Œæˆ
-#define GET_SECTOR_COUNT	1	/* Get media size (needed at FF_USE_MKFS == 1) */						//è·å–æ‰‡åŒºæ•°é‡
-#define GET_SECTOR_SIZE		2	/* Get sector size (needed at FF_MAX_SS != FF_MIN_SS) */				//è·å–å•ä¸ªæ‰‡åŒºå¤§å°
-#define GET_BLOCK_SIZE		3	/* Get erase block size (needed at FF_USE_MKFS == 1) */					//è·å–æ“¦é™¤å—å¤§å°ï¼ˆä»¥æ‰‡åŒºä¸ºå•ä½ï¼‰
-#define CTRL_TRIM			4	/* Inform device that the data on the block of sectors is no longer used (needed at FF_USE_TRIM == 1) *///å¼ºåˆ¶æ“¦é™¤
+#define CTRL_SYNC			0	/* Complete pending write process (needed at FF_FS_READONLY == 0) */	//Ğ´Èë²Ù×÷ÒÑÍê³É
+#define GET_SECTOR_COUNT	1	/* Get media size (needed at FF_USE_MKFS == 1) */						//»ñÈ¡ÉÈÇøÊıÁ¿
+#define GET_SECTOR_SIZE		2	/* Get sector size (needed at FF_MAX_SS != FF_MIN_SS) */				//»ñÈ¡µ¥¸öÉÈÇø´óĞ¡
+#define GET_BLOCK_SIZE		3	/* Get erase block size (needed at FF_USE_MKFS == 1) */					//»ñÈ¡²Á³ı¿é´óĞ¡£¨ÒÔÉÈÇøÎªµ¥Î»£©
+#define CTRL_TRIM			4	/* Inform device that the data on the block of sectors is no longer used (needed at FF_USE_TRIM == 1) *///Ç¿ÖÆ²Á³ı
 
 /* Generic command (Not used by FatFs) */
 #define CTRL_POWER			5	/* Get/Set power status */

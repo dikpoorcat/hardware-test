@@ -3109,7 +3109,7 @@ static FRESULT follow_path (	/* FR_OK(0): successful, !=0: error code */
 /*-----------------------------------------------------------------------*/
 /* Get logical drive number from path name                               */
 /*-----------------------------------------------------------------------*/
-/*å°†è·¯å¾„è½¬æ¢ä¸º logical drive number*/
+/*½«Â·¾¶×ª»»Îª logical drive number*/
 static int get_ldnumber (	/* Returns logical drive number (-1:invalid drive number or null pointer) */
 	const TCHAR** path		/* Pointer to pointer to the path name */
 )
@@ -3124,15 +3124,15 @@ static int get_ldnumber (	/* Returns logical drive number (-1:invalid drive numb
 
 	tt = tp = *path;
 	if (!tp) return vol;	/* Invalid path name? */
-	do tc = *tt++; while ((UINT)tc >= (FF_USE_LFN ? ' ' : '!') && tc != ':');	/* Find a colon in the path */		//FF_USE_LFN ? ' ' : '!'			ï¼šå¦‚æœFF_USE_LFNé0ï¼Œåˆ™è¿”å›'',ä¸º0åˆ™è¿”å›'!'
-																													//tc >= (FF_USE_LFN ? ' ' : '!')	ï¼štc>='!'(FF_USE_LFNä¸º0ï¼Œä¸æ”¯æŒé•¿æ–‡ä»¶å)
+	do tc = *tt++; while ((UINT)tc >= (FF_USE_LFN ? ' ' : '!') && tc != ':');	/* Find a colon in the path */		//FF_USE_LFN ? ' ' : '!'			£ºÈç¹ûFF_USE_LFN·Ç0£¬Ôò·µ»Ø'',Îª0Ôò·µ»Ø'!'
+																													//tc >= (FF_USE_LFN ? ' ' : '!')	£ºtc>='!'(FF_USE_LFNÎª0£¬²»Ö§³Ö³¤ÎÄ¼şÃû)
 
 	if (tc == ':') {	/* DOS/Windows style volume ID? */
 		i = FF_VOLUMES;
-		if (IsDigit(*tp) && tp + 2 == tt) {	/* Is there a numeric volume ID + colon? */								//æ–‡ä»¶pathæ ¼å¼ä¸º  Num : ï¼ˆä¸­é—´æœ‰ä¸€ä¸ªç©ºæ ¼ï¼Œ+2æ­£å¥½æ˜¯å†’å·ä½ç½®ï¼‰
-			i = (int)*tp - '0';	/* Get the LD number */																//-0X30	å¾—åˆ°FF_VOLUMESç´¢å¼•å·
+		if (IsDigit(*tp) && tp + 2 == tt) {	/* Is there a numeric volume ID + colon? */								//ÎÄ¼şpath¸ñÊ½Îª  Num : £¨ÖĞ¼äÓĞÒ»¸ö¿Õ¸ñ£¬+2ÕıºÃÊÇÃ°ºÅÎ»ÖÃ£©
+			i = (int)*tp - '0';	/* Get the LD number */																//-0X30	µÃµ½FF_VOLUMESË÷ÒıºÅ
 		}
-#if FF_STR_VOLUME_ID == 1	/* Arbitrary string is enabled */														//FF_STR_VOLUME_ID==0ï¼Œå³åªèƒ½ä½¿ç”¨æ•°å­—ä½œä¸ºè·¯å¾„
+#if FF_STR_VOLUME_ID == 1	/* Arbitrary string is enabled */														//FF_STR_VOLUME_ID==0£¬¼´Ö»ÄÜÊ¹ÓÃÊı×Ö×÷ÎªÂ·¾¶
 		else {
 			i = 0;
 			do {
@@ -3148,7 +3148,7 @@ static int get_ldnumber (	/* Returns logical drive number (-1:invalid drive numb
 		
 		if (i < FF_VOLUMES) {	/* If a volume ID is found, get the drive number and strip it */
 			vol = i;		/* Drive number */
-			*path = tt;		/* Snip the drive prefix off */															//å¾—åˆ°å»é™¤å‰ç¼€çš„è·¯å¾„ï¼Œå³å†’å·åé¢çš„
+			*path = tt;		/* Snip the drive prefix off */															//µÃµ½È¥³ıÇ°×ºµÄÂ·¾¶£¬¼´Ã°ºÅºóÃæµÄ
 		}
 		return vol;
 	}
@@ -4063,7 +4063,7 @@ FRESULT f_close (
 #endif
 		}
 	}
-	W25Q256_LowPower(FF_Num);												//W25Q256å¤–è®¾ä½åŠŸè€—
+	W25Q256_LowPower(FF_Num);												//W25Q256ÍâÉèµÍ¹¦ºÄ
 	return res;
 }
 
@@ -4648,7 +4648,7 @@ FRESULT f_getfree (
 
 
 	/* Get logical drive */
-	res = find_volume(&path, &fs, 0);													//ç®¡ä»–çš„ï¼Œå°±æ˜¯åˆ›å»ºäº†ä¸€ä¸ªVOLUMNï¼Œå¦‚æœå·²ç»åˆ›å»ºäº†åˆ™ä½¿ç”¨ä¹‹
+	res = find_volume(&path, &fs, 0);													//¹ÜËûµÄ£¬¾ÍÊÇ´´½¨ÁËÒ»¸öVOLUMN£¬Èç¹ûÒÑ¾­´´½¨ÁËÔòÊ¹ÓÃÖ®
 	if (res == FR_OK) {
 		*fatfs = fs;				/* Return ptr to the fs object */
 		/* If free_clst is valid, return it without full FAT scan */
@@ -5531,13 +5531,13 @@ FRESULT f_forward (
 /* Create an FAT/exFAT volume                                            */
 /*-----------------------------------------------------------------------*/
 /*
-*å·ï¼ˆé€»è¾‘é©±åŠ¨å™¨ï¼‰æ˜¯æ–‡ä»¶ç³»ç»Ÿä¸ºç®¡ç†ç‰©ç†ç£ç›˜è€Œæå‡ºçš„ã€‚ä¸€ä¸ªç‰©ç†ç£ç›˜å¯ä»¥æœ‰å¤šä¸ªå·ï¼Œå¤šä¸ªç‰©ç†ç£ç›˜ä¹Ÿå¯ä»¥æ˜ å°„åˆ°1ä¸ªå·ä¸Šã€‚
-*æˆ‘ä»¬å¸¸è¯´å°†ç¡¬ç›˜åˆ†ä¸º4ä¸ªåŒºï¼Œå¯¹äºæ–‡ä»¶ç³»ç»Ÿè€Œè¨€ï¼Œå®é™…ä¸Šå®ƒå°±è¦ç®¡ç†4ä¸ªå·ã€‚
+*¾í£¨Âß¼­Çı¶¯Æ÷£©ÊÇÎÄ¼şÏµÍ³Îª¹ÜÀíÎïÀí´ÅÅÌ¶øÌá³öµÄ¡£Ò»¸öÎïÀí´ÅÅÌ¿ÉÒÔÓĞ¶à¸ö¾í£¬¶à¸öÎïÀí´ÅÅÌÒ²¿ÉÒÔÓ³Éäµ½1¸ö¾íÉÏ¡£
+*ÎÒÃÇ³£Ëµ½«Ó²ÅÌ·ÖÎª4¸öÇø£¬¶ÔÓÚÎÄ¼şÏµÍ³¶øÑÔ£¬Êµ¼ÊÉÏËü¾ÍÒª¹ÜÀí4¸ö¾í¡£
 
-*ç°‡å¯ä»¥ç®€å•çš„ç†è§£ä¸ºæ˜¯ä¸€ç»„æ‰‡åŒºï¼Œæ˜¯æ–‡ä»¶ç³»ç»Ÿç®¡ç†ç£ç›˜æ•°æ®åŒºçš„æœ€å°å•ä½ï¼Œä¸€ä¸ªæ–‡ä»¶å³ä¾¿æ˜¯0å­—èŠ‚ï¼Œ
-*ä¹Ÿä¸€å®šä¼šå ç”¨ä¸€ä¸ªç°‡ã€‚å½“æ ¼å¼åŒ–ç£ç›˜æ—¶ï¼Œä¼šæœ‰â€œåˆ†é…å•å…ƒå¤§å°â€é€‰é¡¹ï¼Œé»˜è®¤é€‰æ‹©ä¸º4096å­—èŠ‚ï¼Œè¿™ä¸ªå¤§å°å°±æ˜¯ç°‡å¤§å°ã€‚
+*´Ø¿ÉÒÔ¼òµ¥µÄÀí½âÎªÊÇÒ»×éÉÈÇø£¬ÊÇÎÄ¼şÏµÍ³¹ÜÀí´ÅÅÌÊı¾İÇøµÄ×îĞ¡µ¥Î»£¬Ò»¸öÎÄ¼ş¼´±ãÊÇ0×Ö½Ú£¬
+*Ò²Ò»¶¨»áÕ¼ÓÃÒ»¸ö´Ø¡£µ±¸ñÊ½»¯´ÅÅÌÊ±£¬»áÓĞ¡°·ÖÅäµ¥Ôª´óĞ¡¡±Ñ¡Ïî£¬Ä¬ÈÏÑ¡ÔñÎª4096×Ö½Ú£¬Õâ¸ö´óĞ¡¾ÍÊÇ´Ø´óĞ¡¡£
 
-*æ‰‡åŒºæ˜¯ç‰©ç†ç£ç›˜çš„æœ€å°å•ä½ï¼Œåœ¨åˆ¶é€ æ—¶å¤§å°å·²ç»ç¡®å®šï¼Œå¯¹äºUç›˜ã€SDå¡ï¼Œä¸€èˆ¬ä¸º512å­—èŠ‚ã€‚
+*ÉÈÇøÊÇÎïÀí´ÅÅÌµÄ×îĞ¡µ¥Î»£¬ÔÚÖÆÔìÊ±´óĞ¡ÒÑ¾­È·¶¨£¬¶ÔÓÚUÅÌ¡¢SD¿¨£¬Ò»°ãÎª512×Ö½Ú¡£
 */
 FRESULT f_mkfs (
 	const TCHAR* path,	/* Logical drive number */
@@ -5548,7 +5548,7 @@ FRESULT f_mkfs (
 )
 {
 	const UINT n_fats = 1;		/* Number of FATs for FAT/FAT32 volume (1 or 2) */
-	const UINT n_rootdir = 512;	/* Number of root directory entries for FAT volume */										//æ ¹ç›®å½•å…¥å£å¤§å°
+	const UINT n_rootdir = 512;	/* Number of root directory entries for FAT volume */										//¸ùÄ¿Â¼Èë¿Ú´óĞ¡
 	static const WORD cst[] = {1, 4, 16, 64, 256, 512, 0};	/* Cluster size boundary for FAT volume (4Ks unit) */
 	static const WORD cst32[] = {1, 2, 4, 8, 16, 32, 0};	/* Cluster size boundary for FAT32 volume (128Ks unit) */
 	BYTE fmt, sys, *buf, *pte, pdrv, part;
@@ -5593,8 +5593,8 @@ FRESULT f_mkfs (
 #endif
 	{
 		buf = (BYTE*)work;		/* Working buffer */
-		sz_buf = len / ss;		/* Size of working buffer (sector) */  //bytesé™¤ä»¥sector_size
-		szb_buf = sz_buf * ss;	/* Size of working buffer (byte) */		//ç©å¾—6ï¼Œè¿™ä¸å°±æ˜¯ä¸Šé¢çš„lenï¼Ÿ
+		sz_buf = len / ss;		/* Size of working buffer (sector) */  //bytes³ıÒÔsector_size
+		szb_buf = sz_buf * ss;	/* Size of working buffer (byte) */		//ÍæµÃ6£¬Õâ²»¾ÍÊÇÉÏÃæµÄlen£¿
 	}
 	if (!buf || sz_buf == 0) return FR_NOT_ENOUGH_CORE;
 
@@ -5609,10 +5609,10 @@ FRESULT f_mkfs (
 		sz_vol = ld_dword(pte + PTE_SizLba);	/* Get volume size */
 	} else {
 		/* Create a single-partition in this function */
-		if (disk_ioctl(pdrv, GET_SECTOR_COUNT, &sz_vol) != RES_OK) LEAVE_MKFS(FR_DISK_ERR);						//è·å¾—ze_vol=sector count=Sector_Max + 1å¯¹WQ256æ¥è¯´å°±æ˜¯8192
-		b_vol = (opt & FM_SFD) ? 0 : 63;		/* Volume start sector */										//SFDæ¨¡å¼ç”±sector 0å¼€å§‹ï¼Œæ”¯æŒå¤šåˆ†åŒºæ—¶SFDæ— æ•ˆ
-		if (sz_vol < b_vol) LEAVE_MKFS(FR_MKFS_ABORTED);														//è¶…èŒƒå›´
-		sz_vol -= b_vol;						/* Volume size */												//è®¾å®šäº†SFDåˆ™b_vol=0,åˆ™volumn sizeç­‰äºæ•´ä¸ªç£ç›˜8192ä¸ªæ‰‡åŒº
+		if (disk_ioctl(pdrv, GET_SECTOR_COUNT, &sz_vol) != RES_OK) LEAVE_MKFS(FR_DISK_ERR);						//»ñµÃze_vol=sector count=Sector_Max + 1¶ÔWQ256À´Ëµ¾ÍÊÇ8192
+		b_vol = (opt & FM_SFD) ? 0 : 63;		/* Volume start sector */										//SFDÄ£Ê½ÓÉsector 0¿ªÊ¼£¬Ö§³Ö¶à·ÖÇøÊ±SFDÎŞĞ§
+		if (sz_vol < b_vol) LEAVE_MKFS(FR_MKFS_ABORTED);														//³¬·¶Î§
+		sz_vol -= b_vol;						/* Volume size */												//Éè¶¨ÁËSFDÔòb_vol=0,Ôòvolumn sizeµÈÓÚÕû¸ö´ÅÅÌ8192¸öÉÈÇø
 	}
 	if (sz_vol < 128) LEAVE_MKFS(FR_MKFS_ABORTED);	/* Check if volume size is >=128s */
 
@@ -5623,15 +5623,15 @@ FRESULT f_mkfs (
 				fmt = FS_EXFAT; break;
 			}
 		}
-		if (au > 128) LEAVE_MKFS(FR_INVALID_PARAMETER);	/* Too large au for FAT/FAT32 */						//auè®¾ä¸º0
+		if (au > 128) LEAVE_MKFS(FR_INVALID_PARAMETER);	/* Too large au for FAT/FAT32 */						//auÉèÎª0
 		if (opt & FM_FAT32) {	/* FAT32 possible? */
-			if ((opt & FM_ANY) == FM_FAT32 || !(opt & FM_FAT)) {	/* FAT32 only or no-FAT? */					//å½“ä»…FAT32æ¨¡å¼æˆ–FAT32||SFDæ—¶
+			if ((opt & FM_ANY) == FM_FAT32 || !(opt & FM_FAT)) {	/* FAT32 only or no-FAT? */					//µ±½öFAT32Ä£Ê½»òFAT32||SFDÊ±
 				fmt = FS_FAT32; break;
 			}
 		}
-		if (!(opt & FM_FAT)) LEAVE_MKFS(FR_INVALID_PARAMETER);	/* no-FAT? */									//FAT32 FATæ¨¡å¼éƒ½ä¸æ”¯æŒæ—¶å‚æ•°é”™è¯¯
-		fmt = FS_FAT16;																							//è®¾å®šä¸ºFAT16
-	} while (0);																								//do while(0),å¯é¿å…ä½¿ç”¨if elseè¿™ç§ç»“æ„
+		if (!(opt & FM_FAT)) LEAVE_MKFS(FR_INVALID_PARAMETER);	/* no-FAT? */									//FAT32 FATÄ£Ê½¶¼²»Ö§³ÖÊ±²ÎÊı´íÎó
+		fmt = FS_FAT16;																							//Éè¶¨ÎªFAT16
+	} while (0);																								//do while(0),¿É±ÜÃâÊ¹ÓÃif elseÕâÖÖ½á¹¹
 
 #if FF_FS_EXFAT
 	if (fmt == FS_EXFAT) {	/* Create an exFAT volume */
@@ -5810,12 +5810,12 @@ FRESULT f_mkfs (
 				sz_rsv = 32;	/* Number of reserved sectors */
 				sz_dir = 0;		/* No static directory */
 				if (n_clst <= MAX_FAT16 || n_clst > MAX_FAT32) LEAVE_MKFS(FR_MKFS_ABORTED);
-			} else {				/* FAT volume */															//å°å®¹é‡åº”é€‰ç”¨FAT16æ ¼å¼ï¼Œæ„å‘³ç€optå‚æ•°åº”è¯¥ä¸ºFM_FAT||FM_FSD
-				if (pau == 0) {	/* au auto-selection */															//au=0,ç°‡é€‰æ‹©é»˜è®¤å¤§å°
+			} else {				/* FAT volume */															//Ğ¡ÈİÁ¿Ó¦Ñ¡ÓÃFAT16¸ñÊ½£¬ÒâÎ¶×Åopt²ÎÊıÓ¦¸ÃÎªFM_FAT||FM_FSD
+				if (pau == 0) {	/* au auto-selection */															//au=0,´ØÑ¡ÔñÄ¬ÈÏ´óĞ¡
 					n = sz_vol / 0x1000;	/* Volume size in unit of 4KS */									//n=2
-					for (i = 0, pau = 1; cst[i] && cst[i] <= n; i++, pau <<= 1) ;	/* Get from table */		//å¾—åˆ°ç»“æœpau=2ï¼Œä¹Ÿå°±æ˜¯æ¯ä¸ªç°‡å«2ä¸ªæ‰‡åŒº
+					for (i = 0, pau = 1; cst[i] && cst[i] <= n; i++, pau <<= 1) ;	/* Get from table */		//µÃµ½½á¹ûpau=2£¬Ò²¾ÍÊÇÃ¿¸ö´Øº¬2¸öÉÈÇø
 				}
-				n_clst = sz_vol / pau;																			//æ€»çš„ç°‡æ•°å°±æ˜¯8192/2
+				n_clst = sz_vol / pau;																			//×ÜµÄ´ØÊı¾ÍÊÇ8192/2
 				if (n_clst > MAX_FAT12) {
 					n = n_clst * 2 + 4;		/* FAT size [byte] */
 				} else {

@@ -1,53 +1,53 @@
 //Z.E. 20180525
 #include "delay.h"
 
-#if Time_test//æµ‹è¯•ç”¨
+#if Time_test//²âÊÔÓÃ
 #include "Bsp_AM2302.h"
-//æ›´æ¢æ•°æ®è¾“å‡ºå¼•è„šæ—¶åªéœ€ä¿®æ”¹WS2812_init()å’Œä»¥ä¸‹å‡ è¡Œ
-#define LED0_H 	(GPIOC->BSRR = 0x00000100) 			//PC8ç½®1	å¿«é€Ÿåœ°å¯¹GPIOAçš„ä½6è¿›è¡Œç¿»è½¬	LED0æ§åˆ¶å¼•è„š	å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time 0.03125us
-#define LED0_L 	(GPIOC->BSRR = 0x01000000)			//PC8ç½®0	å¿«é€Ÿåœ°å¯¹GPIOAçš„ä½6è¿›è¡Œç¿»è½¬	LED0æ§åˆ¶å¼•è„š	å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
-//#define LED1_H 	(GPIOC->BSRR = 0x00000080) 		//PC7ç½®1	å¿«é€Ÿåœ°å¯¹GPIOAçš„ä½7è¿›è¡Œç¿»è½¬	LED1æ§åˆ¶å¼•è„š
-//#define LED1_L 	(GPIOC->BSRR = 0x00800000)		//PC7ç½®0	å¿«é€Ÿåœ°å¯¹GPIOAçš„ä½7è¿›è¡Œç¿»è½¬	LED1æ§åˆ¶å¼•è„š
+//¸ü»»Êı¾İÊä³öÒı½ÅÊ±Ö»ĞèĞŞ¸ÄWS2812_init()ºÍÒÔÏÂ¼¸ĞĞ
+#define LED0_H 	(GPIOC->BSRR = 0x00000100) 			//PC8ÖÃ1	¿ìËÙµØ¶ÔGPIOAµÄÎ»6½øĞĞ·­×ª	LED0¿ØÖÆÒı½Å	Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time 0.03125us
+#define LED0_L 	(GPIOC->BSRR = 0x01000000)			//PC8ÖÃ0	¿ìËÙµØ¶ÔGPIOAµÄÎ»6½øĞĞ·­×ª	LED0¿ØÖÆÒı½Å	Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
+//#define LED1_H 	(GPIOC->BSRR = 0x00000080) 		//PC7ÖÃ1	¿ìËÙµØ¶ÔGPIOAµÄÎ»7½øĞĞ·­×ª	LED1¿ØÖÆÒı½Å
+//#define LED1_L 	(GPIOC->BSRR = 0x00800000)		//PC7ÖÃ0	¿ìËÙµØ¶ÔGPIOAµÄÎ»7½øĞĞ·­×ª	LED1¿ØÖÆÒı½Å
 void WS2812_init(void)
 {
-	RCC->APB2ENR|=1<<4;  		//PORTCæ—¶é’Ÿä½¿èƒ½ 	2~8åˆ†åˆ«ä¸ºA~G  
+	RCC->APB2ENR|=1<<4;  		//PORTCÊ±ÖÓÊ¹ÄÜ 	2~8·Ö±ğÎªA~G  
 	GPIOC->CRH&=0XFFFFFFF0; 
-	GPIOC->CRH|=0X00000007;		//PC8(3æ¨æŒ½ï¼Œ7å¼€æ¼ï¼‰è¾“å‡º
+	GPIOC->CRH|=0X00000007;		//PC8(3ÍÆÍì£¬7¿ªÂ©£©Êä³ö
 //	GPIOA->CRL&=0XFFFF00FF; 
-//	GPIOA->CRL|=0X00003300;		//PA3/2(3æ¨æŒ½ï¼Œ7å¼€æ¼ï¼‰è¾“å‡º		
+//	GPIOA->CRL|=0X00003300;		//PA3/2(3ÍÆÍì£¬7¿ªÂ©£©Êä³ö		
 }
 void time_test(void)
 {
-	PowerMETPin_Init();			//ç”µæºæ§åˆ¶å¼•è„šåˆå§‹åŒ–
-	PWMETEN();					//å¼€å¯ä¸Šæ‹‰çš„ç”µæº
-	WS2812_init();				//è§‚å¯Ÿå¼•è„šPC8çš„åˆå§‹åŒ–
+	PowerMETPin_Init();			//µçÔ´¿ØÖÆÒı½Å³õÊ¼»¯
+	PWMETEN();					//¿ªÆôÉÏÀ­µÄµçÔ´
+	WS2812_init();				//¹Û²ìÒı½ÅPC8µÄ³õÊ¼»¯
 	
-#if	0	//æµ‹è¯•systickå»¶æ—¶ï¼ˆ100uså®æµ‹å‘¨æœŸ104usï¼Œ100mså®æµ‹100msï¼ŒåŸºæœ¬å‡†ï¼‰
+#if	0	//²âÊÔsystickÑÓÊ±£¨100usÊµ²âÖÜÆÚ104us£¬100msÊµ²â100ms£¬»ù±¾×¼£©
 	
 	while(1)
 	{
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Timeï¼Œçº¦0.03us
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time£¬Ô¼0.03us
 		delay_SYSus(50000);
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		delay_SYSus(50000);
 	}	
 
-#elif	0	//æµ‹è¯•TIM3åšçš„å»¶æ—¶ï¼ˆä¸å‡†ï¼‰
+#elif	0	//²âÊÔTIM3×öµÄÑÓÊ±£¨²»×¼£©
 	
-	delay_init();			//åˆå§‹åŒ–å®šæ—¶å™¨TIM3
+	delay_init();			//³õÊ¼»¯¶¨Ê±Æ÷TIM3
 	while(1)
 	{
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Timeï¼Œçº¦0.03us
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time£¬Ô¼0.03us
 		delay_50us(1);
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		delay_50us(1);
 	}
 	
-#elif 0		//æµ‹è¯•nopå¾ªç¯åšçš„å»¶æ—¶
+#elif 0		//²âÊÔnopÑ­»·×öµÄÑÓÊ±
 	while(1)
 	{	
 		#if 1
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Timeï¼Œçº¦0.03us
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time£¬Ô¼0.03us
 		delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);	//10us
 		delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);	//10us
 		delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);	//10us
@@ -72,9 +72,9 @@ void time_test(void)
 		delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);	//10us
 		delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);	//10us
 		//100us
-		//å­—é¢ä¸Š200usï¼Œå®æµ‹300us
+		//×ÖÃæÉÏ200us£¬Êµ²â300us
 		
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);	//10us
 		delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);	//10us
 		delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);	//10us
@@ -99,61 +99,61 @@ void time_test(void)
 		delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);	//10us
 		delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);delay_1us_32M(1);	//10us
 		//100us
-		//å­—é¢ä¸Š200usï¼Œå®æµ‹280usï¼Œæ•…å…¥å‚ä¸º1çš„å•æ¬¡è°ƒç”¨çº¦1.4usï¼Œè€Œé1us
+		//×ÖÃæÉÏ200us£¬Êµ²â280us£¬¹ÊÈë²ÎÎª1µÄµ¥´Îµ÷ÓÃÔ¼1.4us£¬¶ø·Ç1us
 		#else
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Timeï¼Œçº¦0.03us
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time£¬Ô¼0.03us
 		delay_1us_32M(10);
 		
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
-		delay_1us_32M(10);	//å®æµ‹å‘¨æœŸ21.4usï¼Œ7%åå·®
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
+		delay_1us_32M(10);	//Êµ²âÖÜÆÚ21.4us£¬7%Æ«²î
 		#endif
 	}
 #elif 0
-	while(1)				//ç”¨ç¤ºæ³¢å™¨è§‚å¯Ÿå¹¶è®°å½•
+	while(1)				//ÓÃÊ¾²¨Æ÷¹Û²ì²¢¼ÇÂ¼
 	{	
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Timeï¼Œçº¦0.03us
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time£¬Ô¼0.03us
 		delay_1us_32M(1000);//1000us
 		
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		delay_1us_32M(1000);	
 		
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Timeï¼Œçº¦0.03us
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time£¬Ô¼0.03us
 		delay_1us_32M(100);	//100.8us
 		
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		delay_1us_32M(100);	
 		
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Timeï¼Œçº¦0.03us
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time£¬Ô¼0.03us
 		delay_1us_32M(50);	//50.6us
 		
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		delay_1us_32M(50);
 		
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Timeï¼Œçº¦0.03us
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time£¬Ô¼0.03us
 		delay_1us_32M(10);	//10.74us
 		
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		delay_1us_32M(10);	
 		
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Timeï¼Œçº¦0.03us
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time£¬Ô¼0.03us
 		delay_1us_32M(1);	//1.74us
 		
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		delay_1us_32M(1);	
 	}
 #elif 0
-	while(1)				//ç”¨ç¤ºæ³¢å™¨è§‚å¯Ÿï¼Œåˆšå¥½2uså‘¨æœŸ ï¼ˆæ¯ä¸ªåŠå‘¨æœŸå†…ï¼Œæœ‰25ä¸ªnop+1ä¸ªå¯„å­˜å™¨æ“ä½œæŒ‡ä»¤ï¼Œå…±26ä¸ªæœºå™¨å‘¨æœŸï¼Œ
-	{						//while(1)çš„åˆ¤æ–­+æ‰§è¡Œå…±2ä¸ªæŒ‡ä»¤å‘¨æœŸï¼Œå…±2*6=12ä¸ªæœºå™¨å‘¨æœŸã€‚26+12=32ä¸ªæœºå™¨å‘¨æœŸï¼Œå¯¹åº”32Mæ—¶é’Ÿé¢‘ç‡åˆšå¥½1usï¼‰
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+	while(1)				//ÓÃÊ¾²¨Æ÷¹Û²ì£¬¸ÕºÃ2usÖÜÆÚ £¨Ã¿¸ö°ëÖÜÆÚÄÚ£¬ÓĞ25¸önop+1¸ö¼Ä´æÆ÷²Ù×÷Ö¸Áî£¬¹²26¸ö»úÆ÷ÖÜÆÚ£¬
+	{						//while(1)µÄÅĞ¶Ï+Ö´ĞĞ¹²2¸öÖ¸ÁîÖÜÆÚ£¬¹²2*6=12¸ö»úÆ÷ÖÜÆÚ¡£26+12=32¸ö»úÆ÷ÖÜÆÚ£¬¶ÔÓ¦32MÊ±ÖÓÆµÂÊ¸ÕºÃ1us£©
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		MachineCycle_25;
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		MachineCycle_25;
 	}
 #elif 1
 	while(1)
 	{	
 		#if 0
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Timeï¼Œçº¦0.03us
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time£¬Ô¼0.03us
 		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
 		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
 		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
@@ -178,21 +178,9 @@ void time_test(void)
 		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
 		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
 		//200us
-		//å­—é¢400usï¼Œå®æµ‹1080usï¼Œæ•…å…¥å‚ä¸º1çš„å•æ¬¡è°ƒç”¨çº¦5.4usï¼Œè€Œé2us
+		//×ÖÃæ400us£¬Êµ²â1080us£¬¹ÊÈë²ÎÎª1µÄµ¥´Îµ÷ÓÃÔ¼5.4us£¬¶ø·Ç2us
 		
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
-		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
-		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
-		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
-		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
-		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
-		
-		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
-		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
-		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
-		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
-		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
-		//200us
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
 		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
 		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
@@ -205,19 +193,31 @@ void time_test(void)
 		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
 		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
 		//200us
-		//å­—é¢400usï¼Œå®æµ‹1080usï¼Œæ•…å…¥å‚ä¸º1çš„å•æ¬¡è°ƒç”¨çº¦5.4usï¼Œè€Œé2us
+		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
+		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
+		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
+		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
+		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
+		
+		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
+		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
+		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
+		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
+		delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);delay_2us_4M(1);	//20us
+		//200us
+		//×ÖÃæ400us£¬Êµ²â1080us£¬¹ÊÈë²ÎÎª1µÄµ¥´Îµ÷ÓÃÔ¼5.4us£¬¶ø·Ç2us
 		#else
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		delay_2us_4M(50);
 		
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
-		delay_2us_4M(50);	//(10)å®æµ‹å‘¨æœŸ51.6usï¼Œ29%åå·®ï¼›(20)å®æµ‹å‘¨æœŸ91usï¼Œ13.75%åå·®ï¼›(30)å®æµ‹å‘¨æœŸ132usï¼Œ10%åå·®ï¼›(40)å®æµ‹å‘¨æœŸ172usï¼Œ7.5%åå·®ï¼›(50)å®æµ‹å‘¨æœŸ212usï¼Œ6%åå·®ï¼›
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
+		delay_2us_4M(50);	//(10)Êµ²âÖÜÆÚ51.6us£¬29%Æ«²î£»(20)Êµ²âÖÜÆÚ91us£¬13.75%Æ«²î£»(30)Êµ²âÖÜÆÚ132us£¬10%Æ«²î£»(40)Êµ²âÖÜÆÚ172us£¬7.5%Æ«²î£»(50)Êµ²âÖÜÆÚ212us£¬6%Æ«²î£»
 		#endif
 	}
 	#elif 0
-	while(1)	//4Mï¼Œçº¯nopæµ‹è¯•
-	{			//while(1)çš„åˆ¤æ–­+æ‰§è¡Œå…±2ä¸ªæŒ‡ä»¤å‘¨æœŸï¼Œå…±2*6=12ä¸ªæœºå™¨å‘¨æœŸï¼ŒåŠ ä¸ŠLED0_Hå’ŒLED0_L2ä¸ªæœºå™¨å‘¨æœŸï¼Œå…±14ä¸ªï¼Œ14/4=3.5usï¼Œä¸å®æµ‹ç»“æœæ¥è¿‘
-		LED0_H;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+	while(1)	//4M£¬´¿nop²âÊÔ
+	{			//while(1)µÄÅĞ¶Ï+Ö´ĞĞ¹²2¸öÖ¸ÁîÖÜÆÚ£¬¹²2*6=12¸ö»úÆ÷ÖÜÆÚ£¬¼ÓÉÏLED0_HºÍLED0_L2¸ö»úÆ÷ÖÜÆÚ£¬¹²14¸ö£¬14/4=3.5us£¬ÓëÊµ²â½á¹û½Ó½ü
+		LED0_H;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;	//10us
 		DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;	//10us
 		DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;	//10us
@@ -244,7 +244,7 @@ void time_test(void)
 		//50us
 		//50*4=200us
 		
-		LED0_L;				//å ç”¨ä¸€ä¸ªæœºå™¨å‘¨æœŸ Machine Cycle Time
+		LED0_L;				//Õ¼ÓÃÒ»¸ö»úÆ÷ÖÜÆÚ Machine Cycle Time
 		DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;	//10us
 		DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;	//10us
 		DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;DELAY1US_4M;	//10us
@@ -276,80 +276,80 @@ void time_test(void)
 #endif
 
 
-//------------------------------------------------------------åˆ©ç”¨nopå»¶æ—¶ï¼ˆè¿˜æœ‰ä¸ª DELAY1US_32M å¯ç”¨ï¼Œåœ¨å¤´æ–‡ä»¶ï¼‰------------------------------------------------------------//
+//------------------------------------------------------------ÀûÓÃnopÑÓÊ±£¨»¹ÓĞ¸ö DELAY1US_32M ¿ÉÓÃ£¬ÔÚÍ·ÎÄ¼ş£©------------------------------------------------------------//
 /**********************************************************************
-å‡½æ•°ï¼švoid delay_1us_32M(u32 us)
-åŠŸèƒ½ï¼šå¯ä¾›è°ƒç”¨çš„1uså»¶æ—¶ã€‚åªè°ƒç”¨1usçš„è¯ä¼šç¨å¾®ä¸å‡†ï¼Œå› ä¸ºæœ‰å‡ºå…¥æ ˆæ—¶é—´ï¼Œè°ƒç”¨ä¸€æ¬¡å‡½æ•°èŠ±äº†1.49-1=0.49us
-ï¼ˆ100æ¬¡è°ƒç”¨1uså…±å ç”¨150usï¼Œæ¯æ¬¡0.5usï¼›å•æ¬¡è°ƒæµ‹å¾—0.74ã€0.6ã€0.8ï¼‰ï¼Œçº¦15.68ä¸ªæœºå™¨å‘¨æœŸ(15.68/32=0.49us)
-ç”±äºå¯ç²¾ç¡®åˆ°1uså»¶æ—¶ï¼Œæ•…ä¸ç¦æ­¢OSè°ƒåº¦ï¼Œéœ€è¦åœ¨è°ƒç”¨æ—¶æ³¨æ„ï¼Œè‡ªè¡Œåœ¨å¤–éƒ¨ç¦æ­¢OSè°ƒåº¦
-	2018/08/30æµ‹è¯•ï¼Œå…¥å‚ä¸º1çš„å•æ¬¡è°ƒç”¨çº¦1.4usï¼›å…¥å‚ä¸º10ä¸¤æ¬¡è°ƒç”¨çº¦21.4us
-å…¥å‚ï¼šå»¶æ—¶çš„å¾®ç§’æ•°ï¼Œå»ºè®®( us > 10 )ï¼Œ7%åå·®
-å‡ºå‚ï¼šæ— 
+º¯Êı£ºvoid delay_1us_32M(u32 us)
+¹¦ÄÜ£º¿É¹©µ÷ÓÃµÄ1usÑÓÊ±¡£Ö»µ÷ÓÃ1usµÄ»°»áÉÔÎ¢²»×¼£¬ÒòÎªÓĞ³öÈëÕ»Ê±¼ä£¬µ÷ÓÃÒ»´Îº¯Êı»¨ÁË1.49-1=0.49us
+£¨100´Îµ÷ÓÃ1us¹²Õ¼ÓÃ150us£¬Ã¿´Î0.5us£»µ¥´Îµ÷²âµÃ0.74¡¢0.6¡¢0.8£©£¬Ô¼15.68¸ö»úÆ÷ÖÜÆÚ(15.68/32=0.49us)
+ÓÉÓÚ¿É¾«È·µ½1usÑÓÊ±£¬¹Ê²»½ûÖ¹OSµ÷¶È£¬ĞèÒªÔÚµ÷ÓÃÊ±×¢Òâ£¬×ÔĞĞÔÚÍâ²¿½ûÖ¹OSµ÷¶È
+	2018/08/30²âÊÔ£¬Èë²ÎÎª1µÄµ¥´Îµ÷ÓÃÔ¼1.4us£»Èë²ÎÎª10Á½´Îµ÷ÓÃÔ¼21.4us
+Èë²Î£ºÑÓÊ±µÄÎ¢ÃëÊı£¬½¨Òé( us > 10 )£¬7%Æ«²î
+³ö²Î£ºÎŞ
 ***********************************************************************/
 void delay_1us_32M(u32 us)
 {
-	while(us--)				//å®æµ‹æ¯æ¬¡å¾ªç¯(us*5)ä¸ªæœºå™¨å‘¨æœŸ
+	while(us--)				//Êµ²âÃ¿´ÎÑ­»·(us*5)¸ö»úÆ÷ÖÜÆÚ
 	{
-		MachineCycle_27;	//5+27=32ä¸ªæœºå™¨å‘¨æœŸï¼Œ32Mæ—¶é’Ÿé¢‘ç‡ä¸‹ä¸º1us
+		MachineCycle_27;	//5+27=32¸ö»úÆ÷ÖÜÆÚ£¬32MÊ±ÖÓÆµÂÊÏÂÎª1us
 	}
 }
 
 /**********************************************************************
-å‡½æ•°ï¼švoid delay_2us_4M(u32 us)------4Mæ— æ³•åšåˆ°1usï¼Œä¸€æ¬¡whileå¾ªç¯å°±1.25usäº†
-åŠŸèƒ½ï¼šå¯ä¾›è°ƒç”¨çš„2uså»¶æ—¶ã€‚
-ç”±äºå¯ç²¾ç¡®åˆ°1uså»¶æ—¶ï¼Œæ•…ä¸ç¦æ­¢OSè°ƒåº¦ï¼Œéœ€è¦åœ¨è°ƒç”¨æ—¶æ³¨æ„ï¼Œè‡ªè¡Œåœ¨å¤–éƒ¨ç¦æ­¢OSè°ƒåº¦
-	2018/08/30æµ‹è¯•ï¼Œå…¥å‚ä¸º1çš„å•æ¬¡è°ƒç”¨çº¦5.4usï¼Œè€Œé2usï¼›
-å…¥å‚ï¼šå»¶æ—¶çš„å¾®ç§’æ•°ï¼Œå»ºè®®( us > 50 )ï¼Œ6%åå·®
-å‡ºå‚ï¼šæ— 
+º¯Êı£ºvoid delay_2us_4M(u32 us)------4MÎŞ·¨×öµ½1us£¬Ò»´ÎwhileÑ­»·¾Í1.25usÁË
+¹¦ÄÜ£º¿É¹©µ÷ÓÃµÄ2usÑÓÊ±¡£
+ÓÉÓÚ¿É¾«È·µ½1usÑÓÊ±£¬¹Ê²»½ûÖ¹OSµ÷¶È£¬ĞèÒªÔÚµ÷ÓÃÊ±×¢Òâ£¬×ÔĞĞÔÚÍâ²¿½ûÖ¹OSµ÷¶È
+	2018/08/30²âÊÔ£¬Èë²ÎÎª1µÄµ¥´Îµ÷ÓÃÔ¼5.4us£¬¶ø·Ç2us£»
+Èë²Î£ºÑÓÊ±µÄÎ¢ÃëÊı£¬½¨Òé( us > 50 )£¬6%Æ«²î
+³ö²Î£ºÎŞ
 ***********************************************************************/
 void delay_2us_4M(u32 us)
 {
 //	u32	i=0;
-//	for(;i<us;i++)			//å®æµ‹æ¯æ¬¡å¾ªç¯(us*6)ä¸ªæœºå™¨å‘¨æœŸ
+//	for(;i<us;i++)			//Êµ²âÃ¿´ÎÑ­»·(us*6)¸ö»úÆ÷ÖÜÆÚ
 //	{
-//		MachineCycle_2;		//6+2ä¸ªæœºå™¨å‘¨æœŸï¼Œ4Mæ—¶é’Ÿé¢‘ç‡ä¸‹ä¸º2us
+//		MachineCycle_2;		//6+2¸ö»úÆ÷ÖÜÆÚ£¬4MÊ±ÖÓÆµÂÊÏÂÎª2us
 //	}
-	while(us--)				//å®æµ‹æ¯æ¬¡å¾ªç¯(us*5)ä¸ªæœºå™¨å‘¨æœŸ
+	while(us--)				//Êµ²âÃ¿´ÎÑ­»·(us*5)¸ö»úÆ÷ÖÜÆÚ
 	{
-		MachineCycle_3;		//5+3ä¸ªæœºå™¨å‘¨æœŸï¼Œ4Mæ—¶é’Ÿé¢‘ç‡ä¸‹ä¸º2us
+		MachineCycle_3;		//5+3¸ö»úÆ÷ÖÜÆÚ£¬4MÊ±ÖÓÆµÂÊÏÂÎª2us
 	}
 }
 
 
-//------------------------------------------------------------åˆ©ç”¨TIM3å»¶æ—¶ï¼ˆä»STM32F407ç§»è¿‡æ¥ï¼Œè¿˜æ²¡ä¿®æ”¹ï¼Œä¸å‡†ï¼Œ134usï¼‰------------------------------------------------------------//
+//------------------------------------------------------------ÀûÓÃTIM3ÑÓÊ±£¨´ÓSTM32F407ÒÆ¹ıÀ´£¬»¹Ã»ĞŞ¸Ä£¬²»×¼£¬134us£©------------------------------------------------------------//
 /**********************************************************************
-å‡½æ•°ï¼švoid delay_init(void)
-åŠŸèƒ½ï¼šTIM3è¿›è¡Œåˆå§‹åŒ–ï¼Œç”¨æ¥è®¡æ—¶
-å…¥å‚ï¼šæ— 
-å‡ºå‚ï¼šæ— 
+º¯Êı£ºvoid delay_init(void)
+¹¦ÄÜ£ºTIM3½øĞĞ³õÊ¼»¯£¬ÓÃÀ´¼ÆÊ±
+Èë²Î£ºÎŞ
+³ö²Î£ºÎŞ
 ***********************************************************************/
 void delay_init(void)
 {
-	TIM3_Int_Init(49,83);//10Khzè®¡æ•°,50usä¸€æ¬¡ä¸­æ–­
+	TIM3_Int_Init(49,83);//10Khz¼ÆÊı,50usÒ»´ÎÖĞ¶Ï
 }
 
 /**********************************************************************
-å‡½æ•°ï¼švoid delay_50us(u32 us)
-åŠŸèƒ½ï¼šåˆ©ç”¨TIM3è¿›è¡Œ50uså»¶æ—¶
-å…¥å‚ï¼šå»¶æ—¶çš„ï¼ˆ50å¾®ç§’ï¼‰æ•°
-å‡ºå‚ï¼šæ— 
+º¯Êı£ºvoid delay_50us(u32 us)
+¹¦ÄÜ£ºÀûÓÃTIM3½øĞĞ50usÑÓÊ±
+Èë²Î£ºÑÓÊ±µÄ£¨50Î¢Ãë£©Êı
+³ö²Î£ºÎŞ
 ***********************************************************************/
 void delay_50us(u32 us)
 {		
-	TIM_Cmd(TIM3,ENABLE);  //ä½¿èƒ½å®šæ—¶å™¨3
+	TIM_Cmd(TIM3,ENABLE);  //Ê¹ÄÜ¶¨Ê±Æ÷3
 	while(us--)
 	{
-		while(TIM_GetFlagStatus(TIM3,TIM_IT_Update)!=SET); //ç­‰å¾…æº¢å‡º
-		TIM_ClearFlag(TIM3,TIM_IT_Update);                 //æ¸…é™¤æ ‡å¿—ä½
+		while(TIM_GetFlagStatus(TIM3,TIM_IT_Update)!=SET); //µÈ´ıÒç³ö
+		TIM_ClearFlag(TIM3,TIM_IT_Update);                 //Çå³ı±êÖ¾Î»
 	}
-	TIM_Cmd(TIM3,DISABLE); //åœæ­¢å®šæ—¶å™¨3
+	TIM_Cmd(TIM3,DISABLE); //Í£Ö¹¶¨Ê±Æ÷3
 }
 
 /**********************************************************************
-å‡½æ•°ï¼švoid delay_ms(u32 ms)
-åŠŸèƒ½ï¼šåˆ©ç”¨TIM3è¿›è¡Œ1mså»¶æ—¶
-å…¥å‚ï¼šå»¶æ—¶çš„æ¯«ç§’æ•°
-å‡ºå‚ï¼šæ— 
+º¯Êı£ºvoid delay_ms(u32 ms)
+¹¦ÄÜ£ºÀûÓÃTIM3½øĞĞ1msÑÓÊ±
+Èë²Î£ºÑÓÊ±µÄºÁÃëÊı
+³ö²Î£ºÎŞ
 ***********************************************************************/
 void delay_ms(u32 ms)
 {	 	 
@@ -360,31 +360,31 @@ void delay_ms(u32 ms)
 } 
 
 /**********************************************************************
-å‡½æ•°ï¼švoid TIM3_Int_Init(u16 arr,u16 psc)
-åŠŸèƒ½ï¼šé€šç”¨å®šæ—¶å™¨3ä¸­æ–­åˆå§‹åŒ–
-å…¥å‚ï¼šu16 arrï¼Œè‡ªåŠ¨é‡è£…è½½å€¼ï¼›u16 pscï¼Œå®šæ—¶å™¨åˆ†é¢‘
-å‡ºå‚ï¼šæ— 
+º¯Êı£ºvoid TIM3_Int_Init(u16 arr,u16 psc)
+¹¦ÄÜ£ºÍ¨ÓÃ¶¨Ê±Æ÷3ÖĞ¶Ï³õÊ¼»¯
+Èë²Î£ºu16 arr£¬×Ô¶¯ÖØ×°ÔØÖµ£»u16 psc£¬¶¨Ê±Æ÷·ÖÆµ
+³ö²Î£ºÎŞ
 ***********************************************************************/
 void TIM3_Int_Init(u16 arr,u16 psc)
 {
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);           //ä½¿èƒ½TIM3æ—¶é’Ÿ
-	TIM_TimeBaseInitStructure.TIM_Prescaler=psc;                  //å®šæ—¶å™¨åˆ†é¢‘
-	TIM_TimeBaseInitStructure.TIM_CounterMode=TIM_CounterMode_Up; //å‘ä¸Šè®¡æ•°æ¨¡å¼
-	TIM_TimeBaseInitStructure.TIM_Period=arr;                     //è‡ªåŠ¨é‡è£…è½½å€¼
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);           //Ê¹ÄÜTIM3Ê±ÖÓ
+	TIM_TimeBaseInitStructure.TIM_Prescaler=psc;                  //¶¨Ê±Æ÷·ÖÆµ
+	TIM_TimeBaseInitStructure.TIM_CounterMode=TIM_CounterMode_Up; //ÏòÉÏ¼ÆÊıÄ£Ê½
+	TIM_TimeBaseInitStructure.TIM_Period=arr;                     //×Ô¶¯ÖØ×°ÔØÖµ
 	TIM_TimeBaseInitStructure.TIM_ClockDivision=TIM_CKD_DIV1; 
 	TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStructure);
 }
 
 
 
-//------------------------------------------------------------åˆ©ç”¨systickå»¶æ—¶------------------------------------------------------------//
+//------------------------------------------------------------ÀûÓÃsystickÑÓÊ±------------------------------------------------------------//
 /*===========================================================================
-å‡½æ•°ï¼švoid delay_SYSus(u32 nus)
-è¯´æ˜ï¼šuså»¶æ—¶ï¼Œåˆ©ç”¨systickä¸€ç›´åœ¨é€’å‡ï¼Œä¸åœè¯»å–å€¼æ¯”è¾ƒï¼Œå½“æ¯”è¾ƒå€¼è¶…è¿‡å…¥å‚æ—¶åˆ™é€€å‡º               å› è¿›è¡Œusçº§åˆ«çš„å»¶æ—¶ï¼ŒæŒ‡ä»¤æ‰§è¡Œæ—¶é—´ä¼šè¶…å‡º10usï¼Œå¯¼è‡´æ— æ³•è¿›è¡Œ10usä»¥å†…çš„å»¶æ—¶ã€‚æ”¾å¼ƒä½¿ç”¨ï¼Œå½“ç³»ç»Ÿæ—¶é’Ÿé¢‘ç‡å¤Ÿé«˜çš„æ—¶å€™æ‰å¯ä½¿ç”¨ã€‚
-     éœ€è¦æ³¨æ„é˜²æ­¢OSè°ƒåº¦æ‰“æ–­å»¶æ—¶ã€‚ï¼ˆå ç”¨CPUã€OSçš„æ­»ç­‰å¾…ï¼‰
-å…¥å‚ï¼š
-å‡ºå‚ï¼š
+º¯Êı£ºvoid delay_SYSus(u32 nus)
+ËµÃ÷£ºusÑÓÊ±£¬ÀûÓÃsystickÒ»Ö±ÔÚµİ¼õ£¬²»Í£¶ÁÈ¡Öµ±È½Ï£¬µ±±È½ÏÖµ³¬¹ıÈë²ÎÊ±ÔòÍË³ö               Òò½øĞĞus¼¶±ğµÄÑÓÊ±£¬Ö¸ÁîÖ´ĞĞÊ±¼ä»á³¬³ö10us£¬µ¼ÖÂÎŞ·¨½øĞĞ10usÒÔÄÚµÄÑÓÊ±¡£·ÅÆúÊ¹ÓÃ£¬µ±ÏµÍ³Ê±ÖÓÆµÂÊ¹»¸ßµÄÊ±ºò²Å¿ÉÊ¹ÓÃ¡£
+     ĞèÒª×¢Òâ·ÀÖ¹OSµ÷¶È´ò¶ÏÑÓÊ±¡££¨Õ¼ÓÃCPU¡¢OSµÄËÀµÈ´ı£©
+Èë²Î£º
+³ö²Î£º
 ============================================================================*/
 void delay_SYSus(u32 nus)
 {		
@@ -392,21 +392,21 @@ void delay_SYSus(u32 nus)
 	u32 told=0;
 	u32 tnow=0;
 	u32 tcnt=0;
-	u32 reload=SysTick->LOAD;					//è¯»å–LOADçš„å€¼	    	 
-	ticks=nus*4;								//éœ€è¦çš„èŠ‚æ‹æ•°ï¼ˆnuséœ€è¦çš„ticksæ•°ï¼‰	  ç³»ç»Ÿå®šæ—¶å™¨æ—¶é’Ÿsystick=HCLK/8=4Mï¼Œæ¯uséœ€è¦çš„èŠ‚æ‹æ•°ä¸º4	HCLKï¼šç»™AHBæ€»çº¿ã€å†…æ ¸ã€å†…å­˜å’ŒDMAä½¿ç”¨çš„HCLKæ—¶é’Ÿã€‚é«˜é€Ÿå¤–è®¾æ—¶é’Ÿï¼ˆä¸€èˆ¬ä¸åˆ†é¢‘ï¼Œç­‰äºç³»ç»Ÿæ—¶é’Ÿï¼‰ï¼Œæ˜¯ç»™å¤–éƒ¨è®¾å¤‡çš„ï¼Œæ¯”å¦‚å†…å­˜ï¼Œflashï¼ŒDMA	
+	u32 reload=SysTick->LOAD;					//¶ÁÈ¡LOADµÄÖµ	    	 
+	ticks=nus*4;								//ĞèÒªµÄ½ÚÅÄÊı£¨nusĞèÒªµÄticksÊı£©	  ÏµÍ³¶¨Ê±Æ÷Ê±ÖÓsystick=HCLK/8=4M£¬Ã¿usĞèÒªµÄ½ÚÅÄÊıÎª4	HCLK£º¸øAHB×ÜÏß¡¢ÄÚºË¡¢ÄÚ´æºÍDMAÊ¹ÓÃµÄHCLKÊ±ÖÓ¡£¸ßËÙÍâÉèÊ±ÖÓ£¨Ò»°ã²»·ÖÆµ£¬µÈÓÚÏµÍ³Ê±ÖÓ£©£¬ÊÇ¸øÍâ²¿Éè±¸µÄ£¬±ÈÈçÄÚ´æ£¬flash£¬DMA	
 	tcnt=0;
-	OSSchedLock();								//é˜»æ­¢OSè°ƒåº¦ï¼Œé˜²æ­¢æ‰“æ–­uså»¶æ—¶
-	told=SysTick->VAL;							//åˆšè¿›å…¥æ—¶çš„è®¡æ•°å™¨å€¼
+	OSSchedLock();								//×èÖ¹OSµ÷¶È£¬·ÀÖ¹´ò¶ÏusÑÓÊ±
+	told=SysTick->VAL;							//¸Õ½øÈëÊ±µÄ¼ÆÊıÆ÷Öµ
 	while(1)
 	{
 		tnow=SysTick->VAL;	
 		if(tnow!=told)
 		{	    
-			if(tnow<told) tcnt+=told-tnow;		//å¦‚æœæœªé€’å‡åˆ°0
+			if(tnow<told) tcnt+=told-tnow;		//Èç¹ûÎ´µİ¼õµ½0
 			else tcnt+=reload-tnow+told;	    
 			told=tnow;
-			if(tcnt>=ticks)break;				//æ—¶é—´è¶…è¿‡æˆ–ç­‰äºè¦å»¶è¿Ÿçš„æ—¶é—´,åˆ™é€€å‡º.
+			if(tcnt>=ticks)break;				//Ê±¼ä³¬¹ı»òµÈÓÚÒªÑÓ³ÙµÄÊ±¼ä,ÔòÍË³ö.
 		}  
 	};
-	OSSchedUnlock();							//æ¢å¤OSè°ƒåº¦									    
+	OSSchedUnlock();							//»Ö¸´OSµ÷¶È									    
 }

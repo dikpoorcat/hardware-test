@@ -10,13 +10,13 @@
 #include "delay.h"
 
 
-#define  W25QXX_TYPE W25Q256	// é»˜è®¤æ˜¯W25Q256
+#define  W25QXX_TYPE W25Q256	// Ä¬ÈÏÊÇW25Q256
 
 #define  W25Q_Page_Size 256            // zzs add this
 #define  ADS            0x00010000     // zzs add this 
 
 
-//W25Xç³»åˆ—/Qç³»åˆ—èŠ¯ç‰‡åˆ—è¡¨	   
+//W25XÏµÁĞ/QÏµÁĞĞ¾Æ¬ÁĞ±í	   
 //W25Q80  ID  0XEF13
 //W25Q16  ID  0XEF14
 //W25Q32  ID  0XEF15
@@ -30,10 +30,10 @@
 #define W25Q256	0XEF18
  	
 
-#define W25RST_PIN       GPIO_Pin_5//å¤ä½
+#define W25RST_PIN       GPIO_Pin_5//¸´Î»
 #define W25RST_Port      GPIOC
 
-#define W25CS_PIN       GPIO_Pin_0//ä½¿èƒ½
+#define W25CS_PIN       GPIO_Pin_0//Ê¹ÄÜ
 #define W25CS_Port      GPIOB
 
 #define W25CLK_PIN       GPIO_Pin_4
@@ -62,7 +62,7 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////// 
-//æŒ‡ä»¤è¡¨
+//Ö¸Áî±í
 #define W25X_WriteEnable		0x06 
 #define W25X_WriteDisable		0x04 
 
@@ -105,21 +105,21 @@ extern unsigned char W25QXX_BUFFER[4096];
 extern INT8U WQ256_Flag;
 
 INT8U W25QXX_Init(INT8U Task_Num);
-unsigned short  W25QXX_ReadID(void);  	    		// è¯»å–FLASH ID
+unsigned short  W25QXX_ReadID(void);  	    		// ¶ÁÈ¡FLASH ID
 unsigned int W25QXX_ReadSR(void);        		    // // zzs modified it like this
 void W25QXX_Write_SR(unsigned char WriteStatusRegX,unsigned char Value);		// zzs modified it like this
 void W25QXX_EnterOrQuit_4Bytes_AddrMode(unsigned char Cmd_Byte);
-void W25QXX_Write_Enable(void);  		// å†™ä½¿èƒ½ 
-void W25QXX_Write_Disable(void);		// å†™ä¿æŠ¤
+void W25QXX_Write_Enable(void);  		// Ğ´Ê¹ÄÜ 
+void W25QXX_Write_Disable(void);		// Ğ´±£»¤
 void W25QXX_Write_NoCheck(unsigned int WriteAddr,unsigned char* pBuffer,unsigned short NumByteToWrite) ;
-void W25QXX_Read(unsigned int ReadAddr,unsigned char* pBuffer,unsigned short NumByteToRead) ;   //è¯»å–flash
-void W25QXX_Write(unsigned int WriteAddr,unsigned char* pBuffer,unsigned short  NumByteToWrite) ;//å†™å…¥flash
+void W25QXX_Read(unsigned int ReadAddr,unsigned char* pBuffer,unsigned short NumByteToRead) ;   //¶ÁÈ¡flash
+void W25QXX_Write(unsigned int WriteAddr,unsigned char* pBuffer,unsigned short  NumByteToWrite) ;//Ğ´Èëflash
 void W25QXX_Write_Page(unsigned int WriteAddr,unsigned char* pBuffer,unsigned short NumByteToWrite);
-void W25QXX_Erase_Chip(void);    	  	//æ•´ç‰‡æ“¦é™¤
-void W25QXX_Erase_Sector(unsigned int Dst_Addr);	//æ‰‡åŒºæ“¦é™¤
-void W25QXX_Wait_Busy(void);           	//ç­‰å¾…ç©ºé—²
-void W25QXX_PowerDown(void);        	//è¿›å…¥æ‰ç”µæ¨¡å¼
-void W25QXX_WAKEUP(void);				//å”¤é†’
+void W25QXX_Erase_Chip(void);    	  	//ÕûÆ¬²Á³ı
+void W25QXX_Erase_Sector(unsigned int Dst_Addr);	//ÉÈÇø²Á³ı
+void W25QXX_Wait_Busy(void);           	//µÈ´ı¿ÕÏĞ
+void W25QXX_PowerDown(void);        	//½øÈëµôµçÄ£Ê½
+void W25QXX_WAKEUP(void);				//»½ĞÑ
 void W25Q256_LowPower(INT8U Task_Num);
 INT8U W25QXX_Read_By_Sector(INT8U *OutBuff,INT32U Sector_Index,INT8U Count)	;
 INT8U W25QXX_Write_By_Sector(INT8U *InBuff,INT32U Sector_Index,INT8U Count) ;

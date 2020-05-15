@@ -5,7 +5,7 @@
 
 
 
-/*ÂºÂ¯ÃŠÃ½Ã‰Ã¹ÃƒÃ·*/
+/*º¯ÊýÉùÃ÷*/
 void SPI_1_Init(void);
 void BSP_SoftSpiSend(INT8U val);
 INT8U BSP_SoftSpiRece(INT8U val);

@@ -25,9 +25,9 @@
 /* Uncomment the line below to compile the library in DEBUG mode, this will expanse
    the "assert_param" macro in the firmware library code (see "Exported macro"
    section below) */
-/* #define DEBUG    1*/																					//æœ¬æ¥DEBUGæ¨¡å¼åœ¨è¿™é‡Œå¼€çš„
+/* #define DEBUG    1*/																					//±¾À´DEBUGÄ£Ê½ÔÚÕâÀï¿ªµÄ
 
-/* Comment the line below to disable the specific peripheral inclusion */								//æ³¨é‡Šä¸‹é¢çš„è¡Œä»¥ç¦ç”¨ç‰¹å®šçš„å¤–å›´è®¾å¤‡
+/* Comment the line below to disable the specific peripheral inclusion */								//×¢ÊÍÏÂÃæµÄĞĞÒÔ½ûÓÃÌØ¶¨µÄÍâÎ§Éè±¸
 /************************************* ADC ************************************/
 #define _ADC
 #define _ADC1
@@ -151,7 +151,7 @@
 #define HSEStartUp_TimeOut    ((u16)0x0500) /* Time out for HSE start up */
 
 /* Exported macro ------------------------------------------------------------*/
-/*		å·¥ç¨‹ä¼ ä¸‹æ¥æ—¶å€™æ˜¯è¿™æ ·çš„ï¼Œåº”è¯¥æ˜¯è¢«è°æ”¹æˆè¿™æ ·çš„å§ï¼Ÿè¿˜åŸæˆDEBUG
+/*		¹¤³Ì´«ÏÂÀ´Ê±ºòÊÇÕâÑùµÄ£¬Ó¦¸ÃÊÇ±»Ë­¸Ä³ÉÕâÑùµÄ°É£¿»¹Ô­³ÉDEBUG
 #define	DEBUG_PARAM				1
 #ifdef  DEBUG_PARAM*/
 
@@ -166,11 +166,11 @@
 	*                    If expr is true, it returns no value.
 	* Return         : None
 	*******************************************************************************/ 
-	#define assert_param(expr) ((expr) ? (void)0 :assert_failed((u8 *)__FILE__, __LINE__) )			//assert_param()ç›¸å…³https://blog.csdn.net/xiaohu1996/article/details/82708107
-	void assert_failed(u8* file, u32 line);															//è¿™ä¸ªæ˜¯å‡½æ•°å£°æ˜ã€‚DEBUGæ¨¡å¼æ—¶è°ƒç”¨æ­¤å‡½æ•°
+	#define assert_param(expr) ((expr) ? (void)0 :assert_failed((u8 *)__FILE__, __LINE__) )			//assert_param()Ïà¹Øhttps://blog.csdn.net/xiaohu1996/article/details/82708107
+	void assert_failed(u8* file, u32 line);															//Õâ¸öÊÇº¯ÊıÉùÃ÷¡£DEBUGÄ£Ê½Ê±µ÷ÓÃ´Ëº¯Êı
 /* Exported functions ------------------------------------------------------- */
 #else
-	#define assert_param(expr) ((void)0)															//Releaseæ¨¡å¼æ—¶è°ƒç”¨æ­¤å‡½æ•°
+	#define assert_param(expr) ((void)0)															//ReleaseÄ£Ê½Ê±µ÷ÓÃ´Ëº¯Êı
 #endif /* DEBUG */
   
 #endif /* __STM32F10x_CONF_H */

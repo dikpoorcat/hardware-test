@@ -22,7 +22,7 @@
 
 /*******************************************************************************
 * Function Name  : void RCC_Configuration4M(void)
-* Description    : é…ç½®ç³»ç»Ÿæ—¶é’Ÿä¸º4M
+* Description    : ÅäÖÃÏµÍ³Ê±ÖÓÎª4M
 * Input          : None		  
 * Output         : None
 * Contributor: 
@@ -32,18 +32,18 @@ void RCC_Configuration4M(void);
 
  
  /***************************************************************************************
-** å‡½æ•°åç§°: Tmr_TickInit
-** åŠŸèƒ½æè¿°: OS tick åˆå§‹åŒ–å‡½æ•°
-** å‚    æ•°: None
-** è¿” å› å€¼: None       
-** ä½œã€€  è€…: ç½—è¾‰è”
-** æ—¥  ã€€æœŸ: 2007å¹´11æœˆ28æ—¥
+** º¯ÊıÃû³Æ: Tmr_TickInit
+** ¹¦ÄÜÃèÊö: OS tick ³õÊ¼»¯º¯Êı
+** ²Î    Êı: None
+** ·µ »Ø Öµ: None       
+** ×÷¡¡  Õß: ÂŞ»ÔÁª
+** ÈÕ  ¡¡ÆÚ: 2007Äê11ÔÂ28ÈÕ
 ****************************************************************************************/
 void Tmr_TickInit (unsigned int fhz);
 
 /*******************************************************************************
 * Function Name  : void RCC_Configuration32M(void)
-* Description    : é…ç½®ç³»ç»Ÿæ—¶é’Ÿä¸º32M
+* Description    : ÅäÖÃÏµÍ³Ê±ÖÓÎª32M
 * Input          : None		  
 * Output         : None
 * Contributor: 
@@ -59,7 +59,7 @@ void McuSoftReset(void);
 
  /*******************************************************************************
 * Function Name  : void IWDG_Init(void)
-* Description    : å†…éƒ¨çœ‹é—¨ç‹—å¯åŠ¨ï¼Œè¦æ±‚LSI å†…éƒ¨æ—¶é’Ÿå·²ç»å¯åŠ¨
+* Description    : ÄÚ²¿¿´ÃÅ¹·Æô¶¯£¬ÒªÇóLSI ÄÚ²¿Ê±ÖÓÒÑ¾­Æô¶¯
 * Input          : None
 * Output         : None
 * Return         : None
@@ -68,7 +68,7 @@ void IWDG_Init(void);
 
 /*******************************************************************************
 * Function Name  : void IWDG_Reset(void)
-* Description    : å†…éƒ¨çœ‹é—¨ç‹—å¤ä½
+* Description    : ÄÚ²¿¿´ÃÅ¹·¸´Î»
 * Input          : None
 * Output         : None
 * Return         : None

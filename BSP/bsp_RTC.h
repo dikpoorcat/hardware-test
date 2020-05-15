@@ -4,26 +4,26 @@
 
 
 /*
-	æ•°æ®ç»“æ„ è‡ªä»1970å¹´1æœˆ1æ—¥00.00.00ä»¥æ¥çš„ç§’æ•° time_t  UTCæ—¥å†æ—¶é—´å€¼
-	ç»†åˆ†ï¼šstruct tm
-	1ï¼Œå‡½æ•°1 struct tm * localtime(const time_t *timer)
-	2, å‡½æ•°2 time_t mktime(struct tm * timeptr);   
+	Êı¾İ½á¹¹ ×Ô´Ó1970Äê1ÔÂ1ÈÕ00.00.00ÒÔÀ´µÄÃëÊı time_t  UTCÈÕÀúÊ±¼äÖµ
+	Ï¸·Ö£ºstruct tm
+	1£¬º¯Êı1 struct tm * localtime(const time_t *timer)
+	2, º¯Êı2 time_t mktime(struct tm * timeptr);   
 */
 
 
 
 /* Private define-----------------------------------------------------------------------------*/
-// IICå¼•è„šå®šä¹‰
+// IICÒı½Å¶¨Òå
 #define	SIIC_GPIO				GPIOA
 #define SIIC_GPIO_SCL			GPIO_Pin_1
 #define SIIC_GPIO_SDA			GPIO_Pin_0
 #define RCCRTCEN		        RCC_APB2Periph_GPIOA
 #define	IIC_DELAY_TIME			1
 #define	IIC_DELAY_TIME_LONG		2
-// è®¾å¤‡è¯»å†™åœ°å€
+// Éè±¸¶ÁĞ´µØÖ·
 #define	RX8025_ADDR_READ		0x65
 #define	RX8025_ADDR_WRITE		0x64
-// è®¾å¤‡å¯„å­˜å™¨åœ°å€
+// Éè±¸¼Ä´æÆ÷µØÖ·
 #define	RX8025_ADDR_SECONDS		0x00
 #define	RX8025_ADDR_WEEK		0x30
 #define	RX8025_ADDR_DATES		0x40
@@ -31,7 +31,7 @@
 #define	RX8025_ADDR_MINUTES		0x80
 #define	RX8025_ADDR_CONTROL1	0xE0
 #define	RX8025_ADDR_CONTROL2	0xF0
-// è®¾å¤‡æ“ä½œæ¨¡å¼
+// Éè±¸²Ù×÷Ä£Ê½
 #define	RX8025_WRITE_MODE		0xF0
 #define	RX8025_READ_MODE		0xF0 
 #define	RX8025_SIMP_READ_MODE	0x04 
@@ -39,24 +39,24 @@
 
 
 
-/*ç»“æ„ä½“å®šä¹‰*/
-//struct BSPRTC_TIME															//RX8025ç»“æ„ä½“ï¼Œè¯»å†™çš„æ—¶å€™æŒ‰è¿™ä¸ªé¡ºåºå°±è¡Œï¼Œæ•°æ®ä¸º8421BCDç 	æ”¾åœ¨
+/*½á¹¹Ìå¶¨Òå*/
+//struct BSPRTC_TIME															//RX8025½á¹¹Ìå£¬¶ÁĞ´µÄÊ±ºò°´Õâ¸öË³Ğò¾ÍĞĞ£¬Êı¾İÎª8421BCDÂë	·ÅÔÚ
 //{
-//	unsigned char Second;														//ç§’ï¼Œ8421BCDç 
-//	unsigned char Minute;														//åˆ†ï¼Œ8421BCDç 
-//	unsigned char Hour;															//æ—¶ï¼Œ8421BCDç 
-//	unsigned char Week;															//å‘¨ï¼Œ8421BCDç ï¼Œå¥½åƒæ˜¯0~6ï¼Œå…·ä½“æˆ‘è¿˜ä¸æ¸…æ¥š ZE
-//	unsigned char Day;															//æ—¥ï¼Œ8421BCDç 
-//	unsigned char Month;														//æœˆï¼Œ8421BCDç 
-//	unsigned char Year;															//å¹´ï¼Œ8421BCDç ï¼Œä¸ºå®é™…å¹´ä»½-2000
+//	unsigned char Second;														//Ãë£¬8421BCDÂë
+//	unsigned char Minute;														//·Ö£¬8421BCDÂë
+//	unsigned char Hour;															//Ê±£¬8421BCDÂë
+//	unsigned char Week;															//ÖÜ£¬8421BCDÂë£¬ºÃÏñÊÇ0~6£¬¾ßÌåÎÒ»¹²»Çå³ş ZE
+//	unsigned char Day;															//ÈÕ£¬8421BCDÂë
+//	unsigned char Month;														//ÔÂ£¬8421BCDÂë
+//	unsigned char Year;															//Äê£¬8421BCDÂë£¬ÎªÊµ¼ÊÄê·İ-2000
 //};
 
 
 
 
-/*å…¨å±€å˜é‡å£°æ˜*/
-extern struct BSPRTC_TIME gRtcTime;												//æ•°æ®ä¸º8421BCDç 
-extern struct BSPRTC_TIME gSetTime;												//æ•°æ®ä¸º8421BCDç 
+/*È«¾Ö±äÁ¿ÉùÃ÷*/
+extern struct BSPRTC_TIME gRtcTime;												//Êı¾İÎª8421BCDÂë
+extern struct BSPRTC_TIME gSetTime;												//Êı¾İÎª8421BCDÂë
 
 
 

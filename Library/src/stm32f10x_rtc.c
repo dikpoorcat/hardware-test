@@ -247,7 +247,7 @@ FlagStatus RTC_GetFlagStatus(u16 RTC_FLAG)
 
 /*******************************************************************************
 * Function Name  : RTC_ClearFlag
-* Description    : Clears the RTCÂ’s pending flags.
+* Description    : Clears the RTC’s pending flags.
 * Input          : - RTC_FLAG: specifies the flag to clear.
 *                    This parameter can be any combination of the following values:
 *                       - RTC_FLAG_RSF: Registers Synchronized flag. This flag
@@ -300,7 +300,7 @@ ITStatus RTC_GetITStatus(u16 RTC_IT)
 
 /*******************************************************************************
 * Function Name  : RTC_ClearITPendingBit
-* Description    : Clears the RTCÂ’s interrupt pending bits.
+* Description    : Clears the RTC’s interrupt pending bits.
 * Input          : - RTC_IT: specifies the interrupt pending bit to clear.
 *                    This parameter can be any combination of the following values:
 *                       - RTC_IT_OW: Overflow interrupt

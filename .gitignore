@@ -67,3 +67,7 @@ dkms.conf
 *.dbgconf
 *.dep
 FC_JZ.uvoptx
+*.uvoptx
+*.uvprojx
+*.uvprojx
+*.uvoptx

@@ -51,7 +51,7 @@
 #define B485DIS
 #endif
 
-#define SIZE_OF(a)			(INT8U *)a,strlen(a) 								//ç”¨äºéœ€è¦ä¼ å…¥é•¿åº¦çš„ATæŒ‡ä»¤å‡½æ•°ï¼Œå‡å°‘ä¹¦å†™é‡
+#define SIZE_OF(a)			(INT8U *)a,strlen(a) 								//ÓÃÓÚĞèÒª´«Èë³¤¶ÈµÄATÖ¸Áîº¯Êı£¬¼õÉÙÊéĞ´Á¿
 	
 #define	WDT_PRIO 			3
 #define	RF_PRIO	 			4
@@ -73,9 +73,9 @@
 
 
 #define Wdt_Task_Prio		WDT_PRIO
-#define RWNUM 				3													//ç”±4æ”¹ä¸º3ï¼Œåˆ é™¤RTCä»»åŠ¡
+#define RWNUM 				3													//ÓÉ4¸ÄÎª3£¬É¾³ıRTCÈÎÎñ
 
-/*è®¾å¤‡çŠ¶æ€ã€çŠ¶æ€æŒ‡ä»¤å®šä¹‰*/
+/*Éè±¸×´Ì¬¡¢×´Ì¬Ö¸Áî¶¨Òå*/
 #define WAKE_STAT			0X01
 #define SLEEP_STAT			0X02
 #define WAKE_CMD			0XF1
@@ -86,7 +86,7 @@
 #define WAKE_SUCCESS		0X84
 #define SLEEP_SUCCESS		0X85
 
-//-----------------------------------LEDæ§åˆ¶å¼•è„š----------------------------------------
+//-----------------------------------LED¿ØÖÆÒı½Å----------------------------------------
 #define Led_PIN				GPIO_Pin_3
 #define Led_Port			GPIOC
 

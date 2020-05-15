@@ -159,8 +159,8 @@ void PWR_WakeUpPinCmd(FunctionalState NewState)
 * Description    : Enters SLEEP mode.
 * Input          : - SysCtrl_Set: Select the Sleep mode entry mechanism,.
 *                    This parameter can be one of the following values:
-*                       - PWR_SLEEPNowÂ£Â¨0Â£Â©: MCU enters Sleep mode as soon as WFI or WFE instruction is executed.
-*                       - PWR_SLEEPOnExitÂ£Â¨1Â£Â©: MCU enters Sleep mode as soon as it exits the lowest priority ISR.
+*                       - PWR_SLEEPNow£¨0£©: MCU enters Sleep mode as soon as WFI or WFE instruction is executed.
+*                       - PWR_SLEEPOnExit£¨1£©: MCU enters Sleep mode as soon as it exits the lowest priority ISR.
 *
 *                  - PWR_STOPEntry: specifies if SLEEP mode in entered with WFI or WFE instruction.
 *                     This parameter can be one of the following values:

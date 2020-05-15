@@ -1,7 +1,7 @@
 #ifndef	__CRC_H
 #define	__CRC_H
 
-/*ÂºÂ¯ÃŠÃ½Ã‰Ã¹ÃƒÃ·*/
+/*º¯ÊıÉùÃ÷*/
 unsigned short RTU_CRC( unsigned char * puchMsg,unsigned short usDataLen );
 unsigned char RTU_CS( unsigned char * puchMsg,unsigned short usDataLen );
 unsigned long RTU_BYTE(unsigned char *inbuff,unsigned char len);

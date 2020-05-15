@@ -156,11 +156,11 @@ void WWDG_Enable(u8 Counter)
   /* Check the parameters */
   assert_param(IS_WWDG_COUNTER(Counter));
 
-  WWDG->CR = CR_WDGA_Set | Counter;          //zzs note, è®¾ç½®è®¡æ•°å™¨åˆå€¼çš„åŒæ—¶ï¼Œå°±å°†ä½¿èƒ½ä½ç½®1
+  WWDG->CR = CR_WDGA_Set | Counter;          //zzs note, ÉèÖÃ¼ÆÊýÆ÷³õÖµµÄÍ¬Ê±£¬¾Í½«Ê¹ÄÜÎ»ÖÃ1
 	/*
 	while(1)
 		{
-	    ReadDogCnt=WWDG->CR;   //zzs note, åˆ«å¤©çœŸäº†ï¼Œè¯»ä¸åˆ°æƒ³è±¡å½“ä¸­çš„å€¼çš„
+	    ReadDogCnt=WWDG->CR;   //zzs note, ±ðÌìÕæÁË£¬¶Á²»µ½ÏëÏóµ±ÖÐµÄÖµµÄ
 			if(ReadDogCnt<=0x45)
 			{
 			  ReadDogCnt=0;

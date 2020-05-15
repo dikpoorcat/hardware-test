@@ -4,17 +4,17 @@
 
 
 /* --------------------------------Private define---------------------------------------------*/
-/*é€šç”¨*/
-#define DONE				1													//å·²å®ŒæˆæŸç§åŠ¨ä½œ
-#define UNDONE				0													//æœªå®ŒæˆæŸç§åŠ¨ä½œ
+/*Í¨ÓÃ*/
+#define DONE				1													//ÒÑÍê³ÉÄ³ÖÖ¶¯×÷
+#define UNDONE				0													//Î´Íê³ÉÄ³ÖÖ¶¯×÷
 
-/*å¤ä½*/
-#define HOTRST				0xAA												//çƒ­å¤ä½ï¼Œç”±ç¨‹åºæ§åˆ¶å¤ä½
-#define COLDRST				0xBB												//å†·å¤ä½ï¼Œæ„å¤–å¤ä½
-#define FAULTRST			0xCC												//æ•…éšœå¤ä½ï¼Œç‰¹æŒ‡LTEå‘å°„è¿‡ç¨‹ä¸­å¤ä½ï¼Œä¸€èˆ¬ä¸ºå†·å¤ä½
-#define NORST				0xFF												//ç”¨äºéå¤ä½æƒ…å†µä¸‹è·³è¿‡å¼€æœºè”ç»œ
+/*¸´Î»*/
+#define HOTRST				0xAA												//ÈÈ¸´Î»£¬ÓÉ³ÌĞò¿ØÖÆ¸´Î»
+#define COLDRST				0xBB												//Àä¸´Î»£¬ÒâÍâ¸´Î»
+#define FAULTRST			0xCC												//¹ÊÕÏ¸´Î»£¬ÌØÖ¸LTE·¢Éä¹ı³ÌÖĞ¸´Î»£¬Ò»°ãÎªÀä¸´Î»
+#define NORST				0xFF												//ÓÃÓÚ·Ç¸´Î»Çé¿öÏÂÌø¹ı¿ª»úÁªÂç
 
-/*å¸¸é‡*/
+/*³£Á¿*/
 #define Local_Task_Prio		LOCAL_PRIO
 #define Buff485_LEN 		1500
 #define BAT_UNDER			9.2
@@ -22,36 +22,36 @@
 #define FALA_UNDER			5
 #define FALA_UP				5.5
 
-/*æœ¬åœ°åè®®DoType*/
+/*±¾µØĞ­ÒéDoType*/
 #define READTYPE			1
 #define WRITETYPE     		0
 
-/*æœ¬åœ°åè®®é”™è¯¯ä»£ç */
-#define No_Err				00													//æ— é”™è¯¯
-#define Invalid_ID			01													//IDé”™è¯¯æ— æ•ˆID IDåˆ—è¡¨ä¸­çš„ï¼ŒIDå¹¶ä¸æ˜¯æ‰€æœ‰çš„è®¾å¤‡éƒ½æ”¯æŒ
-#define Password_Err		02													//å¯†ç é”™è¯¯ã€é”™è¯¯3æ¬¡åè®¾å¤‡é”ä½ï¼Œéš”å¤©è‡ªåŠ¨è§£é”ã€‘
-#define Data_Err			03													//IDå¯¹åº”æ•°æ®é”™è¯¯
-#define Write_Err			04													//IDä¸ºåªè¯»ä¸å¯å†™
-#define Read_Err			05													//IDä¸ºåªå†™ä¸å¯è¯»
-#define Other_Err			0xFF												//æœ¬åœ°åè®®ä¸­è¿™äº›é”™è¯¯ä»£ç åŸºæœ¬æ²¡ç”¨çš„ï¼Œç»Ÿä¸€ä½¿ç”¨å…¶ä»–é”™è¯¯å°±è¡Œäº†
+/*±¾µØĞ­Òé´íÎó´úÂë*/
+#define No_Err				00													//ÎŞ´íÎó
+#define Invalid_ID			01													//ID´íÎóÎŞĞ§ID IDÁĞ±íÖĞµÄ£¬ID²¢²»ÊÇËùÓĞµÄÉè±¸¶¼Ö§³Ö
+#define Password_Err		02													//ÃÜÂë´íÎó¡¾´íÎó3´ÎºóÉè±¸Ëø×¡£¬¸ôÌì×Ô¶¯½âËø¡¿
+#define Data_Err			03													//ID¶ÔÓ¦Êı¾İ´íÎó
+#define Write_Err			04													//IDÎªÖ»¶Á²»¿ÉĞ´
+#define Read_Err			05													//IDÎªÖ»Ğ´²»¿É¶Á
+#define Other_Err			0xFF												//±¾µØĞ­ÒéÖĞÕâĞ©´íÎó´úÂë»ù±¾Ã»ÓÃµÄ£¬Í³Ò»Ê¹ÓÃÆäËû´íÎó¾ÍĞĞÁË
 
 
 /* --------------------------------Private typedef--------------------------------------------*/
 struct LOCAL_PROTOCAL
 {
-	INT8U  Addr[4];																//æœ¬æœºè£…ç½®åœ°å€ï¼Œé»˜è®¤ä¸º0x00, 0x00, 0x00, 0x00
-	INT8U  DoType;  															//0 å†™å…¥  1 è¯»å–==============CMD
+	INT8U  Addr[4];																//±¾»ú×°ÖÃµØÖ·£¬Ä¬ÈÏÎª0x00, 0x00, 0x00, 0x00
+	INT8U  DoType;  															//0 Ğ´Èë  1 ¶ÁÈ¡==============CMD
 	INT8U  *Pointer;
-	INT8U  Password[3];															//æœ¬æœºå¯†ç ï¼Œé»˜è®¤ä¸º0x00, 0x00, 0x00
-	INT16U CMD;																	//CMDå‘½ä»¤
-	INT16U CMDlen;																//CMDå‘½ä»¤å¯¹åº”å‚æ•°çš„æ•°æ®é•¿åº¦
+	INT8U  Password[3];															//±¾»úÃÜÂë£¬Ä¬ÈÏÎª0x00, 0x00, 0x00
+	INT16U CMD;																	//CMDÃüÁî
+	INT16U CMDlen;																//CMDÃüÁî¶ÔÓ¦²ÎÊıµÄÊı¾İ³¤¶È
 };
 
 
 /* ------------------------------Private variables--------------------------------------------*/
 extern struct LOCAL_PROTOCAL	Local_Protocal;
-extern INT8U					Reset_Flag;    									//å†·å¤ä½ï¼ˆé»˜è®¤å€¼ï¼‰ã€çƒ­å¤ä½ã€å‘é€ä¸­å¤ä½
-extern INT8U					Reset_Count;          							//å†·å¯åŠ¨è®¡æ•°æ ‡è¯†
+extern INT8U					Reset_Flag;    									//Àä¸´Î»£¨Ä¬ÈÏÖµ£©¡¢ÈÈ¸´Î»¡¢·¢ËÍÖĞ¸´Î»
+extern INT8U					Reset_Count;          							//ÀäÆô¶¯¼ÆÊı±êÊ¶
 
 extern INT8U					B485BUF[Buff485_LEN];
 extern OS_EVENT  				*GyBOX;
@@ -82,7 +82,7 @@ void FM_Space_Usage(void);
 void Print_Config(INT8U cmd);
 void DrawSysLogo(void);
 
-/*FATFSåº”ç”¨*/
+/*FATFSÓ¦ÓÃ*/
 FRESULT scan_files (
     char* path        /* Start node to be scanned (***also used as work area***) */
 );
