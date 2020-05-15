@@ -61,7 +61,6 @@ void Task_LTE_Main(void *arg)
 				OSTimeDly(3*20);
 				continue;														//失败时重试（跳过下面语句）
 			}
-//			if(!ME909S_Contact()) continue;										//若尝试联络失败则重新开机		//开机失败的话，这里还可以充当10秒的延时
 			if(!ME909S_SMS_CFG()) continue; 									//短信配置			
 			if(!ME909S_CONFIG()) continue;     						 			//ME909S进行本机配置
 			if(!ME909S_REG()) continue;											//网络注册

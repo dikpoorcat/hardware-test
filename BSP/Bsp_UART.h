@@ -3,6 +3,7 @@
 #include "main.h"
 
 
+/*宏定义*/
 #define BSP_MSGID_RFDataIn	0x08    											// RF串口接收完成消息ID 
 #define BSP_MSGID_RS485DataIn 0x09    											// 485串口收到数据消息ID
 #define BSP_MSGID_UART_RXOVER 0x0a    											// GPRS串口接收完成消息ID
@@ -11,7 +12,7 @@
 #define UART_RS485_MODE		0x33	   											// 半双工模式, RS485, 扩展串口有20MS的转换延时  
 
 																				
-//-----------------------------------485电源控制引脚定义------------------------------------------
+//-----------------------------------485电源控制引脚定义--------------------------------------
 #define PWDC485_PIN      	GPIO_Pin_14
 #define PWDC485_Port     	GPIOB		            //485电源隔离电源 输出5V/200ma
 #define PWDC485EN()      	GPIO_SetBits(PWDC485_Port,PWDC485_PIN)
@@ -29,7 +30,7 @@
 
 
 
-/* --------------------------------Private typedef--------------------------------------------*/
+/*结构体定义*/
 struct Str_Msg{
 	unsigned char	DivNum;														// 设备号,  // zzs note,用于指明消息是从哪里来的。
 	unsigned char	MsgID;														// 系统的ID

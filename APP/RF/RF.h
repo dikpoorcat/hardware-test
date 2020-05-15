@@ -80,4 +80,6 @@ void Read_TT_From_FM(void);
 void History_Data_Store(void);
 void RF_Data_Sample(u16 timeout);
 void RF_Fault_Judge(INT8U Index);
+INT8U RfModuleTest(void);
+INT8U RfReceivedPrint(struct Str_Msg * pMsg);
 #endif

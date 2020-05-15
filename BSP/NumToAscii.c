@@ -12,26 +12,83 @@
 
 
 
-/**********************************************************************
-名称：INT8U Int16uHexToAscii(INT16U InData,INT8U *pOut)
-功能：INT16U的Hex格式数据InData，转换为Ascii数组存入*pOut
-入参：形参返回 ：pOut : 转换后的Ascii码串
-出参：INT8U，位数
-***********************************************************************/
-INT8U Int16uHexToAscii(INT16U InData,INT8U *pOut)
+
+/*******************************************************************
+函数名：INT8U *ScanAsicc(INT8U *InR,INT8U *Asicc,INT8U Asicclen)
+功能：  搜索指定的字符串，并指向字符串后一个
+*********************************************************************/
+INT8U *ScanAsicc(INT8U *InR,INT16U inRlen,INT8U *Asicc,INT8U Asicclen)
+{
+	INT16U i = 0;	
+	INT8U *pRet = InR;
+	
+	for(i = 0; i < inRlen-Asicclen; i++)
+	{
+		if (!(memcmp(pRet,Asicc,Asicclen)))
+		{			 	 
+			return pRet + Asicclen;
+		}
+		pRet++;
+	}
+	return 0;
+}
+
+/*******************************************************************************
+* Function Name : INT8U INT8UBCDToAscii(INT8U InData,INT8U *pOut)
+* Description   : INT8U的BCD码格式数据转换到Ascii码（这个函数只输出A~F,大写格式的Ascii字符）
+*
+* Input         : InData : 被转换的BCD格式的数据
+*
+* Return        : 形参返回 ：pOut : 转换后的Ascii码格式数据
+*                 显式返回 ：2 ：2位宽度
+*******************************************************************************/
+INT8U INT8UBCDToAscii(INT8U InData,INT8U *pOut)
+{
+	INT8U Temp = 0; 
+	INT8U Temp1 = InData; 
+	
+	Temp = (Temp1>>4&0x0f);
+	if(Temp <= 9) pOut[0] = Temp + 0x30;
+	else
+	{	
+		pOut[0] = (Temp - 10) + 'A';
+	}
+	Temp = (Temp1&0x0f);
+	if(Temp <= 9) pOut[1] = Temp + 0x30;
+	else
+	{	
+		pOut[1] = (Temp -10) + 'A';
+	}
+	return 2;
+}
+
+/*******************************************************************************
+* Function Name : INT8U INT16UHexToAscii(INT16U InData,INT8U *pOut)
+* Description   : INT16U的Hex格式数据转换到Ascii
+*
+* Input         : InData : 被转换的字符(ASCII字符)
+*
+* Return        : 形参返回 ：pOut : 转换后的Ascii码串
+*                 显式返回 ：5 ：5位宽度
+*                           4 ：4位宽度
+*                           3 ：3位宽度
+*                           2 ：2位宽度
+*                           1 ：1位宽度
+*******************************************************************************/
+INT8U INT16UHexToAscii(INT16U InData,INT8U *pOut)
 {
 	INT8U Temp[5] = {0};
 	INT8U gTemp = 0;
 	INT8U i = 0;
-
+	
 	for(i = 4; i != 0xff; i--)
 	{
-		gTemp = InData%10;     //个位
-		Temp[i] =  gTemp;
+		gTemp = InData%10;														//个位
+		Temp[i] = gTemp;
 		InData -= gTemp;
-		InData = InData/10;        //去掉个位
+		InData = InData/10;														//去掉个位
 	}
-
+	
 	if(Temp[0])  
 	{
 		pOut[4] = Temp[4] + 0x30;
@@ -41,42 +98,44 @@ INT8U Int16uHexToAscii(INT16U InData,INT8U *pOut)
 		pOut[0] = Temp[0] + 0x30;
 		return 5;
 	}
-
+	
 	if(Temp[1])
-	{         
+	{				 
 		pOut[3] = Temp[4] + 0x30;
 		pOut[2] = Temp[3] + 0x30;
 		pOut[1] = Temp[2] + 0x30;
 		pOut[0] = Temp[1] + 0x30;
 		return 4;
 	}
-
+	
 	if(Temp[2])
-	{         
+	{				 
 		pOut[2] = Temp[4] + 0x30;
 		pOut[1] = Temp[3] + 0x30;
 		pOut[0] = Temp[2] + 0x30;
 		return 3;
 	}
 	if(Temp[3])
-	{         
+	{				 
 		pOut[1] = Temp[4] + 0x30;
 		pOut[0] = Temp[3] + 0x30;
 		return 2;
 	}
-	   
+			 
 	pOut[0] = Temp[4] + 0x30;
 
 	return 1;
 }
 
-/**********************************************************************
-名称：void Int8uHexToAscii(INT8U InData,TCHAR *pOut)
-功能：INT8U的hex数字转换到Ascii码
-入参：InData : 被转化的数字；形参返回 ：pOut : 转换后的Ascii码格式数据
-出参：无
-***********************************************************************/
-void Int8uHexToAscii(INT8U InData,INT8U *pOut)
+/*******************************************************************************
+* Function Name : void INT8UHexToAscii(INT8U InData,TCHAR *pOut)
+* Description   : INT8U的hex数字转换到Ascii码
+*
+* Input         : InData : 被转化的数字
+*
+* Return        : 形参返回 ：pOut : 转换后的Ascii码格式数据
+*******************************************************************************/
+void INT8UHexToAscii(INT8U InData,TCHAR *pOut)
 {
 	pOut[0]=InData/10+0x30;
 	pOut[1]=InData%10+0x30;

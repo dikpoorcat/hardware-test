@@ -216,9 +216,5 @@ INT8U *ME909S_SMS_Extract(u8 *pIn,INT8U InLen,INT8U *OutLen);									//模块短信
 INT8U Update_Flow_DayAndMonth(INT32U In);														//更新位于铁电中的日流量和月流量统计
 void ClearFlowDataDailyAndMonthly(struct BSPRTC_TIME *pTime);									//每天零点清除日流量统计，每月初清除月流量统计	
 
-
-INT8U *ScanAsicc(INT8U *InR,INT16U inRlen,INT8U *Asicc,INT8U Asicclen);
-INT8U INT8UBCDToAscii(INT8U InData,INT8U *pOut);
-INT8U INT16UHexToAscii(INT16U InData,INT8U *pOut);
-void INT8UHexToAscii(INT8U InData,TCHAR *pOut);
+INT8U ME909S_TEST(void);
 #endif 

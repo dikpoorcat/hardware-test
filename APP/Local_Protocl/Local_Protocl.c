@@ -39,6 +39,10 @@ void Task_Local_main(void *arg)
     B485_init(38400);															//485初始化波特率38400（当LOCAL任务存在时会强制执行，否则根据B485DIS宏定义判断是否执行）
 	DrawSysLogo();																//SYS0：打印BTC	logo	SYS1：打印SYS1
 
+/*硬件测试*/
+	HardwareTest();
+/*===============================不会再往下运行了===============================*/
+	
 /*设备自检*/
 	WaitTime = Check_Reset_Mod(WaitTime);										//判断启动方式，并相应处理。有铁电操作。返回WaitTime用于跳过上位机通信
 	FM_Space_Usage();															//铁电空间占用信息
@@ -851,6 +855,261 @@ void DrawSysLogo(void)
 	sprintf(temp,"\r\n编译时间：%s %s\r\n",__DATE__,__TIME__);
 	BspUartWrite(2,(INT8U*)temp,strlen(temp));OSTimeDly(1);						
 }
+
+/*******************************************************************************
+名称：void DrawErrLogo(void)
+功能：从485打印 err logo
+入参：无
+出参：无
+返回：无
+*******************************************************************************/
+void DrawErrLogo(void)
+{
+	char	temp[500]={0};
+
+	sprintf(temp, 			   "\r\n");
+	sprintf(temp+strlen(temp), "                        *,] *                                   *,] *                         ]`* \r\n");                         
+	sprintf(temp+strlen(temp), "                        *=@@@@]  *                   ,/@`        @@@@@]`  *          *  ,]@@@@@^* \r\n");                         
+	sprintf(temp+strlen(temp), "                          =@@@@@@@@@@]]]]]]]]]]/@@@@@@@@^       *,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \r\n");                           
+	sprintf(temp+strlen(temp), "                          **\\@@@@@@@@@@@@@@@@@@@@@@@@@@/         *,@@@@@@@@@@@@@@@@@@@@@@@@@@` \r\n");                            
+	sprintf(temp+strlen(temp), "                            *=@@@@@@@@@@@@@@@@@@@@@@@[ *           */@@@@@@@@@@@@@@@@@@@@/` *\r\n");
+	BspUartWrite(2,(INT8U*)temp,strlen(temp));OSTimeDly(1);
+	sprintf(temp,			   "                             @@@@@@@@@@@@@@@@@@[[  *                @@@@@@@@@@@@@@@[[  * \r\n");                                  
+	sprintf(temp+strlen(temp), "                             @@@@@@@@@@@@@@@                        @@@@@@@@@@@@@@^\r\n");                                        
+	sprintf(temp+strlen(temp), "                             @@@@@@@@@@@@@@`*                      *=@@@@@@@@@@@@@ \r\n");                                        
+	sprintf(temp+strlen(temp), "                             *\\@@@@@@@@@@@**                        *,@@@@@@@@@@/\r\n");                                          
+	sprintf(temp+strlen(temp), "                                ,\\@@@@/`**                            *,\\@@@@@[ *\r\n"); 
+	BspUartWrite(2,(INT8U*)temp,strlen(temp));OSTimeDly(5);
+	sprintf(temp, 			   "\r\n");                                                      
+	sprintf(temp+strlen(temp), "\r\n"); 
+	sprintf(temp+strlen(temp), "\r\n");
+	sprintf(temp+strlen(temp), "\r\n");
+	sprintf(temp+strlen(temp), "\r\n");
+	sprintf(temp+strlen(temp), "\r\n");
+	sprintf(temp+strlen(temp), "\r\n");
+	sprintf(temp+strlen(temp), "                                                        * ,]]]]\r\n");                                                            
+	sprintf(temp+strlen(temp), "                                                      ,/@@@@@@@@@@`\r\n");                                                        
+	sprintf(temp+strlen(temp), "                                                  **/@@@@@@@@@@@@@@@\\\r\n");                                                      
+	sprintf(temp+strlen(temp), "                                                  /@@@@@[[[    ,[[@@@@\r\n");                                                     
+	sprintf(temp+strlen(temp), "                                                 ,[[ *               * \r\n");
+	sprintf(temp+strlen(temp), "\r\n");
+	BspUartWrite(2,(INT8U*)temp,strlen(temp));OSTimeDly(10);					//延时要够，否则会异常
+	
+//	sprintf(temp,"\r\n编译时间：%s %s\r\n",__DATE__,__TIME__);
+//	BspUartWrite(2,(INT8U*)temp,strlen(temp));OSTimeDly(1);						
+}
+
+/*******************************************************************************
+名称：void HardwareTest(void)
+功能：用于测温基站、微气象基站等的整机硬件测试。
+入参：无
+出参：无
+返回：无
+*******************************************************************************/
+void HardwareTest(void)
+{
+	INT8U		i;
+	INT16U		DS;//DS18B20
+	INT8U		Temp[10];
+	INT8U*		pointer;
+	struct HARDWARE_TEST	hardware = {0};										//存放各硬件检测结果，1表示通过，0为异常
+	
+	Led_Init();
+ 
+	while(1)
+	{
+	/*485测试，在B485_init中返回结果*/
+		hardware.b485 = 1;														//默认为1，有问题的话自然打不出来东西
+		BspUartWrite(2,SIZE_OF("\r\n485_Test    ------------------->485_OK\r\n"));OSTimeDly(1);
+
+#if 1  //通用测试（含铁电，WQ256，时钟，电源电压，单片机温度测试）
+	/*铁电测试*/
+		BspUartWrite(2,SIZE_OF("FM_Test     "));OSTimeDly(1);
+		if(FM_test()==1)
+		{
+			hardware.ferroelectric_ram = 1;
+			BspUartWrite(2,SIZE_OF("------------------->FM_OK\r\n"));
+		}
+		else 
+			BspUartWrite(2,SIZE_OF("------------------->FM_ERR\r\n"));
+		OSTimeDly(1);	
+		
+	/* WQ256测试*/
+		BspUartWrite(2,SIZE_OF("WQ256_Test  "));OSTimeDly(1);
+		if( WQ256_Test(3)==1)
+		{
+			hardware.flash_memory = 1;
+			BspUartWrite(2,SIZE_OF("------------------->WQ256_OK\r\n"));
+		}
+		else
+			BspUartWrite(2,SIZE_OF("------------------->WQ256_ERR\r\n"));		
+		OSTimeDly(1);
+
+	/*时钟测试*/	
+		BspUartWrite(2,SIZE_OF("RTC_Test    -------------------\r\n"));OSTimeDly(1);			
+		hardware.rtc = RTCTaskTest();
+		BspUartWrite(2,SIZE_OF("\r\n"));
+
+	/*电池电压、单片机温度测试*/
+		BspUartWrite(2,SIZE_OF("VCC_Test    -------------------\r\n"));OSTimeDly(1);
+		Get_Voltage_MCUtemp_Data(3);
+		BspUartWrite(2,SIZE_OF("\r\n"));
+		if(Equipment_state.BAT_Volt>BAT_UP || Equipment_state.FALA_Volt>FALA_UP)//保险点，用上限
+		{
+			hardware.power_supply = 1;
+		}
+#endif
+#if 1 //1：基站测温测试（含主板温度，射频接收模块测试）   0：基站微气象测试（含风速风向，温湿度，大气压测试）    //PS：如果插了18B20跑了AM2302的驱动（在微气象测试中）会导致系统奔溃！
+	/*DS18B20测试*/
+		BspUartWrite(2,SIZE_OF("DS18B20_Test"));								//DS18B20
+		OSTimeDly(1);
+		if(Get_DS18B20Temp(&DS))
+		{
+			BspUartWrite(2,SIZE_OF("------------------->DS18B20_OK\r\n"));
+			hardware.ds18b20 = 1;
+			Temp[0]=(DS/100+0x30);//取百位
+			Temp[1]=((DS/10%10)+0x30);//取各位
+			Temp[2]='.';
+			Temp[3]=((DS%10)+0x30);//小数
+			BspUartWrite(2,SIZE_OF("Temperature = "));
+			BspUartWrite(2,Temp,4);
+			BspUartWrite(2,SIZE_OF("℃\r\n"));
+		}
+		else
+		{
+			BspUartWrite(2,SIZE_OF("------------------->DS18B20_Err\r\n"));
+		}
+		OSTimeDly(1);
+
+	/*射频测试*/
+		RF_Power_Init();       													//RF模块电源初始化
+		PWRFEN();				 												//打开电源（常开）
+		RF_Uart_init(1200);														//初始化RF串口
+		BspUartWrite(2,SIZE_OF("\r\n"));
+		BspUartWrite(2,SIZE_OF("RF_Test     -------------------\r\n"));OSTimeDly(1);
+		if(RfModuleTest())
+		{	
+			hardware.lora = 1;
+			BspUartWrite(2,SIZE_OF("------------------------------->RF_OK\r\n"));
+		}
+		else
+		{
+			BspUartWrite(2,SIZE_OF("------------------------------->RF_Err\r\n"));
+		}
+		OSTimeDly(1);
+#else
+	/*微气象测试*/
+		PowerMETPin_Init();														//温湿度传感器初始化
+		PWMETEN();																//打开温湿度传感器电源 
+		hardware.meteorology = !Test_Meteorology_Data(1);    					//反回0表示无错误
+#endif		
+
+	/*华为模块测试*/
+		BspUartWrite(2,SIZE_OF("LTE_Test    "));
+		OSTimeDly(1);
+		if(ME909S_TEST())
+		{
+			hardware.lte = 1;
+			BspUartWrite(2,SIZE_OF("LTE_Test    ------------------->LTE_OK\r\n"));
+			OSTimeDly(1);	
+		}
+		else
+		{
+			BspUartWrite(2,SIZE_OF("LTE_Test    ------------------->LTE_ERR\r\n"));
+			OSTimeDly(1);	
+		}
+		
+#if 0		
+	/*加密测试*/
+		BspUartWrite(2,SIZE_OF("JM_Test     "));OSTimeDly(1);
+		
+		if(NAREC300_Test()==1)
+		{
+			hardware.encryption_chip = 1;
+			BspUartWrite(2,SIZE_OF("------------------->JM_Test_OK\r\n"));
+		}
+		else
+		{
+			BspUartWrite(2,SIZE_OF("------------------->JM_Test_ERR\r\n"));
+		}
+		OSTimeDly(1);
+#endif
+
+	/*上述硬件全部测试通过时，才进行看门狗测试*/
+		if(hardware.b485 & hardware.ferroelectric_ram & hardware.flash_memory & hardware.rtc & hardware.power_supply & hardware.ds18b20 & hardware.lora & hardware.lte)
+		{
+		/*看门狗测试*/
+			BspUartWrite(2,SIZE_OF("WDG_Test\r\n"));
+			BspUartWrite(2,SIZE_OF("if Systerm restart,Test is OK\r\n"));		//如果重启则测试通过，结束测试
+
+			PWR->CR |= 1<<8;													//DBP位：取消后备区域的写保护。1：允许写入RTC和后备寄存器
+			BKP->DR2 = 0xCC;													//设初值为0xCC，10秒后看门狗若还未复位，设为0，再次上电还进系统2（即本测试程序）
+			PWR->CR &= ~(1<<8);													//启用后备区域的写保护
+			WDG_En = false;														//禁止init_task_core()中外部看门狗喂狗
+			
+			while(1)
+			{
+				OSTimeDly(10*20);												//延时10秒【不可随意修改】
+				BspUartWrite(2,SIZE_OF("若不复位，则外部看门狗异常\r\n"));
+				
+				PWR->CR |= 1<<8;												//DBP位：取消后备区域的写保护。1：允许写入RTC和后备寄存器			
+				BKP->DR2 = 0;													//设为0，下次继续进本硬件测试系统（若10秒内复位，测试通过，以后都进系统1）
+				PWR->CR &= ~(1<<8);												//启用后备区域的写保护（看门狗复位会自动保护）
+			}			
+		}
+		
+	/*上述硬件测试不通过，打印检测结果*/
+		DrawErrLogo();
+		
+		pointer = (INT8U*)&hardware;
+		for(i=0;i<10;i++)														//目前共检测8个模块
+		{
+			if(*(pointer+i)==0)													//为0，表示测试未通过
+			{
+				switch(i)
+				{
+					case 0:
+						BspUartWrite(2,SIZE_OF("不合格：485功能\r\n\r\n"));
+						break;
+					case 1:
+//						BspUartWrite(2,SIZE_OF("不合格：加密功能\r\n\r\n"));
+						break;
+					case 2:
+						BspUartWrite(2,SIZE_OF("不合格：铁电存储功能\r\n\r\n"));
+						break;
+					case 3:
+						BspUartWrite(2,SIZE_OF("不合格：外部FLASH功能\r\n\r\n"));
+						break;
+					case 4:
+						BspUartWrite(2,SIZE_OF("不合格：RTC功能\r\n\r\n"));
+						break;
+					case 5:
+						BspUartWrite(2,SIZE_OF("不合格：电源电压功能\r\n\r\n"));
+						break;
+					case 6:
+						BspUartWrite(2,SIZE_OF("不合格：DS18B20功能\r\n\r\n"));
+						break;
+					case 7:
+						BspUartWrite(2,SIZE_OF("不合格：LORA射频接收功能\r\n\r\n"));
+						break;
+					case 8:
+//						BspUartWrite(2,SIZE_OF("不合格：微气象功能\r\n\r\n"));
+						break;
+					case 9:
+						BspUartWrite(2,SIZE_OF("不合格：LTE功能\r\n\r\n"));
+						break;
+					default:	
+						BspUartWrite(2,SIZE_OF("程序异常！\r\n"));
+						break;
+				}
+				OSTimeDly(1);
+			}				
+		}
+		while(1) OSTimeDly(3*20);
+	}
+}
+
+
 
 #if 1 /*============================================================FATFS应用函数============================================================*/
 /*******************************************************************************

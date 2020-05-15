@@ -22,13 +22,7 @@
 
 #include "bsp_spi.h"
 
-/*任务占用标志位（FM与WQ256使用）*/
-#define	LTE_Num		0
-#define	RF_Num		1
-#define	LOC_Num		2
-#define	WDT_Num		3
-#define	FF_Num		4															//FatFs文件系统专用
-#define Fault_Num	5															//故障信息存储专用
+
 
 
 

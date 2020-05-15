@@ -71,9 +71,16 @@
 #define	Local_STK_SIZE		256
 
 
-
 #define Wdt_Task_Prio		WDT_PRIO
 #define RWNUM 				3													//由4改为3，删除RTC任务
+
+/*任务占用标志位（FM与WQ256使用）*/
+#define	LTE_Num		0
+#define	RF_Num		1
+#define	LOC_Num		2
+#define	WDT_Num		3
+#define	FF_Num		4															//FatFs文件系统专用
+#define Fault_Num	5															//故障信息存储专用
 
 /*设备状态、状态指令定义*/
 #define WAKE_STAT			0X01
@@ -86,7 +93,7 @@
 #define WAKE_SUCCESS		0X84
 #define SLEEP_SUCCESS		0X85
 
-//-----------------------------------LED控制引脚----------------------------------------
+/*LED控制引脚*/
 #define Led_PIN				GPIO_Pin_3
 #define Led_Port			GPIOC
 
@@ -103,6 +110,8 @@ extern OS_EVENT				*Data_CMDB0X;
 extern OS_EVENT				*Fault_CMDB0X;
 extern INT8U				StopModeLock;
 extern INT8U				TaskActive;
+extern bool					WDG_En;			
+extern bool					IWDG_En;		
 
 
 

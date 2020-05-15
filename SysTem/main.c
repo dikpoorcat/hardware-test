@@ -1,12 +1,9 @@
-/***************************** (C) COPYRIGHT 2019 方诚电力 *****************************
+/***************************** (C) COPYRIGHT 2020 方诚电力 *****************************
 * File Name          : main.c
 * Author             : 研发部
-* Version            : 见历史版本信息
-* Date               : 2019/02/21
-* Description        : 符合南方电网输电线路在线监测通信规约定V3.0标准，能传感采集导线或
-金具表面温度，并将结果通过通信网络传至监测代理装置或状态监测主站。具有自动采集温度功能。
-具备温度受控采集功能，能响应远程指令，按设定采集方式、自动采集时间、采集时间间隔启动采集。
-能循环储存至少30天的温度状态数据。
+* Version            : 见修订说明.txt
+* Date               : 2020/05/15
+* Description        : 用于测温基站、微气象基站等的整机硬件测试。
 ************************************  历史版本信息  ************************************/
 #include "main.h"
 
@@ -22,6 +19,8 @@ OS_STK				RF_STK[RF_STK_SIZE] = {0};
 OS_STK				Local_STK[Local_STK_SIZE] = {0};
 OS_STK				LTE_STK[LTE_STK_SIZE] = {0};
 OS_STK				WDT_STK[WDT_STK_SIZE] = {0};
+bool WDG_En = true;																//允许外部看门狗喂狗
+bool IWDG_En = true;															//允许内部看门狗喂狗
 
 /*静态全局变量*/
 static INT32U		OldTime=0;													//记录每次状态开始的时间（上一次切换状态的时间点）
@@ -50,7 +49,6 @@ void assert_failed(u8* file, u32 line)
 *******************************************************************************/
 int main(void)
 {
-	struct BSPRTC_TIME 	Reset_Time = {0x00,0x00,0x00,0x02,0x01,0x01,0x19}; 		//2019.01.01 周二 0时0分0秒
 	OSInterrputSum = 0;	
 	
 /*系统启动前准备工作*/
@@ -62,12 +60,6 @@ int main(void)
 	BSP_WDGInit();																//外部硬件看门狗初始化初始化
 	BSP_WDGFeedDog(); 															//外部硬件看门狗 喂狗操作，1.6S狗饿	
 	BSP_RX8025Init();															//RTC芯片初始化
-	if(RtcGetChinaStdTimeStruct(&gRtcTime)==0)									//读取RTC时间失败时
-	{
-		RtcSetChinaStdTimeStruct(&Reset_Time);									//设置初始值
-		Time_Proofread = UNDONE;												//标记为校时未完成
-	}
-	SysJudgeAndMarkBkp();														//判断当前运行在SYS0还是SYS1，并标记BKP->DR3
 	
 /*系统初始化*/
 	OSInit();																	//初始化OS
@@ -81,7 +73,7 @@ int main(void)
 	Local_STK_SIZE,
 	(void *)0,
 	OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);	
-	
+/*	
 	// LTE
 	OSTaskCreateExt(Task_LTE_Main, (void *)0, (OS_STK *)&LTE_STK[LTE_STK_SIZE - 1],
 	LTE_Task_Prio,
@@ -99,7 +91,7 @@ int main(void)
 	RF_STK_SIZE,
 	(void *)0,
 	OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);
-
+*/
 	// 看门狗
 	OSTaskCreateExt(Task_Wdt_main, (void *)0, (OS_STK *)&WDT_STK[WDT_STK_SIZE - 1],
 	Wdt_Task_Prio,
@@ -350,8 +342,9 @@ void Reset_On_Time(struct BSPRTC_TIME *pTime)
 *******************************************************************************/
 void Feed_Dog(void )
 {
-	IWDG_Reset();
-	BSP_WDGFeedDog();
+	if(WDG_En) 																	//正式程序中可注释此句
+		BSP_WDGFeedDog();	
+	IWDG_ReloadCounter();														//内部独立看门狗在BOOT中开启
 }
 
 /*******************************************************************************

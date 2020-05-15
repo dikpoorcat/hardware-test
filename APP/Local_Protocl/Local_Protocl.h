@@ -47,6 +47,19 @@ struct LOCAL_PROTOCAL
 	INT16U CMDlen;																//CMD命令对应参数的数据长度
 };
 
+struct HARDWARE_TEST															//存放各硬件检测结果
+{
+	INT8U					b485;												//485
+	INT8U					encryption_chip;									//加密芯片
+	INT8U					ferroelectric_ram;									//铁电存储芯片
+	INT8U					flash_memory;										//外部FLASH存储芯片
+	INT8U					rtc;												//RTC
+	INT8U					power_supply;  										//电源
+	INT8U					ds18b20;   											//DS18B20
+	INT8U					lora;   											//LORA模块
+	INT8U					meteorology;										//微气象
+	INT8U					lte;												//LTE模块
+};
 
 /* ------------------------------Private variables--------------------------------------------*/
 extern struct LOCAL_PROTOCAL	Local_Protocal;
@@ -81,6 +94,8 @@ INT8U Read_TT_Num_Or_ID(INT16U ID,INT8U *pOutBuff);
 void FM_Space_Usage(void);
 void Print_Config(INT8U cmd);
 void DrawSysLogo(void);
+void DrawErrLogo(void);
+void HardwareTest(void);
 
 /*FATFS应用*/
 FRESULT scan_files (

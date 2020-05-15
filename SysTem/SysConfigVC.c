@@ -471,5 +471,5 @@ void IWDG_Init(void)
 *******************************************************************************/
 void IWDG_Reset(void)
 {
-		IWDG_ReloadCounter();
+	IWDG_ReloadCounter();
 }

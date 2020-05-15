@@ -499,3 +499,74 @@ void Read_TT_From_FM(void)
 		else TT_Info.HaveTT[i]=0x55;
 	}	
 }	
+
+/*******************************************************************************
+* Function Name : INT8U RfModuleTest(void)
+* Description   : RF模块测试，并打印结果。
+* Input         : 
+* Return        : 1：成功	0：失败
+*******************************************************************************/
+INT8U RfModuleTest(void)
+{
+	char				chars[50];
+	INT8U				RFCmd[] = RF_READ_CMD;
+	INT8U				RFCmdLen = sizeof(RFCmd);
+	INT8U				Err = 0, count = 0, i = 0;
+	struct Str_Msg		*pRfMsg = (struct Str_Msg *)0; 
+	
+	if(RFSGIN == NULL) RFSGIN = OSMboxCreate(0);
+	for(i=0;i<5;i++)
+	{
+		sprintf(chars, "第 %d 轮采集：\r\n", i+1);	
+		BspUartWrite(2,(INT8U*)chars,strlen(chars));								//打印
+		OSTimeDly(10*20);															//每轮接收10秒
+		
+		memset(RF_Uart_RxBuff,0x00,RF_BuffLen);										//清空串口接收缓存
+		BspUartWrite(1,RFCmd,RFCmdLen);    											//发送获取数据指令
+		pRfMsg = (struct Str_Msg *)OSMboxPend(RFSGIN,45,&Err);   						//等待串口消息 timeout个时间片（射频模块串口最多给256字节，1200波特率时约2.13秒）
+
+		if(Err==OS_NO_ERR && pRfMsg)
+		{
+			if(pRfMsg->DataLen <= 256)												//且数据不超过长度256字节（由射频模块决定）
+			{
+				if(RF_Data_Judge(pRfMsg))											//且协议校验通过
+				{						
+					if(pRfMsg->pData[2]==0x01) 										//若CMD=0X01，表示获取接收板的测温数据
+					{
+						count += RfReceivedPrint(pRfMsg);							//累计统计5次接收到的探头数据个数
+					}
+				}
+			}					
+		}
+		BSP_UART_RxClear(pRfMsg->DivNum);											//清消息缓存		
+	}
+	sprintf(chars, "汇总：共采集到 %d 个数据\r\n", count);	
+	BspUartWrite(2,(INT8U*)chars,strlen(chars));								//打印
+	return count;
+}
+
+/*******************************************************************************
+* Function Name : INT8U RfReceivedPrint(struct Str_Msg * pMsg)
+* Description   : 射频头上传来的数据的解析，统计接收到的探头数据个数。
+* Input         : pMsg:信息结构体指针
+*
+* Return        : 接收到的探头数据个数
+*******************************************************************************/
+INT8U RfReceivedPrint(struct Str_Msg * pMsg)
+{
+	INT8U				i = 0;													//AA 2B 01 DataLen CNT ……
+	INT8U				Cnt = pMsg->pData[4];									//数据域的第一个字节，表示有效测温点个数
+	INT8U				*Ptr = &pMsg->pData[5];									//指向数据域中，测温点数据的指针
+	char				chars[50];
+	INT16U				id = 0, tem = 0;
+	
+	for(i=0; i<Cnt; i++)
+	{
+		id = (*Ptr<<8) + *(Ptr+1);
+		tem = (*(Ptr+2)<<8) + *(Ptr+3);
+		sprintf(chars, "%d	ID：%05d	温度：%d.%d\r\n", i+1, id, tem/10, tem%10);	
+		BspUartWrite(2,(INT8U*)chars,strlen(chars));OSTimeDly(1);				//打印
+		Ptr += 4;  
+	}
+	return Cnt;
+}

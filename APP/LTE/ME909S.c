@@ -1219,130 +1219,53 @@ void ClearFlowDataDailyAndMonthly(struct BSPRTC_TIME *pTime)
 	BSP_WriteDataToFm(Flow_Data_Addr,(u8*)&Local_FLow_Data,Flow_Data_Len);		//清零后写入铁电
 }
 
-/*******************************************************************
-函数名：INT8U *ScanAsicc(INT8U *InR,INT8U *Asicc,INT8U Asicclen)
-功能：  搜索指定的字符串，并指向字符串后一个
-*********************************************************************/
-INT8U *ScanAsicc(INT8U *InR,INT16U inRlen,INT8U *Asicc,INT8U Asicclen)
+
+/*******************************************************************************
+* Function Name :INT8U ME909S_TEST(void)                  
+* Description   :模块测试
+* Input         :无           
+* Return        :成功返回1，失败返回0
+*******************************************************************************/
+INT8U ME909S_TEST(void)
 {
-	INT16U i = 0;	
-	INT8U *pRet = InR;
-	
-	for(i = 0; i < inRlen-Asicclen; i++)
+	INT8U	retry = 0;
+	INT8U	SOCKID = 1;   														// 直接指定Socket号为1
+
+/*节能工作模式判断*/
+	while(Equipment_state.BAT_Volt<BAT_UNDER && Equipment_state.FALA_Volt<FALA_UNDER)	//BAT<9.2V，FALA<5V
 	{
-		if (!(memcmp(pRet,Asicc,Asicclen)))
-		{			 	 
-			return pRet + Asicclen;//开机成功
+		BspUartWrite(2,SIZE_OF("节能模式中……\r\n"));
+		OSTimeDly(3*60*20);														//3min轮询
+		Get_Voltage_MCUtemp_Data( 3 );											//获取电池电压数据和单片机温度
+	}
+	
+/*LTE模块开机*/
+	BspUartWrite(2,SIZE_OF("----------------------------------LTE模块开机配置中\r\n"));OSTimeDly(1);
+	ME909SInit(ME909SBaudrate);
+	for(retry=0;retry<3;retry++)												//最多重试3次
+	{
+	/*LTE模块操作*/
+		if(!ME909S_ON())														//模块开机，并配置串口
+		{
+			ME909S_PW_OFF();													//关电源
+			OSTimeDly(3*20);
+			continue;															//失败时重试（跳过下面语句）
 		}
-		pRet++;
-	}
-	return 0;
-}
-
-/*******************************************************************************
-* Function Name : INT8U INT8UBCDToAscii(INT8U InData,INT8U *pOut)
-* Description   : INT8U的BCD码格式数据转换到Ascii码（这个函数只输出A~F,大写格式的Ascii字符）
-*
-* Input         : InData : 被转换的BCD格式的数据
-*
-* Return        : 形参返回 ：pOut : 转换后的Ascii码格式数据
-*                 显式返回 ：2 ：2位宽度
-*******************************************************************************/
-INT8U INT8UBCDToAscii(INT8U InData,INT8U *pOut)
-{
-	INT8U Temp = 0; 
-	INT8U Temp1 = InData; 
-	
-	Temp = (Temp1>>4&0x0f);
-	if(Temp <= 9) pOut[0] = Temp + 0x30;
-	else
-	{	
-		pOut[0] = (Temp - 10) + 'A';
-	}
-	Temp = (Temp1&0x0f);
-	if(Temp <= 9) pOut[1] = Temp + 0x30;
-	else
-	{	
-		pOut[1] = (Temp -10) + 'A';
-	}
-	return 2;
-}
-
-/*******************************************************************************
-* Function Name : INT8U INT16UHexToAscii(INT16U InData,INT8U *pOut)
-* Description   : INT16U的Hex格式数据转换到Ascii
-*
-* Input         : InData : 被转换的字符(ASCII字符)
-*
-* Return        : 形参返回 ：pOut : 转换后的Ascii码串
-*                 显式返回 ：5 ：5位宽度
-*                           4 ：4位宽度
-*                           3 ：3位宽度
-*                           2 ：2位宽度
-*                           1 ：1位宽度
-*******************************************************************************/
-INT8U INT16UHexToAscii(INT16U InData,INT8U *pOut)
-{
-	INT8U Temp[5] = {0};
-	INT8U gTemp = 0;
-	INT8U i = 0;
-	
-	for(i = 4; i != 0xff; i--)
-	{
-		gTemp = InData%10;     //个位
-		Temp[i] =	gTemp;
-		InData -= gTemp;
-		InData = InData/10;        //去掉个位
+		if(!ME909S_SMS_CFG()) continue; 										//短信配置			
+		if(!ME909S_CONFIG()) continue;     						 				//ME909S进行本机配置
+		if(!ME909S_REG()) continue;												//网络注册
+		if(!ME909S_Link(SOCKID)) continue;										//连接并打开透传
+		
+	/*尝试开机联络*/
+		BspUartWrite(2,SIZE_OF("----------------------------------已进入在线状态\r\n"));OSTimeDly(1);	
+		if(!Startup_Comm(RETRY,TIMEOUT)) return 0;								//开机联络通信，失败时返回0
+		BspUartWrite(2,SIZE_OF("\r\n----------------------------------已退出在线状态\r\n"));OSTimeDly(1);
+		break;
 	}
 	
-	if(Temp[0])  
-	{
-		pOut[4] = Temp[4] + 0x30;
-		pOut[3] = Temp[3] + 0x30;
-		pOut[2] = Temp[2] + 0x30;
-		pOut[1] = Temp[1] + 0x30;
-		pOut[0] = Temp[0] + 0x30;
-		return 5;
-	}
-	
-	if(Temp[1])
-	{				 
-		pOut[3] = Temp[4] + 0x30;
-		pOut[2] = Temp[3] + 0x30;
-		pOut[1] = Temp[2] + 0x30;
-		pOut[0] = Temp[1] + 0x30;
-		return 4;
-	}
-	
-	if(Temp[2])
-	{				 
-		pOut[2] = Temp[4] + 0x30;
-		pOut[1] = Temp[3] + 0x30;
-		pOut[0] = Temp[2] + 0x30;
-		return 3;
-	}
-	if(Temp[3])
-	{				 
-		pOut[1] = Temp[4] + 0x30;
-		pOut[0] = Temp[3] + 0x30;
-		return 2;
-	}
-			 
-	pOut[0] = Temp[4] + 0x30;
-
+/*LTE模块关机*/	
+	BspUartWrite(2,SIZE_OF("----------------------------------LTE模块关机\r\n"));OSTimeDly(1);
+	ME909S_OFF();			  													//关机
+	ME909S_LowPower();															//低功耗
 	return 1;
-}
-
-/*******************************************************************************
-* Function Name : void INT8UHexToAscii(INT8U InData,TCHAR *pOut)
-* Description   : INT8U的hex数字转换到Ascii码
-*
-* Input         : InData : 被转化的数字
-*
-* Return        : 形参返回 ：pOut : 转换后的Ascii码格式数据
-*******************************************************************************/
-void INT8UHexToAscii(INT8U InData,TCHAR *pOut)
-{
-	pOut[0]=InData/10+0x30;
-	pOut[1]=InData%10+0x30;
 }

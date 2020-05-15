@@ -192,67 +192,42 @@ INT8U BSP_ReadDataFromFm(INT16U FlashAddr,INT8U *pDataAddr,INT32U Len)
 	return SPI_statu;
  }
 
-#if 0	//INT8U FM_test(void)
-/************************************************************************************************************************
-* Function Name : INT8U FM_test(void)
-* Description   : 测试铁电存储器。1、执行一下相关驱动I/O口的初始化；
-*                                2、读取铁电存储器的状态；
-*                                3、准备好一个测试数组，填充测试数据后，然后将其写入到铁电中去；
-*                                4、再从铁电中读出刚才写入的测试数据。
-*                                5、对比检查读出的数据是否与写入的相同，若相同，判为测试成功，返回1，若有不同，判为测试失，败返回0
-* Input         : None        
-* Return        : 0: 测试失败
-*                 1：测试成功                   
-*************************************************************************************************************************/
-extern INT8U FMTESTBUFF[];  // zzs add this
-INT16U ValueCnt = 0; 
+/*******************************************************************************
+* Function Name  : INT8U FM_test(void)
+* Description    : 铁电测试，若测试成功，返回1，若测试失败返回0
+* Input          : 
+* Output         : 
+*******************************************************************************/
 INT8U FM_test(void)
 {
-	//INT8U FMTESTBUFF[256];   // zzs note重复定义的内部数组，因为已经有一个完全一样的外部全局数组了
-	INT16U i = 0;
-	INT8U j = 0;
+	INT8U				test[255] = {0}, original[255] = {0};
+	INT16U				i = 0, state = 1;
 	
+	BSP_InitFm(LOC_Num);
 	
-	BSP_InitFm(5);
- 	FmReadState();
-
-	#if 0
- 	for(i = 0;i < 256; i++) FMTESTBUFF[i]=i;
-	BSP_WriteDataToFm(0x1800,FMTESTBUFF,256);
-
-	for(i = 0;i < 256; i++) FMTESTBUFF[i]=0;
-	BSP_ReadDataFromFm(0x1800,FMTESTBUFF,256);
-
-	for(i = 0;i < 256; i++)
+	/*读取原有数据*/
+	BSP_ReadDataFromFm(0x1800, original, 256);									//读取铁电原有信息	
+	
+	/*写入测试数据*/
+ 	for(i=0;i<256;i++) test[i]=i;
+	BSP_WriteDataToFm(0x1800, test, 256);
+	
+	/*读回并比较*/
+	memset(test, 0, 256);														//清0
+	BSP_ReadDataFromFm(0x1800, test, 256);										//读回
+	for(i=0;i<256;i++)
 	{
-		if (FMTESTBUFF[i]!=i)
-			return 0;//FM测试失败
-	}
-	#else
-	for(j=0;j<32;j++)
-	{
-		for(i = 0;i < 256; i++) FMTESTBUFF[i] = 0x00; // 0xFF;
-		
-		BSP_WriteDataToFm(j*256,FMTESTBUFF,256);
-		#if 1
-		BSP_ReadDataFromFm(j*256,FMTESTBUFF,256);
-		for(i = 0;i < 256; i++)
+		if (test[i]!=i)
 		{
-			if (FMTESTBUFF[i]!=0x00) // 0xFF 
-			{
-				ValueCnt++;
-			}
-		}
-		#else
-		BSP_WriteDataToFm(j*256,FMTESTBUFF,256);
-		#endif
+			state = 0;															//FM测试失败
+			break;
+		}	
 	}
 	
-	#endif
-
-	return 1;//FM 测试成功
+	/*写回原有数据*/
+	BSP_WriteDataToFm(0x1800, original, 256);
+	return state;
 }
-#endif
 
 /******************************************************************************* 
 * Function Name  : void FM_LowPower(void)

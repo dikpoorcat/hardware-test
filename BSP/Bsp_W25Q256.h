@@ -123,6 +123,7 @@ void W25QXX_WAKEUP(void);				//»½ÐÑ
 void W25Q256_LowPower(INT8U Task_Num);
 INT8U W25QXX_Read_By_Sector(INT8U *OutBuff,INT32U Sector_Index,INT8U Count)	;
 INT8U W25QXX_Write_By_Sector(INT8U *InBuff,INT32U Sector_Index,INT8U Count) ;
+INT8U WQ256_Test(INT8U retry);
 #endif
 
 

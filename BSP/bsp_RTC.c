@@ -680,5 +680,28 @@ void RTC_LowPower(void)
 	GPIO_Init(SIIC_GPIO, &GPIO_InitStructure);									//PA口
 }
 
-/************************(C)COPYRIGHT 2018 方诚电力*****END OF FILE****************************/
+/******************************************************************************* 
+* Function Name  : INT8U RTCTaskTest(void)
+* Description    : RTC硬件测试函数
+* Input          : None 
+* Output         : None 
+* Return         : 成功返回1，失败返回0
+*******************************************************************************/
+INT8U RTCTaskTest(void)
+{
+	INT8U				times = 5;
+	TCHAR				temp[100] = {0};
+	
+	BSP_RX8025Init();
+	if(!RtcSetTimeSecond(1602331994)) return 0;									//2020.10.10 20:13:14
+	while(times--)
+	{
+		if(!RtcGetChinaStdTimeStruct(&gRtcTime)) return 0;						//从时钟芯片取得RTC时间
+		sprintf(temp+strlen(temp), "本地时间：20%X年%X月%X日 %02X:%02X:%02X\r\n",gRtcTime.Year,gRtcTime.Month,gRtcTime.Day,gRtcTime.Hour,gRtcTime.Minute,gRtcTime.Second);
+		BspUartWrite(2,(INT8U*)temp,strlen(temp));
+		OSTimeDly(20);
+	}
+	return 1;
+}
 
+/************************(C)COPYRIGHT 2018 方诚电力*****END OF FILE****************************/

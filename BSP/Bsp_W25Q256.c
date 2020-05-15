@@ -14,19 +14,14 @@ unsigned char W25QXX_BUFFER[4096] = {0};
 * Description   : SPI1 I/O口模拟，相关I/O口的配置。
 * Input         : None
 * Return        : None
-* History :                               
-* First Issued  : 赵志舜于2018年2月7日创建本函数             E-Mail:11207656@qq.com
-* Version       : V1.0
-* Modify By     : 
 *************************************************************************************************************************/
 void SPI1_Init(void)
 { 
 	GPIO_InitTypeDef GPIO_InitStructure = {0};
 
 	/* Enable SPI1 and GPIOA clocks */
-	//  RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB|RCC_APB2Periph_GPIOC, ENABLE);
-	//	W25CS_H();
+	
 	GPIO_InitStructure.GPIO_Pin = W25CS_PIN;  // PB0
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
@@ -39,40 +34,8 @@ void SPI1_Init(void)
 
 	W25CS_H();
 	W25RST_H();
-
 	SPI_1_Init();
-	
-	//GPIO_InitStructure.GPIO_Pin = W25CS_PIN;//PB0
-	//GPIO_Init(W25CS_Port, &GPIO_InitStructure);
-
-	//GPIO_InitStructure.GPIO_Pin = W25CLK_PIN;
-	//GPIO_Init(W25CLK_Port, &GPIO_InitStructure);
-
-	//GPIO_InitStructure.GPIO_Pin = W25MOSI_PIN;
-	//GPIO_Init(W25MOSI_Port, &GPIO_InitStructure);
-
-	//GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-	//GPIO_InitStructure.GPIO_Pin = W25MISO_PIN;
-	//GPIO_Init(W25MISO_Port, &GPIO_InitStructure);
-		
-
 }
-
-////SPI1读写一字节数据
-//unsigned char SPI1_ReadWrite(unsigned char writedat)
-//{
-//   /* Loop while DR register in not emplty */
-//   while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET);
-
-//   /* Send byte through the SPI1 peripheral */
-//   SPI_I2S_SendData(SPI1, writedat);
-
-//   /* Wait to receive a byte */
-//   while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) == RESET);
-
-//   /* Return the byte read from the SPI bus */
-//   return SPI_I2S_ReceiveData(SPI1);
-//}
 
 /************************************************************************************************************************
 * Function Name : unsigned char  SPI1_ReadWrite(unsigned char val)                            
@@ -81,11 +44,6 @@ void SPI1_Init(void)
 *                       
 * Input         : val  ：要写入的值
 * Return        : data ：读出的值
-*                
-* History :                               
-* First Issued  : 赵志舜于2018年2月7日创建本函数             E-Mail:11207656@qq.com
-* Version       : V1.0
-* Modify By     : 
 *************************************************************************************************************************/
 unsigned char  SPI1_ReadWrite(unsigned char val)
 {
@@ -124,10 +82,6 @@ unsigned char  SPI1_ReadWrite(unsigned char val)
 * Input         : 锁
 * Return        : 1 ：成功
 *                 0 ：失败
-* History :                               
-* First Issued  : 赵志舜于2018年2月7日创建本函数             E-Mail:11207656@qq.com
-* Version       : V1.0
-* Modify By     : /
 *************************************************************************************************************************/
 INT8U W25QXX_Init(INT8U Task_Num)
 { 
@@ -148,11 +102,6 @@ INT8U W25QXX_Init(INT8U Task_Num)
 	else return 0;                       // 失败
 }  
 
-
-
-
-
-
 /************************************************************************************************************************
 * Function Name : unsigned int W25QXX_ReadSR(void)                                     
 * Description   : 读取W25QXX的状态寄存器（默认 : 0x00 zzs???）
@@ -166,10 +115,6 @@ INT8U W25QXX_Init(INT8U Task_Num)
 *                       
 * Input         : None
 * Return        : None
-* History :                               
-* First Issued  : 赵志舜于2018年2月7日创建本函数             E-Mail:11207656@qq.com
-* Version       : V1.0
-* Modify By     : 
 *************************************************************************************************************************/
 #if 0
 unsigned char W25QXX_ReadSR(void)   
@@ -664,137 +609,6 @@ void W25QXX_WAKEUP(void)
 	delay_2us_4M(1);                         // 等待TRES1	入参为1的单次调用约5.4us，而非2us；
 }   
 
-/************************************************************************************************************************
-* Function Name : INT8U WQ256_Test(void)                                                  
-* Description   : 测试W25Q256。
-*                 芯片容量为256M Bits,32M Bytes,有3字节地址模式，和4字节地址模式，zzs note:注意用量，是半片用(3字节地址，
-*                 16M Bytes寻址范围)，还是全片用（4字节地址模式，32M Bytes）。
-*                 
-*                 注：W25Q256，SPI-Flash, 256Bytes以页，最小擦除单位：16页（4kBytes），也可按128页为一块（32kBytes）进行擦除，
-*                     也可按256页为一块（64kBytes）进行擦除，也可按整片(entire chip erase)
-* Input         : None
-* Return        :  0 ：测试失败
-*                  1 ：测试成功
-*
-* History :                               
-* First Issued  : 赵志舜于2018年2月7日创建本函数             E-Mail:11207656@qq.com
-* Version       : V1.0
-* Modify By     : 
-*************************************************************************************************************************/
-#define zzs_Test_W25Q 0
-INT8U FMTESTBUFF[256] = {0};
-INT8U WQ256_Test(void)
-{
-	INT16U i = 0;
-	INT8U ERR = 0;
-	
-	ERR = W25QXX_Init(5);
-	if(ERR == 0) return 0;
-	
-	#if zzs_Test_W25Q
-	W25QXX_Erase_Sector(0);          // 擦除第0块
-	W25QXX_Read(0,FMTESTBUFF,256);   // 读出看初始擦的情况
-	for(i = 0; i < 256; i++)
-	{
-		FMTESTBUFF[i]=i;    // 填充缓冲
-	}
-	
-	W25QXX_Write_NoCheck(0,FMTESTBUFF,256);   // 无校验，不带擦除，写一次
-	for(i = 0; i < 256; i++) FMTESTBUFF[i]=0; // 清除缓冲
-	W25QXX_Read(0,FMTESTBUFF,256);            // 读出看第一次写的情况      // 这次写，是能够完全正确的
-	
-	for(i = 0; i < 256; i++)
-	{
-		FMTESTBUFF[i] =  255 - i;             // 将缓冲内容前后颠倒过来,  再用无校验，无擦除函数写，也就是写上次每个字节中留下来为1的位，下面读出来只要是全0，就OK了  
-		                                      // 也可随便用个其他的测试值，例如：0xAA来填充全部缓冲;但是后面读出来的值就是一些乱乱的值。
-	}
-	W25QXX_Write_NoCheck(0,FMTESTBUFF,256);       // 无校验，不带擦除，写第二次
-	for(i = 0; i < 256; i++) FMTESTBUFF[i] =0xFF; // 涂抹缓冲
-	W25QXX_Read(0,FMTESTBUFF,256);                // 读出看第二次写的情况   // 读出全为0就对了。
-	
-	for(i = 0; i < 256; i++)
-	{
-		FMTESTBUFF[i]=i;    // 填充缓冲
-	}
-	W25QXX_Write(0,FMTESTBUFF,256);           // 带擦除写第一次
-	for(i = 0; i < 256; i++) FMTESTBUFF[i]=0; // 清除缓冲
-	W25QXX_Read(0,FMTESTBUFF,256);            // 读出看带擦除写的情况
-	
-	W25QXX_Erase_Sector(0);         // 擦除第0块
-	W25QXX_Read(0,FMTESTBUFF,256);  // 读出看第0块的的擦除情况
-	
-	W25QXX_Erase_Chip();                  // 整片擦除
-	
-		#if 0
-		// W25QXX_Erase_Sector(Scetor_No);    // 块擦除
-		W25QXX_Erase_Chip();                  // 整片擦除
-			
-		for(j = 0; j < 65536; j++)  // 前半片
-		{
-			W25QXX_Read(j*256,FMTESTBUFF,256);
-			for(i = 0;i < 256;i++)
-			{
-				FMTESTBUFF[i] = i;
-			}
-			W25QXX_Write_NoCheck(j*W25Q_Page_Size,FMTESTBUFF,256);   // Write
-			
-			for(i = 0;i < 256; i++)
-			{
-				FMTESTBUFF[i] = 0;
-			}
-			
-			W25QXX_Read(j*W25Q_Page_Size,FMTESTBUFF,256);            // Read to check
-		}
-		#else
-
-		// W25QXX_Erase_Sector(Scetor_No);    // 块擦除
-		W25QXX_Erase_Chip();                  // 整片擦除
-
-		for(j = 65536; j < 131072; j++)       // 后半片
-		{
-			W25QXX_Read(j*256,FMTESTBUFF,256);         // zzs note,
-			for(i = 0;i < 256; i++)
-			{
-				FMTESTBUFF[i] = i;
-			}
-			
-			W25QXX_Write_NoCheck(j*W25Q_Page_Size,FMTESTBUFF,256);   // Write
-			
-			for(i = 0;i < 256; i++)
-			{
-				FMTESTBUFF[i] = 0;
-			}
-			
-			W25QXX_Read(j*W25Q_Page_Size,FMTESTBUFF,256);            // Read to check
-		}
-		#endif
-	
-	#endif
-	
-	W25QXX_Erase_Sector(0);          // 擦除第0块
-	W25QXX_Read(0,FMTESTBUFF,256);   // 从非页地址上读，是没有太大问题的，
-	for(i = 0; i < 256; i++)
-	{
-		FMTESTBUFF[i] = i;
-	}
-	
-	W25QXX_Write_NoCheck(0,FMTESTBUFF,256);     // 但是从非页地址上写，那就得注意啦，稍不注意就出错！！！！！！！！！！！
-	
-	for(i = 0; i < 256; i++) FMTESTBUFF[i]=0;
-	
-	W25QXX_Read(0,FMTESTBUFF,256);  
-	for(i = 0; i < 256; i++)
-	{
-		if(FMTESTBUFF[i] != i) return 0;           // W25Qxx测试失败
-	}
-    
-	W25QXX_Erase_Chip();    // 测试完成后擦除芯片
-	
-	return 1;  //W25Qxx 测试成功
-}
-
-
-
 /******************************************************************************* 
 * Function Name  : void W25Q256_LowPower(void)
 * Description    : W25Q256进入低功耗，并对相应IO口作低功耗处理
@@ -841,6 +655,58 @@ void W25Q256_LowPower(INT8U Task_Num)
 	GPIO_Init(W25CLK_Port, &GPIO_InitStructure);							//
 }
 
+/************************************************************************************************************************
+* Function Name : INT8U WQ256_Test(INT8U retry)                                                
+* Description   : 测试W25Q256。
+*                 芯片容量为256M Bits,32M Bytes,有3字节地址模式，和4字节地址模式，zzs note:注意用量，是半片用(3字节地址，
+*                 16M Bytes寻址范围)，还是全片用（4字节地址模式，32M Bytes）。
+*                 
+*                 注：W25Q256，SPI-Flash, 256Bytes一页，最小擦除单位：16页（4kBytes），也可按128页为一块（32kBytes）进行擦除，
+*                     也可按256页为一块（64kBytes）进行擦除，也可按整片(entire chip erase)
+* Input         : None
+* Return        :  0 ：测试未通过
+*                  1 ：测试通过
+*************************************************************************************************************************/
+INT8U WQ256_Test(INT8U retry)
+{
+	INT16U				i = 0;
+	INT8U				state = 1;
+	INT8U				test[255] = {0}, original[255] = {0};
+	
+	/*芯片初始化*/
+	while(retry--)
+	{
+		if(W25QXX_Init(LOC_Num)) break;											//初始化通过则跳出
+		OSTimeDly(20);
+	}
+	
+	/*读取原有数据*/
+	W25QXX_Read(0,original,256);
+	
+	/*写入测试数据*/
+	W25QXX_Erase_Sector(0);														//擦除第0块												
+	for(i = 0; i < 256; i++)
+	{
+		test[i] = i;
+	}
+	W25QXX_Write_NoCheck(0,test,256);		
+	
+	/*读回并比较*/
+	memset(test, 0, 256);														//清0
+	W25QXX_Read(0,test,256);													//读回
+	for(i=0;i<256;i++)
+	{
+		if (test[i]!=i)															//内容出错
+		{
+			state = 0;
+			break;
+		}
+	}
+	
+	/*写回原有数据*/
+	W25QXX_Write_NoCheck(0,original,256);
+	return state;																//测试未通过
+}
 
 
 
@@ -895,12 +761,3 @@ INT8U W25QXX_Write_By_Sector(INT8U *InBuff,INT32U Sector_Index,INT8U Count)
 	}			
 	return 1;	
 } 
-
-
-
-
-
-
-
-
-
