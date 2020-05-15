@@ -697,7 +697,7 @@ INT8U RTCTaskTest(void)
 	while(times--)
 	{
 		if(!RtcGetChinaStdTimeStruct(&gRtcTime)) return 0;						//从时钟芯片取得RTC时间
-		sprintf(temp+strlen(temp), "本地时间：20%X年%X月%X日 %02X:%02X:%02X\r\n",gRtcTime.Year,gRtcTime.Month,gRtcTime.Day,gRtcTime.Hour,gRtcTime.Minute,gRtcTime.Second);
+		sprintf(temp, "本地时间：20%X年%X月%X日 %02X:%02X:%02X\r\n",gRtcTime.Year,gRtcTime.Month,gRtcTime.Day,gRtcTime.Hour,gRtcTime.Minute,gRtcTime.Second);
 		BspUartWrite(2,(INT8U*)temp,strlen(temp));
 		OSTimeDly(20);
 	}

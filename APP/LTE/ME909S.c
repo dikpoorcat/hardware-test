@@ -1240,7 +1240,7 @@ INT8U ME909S_TEST(void)
 	}
 	
 /*LTE模块开机*/
-	BspUartWrite(2,SIZE_OF("----------------------------------LTE模块开机配置中\r\n"));OSTimeDly(1);
+	BspUartWrite(2,SIZE_OF("\r\n----------------------------------LTE模块开机配置中\r\n"));OSTimeDly(1);
 	ME909SInit(ME909SBaudrate);
 	for(retry=0;retry<3;retry++)												//最多重试3次
 	{
@@ -1262,6 +1262,7 @@ INT8U ME909S_TEST(void)
 		BspUartWrite(2,SIZE_OF("\r\n----------------------------------已退出在线状态\r\n"));OSTimeDly(1);
 		break;
 	}
+	if(retry>=3) return 0;														//重试次数用尽未成功
 	
 /*LTE模块关机*/	
 	BspUartWrite(2,SIZE_OF("----------------------------------LTE模块关机\r\n"));OSTimeDly(1);

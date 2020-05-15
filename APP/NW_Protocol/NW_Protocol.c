@@ -71,7 +71,7 @@ struct NW_FAULT_INFO Fault_Info[FI_NUM]={0};									//¹ÊÕÏÐÅÏ¢½á¹¹ÌåÊý¾Ý£¬×î¶à´
 struct NW_FAULT_MANAGE  Fault_Manage={0};										//¹ÊÕÏÐÅÏ¢¹ÜÀí½á¹¹Ìå£¬Ã¿ÖÖ¹ÊÕÏµÄ±êÖ¾Î»´¢´æµØ·½
 
 INT8U 				Unreport_Index[31][3]={0};									//Î´ÉÏ±¨Êý¾ÝË÷Òý±í£¬31Ìì£¬Ã¿Ð¡Ê±1bit£¨×î¸ßbit´ú±í0Ê±£©£º1ÒÑÉÏ±¨£¬0Î´ÉÏ±¨	×¢£ºÐÂÉè±¸³õÊ¼»¯Ê±ÒÑÈ«²¿Ð´1
-INT8U 				Device_Number[6]={'F','C',0,0,0,0};							//6Byte×°ÖÃºÅÂë
+INT8U 				Device_Number[6]="FC0000";									//6Byte×°ÖÃºÅÂë
 INT8U 				FUN_Config[24]={0x26,0x30};									//24Byte¹¦ÄÜÅäÖÃ²ÎÊý£¬×î¶à24Ïî¹¦ÄÜ£¬Ä¬ÈÏ26Hµ¼ÏßÎÂ¶È¡¢µçÁ÷Êý¾Ý¼à²â¹¦ÄÜ\30HÉè±¸¹ÊÕÏ×Ô¼ì¹¦ÄÜ	PS£ºÏÖÔÚÔÝ²»Ö§³Ö¹¦ÄÜÅäÖÃ£¬¹Ì¶¨¿ªÆôÕâÁ½¸ö¹¦ÄÜ
 INT8U				Time_Proofread = DONE;										//³õÊ¼»¯ÎªDONE£ºÉè±¸ÉÏµçºóÖ»ÒªRTCÊ±¼ä¸ñÊ½Õý³£¼´¿É²É¼¯ÎÂ¶È£¬·ÀÖ¹µçÁ¿²»×ãÊ±ÒòÎÞ·¨Ð£Ê±¶ø²»²É¼¯
 INT8U				Tem_Sampled[2] = {0};										//ÓÃÓÚÁ¢¼´²É¼¯µÄÎÂ¶ÈÊý¾Ý×éÖ¡ÉÏ±¨
