@@ -6,6 +6,7 @@
 *.ko
 *.obj
 *.elf
+*.Bak
 
 # Linker output
 *.ilk
@@ -66,8 +67,5 @@ dkms.conf
 *.uvguix.dikpo
 *.dbgconf
 *.dep
-FC_JZ.uvoptx
 *.uvoptx
-*.uvprojx
-*.uvprojx
-*.uvoptx
+JLinkLog.txt
