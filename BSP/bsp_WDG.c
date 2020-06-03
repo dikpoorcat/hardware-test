@@ -78,4 +78,23 @@ void BSP_WDGInit(void)
 	GPIO_InitStructure.GPIO_Pin =WDG_GPIO_CTLR_WDI;
 	GPIO_Init(WDG_GPIO_CTLR, &GPIO_InitStructure);
 }
+
+/***********************************************************************************************
+* Function		: void BSP_WDGDeInit(void)
+* Description	: 禁用外部硬件看门狗
+* Input			: 
+* Output		:
+* Note(s)		: 
+* Contributor	:
+***********************************************************************************************/
+void BSP_WDGDeInit(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
+	GPIO_InitStructure.GPIO_Pin =WDG_GPIO_CTLR_WDI;
+	GPIO_Init(WDG_GPIO_CTLR, &GPIO_InitStructure);
+}
+
 /************************(C)COPYRIGHT 2008 千能电力*****END OF FILE****************************/
