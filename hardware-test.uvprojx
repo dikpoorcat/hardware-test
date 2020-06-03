@@ -31,8 +31,8 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:STM32F103RD$SVD/STM32F103xx.svd</SFDFile>
-          <bCustSvd>0</bCustSvd>
+          <SFDFile>C:\Keil_v5\ARM\Pack\Keil\STM32F1xx_DFP\2.2.0\SVD\STM32F103xx.SFR</SFDFile>
+          <bCustSvd>1</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
           <IncludePath></IncludePath>
@@ -47,7 +47,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>YJCS_SV_02_00_00</OutputName>
+          <OutputName>YJCS_SV_02_00_01</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -363,7 +363,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>_FLASH_PROG,RF_Test,HV=0x48563134,VERSION=0x56323030,SYS=1</Define>
+              <Define>_FLASH_PROG,RF_Test,HV=0x48563134,VERSION=0x56323031,SYS=1</Define>
               <Undefine></Undefine>
               <IncludePath>.\SysTem;.\Library\uCOS-II;.\Library\inc;.\BSP;.\APP\LTE;.\APP\Local_Protocl;.\APP\RF;.\APP\RTC;.\APP\NW_Protocol;.\BSP;.\APP\Delay;.\APP\Meteorology;.\APP\FATFS</IncludePath>
             </VariousControls>
