@@ -523,8 +523,10 @@ INT8U RfModuleTest(void)
 		
 		memset(RF_Uart_RxBuff,0x00,RF_BuffLen);										//清空串口接收缓存
 		BspUartWrite(1,RFCmd,RFCmdLen);    											//发送获取数据指令
-		pRfMsg = (struct Str_Msg *)OSMboxPend(RFSGIN,45,&Err);   						//等待串口消息 timeout个时间片（射频模块串口最多给256字节，1200波特率时约2.13秒）
-
+		StopModeLock++;
+		pRfMsg = (struct Str_Msg *)OSMboxPend(RFSGIN,45,&Err);   					//等待串口消息 timeout个时间片（射频模块串口最多给256字节，1200波特率时约2.13秒）
+		if(StopModeLock) StopModeLock--;
+		
 		if(Err==OS_NO_ERR && pRfMsg)
 		{
 			if(pRfMsg->DataLen <= 256)												//且数据不超过长度256字节（由射频模块决定）
@@ -541,7 +543,7 @@ INT8U RfModuleTest(void)
 		BSP_UART_RxClear(pRfMsg->DivNum);											//清消息缓存		
 	}
 	sprintf(chars, "汇总：共采集到 %d 个数据\r\n", count);	
-	BspUartWrite(2,(INT8U*)chars,strlen(chars));								//打印
+	BspUartWrite(2,(INT8U*)chars,strlen(chars));									//打印
 	return count;
 }
 
