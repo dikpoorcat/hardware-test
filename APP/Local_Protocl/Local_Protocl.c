@@ -1046,6 +1046,7 @@ void HardwareTest(void)
 			BKP->DR2 = 0xCC;													//设初值为0xCC，10秒后看门狗若还未复位，设为0，再次上电还进系统2（即本测试程序）
 			PWR->CR &= ~(1<<8);													//启用后备区域的写保护
 			WDG_En = false;														//禁止init_task_core()中外部看门狗喂狗
+			BSP_WDGDeInit();													//禁用外部看门狗喂狗（光上面那个不行，原因未知）
 			
 			while(1)
 			{

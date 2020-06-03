@@ -343,7 +343,7 @@ void Reset_On_Time(struct BSPRTC_TIME *pTime)
 void Feed_Dog(void )
 {
 	if(WDG_En) 																	//正式程序中可注释此句
-		BSP_WDGFeedDog();	
+		BSP_WDGFeedDog();		
 	IWDG_ReloadCounter();														//内部独立看门狗在BOOT中开启
 }
 
