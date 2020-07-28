@@ -217,7 +217,7 @@ INT8U Startup_Comm(u8 times, u16 timeout)
 		if(!len) 
 		{
 			BspUartWrite(2,SIZE_OF("未收到主站回复！\r\n"));
-			if(i<times-1) OSTimeDly(1*60*20-timeout);							//通信失败时每隔1分钟请求一次
+			if(i<times-1) OSTimeDly(1*3*20-timeout);							//通信失败时每隔3秒请求一次
 			continue;															//重试
 		}
 		if(Judge_NW_Framing(START_UP,LTE_Rx_Buff,len,0))						//判断接收内容是否符合南网协议，不符合时重新通信
